@@ -1,0 +1,10 @@
+cellpack.autopack.writers package
+=================================
+
+Module contents
+---------------
+
+.. automodule:: cellpack.autopack.writers
+   :members:
+   :undoc-members:
+   :show-inheritance:

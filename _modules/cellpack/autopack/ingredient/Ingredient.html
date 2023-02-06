@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     
@@ -375,7 +372,7 @@
 <span class="c1"># the ingredient should derive from a class of Agent</span>
 <div class="viewcode-block" id="Ingredient"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient">[docs]</a><span class="k">class</span> <span class="nc">Ingredient</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
     <span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for Ingredients that can be added to a Recipe.</span>
 <span class="sd">    Ingredients provide:</span>
 <span class="sd">        - a molarity used to compute how many to place</span>
@@ -614,7 +611,7 @@
         <span class="c1"># add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type</span>
 
 <div class="viewcode-block" id="Ingredient.reset"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;reset the states of an ingredient&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;reset the states of an ingredient&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span></div>
@@ -798,7 +795,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bullet_nodes</span><span class="p">[</span><span class="n">ret</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Ingredient.getMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getMesh">[docs]</a>    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a mesh representation from a filename for the ingredient</span>
 
 <span class="sd">        @type  filename: string</span>
@@ -934,7 +931,7 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Ingredient.buildMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.buildMesh">[docs]</a>    <span class="k">def</span> <span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a polygon mesh object from a dictionary verts,faces,normals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">geom</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vnormals</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">build_mesh</span><span class="p">(</span>
@@ -946,7 +943,7 @@
         <span class="k">return</span> <span class="n">geom</span></div>
 
 <div class="viewcode-block" id="Ingredient.jitterPosition"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.jitterPosition">[docs]</a>    <span class="k">def</span> <span class="nf">jitterPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        position are the 3d coordiantes of the grid point</span>
 <span class="sd">        spacing is the grid spacing</span>
 <span class="sd">        this will jitter gauss(0., 0.3) * Ingredient.max_jitter</span>
@@ -991,7 +988,7 @@
         <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">n</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Ingredient.get_cuttoff_value"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_cuttoff_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_cuttoff_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the min value a grid point needs to be away from a surfance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the min value a grid point needs to be away from a surfance</span>
 <span class="sd">        in order for this ingredient to pack. Only needs to be calculated once</span>
 <span class="sd">        per ingredient once the jitter is set.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_distance</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1007,7 +1004,7 @@
         <span class="k">return</span> <span class="n">cut</span></div>
 
 <div class="viewcode-block" id="Ingredient.checkIfUpdate"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkIfUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">checkIfUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check if we need to update the distance array. Part of the hack free points&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if we need to update the distance array. Part of the hack free points&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;nbPts&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;firstTimeUpdate&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">firstTimeUpdate</span><span class="p">:</span>
                 <span class="c1"># if it has been updated before</span>
@@ -1151,7 +1148,7 @@
         <span class="k">return</span> <span class="n">rotMat</span></div>
 
 <div class="viewcode-block" id="Ingredient.getAxisRotation"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getAxisRotation">[docs]</a>    <span class="k">def</span> <span class="nf">getAxisRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        combines a rotation about axis to incoming rot.</span>
 <span class="sd">        rot aligns the principal_vector with the surface normal</span>
 <span class="sd">        rot aligns the principal_vector with the biased diretion</span>
@@ -1166,7 +1163,7 @@
         <span class="k">return</span> <span class="n">rot</span></div>
 
 <div class="viewcode-block" id="Ingredient.getBiasedRotation"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getBiasedRotation">[docs]</a>    <span class="k">def</span> <span class="nf">getBiasedRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        combines a rotation about axis to incoming rot</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># -30,+30 ?</span>
@@ -1375,7 +1372,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Ingredient.point_is_available"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.point_is_available">[docs]</a>    <span class="k">def</span> <span class="nf">point_is_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newPt</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Takes in a vector returns a boolean&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes in a vector returns a boolean&quot;&quot;&quot;</span>
         <span class="n">point_in_correct_region</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">far_from_surfaces</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">on_grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">is_point_inside_bb</span><span class="p">(</span>
@@ -1551,7 +1548,7 @@
             <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Ingredient.get_new_pos"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_pos">[docs]</a>    <span class="k">def</span> <span class="nf">get_new_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">positions_to_adjust</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Takes positions_to_adjust, such as an array of spheres at a level in a</span>
 <span class="sd">        sphere tree, and adjusts them relative to the given position and rotation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1840,11 +1837,15 @@
                 <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Ingredient.pack_at_grid_pt_location"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pack_at_grid_pt_location">[docs]</a>    <span class="k">def</span> <span class="nf">pack_at_grid_pt_location</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">grid_point_distances</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="n">jtrans</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="p">,</span>
+        <span class="n">dpad</span><span class="p">,</span>
+        <span class="n">grid_point_distances</span><span class="p">,</span>
+        <span class="n">inside_points</span><span class="p">,</span>
+        <span class="n">new_dist_points</span><span class="p">,</span>
     <span class="p">):</span>
-
-        <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">packing_location</span> <span class="o">=</span> <span class="n">jtrans</span>
         <span class="n">radius_of_area_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">+</span> <span class="n">dpad</span>
 
@@ -1857,18 +1858,18 @@
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">grid_points_to_update</span><span class="p">:</span>
                 <span class="p">(</span>
-                    <span class="n">insidePoints</span><span class="p">,</span>
-                    <span class="n">newDistPoints</span><span class="p">,</span>
+                    <span class="n">inside_points</span><span class="p">,</span>
+                    <span class="n">new_dist_points</span><span class="p">,</span>
                 <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
                     <span class="n">env</span><span class="p">,</span>
                     <span class="n">bounding_point_position</span><span class="p">,</span>
-                    <span class="n">rotMatj</span><span class="p">,</span>
+                    <span class="n">rotation_matrix</span><span class="p">,</span>
                     <span class="n">grid_point_index</span><span class="p">,</span>
                     <span class="n">grid_point_distances</span><span class="p">,</span>
-                    <span class="n">newDistPoints</span><span class="p">,</span>
-                    <span class="n">insidePoints</span><span class="p">,</span>
+                    <span class="n">new_dist_points</span><span class="p">,</span>
+                    <span class="n">inside_points</span><span class="p">,</span>
                 <span class="p">)</span>
-        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
+        <span class="k">return</span> <span class="n">inside_points</span><span class="p">,</span> <span class="n">new_dist_points</span></div>
 
 <div class="viewcode-block" id="Ingredient.remove_from_realtime_display"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.remove_from_realtime_display">[docs]</a>    <span class="k">def</span> <span class="nf">remove_from_realtime_display</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">moving</span><span class="p">):</span>
         <span class="k">pass</span></div>
@@ -2010,7 +2011,7 @@
                     <span class="n">rotMatj</span><span class="p">,</span>
                     <span class="n">insidePoints</span><span class="p">,</span>
                     <span class="n">newDistPoints</span><span class="p">,</span>
-                <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pandaBullet_placeBHT</span><span class="p">(</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spheres_SST_place</span><span class="p">(</span>
                     <span class="n">env</span><span class="p">,</span>
                     <span class="n">compartment</span><span class="p">,</span>
                     <span class="n">ptInd</span><span class="p">,</span>
@@ -2074,7 +2075,13 @@
                 <span class="n">env</span><span class="p">,</span> <span class="n">target_grid_point_position</span><span class="p">,</span> <span class="n">rotation_matrix</span>
             <span class="p">)</span>
             <span class="p">(</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pack_at_grid_pt_location</span><span class="p">(</span>
-                <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">grid_point_distances</span>
+                <span class="n">env</span><span class="p">,</span>
+                <span class="n">jtrans</span><span class="p">,</span>
+                <span class="n">rotMatj</span><span class="p">,</span>
+                <span class="n">dpad</span><span class="p">,</span>
+                <span class="n">grid_point_distances</span><span class="p">,</span>
+                <span class="n">insidePoints</span><span class="p">,</span>
+                <span class="n">newDistPoints</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">is_realtime</span><span class="p">:</span>
@@ -2205,7 +2212,7 @@
         <span class="n">dpad</span><span class="p">,</span>
         <span class="n">moving</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">afvi</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">afviewer</span>
@@ -2377,7 +2384,7 @@
         <span class="k">return</span> <span class="n">accum_results</span></div>
 
 <div class="viewcode-block" id="Ingredient.get_all_positions_to_check"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_all_positions_to_check">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_positions_to_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Takes a starting position in the packing space, and returns all the points that</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a starting position in the packing space, and returns all the points that</span>
 <span class="sd">        need to be tested for a collision as an array.</span>
 
 <span class="sd">            If the point isn&#39;t close to an edge, will return just the staring point.</span>
@@ -2407,7 +2414,7 @@
         <span class="n">dpad</span><span class="p">,</span>
         <span class="n">afvi</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the given grid point is available for packing using the jitter collision detection</span>
 <span class="sd">        method. Returns packing location and new grid point values if packing is successful.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2628,7 +2635,7 @@
         <span class="n">moving</span><span class="p">,</span>
         <span class="n">usePP</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">env</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
@@ -2718,8 +2725,8 @@
 
             <span class="c1"># got all the way through the checks with no collision</span>
             <span class="k">if</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">collision_results</span><span class="p">:</span>
-                <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">inside_points</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">new_dist_points</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">t3</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
                 <span class="c1"># self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?</span>
@@ -2732,21 +2739,14 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rIngr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pt</span><span class="p">,</span> <span class="n">packing_rotation</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
 
-                    <span class="n">new_inside_points</span><span class="p">,</span> <span class="n">new_dist_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distance_values</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pack_at_grid_pt_location</span><span class="p">(</span>
+                        <span class="n">env</span><span class="p">,</span>
                         <span class="n">pt</span><span class="p">,</span>
                         <span class="n">packing_rotation</span><span class="p">,</span>
-                        <span class="n">gridPointsCoords</span><span class="p">,</span>
-                        <span class="n">distance</span><span class="p">,</span>
                         <span class="n">dpad</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="n">insidePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_place_results</span><span class="p">(</span>
-                        <span class="n">new_inside_points</span><span class="p">,</span>
-                        <span class="n">insidePoints</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_place_results</span><span class="p">(</span>
+                        <span class="n">distance</span><span class="p">,</span>
+                        <span class="n">inside_points</span><span class="p">,</span>
                         <span class="n">new_dist_points</span><span class="p">,</span>
-                        <span class="n">newDistPoints</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;compute distance loop </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t3</span><span class="p">)</span>
 
@@ -2768,8 +2768,8 @@
                     <span class="n">success</span><span class="p">,</span>
                     <span class="n">packing_location</span><span class="p">,</span>
                     <span class="n">packing_rotation</span><span class="p">,</span>
-                    <span class="n">insidePoints</span><span class="p">,</span>
-                    <span class="n">newDistPoints</span><span class="p">,</span>
+                    <span class="n">inside_points</span><span class="p">,</span>
+                    <span class="n">new_dist_points</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="c1"># never found a place to pack</span>
@@ -2780,7 +2780,7 @@
 
         <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="Ingredient.pandaBullet_placeBHT"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_placeBHT">[docs]</a>    <span class="k">def</span> <span class="nf">pandaBullet_placeBHT</span><span class="p">(</span>
+<div class="viewcode-block" id="Ingredient.spheres_SST_place"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.spheres_SST_place">[docs]</a>    <span class="k">def</span> <span class="nf">spheres_SST_place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">compartment</span><span class="p">,</span>
@@ -2791,7 +2791,7 @@
         <span class="n">distance</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">env</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
@@ -2929,7 +2929,7 @@
         <span class="n">moving</span><span class="p">,</span>
         <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">histoVol</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>

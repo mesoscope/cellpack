@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     
@@ -294,7 +291,7 @@
 
 
 <div class="viewcode-block" id="SingleSphereIngr"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr">[docs]</a><span class="k">class</span> <span class="nc">SingleSphereIngr</span><span class="p">(</span><span class="n">Ingredient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This Ingredient is represented by a single sphere</span>
 <span class="sd">    and either a single radius, or a list of radii and offset vectors</span>
 <span class="sd">    for each sphere representing the ingredient</span>
@@ -384,7 +381,7 @@
         <span class="n">env</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check spheres for collision</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -402,17 +399,17 @@
             <span class="n">position</span><span class="p">,</span> <span class="n">radius_of_area_to_check</span>
         <span class="p">)</span>  <span class="c1"># indices</span>
         <span class="c1"># check for collisions by looking at grid points in the sphere of radius radc</span>
-        <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsToCheck</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">position</span>
-        <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
-        <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pointsToCheck</span><span class="p">)):</span>
-            <span class="n">grid_point_index</span> <span class="o">=</span> <span class="n">pointsToCheck</span><span class="p">[</span>
-                <span class="n">pti</span>
-            <span class="p">]</span>  <span class="c1"># index of master grid point that is inside the sphere</span>
-            <span class="n">distance_to_packing_location</span> <span class="o">=</span> <span class="n">distA</span><span class="p">[</span>
+        <span class="n">distance_to_grid_points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+            <span class="n">gridPointsCoords</span><span class="p">[</span><span class="n">pointsToCheck</span><span class="p">]</span> <span class="o">-</span> <span class="n">position</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">pti</span><span class="p">,</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pointsToCheck</span><span class="p">):</span>
+
+            <span class="n">distance_to_packing_location</span> <span class="o">=</span> <span class="n">distance_to_grid_points</span><span class="p">[</span>
                 <span class="n">pti</span>
             <span class="p">]</span>  <span class="c1"># is that point&#39;s distance from the center of the sphere (packing location)</span>
             <span class="c1"># distance is an array of distance of closest contact to anything currently in the grid</span>
+
             <span class="n">collision</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">distance_to_packing_location</span>
                 <span class="o">&lt;=</span> <span class="n">radius_of_ing_being_packed</span>
@@ -425,11 +422,12 @@
                     <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">],</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
+
             <span class="n">signed_distance_to_sphere_surface</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">distance_to_packing_location</span> <span class="o">-</span> <span class="n">radius_of_ing_being_packed</span>
             <span class="p">)</span>
 
-            <span class="p">(</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
                 <span class="n">env</span><span class="p">,</span>
                 <span class="n">jtrans</span><span class="p">,</span>
                 <span class="n">rotMat</span><span class="p">,</span>
@@ -447,7 +445,7 @@
         <span class="n">jtrans</span><span class="p">,</span>
         <span class="n">rotation_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check spheres for collision</span>
 <span class="sd">        TODO improve the testwhen grid stepSize is larger that size of the ingredient</span>
 <span class="sd">        &quot;&quot;&quot;</span>

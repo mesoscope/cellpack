@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     
@@ -660,7 +657,7 @@
 
 
 <div class="viewcode-block" id="map_colors"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.map_colors">[docs]</a><span class="k">def</span> <span class="nf">map_colors</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">colorMap</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get colors corresponding to values in a colormap&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get colors corresponding to values in a colormap&quot;&quot;&quot;</span>
 
     <span class="n">values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -693,7 +690,7 @@
 
 
 <div class="viewcode-block" id="create_divergent_color_map_with_scaled_values"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.create_divergent_color_map_with_scaled_values">[docs]</a><span class="k">def</span> <span class="nf">create_divergent_color_map_with_scaled_values</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">,</span> <span class="n">color_list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use case: you want a divergent scale centered at 0, but with drastically different</span>
 <span class="sd">    negative scale and positive scale. Ie, min number is -20, and max is 2000.</span>
 <span class="sd">    @param min_value: float value that is the min of the data</span>

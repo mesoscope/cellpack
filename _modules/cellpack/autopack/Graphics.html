@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -345,13 +342,13 @@
 
 
 <div class="viewcode-block" id="AutopackViewer"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer">[docs]</a><span class="k">class</span> <span class="nc">AutopackViewer</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    the base class for viewing/displaying autopack result in a specified viewer</span>
 <span class="sd">    ie DejaVu, Cinema4D, Maya or Blender (which are supported hostApp by ePMV)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">helper</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ViewerType</span><span class="o">=</span><span class="s2">&quot;dejavu&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor of the AFViewer. Define the needed function for constructing</span>
 <span class="sd">        the geometry representing the different compartment and recipe that have</span>
 <span class="sd">        been used for the filling.</span>
@@ -450,7 +447,7 @@
         <span class="k">return</span> <span class="n">res</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.timeFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.timeFunction">[docs]</a>    <span class="k">def</span> <span class="nf">timeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the time for performing the provided function.</span>
 
 <span class="sd">        @type  function: function</span>
@@ -472,7 +469,7 @@
         <span class="k">return</span> <span class="n">res</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.SetHistoVol"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.SetHistoVol">[docs]</a>    <span class="k">def</span> <span class="nf">SetHistoVol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">histo</span><span class="p">,</span> <span class="n">pad</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Define the current histo volume.</span>
 
 <span class="sd">        @type  histo: autopack.HistoVol</span>
@@ -515,7 +512,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">displayEnv</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.addMasterIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addMasterIngr">[docs]</a>    <span class="k">def</span> <span class="nf">addMasterIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a empty master/parent geometry for a ingredient</span>
 
 <span class="sd">        @type  ingr: autopack.Ingredient</span>
@@ -532,7 +529,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span> <span class="o">=</span> <span class="n">gi</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.prepareMaster"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareMaster">[docs]</a>    <span class="k">def</span> <span class="nf">prepareMaster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create all empty master/parent geometry for the cytoplasm and</span>
 <span class="sd">        all ingredient. If not in DejaVu prepare the meshes use for instanced</span>
 <span class="sd">        geometry such as spheres and cylinders</span>
@@ -605,7 +602,7 @@
         <span class="p">)</span>  <span class="c1"># g</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayEnv"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayEnv">[docs]</a>    <span class="k">def</span> <span class="nf">displayEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        display histo volume bounding box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;BoundingBox&quot;</span>
@@ -620,7 +617,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">reParent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">histoBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayFillBox"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFillBox">[docs]</a>    <span class="k">def</span> <span class="nf">displayFillBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        display the box used for compute the grid and fill</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fbb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -628,7 +625,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fbb</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayCompartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartment">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display geometry for an compartment.</span>
 
 <span class="sd">        @type  orga: autopack.Compartment</span>
@@ -735,14 +732,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Surface&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayCompartments"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartments">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display geometry for all compartments defined for the envume.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displayCompartment</span><span class="p">(</span><span class="n">orga</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayPreFill"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPreFill">[docs]</a>    <span class="k">def</span> <span class="nf">displayPreFill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function once a env and his compartments are defined.</span>
 <span class="sd">        displayPreFill will prepare all master, and will create the geometry for</span>
 <span class="sd">        the histovolume bounding box, and the different compartments defined.</span>
@@ -809,7 +806,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setRigidBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">staticMesh</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">dynamicOptions</span><span class="p">[</span><span class="s2">&quot;static&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayFill"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFill">[docs]</a>    <span class="k">def</span> <span class="nf">displayFill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function once a Box have been filled. displayFill will display</span>
 <span class="sd">        all placed ingredients in the Box, and affiliated them according if they are</span>
 <span class="sd">        on surface, in cytoplasm or in the compartment. displayFill also display</span>
@@ -866,7 +863,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setViewport</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function to display a pointCloud. By default, theses points</span>
 <span class="sd">        are not visible in the viewport.</span>
 
@@ -915,7 +912,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">labDistg</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayCompartmentPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentPoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartmentPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function to display grid pointCloud for an compartment</span>
 
 <span class="sd">        @type  orga: autopack.Compartment</span>
@@ -971,7 +968,7 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayCompartmentsPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsPoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartmentsPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display grid points for all compartments defined for the envume.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
@@ -1477,7 +1474,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setLayers</span><span class="p">(</span><span class="n">newMesh</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayIngrResults"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrResults">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">doSphere</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doMesh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the result for the given ingr after filling</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -2452,7 +2449,7 @@
         <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="n">upyColors</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">upyColors</span><span class="o">.</span><span class="n">black</span><span class="p">],</span>
         <span class="o">**</span><span class="n">options</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        target : name or host object target</span>
 <span class="sd">        Deprecated, need to use new name rule</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2526,7 +2523,7 @@
         <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="n">upyColors</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">upyColors</span><span class="o">.</span><span class="n">black</span><span class="p">],</span>
         <span class="o">**</span><span class="n">options</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        target : name or host object target</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># get distance from object to the target.</span>
@@ -2784,13 +2781,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.clearIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearIngr">[docs]</a>    <span class="k">def</span> <span class="nf">clearIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;will clear all ingredients instances but leave base parent hierarchie intact&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;will clear all ingredients instances but leave base parent hierarchie intact&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delIngr</span><span class="p">)</span></div>
 
     <span class="c1">#        [self.delIngr(ingrname) for ingrname in self.ingredients]</span>
 
 <div class="viewcode-block" id="AutopackViewer.clearRecipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearRecipe">[docs]</a>    <span class="k">def</span> <span class="nf">clearRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;will clear everything related to self.recipe&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;will clear everything related to self.recipe&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">instance_dupliFace</span><span class="p">:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2852,7 +2849,7 @@
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.displayGradient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayGradient">[docs]</a>    <span class="k">def</span> <span class="nf">displayGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the given gradient as sphere at each grid position with radius = weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ramp</span> <span class="o">=</span> <span class="n">upyColors</span><span class="o">.</span><span class="n">getRamp</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">size</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>  <span class="c1"># color</span>

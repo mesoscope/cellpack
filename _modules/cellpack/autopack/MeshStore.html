@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -306,7 +303,7 @@
 
 <div class="viewcode-block" id="MeshStore.normalize_v3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normalize_v3">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">normalize_v3</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Normalize a numpy array of 3 component vectors shape=(n,3)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize a numpy array of 3 component vectors shape=(n,3)&quot;&quot;&quot;</span>
         <span class="c1">#        return self.unit_vector(arr,axis=1)</span>
         <span class="c1">#        lens = numpy.linalg.norm(arr,axis=1)</span>
         <span class="n">lens</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
@@ -337,11 +334,15 @@
 
 <div class="viewcode-block" id="MeshStore.get_midpoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_midpoint">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_midpoint</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="p">]</span></div>
 
 <div class="viewcode-block" id="MeshStore.norm"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.norm">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the norm of the vector [a,b,c]</span>
 
 <span class="sd">        &gt;&gt;&gt; result = helper.norm(a,b,c) #a,b,c being double</span>
@@ -361,7 +362,7 @@
 
 <div class="viewcode-block" id="MeshStore.normalize"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normalize">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the normalized vector A [x,y,z]</span>
 
 <span class="sd">        &gt;&gt;&gt; a = [1.0,3.0,5.0]</span>
@@ -383,12 +384,12 @@
         <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">tmpFileName1</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
+            <span class="n">tmpFileName1</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">get_local_file_location</span><span class="p">(</span>
                 <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.indpolface&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span>
             <span class="p">)</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">tmpFileName1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">get_local_file_location</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fileExtension</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
@@ -416,7 +417,7 @@
         <span class="n">vnormals</span><span class="p">,</span>
         <span class="n">faces</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This is the main function that create a polygonal mesh.</span>
 
 <span class="sd">        @type  name: string</span>
@@ -434,7 +435,7 @@
         <span class="k">return</span> <span class="n">mesh</span></div>
 
 <div class="viewcode-block" id="MeshStore.create_sphere_data"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere_data">[docs]</a>    <span class="k">def</span> <span class="nf">create_sphere_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from http://paulbourke.net/geometry/circlesphere/csource2.c&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;from http://paulbourke.net/geometry/circlesphere/csource2.c&quot;&quot;&quot;</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
@@ -448,9 +449,21 @@
         <span class="n">allfacets</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">iterations</span><span class="p">))</span>
         <span class="n">facets</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">allfacets</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span>
         <span class="n">facets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># p1; facets[0].p2 = p2; facets[0].p3 = p3;</span>
-        <span class="n">facets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># .p1 = p2; facets[1].p2 = p1; facets[1].p3 = p4;</span>
-        <span class="n">facets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># .p1 = p2; facets[2].p2 = p4; facets[2].p3 = p3;</span>
-        <span class="n">facets</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># .p1 = p1; facets[3].p2 = p3; facets[3].p3 = p4;</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+        <span class="p">]</span>  <span class="c1"># .p1 = p2; facets[1].p2 = p1; facets[1].p3 = p4;</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+        <span class="p">]</span>  <span class="c1"># .p1 = p2; facets[2].p2 = p4; facets[2].p3 = p3;</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+        <span class="p">]</span>  <span class="c1"># .p1 = p1; facets[3].p2 = p3; facets[3].p3 = p4;</span>
 
         <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>  <span class="c1"># (i=1;i&lt;iterations;i++) {</span>
@@ -499,7 +512,7 @@
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="MeshStore.create_sphere"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">create_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data and the mesh object of a Sphere of a given radius</span>
 
 <span class="sd">        @type  name: string</span>
@@ -563,7 +576,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MeshStore.build_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.build_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">build_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a polygon mesh object from a dictionary verts,faces,normals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">nv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;verts&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
@@ -577,7 +590,9 @@
             <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
         <span class="p">)</span>
         <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">saveObjMesh</span><span class="p">(</span>
-            <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span> <span class="o">+</span> <span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span> <span class="o">+</span> <span class="s2">&quot;.obj&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + &quot;.obj&quot;)</span>
         <span class="k">return</span> <span class="n">geom</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vnormals</span></div>
@@ -588,6 +603,41 @@
             <span class="n">geometry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_mesh_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_mesh_to_scene</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">geometry</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_scaled_distances_between_surfaces"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_scaled_distances_between_surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">get_scaled_distances_between_surfaces</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">position_list</span><span class="p">,</span> <span class="n">inner_mesh_name</span><span class="p">,</span> <span class="n">outer_mesh_name</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate scaled distances from inner mesh for position_list</span>
+<span class="sd">        Inner mesh surface is 0</span>
+<span class="sd">        Outer mesh surface is 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">inner_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="n">inner_mesh_name</span><span class="p">)</span>
+        <span class="n">outer_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="n">outer_mesh_name</span><span class="p">)</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">proximity</span><span class="o">.</span><span class="n">ProximityQuery</span><span class="p">(</span><span class="n">inner_mesh</span><span class="p">)</span>
+
+        <span class="c1"># closest points on the inner mesh surface</span>
+        <span class="n">inner_loc</span><span class="p">,</span> <span class="n">inner_surface_distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">on_surface</span><span class="p">(</span><span class="n">position_list</span><span class="p">)</span>
+
+        <span class="c1"># intersecting points on the outer surface</span>
+        <span class="n">outer_loc</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">inner_loc</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">position_list</span><span class="p">):</span>
+            <span class="n">outer_loc</span><span class="p">[</span><span class="n">ind</span><span class="p">],</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">outer_mesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">intersects_location</span><span class="p">(</span>
+                <span class="n">ray_origins</span><span class="o">=</span><span class="p">[</span><span class="n">inner_loc</span><span class="p">[</span><span class="n">ind</span><span class="p">]],</span> <span class="n">ray_directions</span><span class="o">=</span><span class="p">[</span><span class="n">position</span> <span class="o">-</span> <span class="n">inner_loc</span><span class="p">[</span><span class="n">ind</span><span class="p">]]</span>
+            <span class="p">)</span>
+
+        <span class="n">scaled_distance_between_surfaces</span> <span class="o">=</span> <span class="n">inner_surface_distances</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">outer_loc</span> <span class="o">-</span> <span class="n">inner_loc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">scaled_distance_between_surfaces</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">scaled_distance_between_surfaces</span> <span class="o">&lt;</span> <span class="mi">0</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Check distances between surfaces&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scaled_distance_between_surfaces</span></div>
 
 <div class="viewcode-block" id="MeshStore.decompose_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.decompose_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">decompose_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">):</span>

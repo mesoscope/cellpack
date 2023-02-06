@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -375,7 +372,7 @@
 
 
 <div class="viewcode-block" id="Voxels"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels">[docs]</a><span class="k">class</span> <span class="nc">Voxels</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Holds a binvox model.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds a binvox model.</span>
 <span class="sd">    data is either a three-dimensional numpy boolean array (dense representation)</span>
 <span class="sd">    or a two-dimensional numpy float array (coordinate representation).</span>
 
@@ -487,7 +484,7 @@
         <span class="k">return</span> <span class="n">index</span></div>
 
 <div class="viewcode-block" id="Voxels.cartesian"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.cartesian">[docs]</a>    <span class="k">def</span> <span class="nf">cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrays</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        #http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays</span>
 <span class="sd">        Generate a cartesian product of input arrays.</span>
 
@@ -539,7 +536,7 @@
 
 
 <div class="viewcode-block" id="read_header"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read_header">[docs]</a><span class="k">def</span> <span class="nf">read_header</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read binvox header. Mostly meant for internal use.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binvox header. Mostly meant for internal use.&quot;&quot;&quot;</span>
     <span class="n">line</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;#binvox&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Not a binvox file&quot;</span><span class="p">)</span>
@@ -551,7 +548,7 @@
 
 
 <div class="viewcode-block" id="read"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read binary binvox format as array.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binary binvox format as array.</span>
 
 <span class="sd">    Returns the model with accompanying metadata.</span>
 
@@ -581,7 +578,7 @@
 
 
 <div class="viewcode-block" id="read_as_3d_array"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read_as_3d_array">[docs]</a><span class="k">def</span> <span class="nf">read_as_3d_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">fix_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read binary binvox format as array.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binary binvox format as array.</span>
 
 <span class="sd">    Returns the model with accompanying metadata.</span>
 
@@ -617,7 +614,7 @@
 
 
 <div class="viewcode-block" id="read_as_coord_array"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read_as_coord_array">[docs]</a><span class="k">def</span> <span class="nf">read_as_coord_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">fix_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read binary binvox format as coordinates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binary binvox format as coordinates.</span>
 
 <span class="sd">    Returns binvox model with voxels in a &quot;coordinate&quot; representation, i.e.  an</span>
 <span class="sd">    3 x N array where N is the number of nonzero voxels. Each column</span>
@@ -667,7 +664,7 @@
 
 
 <div class="viewcode-block" id="dense_to_sparse"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.dense_to_sparse">[docs]</a><span class="k">def</span> <span class="nf">dense_to_sparse</span><span class="p">(</span><span class="n">voxel_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;From dense representation to sparse (coordinate) representation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;From dense representation to sparse (coordinate) representation.</span>
 <span class="sd">    No coordinate reordering.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">voxel_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -699,7 +696,7 @@
 
 
 <div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">voxel_model</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Write binary binvox format.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write binary binvox format.</span>
 
 <span class="sd">    Note that when saving a model in sparse (coordinate) format, it is first</span>
 <span class="sd">    converted to dense format.</span>

@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -584,7 +581,7 @@
 <div class="viewcode-block" id="f_ray_intersect_polyhedron"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_ray_intersect_polyhedron">[docs]</a><span class="k">def</span> <span class="nf">f_ray_intersect_polyhedron</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span> <span class="n">pRayEndPos</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">pTruncateToSegment</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This function returns TRUE if a ray intersects a triangle.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function returns TRUE if a ray intersects a triangle.</span>
 <span class="sd">    It also calculates and returns the UV coordinates of said colision as part of the intersection test,</span>
 <span class="sd">    Makes sure that we are working with arrays</span>
 
@@ -705,7 +702,7 @@
 
 
 <div class="viewcode-block" id="makeMarchingCube"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.makeMarchingCube">[docs]</a><span class="k">def</span> <span class="nf">makeMarchingCube</span><span class="p">(</span><span class="n">gridSpacing</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a numpy array that represents the precomputed distances to each point</span>
 <span class="sd">    for the cube of points surrounding our center point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -758,7 +755,7 @@
 
 
 <div class="viewcode-block" id="f_dot_product"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_dot_product">[docs]</a><span class="k">def</span> <span class="nf">f_dot_product</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return the dot product of two 3D vectors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the dot product of two 3D vectors.&quot;&quot;&quot;</span>
     <span class="n">dottedVectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vector1</span><span class="p">))]</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dottedVectors</span><span class="p">)</span></div>
 </pre></div>

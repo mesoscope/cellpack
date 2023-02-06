@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -388,7 +385,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_rotation_matrix</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RandomRot.random_quaternion"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_quaternion">[docs]</a>    <span class="k">def</span> <span class="nf">random_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return uniform random unit quaternion.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return uniform random unit quaternion.</span>
 
 <span class="sd">        rand: array like or None</span>
 <span class="sd">            Three independent random variables that are uniformly distributed</span>
@@ -422,7 +419,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="RandomRot.quaternion_matrix"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.quaternion_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quaternion</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return homogeneous rotation matrix from quaternion.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return homogeneous rotation matrix from quaternion.</span>
 
 <span class="sd">        &gt;&gt;&gt; M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])</span>
 <span class="sd">        &gt;&gt;&gt; numpy.allclose(M, rotation_matrix(0.123, [1, 0, 0]))</span>
@@ -451,7 +448,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="RandomRot.random_rotation_matrix"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">random_rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return uniform random rotation matrix.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return uniform random rotation matrix.</span>
 
 <span class="sd">        rand: array like</span>
 <span class="sd">            Three independent random variables that are uniformly distributed</span>

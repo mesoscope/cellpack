@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -331,13 +328,13 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
 <span class="kn">import</span> <span class="nn">bisect</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="nb">pow</span> <span class="k">as</span> <span class="n">mathPow</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.upy.hostHelper</span> <span class="kn">import</span> <span class="n">vdistance</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">cos</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.transformation</span> <span class="kn">import</span> <span class="n">angle_between_vectors</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">get_distances_from_point</span>
 
 
 <div class="viewcode-block" id="Gradient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient">[docs]</a><span class="k">class</span> <span class="nc">Gradient</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Gradient class</span>
 <span class="sd">    ==========================</span>
 <span class="sd">    This class handle the use of gradient to control the packing.</span>
@@ -355,7 +352,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">computeStartEnd</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultFunction</span>  <span class="c1"># lambda ?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">list_mode</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;-X&quot;</span><span class="p">,</span> <span class="s2">&quot;-Y&quot;</span><span class="p">,</span> <span class="s2">&quot;-Z&quot;</span><span class="p">,</span> <span class="s2">&quot;direction&quot;</span><span class="p">,</span> <span class="s2">&quot;radial&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_modes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-X&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-Y&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;direction&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;radial&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;surface&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>  <span class="c1"># can X,Y,Z,-X,-Y,-Z,&quot;direction&quot; custom vector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;gauss&quot;</span>  <span class="c1"># &quot;linear&quot; #linear mode for weight generation linearpos linearneg</span>
@@ -378,10 +385,14 @@
         <span class="k">if</span> <span class="s2">&quot;radius&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight_threshold</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="k">if</span> <span class="n">direction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_to_next_surface</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;scale_to_next_surface&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;scale_to_next_surface&quot;</span> <span class="ow">in</span> <span class="n">kw</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">direction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;surface&quot;</span><span class="p">,</span> <span class="s2">&quot;radial&quot;</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>  <span class="c1"># from direction get start and end point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gblob</span> <span class="o">=</span> <span class="mf">4.0</span>
         <span class="c1"># Note : theses functions could also be used to pick an ingredient</span>
@@ -406,7 +417,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mode&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_mode</span><span class="p">,</span>
+                <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_modes</span><span class="p">,</span>
                 <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;gradient direction&quot;</span><span class="p">,</span>
@@ -470,14 +481,14 @@
         <span class="p">}</span>
 
 <div class="viewcode-block" id="Gradient.getCenter"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get the center of the gradient grid&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get the center of the gradient grid&quot;&quot;&quot;</span>
         <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
             <span class="n">center</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="k">return</span> <span class="n">center</span></div>
 
 <div class="viewcode-block" id="Gradient.computeStartEnd"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.computeStartEnd">[docs]</a>    <span class="k">def</span> <span class="nf">computeStartEnd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;get the overall direction of the gradient&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get the overall direction of the gradient&quot;&quot;&quot;</span>
         <span class="c1"># using bb and direction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
@@ -485,7 +496,7 @@
         <span class="c1"># self.distance = math.sqrt(numpy.sum(d*d))</span>
 
 <div class="viewcode-block" id="Gradient.defaultFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.defaultFunction">[docs]</a>    <span class="k">def</span> <span class="nf">defaultFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        #linear function 0-&gt;0.1</span>
 <span class="sd">        #project xyz on direction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -494,197 +505,133 @@
         <span class="k">return</span> <span class="n">v</span></div>
 
 <div class="viewcode-block" id="Gradient.pickPoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.pickPoint">[docs]</a>    <span class="k">def</span> <span class="nf">pickPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        pick next random point according to the chosen function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_functions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pick_mode</span><span class="p">](</span><span class="n">listPts</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Gradient.buildWeigthMap"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMap">[docs]</a>    <span class="k">def</span> <span class="nf">buildWeigthMap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        build the actual gradient value according the gradint mode</span>
+<div class="viewcode-block" id="Gradient.build_weight_map"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_weight_map">[docs]</a>    <span class="k">def</span> <span class="nf">build_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        build the actual gradient value according the gradient mode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">buildWeigthMapAxe</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_axis_weight_map</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;direction&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">buildWeigthMapDirection</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_directional_weight_map</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;radial&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">buildWeigthMapRadial</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_radial_weight_map</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_surface_distance_weight_map</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Gradient.get_gauss_weights"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_gauss_weights">[docs]</a>    <span class="k">def</span> <span class="nf">get_gauss_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        given a number of point compute the gaussian weight for each</span>
+<div class="viewcode-block" id="Gradient.get_gauss_weights"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_gauss_weights">[docs]</a>    <span class="k">def</span> <span class="nf">get_gauss_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_points</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        given a number of points compute the gaussian weight for each</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">degree</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">2</span>
-        <span class="n">window</span> <span class="o">=</span> <span class="n">N</span>  <span class="c1"># degree*2#-1</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">])</span> <span class="o">*</span> <span class="n">window</span>
+        <span class="n">degree</span> <span class="o">=</span> <span class="n">number_of_points</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="n">weightGauss</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="p">)):</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">number_of_points</span><span class="p">)):</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">frac</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
-            <span class="n">gauss</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">gblob</span> <span class="o">*</span> <span class="p">(</span><span class="n">frac</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">frac</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">number_of_points</span>
+            <span class="n">gauss</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">gblob</span> <span class="o">*</span> <span class="p">(</span><span class="n">frac</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
             <span class="n">weightGauss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gauss</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weightGauss</span><span class="p">)</span> <span class="o">*</span> <span class="n">weight</span></div>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weightGauss</span><span class="p">)</span> <span class="o">*</span> <span class="n">number_of_points</span></div>
 
-<div class="viewcode-block" id="Gradient.get_gauss_weights1"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_gauss_weights1">[docs]</a>    <span class="k">def</span> <span class="nf">get_gauss_weights1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        given a number of point compute the gaussian weight for each</span>
-<span class="sd">        (alternative function)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">support_points</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">float</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="o">**</span> <span class="mf">2.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="n">gii_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">support_points</span><span class="p">]</span>
-        <span class="n">ki</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">gii_factors</span><span class="p">))</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">giin</span> <span class="o">/</span> <span class="n">ki</span> <span class="k">for</span> <span class="n">giin</span> <span class="ow">in</span> <span class="n">gii_factors</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="Gradient.getDirectionLength"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getDirectionLength">[docs]</a>    <span class="k">def</span> <span class="nf">getDirectionLength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Gradient.get_direction_length"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_direction_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_direction_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">direction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
-        <span class="k">if</span> <span class="n">bb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">bb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bb</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bb</span>
         <span class="c1"># assume grid orthogonal</span>
-        <span class="n">maxinmini</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
-            <span class="n">angle</span> <span class="o">=</span> <span class="n">angle_between_vectors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">[</span><span class="n">ax</span><span class="p">],</span> <span class="n">direction</span><span class="p">)</span>
-            <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
-            <span class="n">maxi</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">mini</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">maxinmini</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">])</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-        <span class="n">axi</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-        <span class="n">L</span> <span class="o">=</span> <span class="n">maxinmini</span><span class="p">[</span><span class="n">axi</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">maxinmini</span><span class="p">[</span><span class="n">axi</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">vdot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">[</span><span class="n">axes</span><span class="p">[</span><span class="n">axi</span><span class="p">]]),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
-        <span class="p">)</span>  <span class="c1"># cos a * |A|*|B|</span>
-        <span class="n">Ld</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">vdot</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">L</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Ld</span><span class="p">,</span> <span class="n">maxinmini</span></div>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">axis_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">angle_between_vectors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">[</span><span class="n">axis_name</span><span class="p">],</span> <span class="n">direction</span><span class="p">)</span>
+            <span class="n">angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">min_angle</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+        <span class="n">axis_with_smallest_angle</span> <span class="o">=</span> <span class="n">angles</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">min_angle</span><span class="p">)</span>
+        <span class="n">min_bounds_length</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">axis_with_smallest_angle</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">axis_with_smallest_angle</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">dot_product</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">[</span><span class="n">axes</span><span class="p">[</span><span class="n">axis_with_smallest_angle</span><span class="p">]],</span> <span class="n">direction</span>
+        <span class="p">)</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">dot_product</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">min_angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">min_bounds_length</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">length</span></div>
 
-<div class="viewcode-block" id="Gradient.buildWeigthMapRadial"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMapRadial">[docs]</a>    <span class="k">def</span> <span class="nf">buildWeigthMapRadial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        from a given point (self.direction) build a radial weight</span>
-<span class="sd">        according the chosen mode</span>
-<span class="sd">        (linear, gauss, etc...)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">MasterPosition</span><span class="p">)</span>
+<div class="viewcode-block" id="Gradient.build_radial_weight_map"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_radial_weight_map">[docs]</a>    <span class="k">def</span> <span class="nf">build_radial_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="n">bb</span>
-        <span class="n">radial_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
-        <span class="n">NW</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">xl</span><span class="p">,</span> <span class="n">yl</span><span class="p">,</span> <span class="n">zl</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="n">zr</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
+        <span class="n">max_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">get_distances_from_point</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">distances</span> <span class="o">&lt;</span> <span class="n">max_distance</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">max_distance</span><span class="p">)</span>
+            <span class="o">/</span> <span class="n">max_distance</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_weights_by_mode</span><span class="p">()</span></div>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;gauss&quot;</span><span class="p">:</span>  <span class="c1"># 0-1-0</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gauss_weights</span><span class="p">(</span>
-                <span class="n">NW</span>
-            <span class="p">)</span>  <span class="c1"># numpy.random.normal(0.5, 0.1, NW) #one dimension</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;half-gauss&quot;</span><span class="p">:</span>  <span class="c1"># 0-1</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gauss_weights</span><span class="p">(</span><span class="n">NW</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)[</span><span class="n">NW</span><span class="p">:]</span>
-        <span class="k">for</span> <span class="n">ptid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">dist</span> <span class="o">=</span> <span class="n">vdistance</span><span class="p">(</span><span class="n">MasterPosition</span><span class="p">[</span><span class="n">ptid</span><span class="p">],</span> <span class="n">radial_point</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">))</span>
-                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
-                    <span class="k">else</span> <span class="mf">0.0</span>
-                <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;square&quot;</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">mathPow</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
-                    <span class="k">else</span> <span class="mf">0.0</span>
-                <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;cube&quot;</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">mathPow</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)),</span> <span class="mi">3</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
-                    <span class="k">else</span> <span class="mf">0.0</span>
-                <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;gauss&quot;</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="k">else</span> <span class="mf">1.0</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;half-gauss&quot;</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="k">else</span> <span class="mf">1.0</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+<div class="viewcode-block" id="Gradient.build_surface_distance_weight_map"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_surface_distance_weight_map">[docs]</a>    <span class="k">def</span> <span class="nf">build_surface_distance_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        build a map of weights based on the distance from a surface</span>
+<span class="sd">        assumes self.distances include surface distances</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">surface_distances</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Map created without specifying distances&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_to_next_surface</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">scaled_distance_to_next_surface</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">surface_distances</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">max_distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_weights_by_mode</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Gradient.buildWeigthMapDirection"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMapDirection">[docs]</a>    <span class="k">def</span> <span class="nf">buildWeigthMapDirection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Gradient.build_directional_weight_map"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_directional_weight_map">[docs]</a>    <span class="k">def</span> <span class="nf">build_directional_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from a given direction build a linear weight according the chosen mode</span>
 <span class="sd">        (linear, gauss, etc...)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">MasterPosition</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="n">bb</span>
-        <span class="n">axe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
-        <span class="n">NW</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCenter</span><span class="p">()</span>
-        <span class="n">L</span><span class="p">,</span> <span class="n">maxinmini</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDirectionLength</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;gauss&quot;</span><span class="p">:</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gauss_weights</span><span class="p">(</span>
-                <span class="n">NW</span>
-            <span class="p">)</span>  <span class="c1"># numpy.random.normal(0.5, 0.1, NW) #one dimension</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;half-gauss&quot;</span><span class="p">:</span>  <span class="c1"># 0-1</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gauss_weights</span><span class="p">(</span><span class="n">NW</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)[</span><span class="n">NW</span><span class="p">:]</span>
-        <span class="k">for</span> <span class="n">ptid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">MasterPosition</span><span class="p">[</span><span class="n">ptid</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="n">center</span>
-            <span class="p">)</span>  <span class="c1"># [maxinmini[0][0],maxinmini[1][0],maxinmini[2][0]])</span>
-            <span class="n">vdot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">axe</span><span class="p">))</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="p">((</span><span class="n">L</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">vdot</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># -0.5-&gt;0.5 axe value normalized?</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;square&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mathPow</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;cube&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mathPow</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;gauss&quot;</span><span class="p">:</span>
-                <span class="c1">#                p goes from 0.0 to 1.0</span>
-                <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">NW</span><span class="p">)</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">NW</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="c1"># w = d[i] if d[i] &gt; 0.9 else 0.0</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+        <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_direction_length</span><span class="p">()</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">master_grid_positions</span> <span class="o">-</span> <span class="n">center</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="n">length</span>
+        <span class="n">max_d</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="n">min_d</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">distances</span> <span class="o">-</span> <span class="n">min_d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_d</span> <span class="o">-</span> <span class="n">min_d</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_weights_by_mode</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Gradient.buildWeigthMapAxe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMapAxe">[docs]</a>    <span class="k">def</span> <span class="nf">buildWeigthMapAxe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">MasterPosition</span><span class="p">,</span> <span class="n">Axe</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Gradient.build_axis_weight_map"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_axis_weight_map">[docs]</a>    <span class="k">def</span> <span class="nf">build_axis_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from a given axe (X,Y,Z) build a linear weight according the chosen mode</span>
 <span class="sd">        (linear, gauss, etc...)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">MasterPosition</span><span class="p">)</span>
-        <span class="n">NW</span> <span class="o">=</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="n">bb</span>
         <span class="n">ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">]</span>
         <span class="n">maxi</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">ind</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ind</span><span class="p">])</span>
         <span class="n">mini</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">ind</span><span class="p">],</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ind</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;gauss&quot;</span><span class="p">:</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gauss_weights</span><span class="p">(</span>
-                <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span>
-            <span class="p">)</span>  <span class="c1"># d = numpy.random.normal(0.5, 0.1, N/3) #one dimension</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;half-gauss&quot;</span><span class="p">:</span>  <span class="c1"># 0-1</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gauss_weights</span><span class="p">(</span><span class="n">NW</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)[</span><span class="n">NW</span><span class="p">:]</span>  <span class="c1"># TODO: fix error here</span>
-        <span class="k">for</span> <span class="n">ptid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">MasterPosition</span><span class="p">[</span><span class="n">ptid</span><span class="p">][</span><span class="n">ind</span><span class="p">]</span> <span class="o">-</span> <span class="n">mini</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">maxi</span> <span class="o">-</span> <span class="n">mini</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># -0.5-&gt;0.5 axe value normalized?</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;square&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mathPow</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;cube&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mathPow</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1">#</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;gauss&quot;</span><span class="p">:</span>
-                <span class="n">vax</span> <span class="o">=</span> <span class="n">p</span>  <span class="c1"># (MasterPosition[ptid][ind]-mini)/(maxi-mini) #0-1 on the axes</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">vax</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">vax</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;half-gauss&quot;</span><span class="p">:</span>
-                <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">N</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="p">(</span><span class="n">master_grid_positions</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">]</span> <span class="o">-</span> <span class="n">mini</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">maxi</span> <span class="o">-</span> <span class="n">mini</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_weights_by_mode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Gradient.set_weights_by_mode"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.set_weights_by_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_weights_by_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">scaled_distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distances</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">scaled_distances</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">scaled_distances</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;CHECK CALCULATED DISTANCES&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Max: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">scaled_distances</span><span class="p">)</span><span class="si">}</span><span class="s2">, Min: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">scaled_distances</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">scaled_distances</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;square&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">scaled_distances</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mode</span> <span class="o">==</span> <span class="s2">&quot;cube&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">scaled_distances</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="c1"># TODO: talk to Ludo about calculating gaussian weights</span>
 
 <div class="viewcode-block" id="Gradient.getMaxWeight"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getMaxWeight">[docs]</a>    <span class="k">def</span> <span class="nf">getMaxWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from the given list of grid point indice, get the point with the maximum weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ptInd</span> <span class="o">=</span> <span class="n">listPts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -698,7 +645,7 @@
         <span class="k">return</span> <span class="n">ptInd</span></div>
 
 <div class="viewcode-block" id="Gradient.getMinWeight"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getMinWeight">[docs]</a>    <span class="k">def</span> <span class="nf">getMinWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from the given list of grid point indice, get the point with the minimum weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ptInd</span> <span class="o">=</span> <span class="n">listPts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -711,22 +658,22 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">ptInd</span></div>
 
-<div class="viewcode-block" id="Gradient.getRndWeighted"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getRndWeighted">[docs]</a>    <span class="k">def</span> <span class="nf">getRndWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Gradient.getRndWeighted"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getRndWeighted">[docs]</a>    <span class="k">def</span> <span class="nf">getRndWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_pts</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From http://glowingpython.blogspot.com/2012/09/weighted-random-choice.html</span>
 <span class="sd">        Weighted random selection</span>
 <span class="sd">        returns n_picks random indexes.</span>
 <span class="sd">        the chance to pick the index i</span>
 <span class="sd">        is give by the weight weights[i].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">listPts</span><span class="p">)</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">list_of_pts</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">listPts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">list_of_pts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Gradient.getLinearWeighted"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getLinearWeighted">[docs]</a>    <span class="k">def</span> <span class="nf">getLinearWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From:</span>
 <span class="sd">        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
 <span class="sd">        The following is a simple function to implement weighted random selection in</span>
@@ -752,7 +699,7 @@
                 <span class="k">return</span> <span class="n">listPts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Gradient.getBinaryWeighted"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getBinaryWeighted">[docs]</a>    <span class="k">def</span> <span class="nf">getBinaryWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From</span>
 <span class="sd">        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
 <span class="sd">        Note that the loop in the end of the function is simply looking</span>
@@ -780,7 +727,7 @@
                 <span class="k">return</span> <span class="n">i</span></div>
 
 <div class="viewcode-block" id="Gradient.getSubWeighted"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getSubWeighted">[docs]</a>    <span class="k">def</span> <span class="nf">getSubWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From</span>
 <span class="sd">        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
 <span class="sd">        This method is about twice as fast as the binary-search technique,</span>

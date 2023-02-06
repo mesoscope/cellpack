@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -342,7 +339,7 @@
 
 <div class="viewcode-block" id="PlotlyAnalysis.add_ingredient_positions"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_ingredient_positions">[docs]</a>    <span class="k">def</span> <span class="nf">add_ingredient_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="s2">&quot;positions&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">)):</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                         <span class="n">position</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">apply_rotation</span><span class="p">(</span>

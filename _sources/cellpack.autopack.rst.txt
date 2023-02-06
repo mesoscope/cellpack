@@ -11,6 +11,7 @@ Subpackages
    cellpack.autopack.interface_objects
    cellpack.autopack.loaders
    cellpack.autopack.upy
+   cellpack.autopack.writers
 
 Submodules
 ----------

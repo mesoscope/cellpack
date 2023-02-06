@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     
@@ -292,7 +289,7 @@
 
 
 <div class="viewcode-block" id="MultiSphereIngr"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr">[docs]</a><span class="k">class</span> <span class="nc">MultiSphereIngr</span><span class="p">(</span><span class="n">Ingredient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This Ingredient is represented by a collection of spheres specified by radii</span>
 <span class="sd">    and positions. The principal Vector will be used to align the ingredient</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -378,14 +375,14 @@
         <span class="n">env</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check spheres for collision</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
         <span class="c1"># should we also check for outside the main grid ?</span>
         <span class="c1"># wouldnt be faster to do sphere-sphere distance test ? than points/points from the grid</span>
-        <span class="n">centT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>  <span class="c1"># centers)</span>
+        <span class="n">transformed_centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>  <span class="c1"># centers)</span>
         <span class="c1"># sphNum = 0  # which sphere in the sphere tree we&#39;re checking</span>
         <span class="c1"># self.distances_temp = []</span>
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
@@ -393,7 +390,7 @@
         <span class="n">at_max_level</span> <span class="o">=</span> <span class="n">level</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span> <span class="ow">and</span> <span class="p">(</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">positions</span>
         <span class="p">)</span>
-        <span class="k">for</span> <span class="n">radius_of_ing_being_packed</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centT</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">radius_of_ing_being_packed</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">transformed_centers</span><span class="p">):</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">posc</span>
             <span class="n">radius_of_area_to_check</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">radius_of_ing_being_packed</span> <span class="o">+</span> <span class="n">dpad</span>
@@ -527,30 +524,37 @@
         <span class="k">return</span> <span class="n">closest_distance</span></div>
 
 <div class="viewcode-block" id="MultiSphereIngr.pack_at_grid_pt_location"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.pack_at_grid_pt_location">[docs]</a>    <span class="k">def</span> <span class="nf">pack_at_grid_pt_location</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">grid_point_distances</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="n">jtrans</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="p">,</span>
+        <span class="n">dpad</span><span class="p">,</span>
+        <span class="n">grid_point_distances</span><span class="p">,</span>
+        <span class="n">inside_points</span><span class="p">,</span>
+        <span class="n">new_dist_points</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
         <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
-        <span class="n">centT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>  <span class="c1"># centers)</span>
-        <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">gridPointsCoords</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">masterGridPositions</span>
-        <span class="k">for</span> <span class="n">radius_of_sphere_in_tree</span><span class="p">,</span> <span class="n">pos_of_sphere</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centT</span><span class="p">):</span>
+        <span class="n">transformed_centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span>
+            <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers</span>
+        <span class="p">)</span>  <span class="c1"># centers)</span>
+        <span class="n">grid_points_coords</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
+        <span class="k">for</span> <span class="n">radius_of_sphere_in_tree</span><span class="p">,</span> <span class="n">pos_of_sphere</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">transformed_centers</span><span class="p">):</span>
             <span class="n">radius_of_area_to_check</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">radius_of_sphere_in_tree</span> <span class="o">+</span> <span class="n">dpad</span>
-            <span class="p">)</span>  <span class="c1"># extends the packing ingredient&#39;s bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe</span>
+            <span class="p">)</span>  <span class="c1"># extends the packing ingredient&#39;s bounding box to be large enough to include masked grid points of the largest possible ingredient in the recipe</span>
 
-            <span class="n">pointsToCheck</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
+            <span class="n">points_to_check</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
                 <span class="n">pos_of_sphere</span><span class="p">,</span> <span class="n">radius_of_area_to_check</span>
             <span class="p">)</span>  <span class="c1"># indices</span>
             <span class="c1"># check for collisions by looking at grid points in the sphere of radius radc</span>
-            <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsToCheck</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">pos_of_sphere</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">grid_points_coords</span><span class="p">,</span> <span class="n">points_to_check</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">pos_of_sphere</span>
             <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
             <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
-            <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pointsToCheck</span><span class="p">)):</span>
-                <span class="n">grid_point_index</span> <span class="o">=</span> <span class="n">pointsToCheck</span><span class="p">[</span>
+            <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points_to_check</span><span class="p">)):</span>
+                <span class="n">grid_point_index</span> <span class="o">=</span> <span class="n">points_to_check</span><span class="p">[</span>
                     <span class="n">pti</span>
                 <span class="p">]</span>  <span class="c1"># index of master grid point that is inside the sphere</span>
                 <span class="n">distance_to_packing_location</span> <span class="o">=</span> <span class="n">distA</span><span class="p">[</span>
@@ -562,20 +566,20 @@
                     <span class="n">distance_to_packing_location</span> <span class="o">-</span> <span class="n">radius_of_sphere_in_tree</span>
                 <span class="p">)</span>
                 <span class="p">(</span>
-                    <span class="n">insidePoints</span><span class="p">,</span>
-                    <span class="n">newDistPoints</span><span class="p">,</span>
+                    <span class="n">inside_points</span><span class="p">,</span>
+                    <span class="n">new_dist_points</span><span class="p">,</span>
                 <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
                     <span class="n">env</span><span class="p">,</span>
                     <span class="n">jtrans</span><span class="p">,</span>
-                    <span class="n">rotMatj</span><span class="p">,</span>
+                    <span class="n">rotation_matrix</span><span class="p">,</span>
                     <span class="n">grid_point_index</span><span class="p">,</span>
                     <span class="n">grid_point_distances</span><span class="p">,</span>
-                    <span class="n">newDistPoints</span><span class="p">,</span>
-                    <span class="n">insidePoints</span><span class="p">,</span>
+                    <span class="n">new_dist_points</span><span class="p">,</span>
+                    <span class="n">inside_points</span><span class="p">,</span>
                     <span class="n">signed_distance_to_sphere_surface</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
+        <span class="k">return</span> <span class="n">inside_points</span><span class="p">,</span> <span class="n">new_dist_points</span></div>
 
 <div class="viewcode-block" id="MultiSphereIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -583,15 +587,15 @@
         <span class="n">jtrans</span><span class="p">,</span>
         <span class="n">rotation_matrix</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check spheres for collision</span>
-<span class="sd">        TODO improve the testwhen grid stepSize is larger that size of the ingredient</span>
+<span class="sd">        TODO improve the test when grid stepSize is larger that size of the ingredient</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
         <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
-        <span class="n">centT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centT</span><span class="p">):</span>
+        <span class="n">transformed_centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">transformed_centers</span><span class="p">):</span>
             <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">posc</span><span class="p">,</span> <span class="n">radc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># indices</span>
             <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>

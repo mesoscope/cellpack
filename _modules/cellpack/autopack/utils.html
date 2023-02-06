@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     
@@ -289,8 +286,12 @@
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pt2</span> <span class="o">-</span> <span class="n">pt1</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="get_distances_from_point"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_distances_from_point">[docs]</a><span class="k">def</span> <span class="nf">get_distances_from_point</span><span class="p">(</span><span class="n">np_array_of_pts</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np_array_of_pts</span> <span class="o">-</span> <span class="n">pt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="ingredient_compare1"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare1">[docs]</a><span class="k">def</span> <span class="nf">ingredient_compare1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sort ingredients using decreasing priority and decreasing radii for</span>
 <span class="sd">    priority ties and decreasing completion for radii ties</span>
 <span class="sd">    for priority &gt; 0</span>
@@ -320,7 +321,7 @@
 
 
 <div class="viewcode-block" id="ingredient_compare0"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare0">[docs]</a><span class="k">def</span> <span class="nf">ingredient_compare0</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sort ingredients using decreasing priority and decreasing radii for</span>
 <span class="sd">    priority ties and decreasing completion for radii ties</span>
 <span class="sd">    for priority &lt; 0</span>
@@ -350,7 +351,7 @@
 
 
 <div class="viewcode-block" id="ingredient_compare2"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare2">[docs]</a><span class="k">def</span> <span class="nf">ingredient_compare2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sort ingredients using decreasing radii and decresing completion</span>
 <span class="sd">    for radii matches:</span>
 <span class="sd">    priority = 0</span>
@@ -401,7 +402,7 @@
 
 
 <div class="viewcode-block" id="deep_merge"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.deep_merge">[docs]</a><span class="k">def</span> <span class="nf">deep_merge</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">merge_dct</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Recursive dict merge</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursive dict merge</span>
 
 <span class="sd">    This mutates dct - the contents of merge_dct are added to dct (which is also returned).</span>
 <span class="sd">    If you want to keep dct you could call it like deep_merge(copy.deepcopy(dct), merge_dct)</span>

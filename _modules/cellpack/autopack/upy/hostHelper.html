@@ -32,9 +32,6 @@
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     
@@ -317,7 +314,7 @@
 
 
 <div class="viewcode-block" id="vdistance"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.vdistance">[docs]</a><span class="k">def</span> <span class="nf">vdistance</span><span class="p">(</span><span class="n">c0</span><span class="p">,</span> <span class="n">c1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;get the distance between two points c0 and c1&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get the distance between two points c0 and c1&quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
@@ -354,7 +351,7 @@
 
 
 <div class="viewcode-block" id="Helper"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper">[docs]</a><span class="k">class</span> <span class="nc">Helper</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Helper abstract Object</span>
 <span class="sd">    ==========================</span>
 <span class="sd">    This is the main class from which all helper derived. The Helper</span>
@@ -446,7 +443,7 @@
 <div class="viewcode-block" id="Helper.testForEscape"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.testForEscape">[docs]</a>    <span class="k">def</span> <span class="nf">testForEscape</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return True if ESC is press</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span></div>
@@ -456,7 +453,7 @@
     <span class="c1"># ==============================================================================</span>
 
 <div class="viewcode-block" id="Helper.norm"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.norm">[docs]</a>    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the norm of the vector [a,b,c]</span>
 
 <span class="sd">        &gt;&gt;&gt; result = helper.norm(a,b,c) #a,b,c being double</span>
@@ -475,7 +472,7 @@
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.normalize"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the normalized vector A [x,y,z]</span>
 
 <span class="sd">        &gt;&gt;&gt; a = [1.0,3.0,5.0]</span>
@@ -493,7 +490,7 @@
             <span class="k">return</span> <span class="p">[</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.measure_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.measure_distance">[docs]</a>    <span class="k">def</span> <span class="nf">measure_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c0</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;measure distance between 2 point specify by x,y,z</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;measure distance between 2 point specify by x,y,z</span>
 <span class="sd">        c0,c1 should be Numeric.array</span>
 
 <span class="sd">        &gt;&gt;&gt; a = [1.0,3.0,5.0]</span>
@@ -540,7 +537,7 @@
         <span class="k">return</span> <span class="n">pos</span></div>
 
 <div class="viewcode-block" id="Helper.randpoint_onsphere"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.randpoint_onsphere">[docs]</a>    <span class="k">def</span> <span class="nf">randpoint_onsphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">biased</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a random point on the outside of a sphere.</span>
 
 <span class="sd">        &gt;&gt;&gt; r = 2.0</span>
@@ -608,7 +605,7 @@
         <span class="k">return</span> <span class="n">matrice</span></div>
 
 <div class="viewcode-block" id="Helper.rotatePoint"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rotatePoint">[docs]</a>    <span class="k">def</span> <span class="nf">rotatePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rotate the point pt [x,y,z] around axe ax[0],ax[1],ax[2] by ax[3] radians,</span>
 <span class="sd">        and translate by m [x,y,z].</span>
 
@@ -664,7 +661,7 @@
         <span class="k">return</span> <span class="n">pt</span></div>
 
 <div class="viewcode-block" id="Helper.eulerToMatrix"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.eulerToMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">eulerToMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">euler</span><span class="p">):</span>  <span class="c1"># double heading, double attitude, double bank</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Code from &#39;http://www.euclideanspace.com/maths/geometry/rotations/conversions/&#39;.</span>
 
 <span class="sd">        This conversion uses NASA standard aeroplane conventions as described on page:</span>
@@ -727,7 +724,7 @@
         <span class="k">return</span> <span class="n">m</span></div>
 
 <div class="viewcode-block" id="Helper.getTubeProperties"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getTubeProperties">[docs]</a>    <span class="k">def</span> <span class="nf">getTubeProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord1</span><span class="p">,</span> <span class="n">coord2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From two point return the length, and the orientation from one to another.</span>
 <span class="sd">        This function is used to build a cylinder from two points (see oneCylinder function)</span>
 
@@ -777,7 +774,7 @@
 <div class="viewcode-block" id="Helper.update"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the host viewport, ui or gl draw</span>
 <span class="sd">        This function can&#39;t be call in a thread.</span>
 
@@ -786,7 +783,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.fit_view3D"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.fit_view3D">[docs]</a>    <span class="k">def</span> <span class="nf">fit_view3D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that should recenter the viewport to the object in the scene.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -794,7 +791,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.checkName"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.checkName">[docs]</a>    <span class="k">def</span> <span class="nf">checkName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check the provide name to avoid invalid caracter for the</span>
 <span class="sd">        host. ie maya didnt support object name starting with number, and automatically rename the object.</span>
 <span class="sd">        In order to retrieve the object use this functon. If a invalid</span>
@@ -826,7 +823,7 @@
         <span class="k">return</span> <span class="n">name</span></div>
 
 <div class="viewcode-block" id="Helper.getObject"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getObject">[docs]</a>    <span class="k">def</span> <span class="nf">getObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve an object from his name.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -847,7 +844,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.getObjectName"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getObjectName">[docs]</a>    <span class="k">def</span> <span class="nf">getObjectName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the name of an host object.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -868,7 +865,7 @@
     <span class="k">def</span> <span class="nf">getCurrentScene</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current/active working document or scene.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -887,7 +884,7 @@
 
 <div class="viewcode-block" id="Helper.getCurrentSceneName"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getCurrentSceneName">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">getCurrentSceneName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current/active working document or scene name.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -907,7 +904,7 @@
 <div class="viewcode-block" id="Helper.getCurrentSelection"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getCurrentSelection">[docs]</a>    <span class="k">def</span> <span class="nf">getCurrentSelection</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current/active selected object in the document or scene.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -923,7 +920,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setCurrentSelection"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setCurrentSelection">[docs]</a>    <span class="k">def</span> <span class="nf">setCurrentSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current/active selected object in the document or scene.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -937,7 +934,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getPosUntilRoot"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getPosUntilRoot">[docs]</a>    <span class="k">def</span> <span class="nf">getPosUntilRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Go through the hierarchy of the object until reaching the top level,</span>
 <span class="sd">        increment the position to get the transformation due to parents.</span>
 <span class="sd">        DEPRECATED</span>
@@ -962,7 +959,7 @@
         <span class="k">return</span> <span class="n">pos</span></div>
 
 <div class="viewcode-block" id="Helper.addObjectToScene"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addObjectToScene">[docs]</a>    <span class="k">def</span> <span class="nf">addObjectToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">centerRoot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rePos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert/add an object to the current document under the specified parent, and</span>
 <span class="sd">        at the specified location. This function is used by all the basic object creation function.</span>
 
@@ -994,7 +991,7 @@
                 <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.AddObject"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.AddObject">[docs]</a>    <span class="k">def</span> <span class="nf">AddObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">centerRoot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rePos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert/add an object to the current document under the specified parent, and</span>
 <span class="sd">        at the specified location. This function is an alias for addObjectToScene to</span>
 <span class="sd">        permit to some script to work either in dejavu and the host.</span>
@@ -1017,7 +1014,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.ObjectsSelection"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.ObjectsSelection">[docs]</a>    <span class="k">def</span> <span class="nf">ObjectsSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listeObjects</span><span class="p">,</span> <span class="n">typeSel</span><span class="o">=</span><span class="s2">&quot;new&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the current object selection. Redundant with setCurrentSelection.</span>
 
 <span class="sd">        This function make the distinction between adding (typeSel=&quot;add&quot;) object to the selection and creating</span>
@@ -1034,7 +1031,7 @@
         <span class="c1"># Put here the code to add/set an object to the current selection</span>
 
 <div class="viewcode-block" id="Helper.JoinsObjects"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.JoinsObjects">[docs]</a>    <span class="k">def</span> <span class="nf">JoinsObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listeObjects</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merge the given liste of object in one unique geometry.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1044,7 +1041,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.addCameraToScene"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addCameraToScene">[docs]</a>    <span class="k">def</span> <span class="nf">addCameraToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">focal</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a camera object to the scene</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1080,7 +1077,7 @@
         <span class="n">scene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a light to the scene</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1121,7 +1118,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">addObjectToScene</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">lamp</span><span class="p">,</span> <span class="n">centerRoot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.newEmpty"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.newEmpty">[docs]</a>    <span class="k">def</span> <span class="nf">newEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parentCenter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new Null/Empty Object</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1152,7 +1149,7 @@
 <div class="viewcode-block" id="Helper.newInstance"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.newInstance">[docs]</a>    <span class="k">def</span> <span class="nf">newInstance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hostmatrice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matrice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new Instance from another Object</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1189,13 +1186,13 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.getMasterInstance"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMasterInstance">[docs]</a>    <span class="k">def</span> <span class="nf">getMasterInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the object use for the instanciation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">instance</span></div>
 
 <div class="viewcode-block" id="Helper.updateMasterInstance"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.updateMasterInstance">[docs]</a>    <span class="k">def</span> <span class="nf">updateMasterInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the reference of the passed instance by adding/removing-hiding objects</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1218,7 +1215,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.toggleDisplay"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.toggleDisplay">[docs]</a>    <span class="k">def</span> <span class="nf">toggleDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Toggle on/off the display/visibility/rendermode of an hostObject in the host viewport.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1234,7 +1231,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.toggleXray"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.toggleXray">[docs]</a>    <span class="k">def</span> <span class="nf">toggleXray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">xray</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Toggle on/off the Xray visibility of an hostObject in the host viewport. Currently not supported in Maya</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1251,7 +1248,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;not supported yet in &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.getVisibility"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getVisibility">[docs]</a>    <span class="k">def</span> <span class="nf">getVisibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">editor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return the editor/renedring/active visibility state of the given object</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1271,7 +1268,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setViewport"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setViewport">[docs]</a>    <span class="k">def</span> <span class="nf">setViewport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        set the property of the viewport</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1283,20 +1280,20 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.toggleEditMode"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.toggleEditMode">[docs]</a>    <span class="k">def</span> <span class="nf">toggleEditMode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Turn off edit mode (if any)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.restoreEditMode"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.restoreEditMode">[docs]</a>    <span class="k">def</span> <span class="nf">restoreEditMode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">editmode</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Restor any edit mode (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setObjectMatrix"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setObjectMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">setObjectMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">matrice</span><span class="p">,</span> <span class="n">hostmatrice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set a matrix to an hostObject</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1323,7 +1320,7 @@
             <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.concatObjectMatrix"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.concatObjectMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">concatObjectMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">matrice</span><span class="p">,</span> <span class="n">hostmatrice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply a matrix to an hostObject</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1347,7 +1344,7 @@
             <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.translateObj"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.translateObj">[docs]</a>    <span class="k">def</span> <span class="nf">translateObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">use_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Global Translation : Move the object to the vector position</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1367,7 +1364,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.scaleObj"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.scaleObj">[docs]</a>    <span class="k">def</span> <span class="nf">scaleObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Global Scale : scale the object by the vector scale</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1383,7 +1380,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.rotateObj"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rotateObj">[docs]</a>    <span class="k">def</span> <span class="nf">rotateObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Global Rotation : Rotate the object</span>
 <span class="sd">        This method take a 3d array [rotation_X,rotatio_Y,rotation_Z]</span>
 
@@ -1402,7 +1399,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setTranslation"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">setTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current position (translation)  of the  given object in absolute or local world</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1420,7 +1417,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getTranslation"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">getTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current position (translation)  of the  given object in absolute or local world</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1439,7 +1436,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.getSize"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getSize">[docs]</a>    <span class="k">def</span> <span class="nf">getSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current size in x, y and z of the  given object if applcable</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1453,7 +1450,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.getScale"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getScale">[docs]</a>    <span class="k">def</span> <span class="nf">getScale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current scale of the  given object in absolute or local world</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1469,7 +1466,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.resetTransformation"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.resetTransformation">[docs]</a>    <span class="k">def</span> <span class="nf">resetTransformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        ReSet the transformation of a given Object to identity</span>
 
 <span class="sd">        * can be overwriten by children class for each host</span>
@@ -1488,7 +1485,7 @@
 <div class="viewcode-block" id="Helper.setTransformation"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setTransformation">[docs]</a>    <span class="k">def</span> <span class="nf">setTransformation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the transformatio of a given Object</span>
 
 <span class="sd">        * can be overwriten by children class for each host</span>
@@ -1522,7 +1519,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">translateObj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">absolue</span><span class="o">=</span><span class="n">absolue</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.updateTubeObjs"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.updateTubeObjs">[docs]</a>    <span class="k">def</span> <span class="nf">updateTubeObjs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listeObj</span><span class="p">,</span> <span class="n">listePts</span><span class="p">,</span> <span class="n">listeInd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function will update a liste of Tupe according the given liste of new points.</span>
 <span class="sd">        One Tube is define by two 3d points.</span>
 
@@ -1541,7 +1538,7 @@
             <span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.convertColor"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.convertColor">[docs]</a>    <span class="k">def</span> <span class="nf">convertColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">toint</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function will convert a color array [r,g,b] from range 1-255</span>
 <span class="sd">        to range 0.-1 (vice/versa)</span>
 
@@ -1562,7 +1559,7 @@
         <span class="k">return</span> <span class="n">col</span></div>
 
 <div class="viewcode-block" id="Helper.addMaterialFromDic"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMaterialFromDic">[docs]</a>    <span class="k">def</span> <span class="nf">addMaterialFromDic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add material to the current scene given a dictionary {&quot;name&quot;:[r,b,g]}</span>
 
 
@@ -1577,7 +1574,7 @@
         <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">addMaterial</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dic</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span></div>
 
 <div class="viewcode-block" id="Helper.createColorsMat"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.createColorsMat">[docs]</a>    <span class="k">def</span> <span class="nf">createColorsMat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a Material for all defined colors in upy.colors</span>
 
 <span class="sd">        @rtype:   list</span>
@@ -1589,7 +1586,7 @@
         <span class="k">return</span> <span class="n">Mat</span></div>
 
 <div class="viewcode-block" id="Helper.retrieveColorMat"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.retrieveColorMat">[docs]</a>    <span class="k">def</span> <span class="nf">retrieveColorMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve a material in the current document from his color (r,g,b), if his</span>
 <span class="sd">        color is defined in upy.colors</span>
 
@@ -1622,7 +1619,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">addMaterial</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">color</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.addMaterial"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">addMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a material in the current document</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1642,7 +1639,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">addMaterial</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.assignMaterial"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.assignMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">assignMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">matname</span><span class="p">,</span> <span class="n">texture</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assign the provided material to the object</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1665,7 +1662,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assignMaterial</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.colorMaterial"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.colorMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">colorMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Color a given material using the given color (r,g,b).</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1682,7 +1679,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMaterial"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMaterial">[docs]</a>    <span class="k">def</span> <span class="nf">getMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the maerial of the given name.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1696,7 +1693,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getAllMaterials"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getAllMaterials">[docs]</a>    <span class="k">def</span> <span class="nf">getAllMaterials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all the maerials of the current scene.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1706,7 +1703,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.changeMaterialProperty"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.changeMaterialProperty">[docs]</a>    <span class="k">def</span> <span class="nf">changeMaterialProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change a material properties.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1725,7 +1722,7 @@
             <span class="k">return</span></div>
 
 <div class="viewcode-block" id="Helper.getMaterialProperty"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMaterialProperty">[docs]</a>    <span class="k">def</span> <span class="nf">getMaterialProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a material properties.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1744,7 +1741,7 @@
             <span class="k">return</span></div>
 
 <div class="viewcode-block" id="Helper.colorObject"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.colorObject">[docs]</a>    <span class="k">def</span> <span class="nf">colorObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the given color to the given object,</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1770,7 +1767,7 @@
         <span class="n">facesSelection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">faceMaterial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the given set of color to the given object,</span>
 <span class="sd">        if the object is a mesh this function handle the color per vertex.</span>
 
@@ -1796,7 +1793,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.changeObjColorMat"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.changeObjColorMat">[docs]</a>    <span class="k">def</span> <span class="nf">changeObjColorMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the diffuse color of the object material.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1809,7 +1806,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMesh">[docs]</a>    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the mesh of given name</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1823,18 +1820,18 @@
         <span class="k">return</span> <span class="n">name</span></div>
 
 <div class="viewcode-block" id="Helper.getLayers"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getLayers">[docs]</a>    <span class="k">def</span> <span class="nf">getLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a list of active layers of a scene or an object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="Helper.setLayers"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setLayers">[docs]</a>    <span class="k">def</span> <span class="nf">setLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scn</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the layers of a scene or an object, expects a list of integers</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.checkIsMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.checkIsMesh">[docs]</a>    <span class="k">def</span> <span class="nf">checkIsMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that name correspond to a valid mesh.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1848,7 +1845,7 @@
         <span class="k">return</span> <span class="n">name</span></div>
 
 <div class="viewcode-block" id="Helper.getName"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getName">[docs]</a>    <span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the name of an host object. Redundant with getObjecName</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1865,7 +1862,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.setName"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setName">[docs]</a>    <span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name of an host object. Redundant with getObjecName</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1881,7 +1878,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.reParent"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.reParent">[docs]</a>    <span class="k">def</span> <span class="nf">reParent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the object parent using the specified parent objects</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1894,7 +1891,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.deleteChildrens"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.deleteChildrens">[docs]</a>    <span class="k">def</span> <span class="nf">deleteChildrens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete recursively all the children of the given object.</span>
 
 <span class="sd">        @type  obj: hostObject</span>
@@ -1914,7 +1911,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.constraintLookAt"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.constraintLookAt">[docs]</a>    <span class="k">def</span> <span class="nf">constraintLookAt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cosntraint an hostobject to look at the camera.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1938,7 +1935,7 @@
         <span class="n">lookAt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a hostobject of type Text.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1968,7 +1965,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">text</span><span class="p">,</span> <span class="n">text</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.Circle"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Circle">[docs]</a>    <span class="k">def</span> <span class="nf">Circle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rad</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a hostobject of type 2d circle.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -1989,7 +1986,7 @@
         <span class="k">return</span> <span class="n">circle</span></div>
 
 <div class="viewcode-block" id="Helper.rerieveAxis"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rerieveAxis">[docs]</a>    <span class="k">def</span> <span class="nf">rerieveAxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the axis from the given array (X,Y or Z +/-).</span>
 
 <span class="sd">        @type  axis: list</span>
@@ -2028,7 +2025,7 @@
         <span class="k">return</span> <span class="n">head</span><span class="p">,</span> <span class="n">tail</span></div>
 
 <div class="viewcode-block" id="Helper.Cylinder"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Cylinder">[docs]</a>    <span class="k">def</span> <span class="nf">Cylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a hostobject of type cylinder.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2052,7 +2049,7 @@
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.Sphere"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Sphere">[docs]</a>    <span class="k">def</span> <span class="nf">Sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a hostobject of type sphere.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2074,7 +2071,7 @@
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.getBoxSize"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getBoxSize">[docs]</a>    <span class="k">def</span> <span class="nf">getBoxSize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the current size in x, y and z of the  given Box if applcable</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2096,7 +2093,7 @@
         <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a hostobject of type cube.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2139,7 +2136,7 @@
         <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the given box.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2167,7 +2164,7 @@
         <span class="c1"># set the dimension to size</span>
 
 <div class="viewcode-block" id="Helper.getCornerPointCube"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getCornerPointCube">[docs]</a>    <span class="k">def</span> <span class="nf">getCornerPointCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the corner Point of the Given Cube/Box</span>
 
 <span class="sd">        @type  obj: string</span>
@@ -2200,7 +2197,7 @@
         <span class="k">return</span> <span class="n">cornerPoints</span></div>
 
 <div class="viewcode-block" id="Helper.spline"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.spline">[docs]</a>    <span class="k">def</span> <span class="nf">spline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This will return a hostApp spline/curve object according the given list</span>
 <span class="sd">        of point.</span>
 
@@ -2245,7 +2242,7 @@
         <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a hostobject of type cube.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2279,7 +2276,7 @@
         <span class="k">return</span> <span class="n">plane</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.update_spline"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.update_spline">[docs]</a>    <span class="k">def</span> <span class="nf">update_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This will update the spline points coordinates</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2297,7 +2294,7 @@
     <span class="c1"># this already exist in c4d,overwrite in host if support it</span>
     <span class="c1"># also exist in glut</span>
 <div class="viewcode-block" id="Helper.Platonic"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Platonic">[docs]</a>    <span class="k">def</span> <span class="nf">Platonic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Generate one of the 5 platonic solid. The name of each figure is derived from its number of faces: respectively &quot;tetra&quot; 4, &quot;hexa&quot; 6, &quot;ocata&quot; 8, &quot;dodeca&quot; 12, and 20.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate one of the 5 platonic solid. The name of each figure is derived from its number of faces: respectively &quot;tetra&quot; 4, &quot;hexa&quot; 6, &quot;ocata&quot; 8, &quot;dodeca&quot; 12, and 20.</span>
 <span class="sd">        @type  name: string</span>
 <span class="sd">        @param name: name of the platonic</span>
 <span class="sd">        @type  Type: string or int</span>
@@ -2337,7 +2334,7 @@
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.tetrahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.tetrahedron">[docs]</a>    <span class="k">def</span> <span class="nf">tetrahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data of a tetrahedron of a given radius</span>
 
 <span class="sd">        @type  radius: float</span>
@@ -2372,7 +2369,7 @@
         <span class="k">return</span> <span class="n">_corners</span><span class="p">,</span> <span class="n">faceIndices</span><span class="p">,</span> <span class="n">faceNormals</span></div>
 
 <div class="viewcode-block" id="Helper.Tetrahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Tetrahedron">[docs]</a>    <span class="k">def</span> <span class="nf">Tetrahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data and the mesh object of a Tetrahedron of a given radius</span>
 
 <span class="sd">        @type  name: string</span>
@@ -2388,7 +2385,7 @@
         <span class="k">return</span> <span class="n">ob</span><span class="p">,</span> <span class="n">obme</span></div>
 
 <div class="viewcode-block" id="Helper.hexahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.hexahedron">[docs]</a>    <span class="k">def</span> <span class="nf">hexahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data of a hexahedron of a given radius</span>
 
 <span class="sd">        @type  radius: float</span>
@@ -2427,7 +2424,7 @@
         <span class="k">return</span> <span class="n">_corners</span><span class="p">,</span> <span class="n">faceIndices</span><span class="p">,</span> <span class="n">faceNormals</span></div>
 
 <div class="viewcode-block" id="Helper.Hexahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Hexahedron">[docs]</a>    <span class="k">def</span> <span class="nf">Hexahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data and the mesh object of a Hexahedron of a given radius</span>
 
 <span class="sd">        @type  name: string</span>
@@ -2444,7 +2441,7 @@
         <span class="k">return</span> <span class="n">ob</span><span class="p">,</span> <span class="n">obme</span></div>
 
 <div class="viewcode-block" id="Helper.octahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.octahedron">[docs]</a>    <span class="k">def</span> <span class="nf">octahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data of a octahedron of a given radius</span>
 
 <span class="sd">        @type  radius: float</span>
@@ -2487,7 +2484,7 @@
         <span class="k">return</span> <span class="n">_corners</span><span class="p">,</span> <span class="n">faceIndices</span><span class="p">,</span> <span class="n">faceNormals</span></div>
 
 <div class="viewcode-block" id="Helper.Octahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Octahedron">[docs]</a>    <span class="k">def</span> <span class="nf">Octahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data and the mesh object of a Octahedron of a given radius</span>
 
 <span class="sd">        @type  name: string</span>
@@ -2503,7 +2500,7 @@
         <span class="k">return</span> <span class="n">ob</span><span class="p">,</span> <span class="n">obme</span></div>
 
 <div class="viewcode-block" id="Helper.dodecahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.dodecahedron">[docs]</a>    <span class="k">def</span> <span class="nf">dodecahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data of a dodecahedron of a given radius</span>
 
 <span class="sd">        @type  radius: float</span>
@@ -2592,7 +2589,7 @@
         <span class="k">return</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.Dodecahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Dodecahedron">[docs]</a>    <span class="k">def</span> <span class="nf">Dodecahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data and the mesh object of a Dodecahedron of a given radius</span>
 
 <span class="sd">        @type  name: string</span>
@@ -2608,7 +2605,7 @@
         <span class="k">return</span> <span class="n">ob</span><span class="p">,</span> <span class="n">obme</span></div>
 
 <div class="viewcode-block" id="Helper.icosahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.icosahedron">[docs]</a>    <span class="k">def</span> <span class="nf">icosahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data of a icosahedron of a given radius</span>
 
 <span class="sd">        @type  radius: float</span>
@@ -2681,7 +2678,7 @@
         <span class="k">return</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.Icosahedron"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Icosahedron">[docs]</a>    <span class="k">def</span> <span class="nf">Icosahedron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the mesh data and the mesh object of a Icosahedron of a given radius</span>
 
 <span class="sd">        @type  name: string</span>
@@ -2706,7 +2703,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">resetProgressBar</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Helper.progressBar"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.progressBar">[docs]</a>    <span class="k">def</span> <span class="nf">progressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the progress bar status by progress value and label string</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2719,7 +2716,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.resetProgressBar"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.resetProgressBar">[docs]</a>    <span class="k">def</span> <span class="nf">resetProgressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the Progress Bar, using value</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2731,7 +2728,7 @@
     <span class="c1">#     Texture Mapping / UV</span>
     <span class="c1"># ===============================================================================</span>
 <div class="viewcode-block" id="Helper.getUVs"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getUVs">[docs]</a>    <span class="k">def</span> <span class="nf">getUVs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the Progress Bar, using value</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2740,7 +2737,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setUVs"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setUVs">[docs]</a>    <span class="k">def</span> <span class="nf">setUVs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the Progress Bar, using value</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2749,7 +2746,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getUV"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getUV">[docs]</a>    <span class="k">def</span> <span class="nf">getUV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">faceIndex</span><span class="p">,</span> <span class="n">vertexIndex</span><span class="p">,</span> <span class="n">perVertice</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the UV coordinate of the given object according faceIndex and vertexIndex</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2769,7 +2766,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setUV"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setUV">[docs]</a>    <span class="k">def</span> <span class="nf">setUV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">faceIndex</span><span class="p">,</span> <span class="n">vertexIndex</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">perVertice</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update/Set the UV coordinate of the given object according faceIndex and vertexIndex</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2793,7 +2790,7 @@
     <span class="c1"># ===============================================================================</span>
 
 <div class="viewcode-block" id="Helper.findClosestPoint"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.findClosestPoint">[docs]</a>    <span class="k">def</span> <span class="nf">findClosestPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the closest vertices to the given 3d points in Python implementation</span>
 
 <span class="sd">        @type  point: 3 points</span>
@@ -2822,7 +2819,7 @@
         <span class="k">return</span> <span class="n">mini</span><span class="p">,</span> <span class="n">miniv</span></div>
 
 <div class="viewcode-block" id="Helper.ToMat"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.ToMat">[docs]</a>    <span class="k">def</span> <span class="nf">ToMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a python (4,4) matrice array from a host matrice</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2835,7 +2832,7 @@
         <span class="k">return</span> <span class="n">mat</span></div>
 
 <div class="viewcode-block" id="Helper.ToVec"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.ToVec">[docs]</a>    <span class="k">def</span> <span class="nf">ToVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a python xyz array from a host xyz array/vector</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2864,7 +2861,7 @@
         <span class="p">],</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function that generate a Polygon object from the given vertices, face and normal.</span>
 <span class="sd">        material or color can be passed and apply to the created polygon.</span>
 <span class="sd">        Return the object and the mesh.</span>
@@ -2897,7 +2894,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.PointCloudObject"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.PointCloudObject">[docs]</a>    <span class="k">def</span> <span class="nf">PointCloudObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function create a special polygon which have only point.</span>
 <span class="sd">        See createsNmesh or particul if the hostdoes no support only point mesh</span>
 
@@ -2931,7 +2928,7 @@
         <span class="n">editMode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add one bone to an armature.</span>
 <span class="sd">        Optional function for creation of the armature</span>
 
@@ -2960,7 +2957,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.armature"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.armature">[docs]</a>    <span class="k">def</span> <span class="nf">armature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an armature along the given coordinates</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -2980,7 +2977,7 @@
         <span class="c1"># return armObj,bones</span>
 
 <div class="viewcode-block" id="Helper.oneMetaBall"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.oneMetaBall">[docs]</a>    <span class="k">def</span> <span class="nf">oneMetaBall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metab</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add one ball to a metaball object.</span>
 <span class="sd">        Optional function for creation of the metaball</span>
 
@@ -3001,7 +2998,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.metaballs"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.metaballs">[docs]</a>    <span class="k">def</span> <span class="nf">metaballs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">listePt</span><span class="p">,</span> <span class="n">listeR</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a metaballs along the given coordinates</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3033,7 +3030,7 @@
         <span class="n">hostmatrice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a particle system along the given coordinates</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3053,7 +3050,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.updateParticles"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.updateParticles">[docs]</a>    <span class="k">def</span> <span class="nf">updateParticles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newPos</span><span class="p">,</span> <span class="n">PS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the particle system along the given new coordinates.</span>
 <span class="sd">        remove or add particle.</span>
 
@@ -3069,7 +3066,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getParticles"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getParticles">[docs]</a>    <span class="k">def</span> <span class="nf">getParticles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a particle system along the given name</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3085,7 +3082,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.setParticulesPosition"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setParticulesPosition">[docs]</a>    <span class="k">def</span> <span class="nf">setParticulesPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newPos</span><span class="p">,</span> <span class="n">PS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update he particle position of a particle system along the given new coordinates</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3100,7 +3097,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getParticulesPosition"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getParticulesPosition">[docs]</a>    <span class="k">def</span> <span class="nf">getParticulesPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PS</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the particle position of a particle system</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3119,7 +3116,7 @@
     <span class="c1"># Mesh Function</span>
     <span class="c1"># ===============================================================================</span>
 <div class="viewcode-block" id="Helper.getMeshVertice"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMeshVertice">[docs]</a>    <span class="k">def</span> <span class="nf">getMeshVertice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertex_indice</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the vertices of the given polygon object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3137,7 +3134,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMeshVertices"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMeshVertices">[docs]</a>    <span class="k">def</span> <span class="nf">getMeshVertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the vertices of the given polygon object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3155,7 +3152,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMeshNormales"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMeshNormales">[docs]</a>    <span class="k">def</span> <span class="nf">getMeshNormales</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the normals of the given polygon object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3173,7 +3170,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMeshEdge"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMeshEdge">[docs]</a>    <span class="k">def</span> <span class="nf">getMeshEdge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostedge</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the host edge in python format</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3189,7 +3186,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMeshEdges"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMeshEdges">[docs]</a>    <span class="k">def</span> <span class="nf">getMeshEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the edges of the given polygon object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3207,7 +3204,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getFaceEdges"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getFaceEdges">[docs]</a>    <span class="k">def</span> <span class="nf">getFaceEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">faceindice</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the edges of the given face object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3227,7 +3224,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getFace"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getFace">[docs]</a>    <span class="k">def</span> <span class="nf">getFace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostface</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the face edge in python format</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3244,7 +3241,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getFaces"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getFaces">[docs]</a>    <span class="k">def</span> <span class="nf">getFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the faces of the given polygon object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3262,7 +3259,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.getMeshFaces"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getMeshFaces">[docs]</a>    <span class="k">def</span> <span class="nf">getMeshFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the faces of the given polygon object data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3282,7 +3279,7 @@
 <div class="viewcode-block" id="Helper.setMeshVertice"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshVertice">[docs]</a>    <span class="k">def</span> <span class="nf">setMeshVertice</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertice_indice</span><span class="p">,</span> <span class="n">vertice_coordinate</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the vertice for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3303,7 +3300,7 @@
 <div class="viewcode-block" id="Helper.setMeshVertices"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshVertices">[docs]</a>    <span class="k">def</span> <span class="nf">setMeshVertices</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertices_coordinates</span><span class="p">,</span> <span class="n">vertices_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the vertices for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3322,7 +3319,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setMeshFace"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshFace">[docs]</a>    <span class="k">def</span> <span class="nf">setMeshFace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">faceindce</span><span class="p">,</span> <span class="n">face_vertices_indices</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the  face for the given face</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3341,7 +3338,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setMeshFaces"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshFaces">[docs]</a>    <span class="k">def</span> <span class="nf">setMeshFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">faces_vertices_indices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the faces  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3360,7 +3357,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setMeshEdge"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshEdge">[docs]</a>    <span class="k">def</span> <span class="nf">setMeshEdge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">edgeindce</span><span class="p">,</span> <span class="n">edge_vertices_indices</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the edge for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3379,7 +3376,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setMeshEdges"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshEdges">[docs]</a>    <span class="k">def</span> <span class="nf">setMeshEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">edges_vertices_indices</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the edges selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3398,7 +3395,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.addMeshVertice"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshVertice">[docs]</a>    <span class="k">def</span> <span class="nf">addMeshVertice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertice_coordinate</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the vertice for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3413,7 +3410,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.addMeshVertices"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshVertices">[docs]</a>    <span class="k">def</span> <span class="nf">addMeshVertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertices_coordinates</span><span class="p">,</span> <span class="n">vertices_indices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the vertices for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3428,7 +3425,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.addMeshFace"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshFace">[docs]</a>    <span class="k">def</span> <span class="nf">addMeshFace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">face_vertices_indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the  face for the given face</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3443,7 +3440,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.addMeshFaces"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshFaces">[docs]</a>    <span class="k">def</span> <span class="nf">addMeshFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">faces_vertices_indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the faces  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3458,7 +3455,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.addMeshEdge"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshEdge">[docs]</a>    <span class="k">def</span> <span class="nf">addMeshEdge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">edge_vertices_indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the edge for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3475,7 +3472,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.addMeshEdges"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshEdges">[docs]</a>    <span class="k">def</span> <span class="nf">addMeshEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">edges_vertices_indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the edges selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3490,7 +3487,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.selectVertice"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.selectVertice">[docs]</a>    <span class="k">def</span> <span class="nf">selectVertice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertice_indice</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the vertice selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3507,7 +3504,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.selectVertices"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.selectVertices">[docs]</a>    <span class="k">def</span> <span class="nf">selectVertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertices_indices</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the vertices selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3524,7 +3521,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.selectFace"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.selectFace">[docs]</a>    <span class="k">def</span> <span class="nf">selectFace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">faceindce</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the  selecion status  for the given face</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3541,7 +3538,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.selectFaces"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.selectFaces">[docs]</a>    <span class="k">def</span> <span class="nf">selectFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the faces selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3558,7 +3555,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.selectEdge"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.selectEdge">[docs]</a>    <span class="k">def</span> <span class="nf">selectEdge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">edgeindce</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the edge selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3575,7 +3572,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.selectEdges"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.selectEdges">[docs]</a>    <span class="k">def</span> <span class="nf">selectEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the edges selecion status  for the given mesh data</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3592,7 +3589,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.deleteMeshVertices"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.deleteMeshVertices">[docs]</a>    <span class="k">def</span> <span class="nf">deleteMeshVertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete the give vertices indices</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3609,7 +3606,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.deleteMeshFaces"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.deleteMeshFaces">[docs]</a>    <span class="k">def</span> <span class="nf">deleteMeshFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete the give faces indices</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3626,7 +3623,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.deleteMeshEdges"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.deleteMeshEdges">[docs]</a>    <span class="k">def</span> <span class="nf">deleteMeshEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete the give edges indices</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3655,7 +3652,7 @@
         <span class="k">return</span> <span class="n">indfaces</span><span class="p">,</span> <span class="n">ifaces</span></div>
 
 <div class="viewcode-block" id="Helper.getFaceNormalsArea"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getFaceNormalsArea">[docs]</a>    <span class="k">def</span> <span class="nf">getFaceNormalsArea</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;compute the face normal of the compartment mesh&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;compute the face normal of the compartment mesh&quot;&quot;&quot;</span>
         <span class="n">normals</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">vnormals</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:])</span>
         <span class="n">areas</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added by Graham</span>
@@ -3698,7 +3695,7 @@
         <span class="k">return</span> <span class="n">newnormals</span></div>
 
 <div class="viewcode-block" id="Helper.normalize_v3"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.normalize_v3">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_v3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Normalize a numpy array of 3 component vectors shape=(n,3)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalize a numpy array of 3 component vectors shape=(n,3)&quot;&quot;&quot;</span>
         <span class="c1">#        return self.unit_vector(arr,axis=1)</span>
         <span class="c1">#        lens = numpy.linalg.norm(arr,axis=1)</span>
         <span class="n">lens</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
@@ -3729,13 +3726,13 @@
 <div class="viewcode-block" id="Helper.matrixToVNMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.matrixToVNMesh">[docs]</a>    <span class="k">def</span> <span class="nf">matrixToVNMesh</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>  <span class="c1"># edge size ?</span>
-        <span class="sd">&quot;&quot;&quot;convert liste of matrix (rotation/position) to point mesh in order to use cloner / dupliVert&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;convert liste of matrix (rotation/position) to point mesh in order to use cloner / dupliVert&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.matrixToFacesMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.matrixToFacesMesh">[docs]</a>    <span class="k">def</span> <span class="nf">matrixToFacesMesh</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>  <span class="c1"># edge size ?</span>
-        <span class="sd">&quot;&quot;&quot;convert liste of matrix (rotation/position) to quad mesh in order to use cloner / dupliFace&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;convert liste of matrix (rotation/position) to quad mesh in order to use cloner / dupliFace&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.toggle"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.toggle">[docs]</a>    <span class="k">def</span> <span class="nf">toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -3839,7 +3836,7 @@
     <span class="c1"># major functions</span>
 
     <span class="k">def</span> <span class="nf">_triangulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        triangulates poly and returns a list of triangles</span>
 <span class="sd">        poly: list of points that form an anticlockwise polygon (self-intersecting polygons won&#39;t work, results are... undefined)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3858,7 +3855,7 @@
         <span class="k">return</span> <span class="n">triangles</span>
 
 <div class="viewcode-block" id="Helper.triangulate"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.triangulate">[docs]</a>    <span class="k">def</span> <span class="nf">triangulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert quad to triangle the selected face of the given polygon object.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3871,7 +3868,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.recalc_normals"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.recalc_normals">[docs]</a>    <span class="k">def</span> <span class="nf">recalc_normals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recalcul normals mesh outside/inside</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3884,7 +3881,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.IndexedPolgonsToTriPoints"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.IndexedPolgonsToTriPoints">[docs]</a>    <span class="k">def</span> <span class="nf">IndexedPolgonsToTriPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert DejaVu IndexPolygon vertices data in a python list.</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3915,7 +3912,7 @@
     <span class="c1"># ==============================================================================</span>
     <span class="c1"># object or scene property ?</span>
 <div class="viewcode-block" id="Helper.getPropertyObject"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getPropertyObject">[docs]</a>    <span class="k">def</span> <span class="nf">getPropertyObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the  property &quot;key&quot; of the object obj</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3931,7 +3928,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.setPropertyObject"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setPropertyObject">[docs]</a>    <span class="k">def</span> <span class="nf">setPropertyObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a property &quot;key&quot; for the object obj and set his value</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3951,7 +3948,7 @@
     <span class="c1"># ==============================================================================</span>
     <span class="c1"># object or scene property ?</span>
 <div class="viewcode-block" id="Helper.getProperty"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getProperty">[docs]</a>    <span class="k">def</span> <span class="nf">getProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the  property &quot;key&quot; of the object obj</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3967,7 +3964,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.setProperty"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setProperty">[docs]</a>    <span class="k">def</span> <span class="nf">setProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a property &quot;key&quot; for the object obj and set his value</span>
 
 <span class="sd">        * overwrited by children class for each host</span>
@@ -3987,7 +3984,7 @@
     <span class="c1"># ===============================================================================</span>
 
 <div class="viewcode-block" id="Helper.pathDeform"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.pathDeform">[docs]</a>    <span class="k">def</span> <span class="nf">pathDeform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Should create a modifierfor the given object using the given path/curve/spline</span>
 <span class="sd">        TO DO.</span>
 
@@ -4001,7 +3998,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.updatePathDeform"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.updatePathDeform">[docs]</a>    <span class="k">def</span> <span class="nf">updatePathDeform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Should update the modifierfor the given object using the given path/curve/spline</span>
 
 <span class="sd">        TO DO.</span>
@@ -4022,7 +4019,7 @@
     <span class="c1"># ===============================================================================</span>
 
 <div class="viewcode-block" id="Helper.vector_norm"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.vector_norm">[docs]</a>    <span class="k">def</span> <span class="nf">vector_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return length, i.e. eucledian norm, of ndarray along axis.</span>
 
 <span class="sd">        &gt;&gt;&gt; v = numpy.random.random(3)</span>
@@ -4061,7 +4058,7 @@
 
 <div class="viewcode-block" id="Helper.unit_vector"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.unit_vector">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">unit_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return ndarray normalized by length, i.e. eucledian norm, along axis.</span>
 
 <span class="sd">        &gt;&gt;&gt; v0 = numpy.random.random(3)</span>
@@ -4104,7 +4101,7 @@
             <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="Helper.getAngleAxis"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getAngleAxis">[docs]</a>    <span class="k">def</span> <span class="nf">getAngleAxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec1</span><span class="p">,</span> <span class="n">vec2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return angle (radians) and axis of rotation between two given vectors.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4114,7 +4111,7 @@
         <span class="k">return</span> <span class="n">angle</span><span class="p">,</span> <span class="n">axis</span></div>
 
 <div class="viewcode-block" id="Helper.scalar"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.scalar">[docs]</a>    <span class="k">def</span> <span class="nf">scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculates the scalar product of two vectors</span>
 <span class="sd">        v1 and v2 are numpy.array objects.</span>
 <span class="sd">        returns a float for a one-dimensional array.</span>
@@ -4122,7 +4119,7 @@
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v1</span> <span class="o">*</span> <span class="n">v2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.dihedral"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.dihedral">[docs]</a>    <span class="k">def</span> <span class="nf">dihedral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">,</span> <span class="n">v4</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a float value for the dihedral angle between</span>
 <span class="sd">        the four vectors. They define the bond for which the</span>
 <span class="sd">        torsion is calculated (~) as:</span>
@@ -4187,7 +4184,7 @@
 
 <div class="viewcode-block" id="Helper.rotation_matrix"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rotation_matrix">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return matrix to rotate about axis defined by point and direction.</span>
 
 <span class="sd">        &gt;&gt;&gt; R = rotation_matrix(math.pi/2.0, [0, 0, 1], [1, 0, 0])</span>
@@ -4244,7 +4241,7 @@
         <span class="k">return</span> <span class="n">M</span></div>
 
 <div class="viewcode-block" id="Helper.rotate_about_axis"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rotate_about_axis">[docs]</a>    <span class="k">def</span> <span class="nf">rotate_about_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from http://480.sagenb.org/home/pub/20/</span>
 
 <span class="sd">        Create the rotation matrix for a angle theta around the given axis, and apply it to the given point (B).</span>
@@ -4277,7 +4274,7 @@
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.angle_between_vectors"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.angle_between_vectors">[docs]</a>    <span class="k">def</span> <span class="nf">angle_between_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the angle between vectors.</span>
 
 <span class="sd">        If directed is False, the input vectors are interpreted as undirected axes,</span>
@@ -4308,7 +4305,7 @@
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot</span> <span class="k">if</span> <span class="n">directed</span> <span class="k">else</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">dot</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Helper.rotVectToVect"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rotVectToVect">[docs]</a>    <span class="k">def</span> <span class="nf">rotVectToVect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vect1</span><span class="p">,</span> <span class="n">vect2</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;returns a 4x4 transformation that will align vect1 with vect2</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a 4x4 transformation that will align vect1 with vect2</span>
 <span class="sd">        vect1 and vect2 can be any vector (non-normalized)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">v1x</span><span class="p">,</span> <span class="n">v1y</span><span class="p">,</span> <span class="n">v1z</span> <span class="o">=</span> <span class="n">vect1</span>
@@ -4389,7 +4386,7 @@
         <span class="k">return</span> <span class="n">rot</span></div>
 
 <div class="viewcode-block" id="Helper.ApplyMatrix"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.ApplyMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">ApplyMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the 4x4 transformation matrix to the given list of 3d points.</span>
 
 <span class="sd">        @type  coords: array</span>
@@ -4409,7 +4406,7 @@
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mat</span><span class="p">))[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Helper.Decompose4x4"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Decompose4x4">[docs]</a>    <span class="k">def</span> <span class="nf">Decompose4x4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Takes a matrix in shape (16,) in OpenGL form (sequential values go</span>
 <span class="sd">        down columns) and decomposes it into its rotation (shape (16,)),</span>
 <span class="sd">        translation (shape (3,)), and scale (shape (3,))</span>
@@ -4437,7 +4434,7 @@
         <span class="k">return</span> <span class="n">rot</span><span class="p">,</span> <span class="n">transl</span><span class="p">,</span> <span class="n">scale</span></div>
 
 <div class="viewcode-block" id="Helper.getTubePropertiesMatrix"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getTubePropertiesMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">getTubePropertiesMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord1</span><span class="p">,</span> <span class="n">coord2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From two point return the length, and the orientation from one to another.</span>
 <span class="sd">        This function is used to build a cylinder from two points (see oneCylinder function)</span>
 
@@ -4480,7 +4477,7 @@
         <span class="k">return</span> <span class="n">length</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">M</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Helper.getCenter"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the center from a 3d array of coordinate x,y,z.</span>
 
 <span class="sd">        @type  coords: liste/array</span>
@@ -4504,7 +4501,7 @@
     <span class="c1"># animation features</span>
     <span class="c1"># ===============================================================================</span>
 <div class="viewcode-block" id="Helper.setKeyFrame"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setKeyFrame">[docs]</a>    <span class="k">def</span> <span class="nf">setKeyFrame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set a keyframe for the curret object</span>
 
 <span class="sd">        @type  obj: hostObj</span>
@@ -4515,7 +4512,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.setFrame"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setFrame">[docs]</a>    <span class="k">def</span> <span class="nf">setFrame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the current frame</span>
 
 <span class="sd">        @type  value: int/float</span>
@@ -4526,7 +4523,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="Helper.frameAdvanced"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.frameAdvanced">[docs]</a>    <span class="k">def</span> <span class="nf">frameAdvanced</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Play frame for a specifiy duration with/without display and with/without a callbac</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4542,7 +4539,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.animationStart"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.animationStart">[docs]</a>    <span class="k">def</span> <span class="nf">animationStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Play frame for a specifiy duration</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4556,7 +4553,7 @@
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="Helper.animationStop"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.animationStop">[docs]</a>    <span class="k">def</span> <span class="nf">animationStop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stop the animation</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4580,7 +4577,7 @@
         <span class="n">rotMassClamp</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the curren objec as a rigid body</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4592,7 +4589,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.setSoftBody"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setSoftBody">[docs]</a>    <span class="k">def</span> <span class="nf">setSoftBody</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the curren object as a soft body</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4613,7 +4610,7 @@
         <span class="n">damping</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the spring control</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4635,7 +4632,7 @@
         <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a sprin between two physics objects</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4647,7 +4644,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Helper.addConstraint"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addConstraint">[docs]</a>    <span class="k">def</span> <span class="nf">addConstraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;spring&quot;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a constraint to the  given object</span>
 
 <span class="sd">        @type  doc: document/scene</span>
@@ -4701,7 +4698,7 @@
         <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">invert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Experiment for baking faces colors using a PIL image</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4768,7 +4765,7 @@
         <span class="k">return</span> <span class="n">img</span></div>
 
 <div class="viewcode-block" id="Helper.fillTriangleColor"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.fillTriangleColor">[docs]</a>    <span class="k">def</span> <span class="nf">fillTriangleColor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span><span class="p">,</span> <span class="n">xys</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw and color a Triangle according a color per corner.</span>
 
 <span class="sd">        Interpolate the color as OpenGL will do with per vertex</span>
@@ -4784,7 +4781,7 @@
         <span class="k">return</span> <span class="n">array</span></div>
 
 <div class="viewcode-block" id="Helper.drawGradientLine"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.drawGradientLine">[docs]</a>    <span class="k">def</span> <span class="nf">drawGradientLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imdraw</span><span class="p">,</span> <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span><span class="p">,</span> <span class="n">xys</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw and color a gradient using either PIL rectangle or point drawing methods</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4802,7 +4799,7 @@
                     <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.drawPtCol"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.drawPtCol">[docs]</a>    <span class="k">def</span> <span class="nf">drawPtCol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imdraw</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">uv</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Draw  on the given Texture image accordinge en UV coordinates and colors</span>
 <span class="sd">        uv is the 3 vertex coordinate in UV</span>
 
@@ -5151,7 +5148,7 @@
 
 <div class="viewcode-block" id="Helper.writeMeshToFile"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.writeMeshToFile">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">writeMeshToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vnorms</span><span class="o">=</span><span class="p">[],</span> <span class="n">fnorms</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the given mesh data (vertices, faces, normal, face normal) in the DejaVu format.</span>
 <span class="sd">        Create two files : filename.indpolvert and filename.indpolface</span>
 
@@ -5183,7 +5180,7 @@
         <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Helper.readMeshFromFile"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.readMeshFromFile">[docs]</a>    <span class="k">def</span> <span class="nf">readMeshFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given the DejaVu filename return the mesh data (vertices, faces, normal).</span>
 
 <span class="sd">        Parse two files : filename.indpolvert and filename.indpolface</span>
@@ -5217,7 +5214,7 @@
         <span class="k">return</span> <span class="n">verts</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">norms</span></div>
 
 <div class="viewcode-block" id="Helper.writeToFile"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.writeToFile">[docs]</a>    <span class="k">def</span> <span class="nf">writeToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the given polygon mesh data (vertices, faces, normal, face normal) in the DejaVu format.</span>
 
 <span class="sd">        Create two files : filename.indpolvert and filename.indpolface.</span>
