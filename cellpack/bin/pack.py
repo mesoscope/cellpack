@@ -44,7 +44,7 @@ def pack(recipe, config=None):
         analyze.doloop(
             config_data["num_trials"],
             env.boundingBox,
-            plot_figures=config_data["save_plot_figures"],
+            plot_figures=config_data.get("save_plot_figures", True),
             show_grid=config_data["show_grid_plot"],
             seed_list=config_data["randomness_seed"],
             config_name=config_data["name"],
