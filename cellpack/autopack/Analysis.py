@@ -2211,7 +2211,8 @@ class AnalyseAP:
 
             self.histo(
                 total_ingredient_distances,
-                self.env.out_folder / f"total_ingredient_distances_{self.env.basename}.png",
+                self.env.out_folder
+                / f"total_ingredient_distances_{self.env.basename}.png",
             )
             # plot the angle
             if len(total_angles):
