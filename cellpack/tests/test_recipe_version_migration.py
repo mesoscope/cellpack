@@ -543,8 +543,11 @@ def test_convert_compartment(converted_compartment_data, expected_compartment_da
     for obj in converted_compartment_data["objects"]:
         data = converted_compartment_data["objects"][obj]
         mock_rep = MagicMock()
+        mock_partners = MagicMock()
         data["representations"] = mock_rep
+        data["partners"] = mock_partners
         expected_compartment_data["objects"][obj]["representations"] = mock_rep
+        expected_compartment_data["objects"][obj]["partners"] = mock_partners
         assert (
             converted_compartment_data["objects"][obj]
             == expected_compartment_data["objects"][obj]

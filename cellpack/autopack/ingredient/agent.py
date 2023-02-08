@@ -1,71 +1,7 @@
 import numpy
 import math
 
-
-class Partner:
-    def __init__(self, ingr, weight=0.0, properties=None):
-        if type(ingr) is str:
-            self.name = ingr
-        else:
-            self.name = ingr.name
-        self.ingr = ingr
-        self.weight = weight
-        self.properties = {}
-        self.distance_expression = None
-        if properties is not None:
-            self.properties = properties
-
-    # def setup(
-    #     self,
-    # ):
-    # QUESTION: why is this commented out?
-    # # setup the marge according the pt properties
-    # pt1 = numpy.array(self.getProperties("pt1"))
-    # pt2 = numpy.array(self.getProperties("pt2"))
-    # pt3 = numpy.array(self.getProperties("pt3"))
-    # pt4 = numpy.array(self.getProperties("pt4"))
-
-    # # length = autopack.helper.measure_distance(pt2,pt3)#length
-    # margein = math.degrees(
-    #     autopack.helper.angle_between_vectors(pt2 - pt1, pt3 - pt2)
-    # )  # 4
-    # margeout = math.degrees(
-    #     autopack.helper.angle_between_vectors(pt3 - pt2, pt4 - pt3)
-    # )  # 113
-    # dihedral = math.degrees(
-    #     autopack.helper.angle_between_vectors(pt2 - pt1, pt4 - pt2)
-    # )  # 79
-    # dihedral = autopack.helper.dihedral(pt1, pt2, pt3, pt4)
-    # self.properties["marge_in"] = [margein - 1, margein + 1]
-    # self.properties["marge_out"] = [margeout - 1, margeout + 1]
-    # self.properties["diehdral"] = [dihedral - 1, dihedral + 1]
-
-    def addProperties(self, name, value):
-        self.properties[name] = value
-
-    def getProperties(self, name):
-        if name in self.properties:
-            # if name == "pt1":
-            #    return [0,0,0]
-            # if name == "pt2":
-            #    return [0,0,0]
-            return self.properties[name]
-        else:
-            return None
-
-    def distanceFunction(self, d, expression=None, function=None):
-        # default function that can be overwrite or
-        # can provide an experssion which 1/d or 1/d^2 or d^2etc.w*expression
-        # can provide directly a function that take as
-        # arguments the w and the distance
-        if expression is not None:
-            val = self.weight * expression(d)
-        elif function is not None:
-            val = function(self.weight, d)
-        else:
-            val = self.weight * 1.0 / d
-        return val
-
+from cellpack.autopack.ingredient.partner import Partner
 
 class Agent:
     def __init__(
@@ -86,15 +22,6 @@ class Agent:
         self.name = name
         self.concentration = concentration
         self.partners = partners
-        self.excluded_partners = {}
-        # the partner position is the local position
-        self.partners_position = []
-        self.partners_name = []
-        if not self.partners_position:
-            for i in self.partners_name:
-                self.partners_position.append([numpy.identity(4)])
-        excluded_partners_name = []
-        self.excluded_partners_name = excluded_partners_name
         self.packing_mode = packing_mode
 
         assert self.packing_mode in [
@@ -107,13 +34,9 @@ class Agent:
             "squaretile",
             "triangletile",
         ]
-        partners_weight = 0
-        self.partners_weight = partners_weight
-        # assert place_method in ['jitter', 'spring','rigid-body']
         self.place_method = place_method
         self.mesh_3d = None
         self.is_attractor = is_attractor
-        self.weight = weight
         self.force_random = force_random
         self.distance_function = distance_function
         self.distance_expression = distance_expression
@@ -125,27 +48,6 @@ class Agent:
         self.radii = None
         self.recipe = None  # weak ref to recipe
         self.tilling = None
-
-    def getProbaBinding(self, val=None):
-        # get a value between 0.0 and 1.0and return the weight and success ?
-        if val is None:
-            val = numpy.random()
-        if self.cb is not None:
-            return self.cb(val)
-        if val <= self.weight:
-            return True, val
-        else:
-            return False, val
-
-    def getPartnerweight(self, name):
-        print("Deprecated use self.weight")
-        partner = self.getPartner(name)
-        w = partner.getProperties("weight")
-        if w is not None:
-            return w
-
-    def getPartnersName(self):
-        return list(self.partners.keys())
 
     def getPartner(self, name):
         if name in self.partners:
@@ -163,42 +65,8 @@ class Agent:
             self.partners[ingr.name].properties = properties
         return self.partners[ingr.name]
 
-    def getExcludedPartnersName(self):
-        return list(self.excluded_partners.keys())
-
-    def getExcludedPartner(self, name):
-        if name in self.excluded_partners:
-            return self.excluded_partners[name]
-        else:
-            return None
-
     def addExcludedPartner(self, name, properties=None):
         self.excluded_partners[name] = Partner(name, properties=properties)
-
-    def sortPartner(self, listeP=None):
-        if listeP is None:
-            listeP = []
-            for i, ingr in list(self.partners.keys()):
-                listeP.append([i, ingr])
-        # extract ing name unic
-        listeIngrInstance = {}
-        for i, ingr in listeP:
-            if ingr.name not in listeIngrInstance:
-                listeIngrInstance[ingr.name] = [ingr.weight, []]
-            listeIngrInstance[ingr.name][1].append(i)
-        # sort according ingredient binding weight (proba to bind)
-        sortedListe = sorted(
-            list(listeIngrInstance.items()), key=lambda elem: elem[1][0]
-        )
-        # sortedListe is [ingr,(weight,(instances indices))]
-        # sort by weight/min->max
-        # wIngrList = []
-        # for i,ingr in listeP:
-        # need to sort by ingr.weight
-        #    wIngrList.append([i,ingr,ingr.weight])
-        # sortedListe = sorted(wIngrList, key=lambda elem: elem[2])   # sort by weight/min->max
-        #        print sortedListe
-        return sortedListe
 
     def weightListByDistance(self, listePartner):
         probaArray = []
