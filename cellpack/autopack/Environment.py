@@ -145,7 +145,7 @@ class Environment(CompartmentList):
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
         self.result_file = f"{self.out_folder}/{self.name}_{config['name']}_{recipe.get('version', 'default')}"
-        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid.dat"
+        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_{recipe.get('version', 'default')}_grid.dat"
 
         should_load_grid_file = (
             os.path.isfile(self.grid_file_out) and self.load_from_grid_file
