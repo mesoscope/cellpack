@@ -17,7 +17,6 @@ class Agent:
         packing_mode="random",
         partners=None,
         place_method="jitter",
-        weight=0.2,  # use for affinity ie partner.weight
     ):
         self.name = name
         self.concentration = concentration
@@ -42,7 +41,6 @@ class Agent:
         self.distance_expression = distance_expression
         self.overwrite_distance_function = overwrite_distance_function
         self.overwrite_distance_function = True
-        # chance to actually bind to any partner
         self.gradient = gradient
         self.cb = None
         self.radii = None
@@ -54,16 +52,6 @@ class Agent:
             return self.partners[name]
         else:
             return None
-
-    def addPartner(self, ingr, weight=0.0, properties=None):
-        if ingr.name not in self.partners:
-            self.partners[ingr.name] = Partner(
-                ingr, weight=weight, properties=properties
-            )
-        else:
-            self.partners[ingr.name].weight = weight
-            self.partners[ingr.name].properties = properties
-        return self.partners[ingr.name]
 
     def addExcludedPartner(self, name, properties=None):
         self.excluded_partners[name] = Partner(name, properties=properties)

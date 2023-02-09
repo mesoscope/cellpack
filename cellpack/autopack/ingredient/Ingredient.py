@@ -1245,9 +1245,9 @@ class Ingredient(Agent):
                     and ing.name not in self.excluded_partners_name
                 ):
                     self.log.info("shoul attract %s" + self.name)
-                    part = self.getPartner(ing.name)
+                    part = self.partners.get_partner_by_name(ing.name)
                     if part is None:
-                        part = self.addPartner(ing, weight=ing.weight)
+                        part = self.partners.add_partner(ing, weight=ing.weight)
                     if ing.distance_expression is not None:
                         part.distance_expression = ing.distance_expression
                     d = afvi.vi.measure_distance(jtrans, t)
