@@ -13,13 +13,13 @@ from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
-log_file_path = path.abspath(path.join(__file__, "../../../logging.conf"))
+log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
 
 
-def pack(recipe, config):
+def pack(recipe, config=None):
     """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe

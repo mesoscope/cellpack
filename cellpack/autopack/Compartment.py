@@ -373,7 +373,15 @@ class Compartment(CompartmentList):
         rotMat = mat = numpy.identity(4)
         mat = mat.transpose().reshape((16,))
         mat3x3 = Mat3(
-            mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
+            mat[0],
+            mat[1],
+            mat[2],
+            mat[4],
+            mat[5],
+            mat[6],
+            mat[8],
+            mat[9],
+            mat[10],
         )
         pmat = Mat4(
             mat[0],
@@ -477,8 +485,12 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints = pickle.load(f)
         self.surfacePointsNormals = surfacePointsNormals = pickle.load(f)
         self.surfacePointsCoords = surfacePointsCoords = pickle.load(f)
-
-        return surfacePoints, insidePoints, surfacePointsNormals, surfacePointsCoords
+        return (
+            surfacePoints,
+            insidePoints,
+            surfacePointsNormals,
+            surfacePointsCoords,
+        )
 
     def setNumber(self, num):
         """set compartment uniq id"""
@@ -662,7 +674,11 @@ class Compartment(CompartmentList):
             else:
                 n1 = 1.0 / n
             for i in range(3):
-                vnormals[f[i]] = [normal[0] * n1, normal[1] * n1, normal[2] * n1]
+                vnormals[f[i]] = [
+                    normal[0] * n1,
+                    normal[1] * n1,
+                    normal[2] * n1,
+                ]
         return vnormals  # areas added by Graham
 
     def getFaceNormals(self, vertices, faces, fillBB=None):
@@ -773,7 +789,11 @@ class Compartment(CompartmentList):
             x, y, z = p1
             nx1, ny1, nz1 = vnormals[s1]
             nx2, ny2, nz2 = vnormals[s2]
-            edgeNorm = ((nx1 + nx2) * 0.5, (ny1 + ny2) * 0.5, (nz1 + nz2) * 0.5)
+            edgeNorm = (
+                (nx1 + nx2) * 0.5,
+                (ny1 + ny2) * 0.5,
+                (nz1 + nz2) * 0.5,
+            )
             for i in range(1, nbp1 + 1):
                 points.append((x + i * dx1, y + i * dy1, z + i * dz1))
                 normals.append(edgeNorm)
@@ -1071,9 +1091,27 @@ class Compartment(CompartmentList):
         ) | numpy.equal(env.grid.compartment_ids, -parent_id)
         grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
 
-        surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
+        surface_distances, _ = surface_tree.query(tuple(grid_pt_to_calc))
         all_surface_distances = numpy.full(master_grid_positions.shape[0], numpy.nan)
         all_surface_distances[grid_pt_indexes] = surface_distances
+
+        if self.parent is not None:
+            grid_pts_between_surfaces = numpy.equal(
+                env.grid.compartment_ids, -parent_id
+            )
+            grid_pt_to_calc = master_grid_positions[grid_pts_between_surfaces]
+            scaled_distance_to_next_surface = numpy.full(
+                master_grid_positions.shape[0], numpy.nan
+            )
+            scaled_distance_to_next_surface[
+                grid_pts_between_surfaces
+            ] = env.mesh_store.get_scaled_distances_between_surfaces(
+                grid_pt_to_calc,
+                self.gname,
+                self.parent.gname,
+            )
+            self.scaled_distance_to_next_surface = scaled_distance_to_next_surface
+
         self.max_distance = max(surface_distances)
         self.surface_distances = all_surface_distances
 
@@ -1380,7 +1418,16 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_pyray(
-        self, env, ctree, distances, grdPos, diag, vSurfaceArea, srfPts, idarray, ray=1
+        self,
+        env,
+        ctree,
+        distances,
+        grdPos,
+        diag,
+        vSurfaceArea,
+        srfPts,
+        idarray,
+        ray=1,
     ):
 
         if self.is_box:
@@ -1828,7 +1875,11 @@ class Compartment(CompartmentList):
                         uniquePointsCoords2 = vertices[uniquePoints2]
                         endPoint2 = findPointsCenter(uniquePointsCoords2)
                         numHits2, thisBackFace2 = f_ray_intersect_polyhedron(
-                            g.globalCoord, endPoint2, g.closeFaces, vertices, False
+                            g.globalCoord,
+                            endPoint2,
+                            g.closeFaces,
+                            vertices,
+                            False,
                         )
                     if len(g.closeFaces) == 1 or thisBackFace != thisBackFace2:
                         mismatchCounter += 1
@@ -2738,7 +2789,11 @@ class Compartment(CompartmentList):
                         uniquePointsCoords2 = vertices[uniquePoints2]
                         endPoint2 = findPointsCenter(uniquePointsCoords2)
                         numHits2, thisBackFace2 = f_ray_intersect_polyhedron(
-                            g.globalCoord, endPoint2, g.closeFaces, vertices, False
+                            g.globalCoord,
+                            endPoint2,
+                            g.closeFaces,
+                            vertices,
+                            False,
                         )
                     if len(g.closeFaces) == 1 or thisBackFace != thisBackFace2:
                         mismatchCounter += 1
@@ -2981,7 +3036,8 @@ class Compartment(CompartmentList):
             #            vnpos = numpy.array(npost[sptInd])
             facesN = self.getVNfromF(sptInd)
             d1 = helper.measure_distance(
-                numpy.array(grdPos[ptInd]), numpy.array(srfPts[sptInd]) + (n * 0.00001)
+                numpy.array(grdPos[ptInd]),
+                numpy.array(srfPts[sptInd]) + (n * 0.00001),
             )
             d2 = helper.measure_distance(
                 numpy.array(grdPos[ptInd]), numpy.array(srfPts[sptInd])
@@ -3152,7 +3208,9 @@ class Compartment(CompartmentList):
             # raycats and see what it it on the mesh
             # or result = world.sweepTestClosest(shape, tsFrom, tsTo, penetration)
             res = pud.rayCast(
-                grdPos[ptInd], (numpy.array(grdPos[ptInd]) + v) * 99999, closest=True
+                grdPos[ptInd],
+                (numpy.array(grdPos[ptInd]) + v) * 99999,
+                closest=True,
             )  # world.rayTestAll(start, end)
             # can we get the number of hit?
             if res.hasHit():
@@ -3166,7 +3224,15 @@ class Compartment(CompartmentList):
                 dot = numpy.dot(v, n)
                 dot2 = numpy.dot(an, v)
                 a2 = helper.angle_between_vectors(-v, an)
-                print("hit with ", a, math.degrees(a), a2, math.degrees(a2), dot, dot2)
+                print(
+                    "hit with ",
+                    a,
+                    math.degrees(a),
+                    a2,
+                    math.degrees(a2),
+                    dot,
+                    dot2,
+                )
                 if display:
                     helper.setTranslation(sph3, numpy.array(h.getHitPos()))
                     helper.updateOneCylinder(
@@ -3253,7 +3319,8 @@ class Compartment(CompartmentList):
             node = pud.addSingleSphereRB(r, name=str(i))
             node.setPos(pos[0], pos[1], pos[2])
             helper.progressBar(
-                progress=int((i / float(NPT)) * 100.0), label=str(i) + "/" + str(NPT)
+                progress=int((i / float(NPT)) * 100.0),
+                label=str(i) + "/" + str(NPT),
             )
             return node
 

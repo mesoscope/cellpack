@@ -13,10 +13,11 @@ setup_requirements = [
 ]
 
 test_requirements = [
-    "black>=19.10b0",
+    "black>=19.10b0, <=23.0",
     "codecov>=2.1.4",
     "flake8>=3.8.3",
     "flake8-debugger>=3.2.1",
+    "mdutils>=1.4.0",
     "pytest>=5.4.3",
     "pytest-cov>=2.9.0",
     "pytest-raises>=0.11",
@@ -66,7 +67,6 @@ extra_requirements = {
     "all": [
         *requirements,
         *dev_requirements,
-        *analysis_requirements,
     ],
 }
 
@@ -82,7 +82,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    description="algorthim to pack molecular recipes",
+    description="algorithm to pack molecular recipes",
     entry_points={
         "console_scripts": [
             "analyze=cellpack.bin.analyze:main",
@@ -98,7 +98,14 @@ setup(
     keywords="cellpack",
     name="cellpack",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
-    python_requires=">=3.7",
+    package_data={
+        '': [
+            'cellpack/tests/packing-configs/*',
+            'cellpack/tests/recipes/*',
+            'logging.conf'
+        ]
+    },
+    python_requires=">=3.8",
     setup_requires=setup_requirements,
     test_suite="cellpack/tests",
     tests_require=test_requirements,

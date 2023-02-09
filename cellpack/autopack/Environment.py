@@ -1978,7 +1978,7 @@ class Environment(CompartmentList):
 
             # breakin test
             if len(self.activeIngr) == 0:
-                self.log.warn("exit packing loop because of len****")
+                self.log.warning("exit packing loop because of len****")
                 if hasattr(self, "afviewer"):
                     if self.afviewer is not None and hasattr(self.afviewer, "vi"):
                         self.afviewer.vi.resetProgressBar()
