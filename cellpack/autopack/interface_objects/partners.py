@@ -83,6 +83,13 @@ class Partners:
         self.excluded_ingredients = {}
         self.ingredients = {}
 
+        # partner = {
+        #     name:
+        #     position
+        #     weight
+        #     probability_binding (negative value means repelled)
+        # }
+
         if len(self.positions) == 0 :
             for i in self.names:
                 self.positions.append([numpy.identity(4)])
@@ -113,13 +120,17 @@ class Partners:
                 #     partner.addProperties(p, partner_ingredient.properties[p])
                 w += ((1 - weight_initial) / (total - 1)) - weight_initial
     
+    def is_partner(self, full_ingredient_name):
+        print(full_ingredient_name, self.names)
+        return self.get_partner_index(full_ingredient_name) >= 0
+
     def get_partner_index(self, full_ingredient_name):
         for index, base_name in enumerate(self.names):
             if base_name in full_ingredient_name:
                 return index
         else:
-            return -1     
-
+            return -1
+    
     def get_partner_by_name(self, name):
         if name in self.ingredients:
             return self.ingredients[name]

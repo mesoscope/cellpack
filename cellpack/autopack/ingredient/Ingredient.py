@@ -1232,8 +1232,8 @@ class Ingredient(Agent):
             ing = mingrs[2][i]
             t = mingrs[0][i]
             if self.packing_mode == "closePartner":
-                if ing.o_name in self.partners_name or ing.name in self.partners_name:
-                    listePartner.append([i, self.partners[ing.name], mingrs[3][i]])
+                if self.partners.is_partner(ing.name):
+                    listePartner.append([i, self.partners.get_partner_by_name(ing.name), mingrs[3][i]])
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if (
                 ing.is_attractor
@@ -1686,7 +1686,7 @@ class Ingredient(Agent):
         is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
         # I think this should be done ealier, when we're getting the point index
-        if env.ingrLookForNeighbours and self.packing_mode == "closePartner":
+        if self.packing_mode == "closePartner":
             target_grid_point_position, rotation_matrix = self.close_partner_check(
                 target_grid_point_position,
                 rotation_matrix,
@@ -2304,9 +2304,9 @@ class Ingredient(Agent):
         bind = True
         self.log.info("look for ingredient %r", translation)
         # roll a dice about proba_not_binding
-        if self.proba_not_binding != 0:  # between 0 and 1
+        if self.partners.probability_repelled != 0:  # between 0 and 1
             b = random()
-            if b <= self.proba_not_binding:
+            if b <= self.partners.probability_repelled:
                 bind = False
         if bind:
             closesbody_indice = self.getClosestIngredient(

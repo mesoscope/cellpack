@@ -150,9 +150,6 @@ class Agent:
             # get closestFreePoint using freePoint and masterGridPosition
             # if self.place_method == "rigid-body" or self.place_method == "jitter":
             # the new point is actually tPt -normalise(tPt-current)*radius
-            self.log.info(
-                "tP %r %s %r %d", ing_indice, ing.name, targetPoint, ing.radii[0][0]
-            )
             # what I need it the closest free point from the target ingredient
             v = numpy.array(targetPoint) - numpy.array(currentPos)
             s = numpy.sum(v * v)
