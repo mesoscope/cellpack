@@ -1,0 +1,117 @@
+{
+    "version": "1.1",
+    "format_version": "2.0",
+    "name": "partner_packing",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1
+        ]
+    ],
+    "objects": {
+        "Sphere_radius_25p": {
+            "jitter_attempts": 20,
+            "rotation_range": 6.2831,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "packing_mode": "random",
+            "type": "single_sphere",
+            "rejection_threshold": 100,
+            "place_method": "jitter",
+            "partners": {
+                "names": [],
+                "positions": [],
+                "excluded_names": [],
+                "probability_binding": 1.0,
+                "probability_repelled": 0.0
+            },
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                -3.1415927,
+                -3.1415927
+            ],
+            "representations": {
+                "atomic": null,
+                "packing": null,
+                "mesh": null
+            },
+            "radius": 20
+        },
+        "Sphere_radius_30r": {
+            "jitter_attempts": 10,
+            "partners": {
+                "positions": [],
+                "names": [
+                    "Sphere_radius_25p"
+                ],
+                "excluded_names": [],
+                "probability_binding": 1.0,
+                "probability_repelled": 0.0
+            },
+            "rotation_range": 6.2831,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "packing_mode": "closePartner",
+            "type": "single_sphere",
+            "rejection_threshold": 1000,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                -3.1415927,
+                -3.1415927
+            ],
+            "representations": {
+                "atomic": null,
+                "packing": null,
+                "mesh": null
+            },
+            "radius": 30
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    {
+                        "object": "Sphere_radius_25p",
+                        "count": 10,
+                        "priority": -1
+                    },
+                    {
+                        "object": "Sphere_radius_30r",
+                        "count": 200,
+                        "priority": 0
+                    }
+                ]
+            }
+        }
+    }
+}
