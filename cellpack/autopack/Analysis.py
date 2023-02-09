@@ -29,6 +29,7 @@ from tqdm import tqdm
 import cellpack.autopack as autopack
 from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
 from cellpack.autopack.ldSequence import halton
+from cellpack.autopack.MeshStore import calc_scaled_distances_for_positions
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
@@ -1402,25 +1403,11 @@ class AnalyseAP:
                 pos_list = numpy.array(pos_dict[self.ingredient_key])
                 sph_pts = self.cartesian_to_sph(pos_list)
 
-                inner_loc = numpy.zeros(pos_list.shape)
-                outer_loc = numpy.zeros(pos_list.shape)
-
-                query = trimesh.proximity.ProximityQuery(inner_mesh)
-
-                # closest points on the inner mesh surface
-                inner_loc, inner_surface_distances, _ = query.on_surface(pos_list)
-
-                # intersecting points on the outer surface
-                outer_loc, _, _ = outer_mesh.ray.intersects_location(
-                    ray_origins=inner_loc,
-                    ray_directions=(pos_list - inner_loc),
+                scaled_rad, distance_between_surfaces = calc_scaled_distances_for_positions(
+                    pos_list,
+                    inner_mesh,
+                    outer_mesh
                 )
-
-                distance_between_surfaces = numpy.linalg.norm(
-                    outer_loc - inner_loc, axis=1
-                )
-
-                scaled_rad = inner_surface_distances / distance_between_surfaces
 
                 trial_spilr = {}
                 for scaled_val in ["raw", "scaled"]:
