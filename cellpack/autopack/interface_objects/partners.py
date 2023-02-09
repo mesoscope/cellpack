@@ -1,6 +1,68 @@
 import numpy
 
-from cellpack.autopack.ingredient.partner import Partner
+class Partner:
+    def __init__(self, ingredient, weight=0.0, properties=None):
+        if type(ingredient) is str:
+            self.name = ingredient
+        else:
+            self.name = ingredient.name
+        self.ingr = ingredient
+        self.weight = weight
+        self.properties = {}
+        self.distance_expression = None
+        if properties is not None:
+            self.properties = properties
+
+    # def setup(
+    #     self,
+    # ):
+    # QUESTION: why is this commented out?
+    # # setup the marge according the pt properties
+    # pt1 = numpy.array(self.getProperties("pt1"))
+    # pt2 = numpy.array(self.getProperties("pt2"))
+    # pt3 = numpy.array(self.getProperties("pt3"))
+    # pt4 = numpy.array(self.getProperties("pt4"))
+
+    # # length = autopack.helper.measure_distance(pt2,pt3)#length
+    # margein = math.degrees(
+    #     autopack.helper.angle_between_vectors(pt2 - pt1, pt3 - pt2)
+    # )  # 4
+    # margeout = math.degrees(
+    #     autopack.helper.angle_between_vectors(pt3 - pt2, pt4 - pt3)
+    # )  # 113
+    # dihedral = math.degrees(
+    #     autopack.helper.angle_between_vectors(pt2 - pt1, pt4 - pt2)
+    # )  # 79
+    # dihedral = autopack.helper.dihedral(pt1, pt2, pt3, pt4)
+    # self.properties["marge_in"] = [margein - 1, margein + 1]
+    # self.properties["marge_out"] = [margeout - 1, margeout + 1]
+    # self.properties["diehdral"] = [dihedral - 1, dihedral + 1]
+
+    def addProperties(self, name, value):
+        self.properties[name] = value
+
+    def getProperties(self, name):
+        if name in self.properties:
+            # if name == "pt1":
+            #    return [0,0,0]
+            # if name == "pt2":
+            #    return [0,0,0]
+            return self.properties[name]
+        else:
+            return None
+
+    def distanceFunction(self, d, expression=None, function=None):
+        # default function that can be overwrite or
+        # can provide an experssion which 1/d or 1/d^2 or d^2etc.w*expression
+        # can provide directly a function that take as
+        # arguments the w and the distance
+        if expression is not None:
+            val = self.weight * expression(d)
+        elif function is not None:
+            val = function(self.weight, d)
+        else:
+            val = self.weight * 1.0 / d
+        return val
 
 class Partners:
     def __init__(
@@ -23,7 +85,7 @@ class Partners:
 
         if len(self.positions) == 0 :
             for i in self.names:
-                self.partners_position.append([numpy.identity(4)])
+                self.positions.append([numpy.identity(4)])
 
     def set_partner(self, partner_ingredient):
         if partner_ingredient is None:
@@ -37,6 +99,8 @@ class Partners:
                 total = 2
                 weight_initial = 1
                 i = self.get_partner_index(partner_ingredient.name)
+                if i < 0:
+                    import ipdb; ipdb.set_trace()
                 if i < len(self.positions):
                     partner = self.add_partner(
                         partner_ingredient,
@@ -45,15 +109,16 @@ class Partners:
                     )
                 else:
                     partner = self.add_partner(partner_ingredient, weight=w, properties={})
-                for p in partner_ingredient.properties:
-                    partner.addProperties(p, partner_ingredient.properties[p])
+                # for p in partner_ingredient.properties:
+                #     partner.addProperties(p, partner_ingredient.properties[p])
                 w += ((1 - weight_initial) / (total - 1)) - weight_initial
     
-    def get_partner_index(self, name):
-        if name in self.names:
-            return self.names.index(name)
+    def get_partner_index(self, full_ingredient_name):
+        for index, base_name in enumerate(self.names):
+            if base_name in full_ingredient_name:
+                return index
         else:
-            return None     
+            return -1     
 
     def get_partner_by_name(self, name):
         if name in self.ingredients:

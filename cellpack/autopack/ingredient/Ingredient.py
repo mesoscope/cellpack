@@ -190,7 +190,7 @@ class Ingredient(Agent):
         rotation_range=6.2831,
         use_orient_bias=False,
         use_rotation_axis=False,
-        weight=0.2,  # use for affinity ie partner.weight
+        weight=0.2
     ):
         super().__init__(
             name,
@@ -204,7 +204,6 @@ class Ingredient(Agent):
             packing_mode=packing_mode,
             partners=partners,
             place_method=place_method,
-            weight=weight,
         )
         self.log = logging.getLogger("ingredient")
         self.log.propagate = False

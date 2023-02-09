@@ -1,8 +1,6 @@
 import numpy
 import math
 
-from cellpack.autopack.ingredient.partner import Partner
-
 class Agent:
     def __init__(
         self,
@@ -53,8 +51,9 @@ class Agent:
         else:
             return None
 
-    def addExcludedPartner(self, name, properties=None):
-        self.excluded_partners[name] = Partner(name, properties=properties)
+    # TODO: move this function to Partners class
+    # def addExcludedPartner(self, name, properties=None):
+    #     self.excluded_partners[name] = Partner(name, properties=properties)
 
     def weightListByDistance(self, listePartner):
         probaArray = []
