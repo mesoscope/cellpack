@@ -319,7 +319,6 @@ class Gradient:
         max_d = max(distances)
         min_d = min(distances)
         self.distances = 1 - (distances - min_d) / (max_d - min_d)
-        print(self.distances)
         self.set_weights_by_mode()
 
     def build_axis_weight_map(self, bb, master_grid_positions, axis="X"):
