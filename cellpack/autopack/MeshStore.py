@@ -325,9 +325,8 @@ class MeshStore:
             self.add_mesh_to_scene(geometry, mesh_name)
         return geometry
 
-    def calc_scaled_distances_for_positions(
-        self, position_list, inner_mesh, outer_mesh
-    ):
+    @staticmethod
+    def calc_scaled_distances_for_positions(position_list, inner_mesh, outer_mesh):
         # first, calculates intersection points and distances
         # between given position_list and inner_mesh
         # then, calculates the distances between inner_mesh and outer_mesh
@@ -355,7 +354,11 @@ class MeshStore:
         ):
             raise ValueError("Check distances between surfaces")
 
-        return scaled_distance_between_surfaces, distance_between_surfaces
+        return (
+            scaled_distance_between_surfaces,
+            distance_between_surfaces,
+            inner_surface_distances,
+        )
 
     def get_scaled_distances_between_surfaces(
         self, position_list, inner_mesh_name, outer_mesh_name

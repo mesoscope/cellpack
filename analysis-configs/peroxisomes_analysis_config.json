@@ -12,5 +12,10 @@
         "load_from_file": true,
         "save_heatmaps": true
     },
-    "parametrized_representation": false
+    "parametrized_representation": {
+        "num_angular_points": 8,
+        "save_plots": true,
+        "max_plots_to_save": 2,
+        "get_correlations": false
+    }
 }

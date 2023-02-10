@@ -1196,9 +1196,6 @@ class AnalyseAP:
         if analysis_config.get("parametrized_representation"):
             self.get_parametrized_representation(
                 all_pos_list=all_pos_list,
-                angular_spacing=numpy.pi / 64,
-                inner_mesh_path=self.inner_mesh_path,
-                outer_mesh_path=self.outer_mesh_path,
                 **analysis_config["parametrized_representation"],
             )
 
@@ -1411,9 +1408,7 @@ class AnalyseAP:
     def get_parametrized_representation(
         self,
         all_pos_list,
-        angular_spacing=numpy.pi / 64,
-        inner_mesh_path=None,
-        outer_mesh_path=None,
+        num_angular_points=64,
         save_plots=False,
         max_plots_to_save=1,
         get_correlations=False,
@@ -1423,14 +1418,12 @@ class AnalyseAP:
             raise ValueError(
                 "Provide inner and outer mesh paths to create parametrized representations."
             )
-        theta_vals = numpy.linspace(0, numpy.pi, 1 + int(numpy.pi / angular_spacing))
-        phi_vals = numpy.linspace(
-            0, 2 * numpy.pi, 1 + int(2 * numpy.pi / angular_spacing)
-        )
-        rad_vals = numpy.linspace(0, 1, 1 + int(numpy.pi / angular_spacing))
+        theta_vals = numpy.linspace(0, numpy.pi, 1 + num_angular_points)
+        phi_vals = numpy.linspace(0, 2 * numpy.pi, 1 + 2 * num_angular_points)
+        rad_vals = numpy.linspace(0, 1, 1 + num_angular_points)
 
-        inner_mesh = trimesh.load_mesh(inner_mesh_path)
-        outer_mesh = trimesh.load_mesh(outer_mesh_path)
+        inner_mesh = trimesh.load_mesh(self.inner_mesh_path)
+        outer_mesh = trimesh.load_mesh(self.outer_mesh_path)
 
         all_spilr = {}
         for scaled_val in ["raw", "scaled"]:
@@ -1445,10 +1438,12 @@ class AnalyseAP:
             )
 
         if save_plots:
-            save_dir = self.output_path / "heatmaps"
+            save_dir = self.output_path / "spilr_heatmaps"
             os.makedirs(save_dir, exist_ok=True)
 
-        for pc, packing_dict in enumerate(all_pos_list):
+        for pc, (packing_id, packing_dict) in enumerate(
+            zip(self.packing_id_dict.values(), all_pos_list)
+        ):
             num_saved_plots = 0
             for sc, (_, pos_dict) in enumerate(packing_dict.items()):
                 pos_list = numpy.array(pos_dict[self.ingredient_key])
@@ -1457,6 +1452,7 @@ class AnalyseAP:
                 (
                     scaled_rad,
                     distance_between_surfaces,
+                    inner_surface_distances,
                 ) = MeshStore.calc_scaled_distances_for_positions(
                     pos_list, inner_mesh, outer_mesh
                 )
@@ -1496,12 +1492,10 @@ class AnalyseAP:
                     )
 
                     if save_plots and (num_saved_plots <= max_plots_to_save):
-                        label_str = (
-                            f"Distance from Nuclear Surface, {pc}_{sc}, {scaled_val}"
-                        )
+                        label_str = f"Distance from Nuclear Surface, {packing_id}_{sc}, {scaled_val}"
                         file_path = (
                             save_dir
-                            / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingredient_key}"
+                            / f"heatmap_{scaled_val}_{packing_id}_{sc}_{self.ingredient_key}"
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1517,11 +1511,13 @@ class AnalyseAP:
         if save_plots:
             for scaled_val in ["raw", "scaled"]:
                 average_spilr = numpy.nanmean(all_spilr[scaled_val], axis=1)
-                for pc in range(average_spilr.shape[0]):
-                    label_str = f"Distance from Nuclear Surface, avg {pc}, {scaled_val}"
+                for pc, packing_id in enumerate(self.packing_id_dict.values()):
+                    label_str = (
+                        f"Distance from Nuclear Surface, avg {packing_id}, {scaled_val}"
+                    )
                     file_path = (
                         save_dir
-                        / f"avg_heatmap_{scaled_val}_{pc}_{self.ingredient_key}"
+                        / f"avg_heatmap_{scaled_val}_{packing_id}_{self.ingredient_key}"
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 
