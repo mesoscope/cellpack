@@ -121,7 +121,6 @@ class Partners:
                 w += ((1 - weight_initial) / (total - 1)) - weight_initial
     
     def is_partner(self, full_ingredient_name):
-        print(full_ingredient_name, self.names)
         return self.get_partner_index(full_ingredient_name) >= 0
 
     def get_partner_index(self, full_ingredient_name):

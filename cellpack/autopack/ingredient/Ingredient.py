@@ -1213,49 +1213,46 @@ class Ingredient(Agent):
         else:
             return []
 
-    def getListePartners(
+    def get_partners(
         self, histoVol, jtrans, rotMat, organelle, afvi, close_indice=None
     ):
         if close_indice is None:
-            mingrs = self.getIngredientsInBox(histoVol, jtrans, rotMat, organelle, afvi)
+            near_by_ingredients = self.getIngredientsInBox(histoVol, jtrans, rotMat, organelle, afvi)
         else:
-            # mingrs = zip(*mingrs)
-            mingrs = self.getIngredientsInTree(close_indice)
-        listePartner = []
-        if not len(mingrs) or not len(mingrs[2]):
+            near_by_ingredients = self.getIngredientsInTree(close_indice)
+        placed_partners = []
+        if not len(near_by_ingredients) or not len(near_by_ingredients[2]):
             self.log.info("no close ingredient found")
             return [], []
         else:
             self.log.info("nb close ingredient %s", self.name)
-        listePartner = []
-        for i in range(len(mingrs[2])):
-            ing = mingrs[2][i]
-            t = mingrs[0][i]
+        for i in range(len(near_by_ingredients[2])):
+            packed_ingredient = near_by_ingredients[2][i]
+            ingredient_position = near_by_ingredients[0][i]
             if self.packing_mode == "closePartner":
-                if self.partners.is_partner(ing.name):
-                    listePartner.append([i, self.partners.get_partner_by_name(ing.name), mingrs[3][i]])
+                if self.partners.is_partner(packed_ingredient.name):
+                    placed_partners.append([i, self.partners.get_partner_by_name(packed_ingredient.name), near_by_ingredients[3][i]])
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if (
-                ing.is_attractor
+                packed_ingredient.is_attractor
             ):  # and self.compNum <= 0: #always attract! or rol a dice ?sself.excluded_partners.has_key(name)
                 if (
-                    ing.name not in self.partners_name
-                    and self.name not in ing.excluded_partners_name
-                    and ing.name not in self.excluded_partners_name
+                    packed_ingredient.name not in self.partners_name
+                    and self.name not in packed_ingredient.excluded_partners_name
+                    and packed_ingredient.name not in self.excluded_partners_name
                 ):
-                    self.log.info("shoul attract %s" + self.name)
-                    part = self.partners.get_partner_by_name(ing.name)
+                    part = self.partners.get_partner_by_name(packed_ingredient.name)
                     if part is None:
-                        part = self.partners.add_partner(ing, weight=ing.weight)
-                    if ing.distance_expression is not None:
-                        part.distance_expression = ing.distance_expression
-                    d = afvi.vi.measure_distance(jtrans, t)
-                    listePartner.append([i, part, d])
-        if not listePartner:
+                        part = self.partners.add_partner(packed_ingredient, weight=packed_ingredient.weight)
+                    if packed_ingredient.distance_expression is not None:
+                        part.distance_expression = packed_ingredient.distance_expression
+                    d = afvi.vi.measure_distance(jtrans, ingredient_position)
+                    placed_partners.append([i, part, d])
+        if not placed_partners:
             self.log.info("no partner found in close ingredient %s", self.packing_mode)
             return [], []
         else:
-            return mingrs, listePartner
+            return near_by_ingredients, placed_partners
 
     def getTransform(self):
         tTrans = self.vi.ToVec(self.vi.getTranslation(self.moving))
@@ -1470,9 +1467,6 @@ class Ingredient(Agent):
                 R["indices"].append(p[1])
             elif p[1] == ind:
                 R["indices"].append(p[0])
-        print("getClosePairIngredient ", R)
-        print("all pairs ", pairs)
-        print("query was ind ", ind)
         return R
 
     def getClosestIngredient(self, point, histoVol, cutoff=10.0):
@@ -1832,8 +1826,8 @@ class Ingredient(Agent):
             )
             try:
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception:
-                print("PROBLEM ", self.name)
+            except Exception as e:
+                print(f"PROBLEM: {self.name}, {e}")
                 rot_mat = numpy.identity(4)
         else:
             # this is where we could apply biased rotation ie gradient/attractor
@@ -1957,10 +1951,10 @@ class Ingredient(Agent):
         if is_realtime:
             self.update_display_rt(moving, jtrans, rotMatj)
         # 2- get the neighboring object from ptInd
-        mingrs, listePartner = self.getListePartners(
+        near_by_ingredients, placed_partners = self.get_partners(
             histoVol, jtrans, rotation_matrix, compartment, afvi
         )
-        for i, elem in enumerate(mingrs):
+        for i, elem in enumerate(near_by_ingredients):
             ing = elem[2]
             t = elem[0]
             r = elem[1]
@@ -1990,11 +1984,10 @@ class Ingredient(Agent):
                 )
                 static.append(ipoly)
 
-        if listePartner:  # self.packing_mode=="closePartner":
-            self.log.info("len listePartner = %d", len(listePartner))
+        if placed_partners:
             if not self.force_random:
-                targetPoint, weight = self.pickPartner(
-                    mingrs, listePartner, currentPos=jtrans
+                targetPoint = self.pick_partner_grid_index(
+                    near_by_ingredients, placed_partners, currentPos=jtrans
                 )
                 if targetPoint is None:
                     targetPoint = jtrans
@@ -2225,17 +2218,17 @@ class Ingredient(Agent):
         return False, packing_location, packing_rotation, {}, {}
 
     def lookForNeighbours(self, trans, rotMat, organelle, afvi, closest_indice=None):
-        mingrs, listePartner = self.getListePartners(
+        near_by_ingredients, placed_partners = self.get_partners(
             self.env, trans, rotMat, organelle, afvi, close_indice=closest_indice
         )
         targetPoint = trans
         found = False
-        if listePartner:  # self.packing_mode=="closePartner":
+        if placed_partners:  # self.packing_mode=="closePartner":
             self.log.info("partner found")
             if not self.force_random:
                 for jitterPos in range(self.jitter_attempts):  #
-                    targetPoint, weight = self.pickPartner(
-                        mingrs, listePartner, currentPos=trans
+                    targetPoint = self.pick_partner_grid_index(
+                        near_by_ingredients, placed_partners, currentPos=trans
                     )
                     if targetPoint is not None:
                         break
@@ -2685,10 +2678,10 @@ class Ingredient(Agent):
                     )
         # 2- get the neighboring object from ptInd
         if histoVol.ingrLookForNeighbours:
-            mingrs, listePartner = self.getListePartners(
+            near_by_ingredients, placed_partners = self.get_partners(
                 histoVol, jtrans, rotation_matrix, compartment, afvi
             )
-            for i, elem in enumerate(mingrs):
+            for i, elem in enumerate(near_by_ingredients):
                 ing = elem[2]
                 t = elem[0]
                 r = elem[1]
@@ -2715,11 +2708,11 @@ class Ingredient(Agent):
                         name, afvi.orgaToMasterGeom[ing], parent=afvi.staticMesh
                     )
 
-            if listePartner:  # self.packing_mode=="closePartner":
-                self.log.info("len listePartner = %d", len(listePartner))
+            if placed_partners:  # self.packing_mode=="closePartner":
+                self.log.info(f"len listePartner: {len(placed_partners)}")
                 if not self.force_random:
-                    targetPoint, weight = self.pickPartner(
-                        mingrs, listePartner, currentPos=jtrans
+                    targetPoint = self.pick_partner_grid_index(
+                        near_by_ingredients, placed_partners, currentPos=jtrans
                     )
                     if targetPoint is None:
                         targetPoint = jtrans

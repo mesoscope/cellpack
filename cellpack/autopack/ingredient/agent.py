@@ -45,42 +45,23 @@ class Agent:
         self.recipe = None  # weak ref to recipe
         self.tilling = None
 
-    def getPartner(self, name):
-        if name in self.partners:
-            return self.partners[name]
-        else:
-            return None
-
     # TODO: move this function to Partners class
     # def addExcludedPartner(self, name, properties=None):
     #     self.excluded_partners[name] = Partner(name, properties=properties)
 
-    def weightListByDistance(self, listePartner):
-        probaArray = []
+    def get_weights_by_distance(self, placed_partners):
+        weights = []
         w = 0.0
-        for i, part, dist in listePartner:
-            # print ("i",part,dist,w,part.weight)
+        for _, partner, dist in placed_partners:
             if self.overwrite_distance_function:
-                wd = part.weight
+                wd = partner.weight
             else:
-                wd = part.distanceFunction(dist, expression=part.distance_expression)
-            # print "calc ",dist, wd
-            probaArray.append(wd)
+                wd = partner.distanceFunction(dist, expression=partner.distance_expression)
+            weights.append(wd)
             w = w + wd
         # probaArray.append(self.proba_not_binding)
         # w=w+self.proba_not_binding
-        return probaArray, w
-
-    def getProbaArray(self, weightD, total):
-        probaArray = []
-        final = 0.0
-        for w in weightD:
-            p = w / total
-            #            print "norma ",w,total,p
-            final = final + p
-            probaArray.append(final)
-        probaArray[-1] = 1.0
-        return probaArray
+        return weights, w
 
     def getSubWeighted(self, weights):
         """
@@ -96,40 +77,26 @@ class Agent:
         """
         rnd = numpy.random.random() * sum(weights)
         if sum(weights) == 0:
-            return None, None
+            return None
         for i, w in enumerate(weights):
             rnd -= w
             if rnd < 0:
-                return i, rnd
-        return None, None
+                return i
+        return None
 
-    def pickPartner(self, mingrs, listePartner, currentPos=[0, 0, 0]):
-        # listePartner is (i,partner,d)
-        # wieght using the distance function
-        #        print "len",len(listePartner)
+    def pick_partner_grid_index(self, near_by_ingredients, placed_partners, currentPos=[0, 0, 0]):
+        # placed_partners is (i,partner,d)
+        # weight using the distance function
         targetPoint = None
-        weightD, total = self.weightListByDistance(listePartner)
-        self.log.info("w %r %d", weightD, total)
-        i, b = self.getSubWeighted(weightD)
+        weightD, total = self.get_weights_by_distance(placed_partners)
+        self.log.info(f"w {placed_partners} {total}")
+        i = self.getSubWeighted(weightD)
         if i is None:
             return None, None
-        # probaArray = self.getProbaArray(weightD,total)
-        #        print "p",probaArray
-        #        probaArray=numpy.array(probaArray)
-        #        #where is random in probaArray->index->ingr
-        #        b = random()
-        #        test = b < probaArray
-        #        i = test.tolist().index(True)
-        #        print "proba",i,test,(len(probaArray)-1)
-        #        if i == (len(probaArray)-1) :
-        #            #no binding due to proba not binding....
-        #            print ("no binding due to proba")
-        #            return None,b
-
-        ing_indice = listePartner[i][0]  # i,part,dist
-        ing = mingrs[2][ing_indice]  # [2]
-        self.log.info("binding to %s" + ing.name)
-        targetPoint = mingrs[0][ing_indice]  # [0]
+        partner_index = placed_partners[i][0]  # i,part,dist
+        partner_ingredient = near_by_ingredients[2][partner_index] 
+        self.log.info(F"binding to {partner_ingredient.name}")
+        targetPoint = near_by_ingredients[0][partner_index]
         if self.compNum > 0:
             #            organelle = self.env.compartments[abs(self.compNum)-1]
             #            dist,ind = organelle.OGsrfPtsBht.query(targetPoint)
@@ -137,14 +104,11 @@ class Agent:
             targetPoint = self.env.grid.getClosestFreeGridPoint(
                 targetPoint,
                 compId=self.compNum,
-                ball=(ing.encapsulating_radius + self.encapsulating_radius),
+                ball=(partner_ingredient.encapsulating_radius + self.encapsulating_radius),
                 distance=self.encapsulating_radius * 2.0,
             )
             self.log.info(
-                "target point free tree is %r %r %r",
-                targetPoint,
-                self.encapsulating_radius,
-                ing.encapsulating_radius,
+                f"target point free tree is {targetPoint} {self.encapsulating_radius} {partner_ingredient.encapsulating_radius}"
             )
         else:
             # get closestFreePoint using freePoint and masterGridPosition
@@ -154,25 +118,9 @@ class Agent:
             v = numpy.array(targetPoint) - numpy.array(currentPos)
             s = numpy.sum(v * v)
             factor = (v / math.sqrt(s)) * (
-                ing.encapsulating_radius + self.encapsulating_radius
-            )  # encapsulating radus ?
+                partner_ingredient.encapsulating_radius + self.encapsulating_radius
+            )
             targetPoint = numpy.array(targetPoint) - factor
 
-        return targetPoint, b
+        return targetPoint
 
-    def pickPartnerInstance(self, bindingIngr, mingrs, currentPos=None):
-        # bindingIngr is ingr,(weight,(instances indices))
-        #        print "bindingIngr ",bindingIngr,bindingIngr[1]
-        if currentPos is None:  # random mode
-            picked_I = numpy.random() * len(bindingIngr[1][1])
-            i = bindingIngr[1][1][picked_I]
-        else:  # pick closest one
-            mind = 99999999.9
-            i = 0
-            for ind in bindingIngr[1][1]:
-                v = numpy.array(mingrs[ind][0]) - numpy.array(currentPos)
-                d = numpy.sum(v * v)
-                if d < mind:
-                    mind = d
-                    i = ind
-        return i
