@@ -1699,12 +1699,13 @@ class AnalyseAP:
         bounding_box,
         get_distance_distribution=True,
         render=False,
-        plot=True,
+        plot_figures=True,
         show_grid=True,
         fbox_bb=None,
         use_file=True,
         seed_list=None,
         config_name="default",
+        recipe_version="1.0.0",
     ):
         # doLoop automatically produces result files, images, and documents from the recipe while adjusting parameters
         # To run doLoop, 1) in your host's python console type:
@@ -1716,7 +1717,7 @@ class AnalyseAP:
         # analyse.doloop(n)
         if seed_list is None:
             seed_list = self.getHaltonUnique(num_seeds)
-        packing_basename = f"{self.env.name}_{config_name}"
+        packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
         numpy.savetxt(
             self.env.out_folder / f"seeds_{packing_basename}.txt",
             seed_list,
@@ -1775,7 +1776,7 @@ class AnalyseAP:
                 self.helper.render(seed_basename + ".jpg", 640, 480)
                 self.helper.write(seed_basename + ".c4d", [])
 
-            if plot and two_d:
+            if plot_figures and two_d:
                 width = self.env.get_size_of_bounding_box()
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
@@ -1879,7 +1880,7 @@ class AnalyseAP:
                                 seed_distances_from_center.tolist()
                             )
 
-                        if plot and two_d:
+                        if plot_figures and two_d:
                             for i, p in enumerate(seed_ingredient_positions):
                                 ax.add_patch(
                                     Circle(
@@ -2023,7 +2024,7 @@ class AnalyseAP:
                                     seed_distances_from_center.tolist()
                                 )
 
-                            if plot and two_d:
+                            if plot_figures and two_d:
                                 for p in seed_ingredient_positions:
                                     ax.add_patch(
                                         Circle(
@@ -2099,7 +2100,7 @@ class AnalyseAP:
                                     seed_distances_from_center.tolist()
                                 )
 
-                            if plot and two_d:
+                            if plot_figures and two_d:
                                 for p in seed_ingredient_positions:
                                     ax.add_patch(
                                         Circle(
@@ -2134,7 +2135,7 @@ class AnalyseAP:
                         ingredient_angles_dict,
                     )
 
-                if plot and two_d:
+                if plot_figures and two_d:
                     ax.set_aspect(1.0)
                     plt.axhline(y=bounding_box[0][1], color="k")
                     plt.axhline(y=bounding_box[1][1], color="k")
@@ -2198,31 +2199,32 @@ class AnalyseAP:
         self.env.basename = packing_basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        # if plot and two_d:
-        self.env.loopThroughIngr(self.axis_distribution)
-        self.env.loopThroughIngr(self.occurence_distribution)
-        self.axis_distribution_total(total_positions)
-        # plot the distances
-        self.histo(
-            total_center_distances,
-            self.env.out_folder / f"total_center_distances_{self.env.basename}.png",
-        )
+        if plot_figures:
+            self.env.loopThroughIngr(self.axis_distribution)
+            self.env.loopThroughIngr(self.occurence_distribution)
+            self.axis_distribution_total(total_positions)
+            # plot the distances
+            self.histo(
+                total_center_distances,
+                self.env.out_folder / f"total_center_distances_{self.env.basename}.png",
+            )
 
-        self.histo(
-            total_ingredient_distances,
-            self.env.out_folder / f"total_ingredient_distances_{self.env.basename}.png",
-        )
-        # plot the angle
-        if len(total_angles):
             self.histo(
-                total_angles[1],
-                self.env.out_folder / f"total_angles_X_{self.env.basename}.png",
+                total_ingredient_distances,
+                self.env.out_folder
+                / f"total_ingredient_distances_{self.env.basename}.png",
             )
-            self.histo(
-                total_angles[2],
-                self.env.out_folder / f"total_angles_Y_{self.env.basename}.png",
-            )
-            self.histo(
-                total_angles[3],
-                self.env.out_folder / f"total_angles_Z_{self.env.basename}.png",
-            )
+            # plot the angle
+            if len(total_angles):
+                self.histo(
+                    total_angles[1],
+                    self.env.out_folder / f"total_angles_X_{self.env.basename}.png",
+                )
+                self.histo(
+                    total_angles[2],
+                    self.env.out_folder / f"total_angles_Y_{self.env.basename}.png",
+                )
+                self.histo(
+                    total_angles[3],
+                    self.env.out_folder / f"total_angles_Z_{self.env.basename}.png",
+                )
