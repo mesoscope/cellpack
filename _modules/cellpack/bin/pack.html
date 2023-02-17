@@ -321,10 +321,11 @@
         <span class="n">analyze</span><span class="o">.</span><span class="n">doloop</span><span class="p">(</span>
             <span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;num_trials&quot;</span><span class="p">],</span>
             <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span>
-            <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">plot_figures</span><span class="o">=</span><span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;save_plot_figures&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
             <span class="n">show_grid</span><span class="o">=</span><span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;show_grid_plot&quot;</span><span class="p">],</span>
             <span class="n">seed_list</span><span class="o">=</span><span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;randomness_seed&quot;</span><span class="p">],</span>
             <span class="n">config_name</span><span class="o">=</span><span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+            <span class="n">recipe_version</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">env</span><span class="o">.</span><span class="n">buildGrid</span><span class="p">(</span><span class="n">rebuild</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
