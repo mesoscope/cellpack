@@ -38,9 +38,6 @@ class Partner:
     # self.properties["marge_out"] = [margeout - 1, margeout + 1]
     # self.properties["diehdral"] = [dihedral - 1, dihedral + 1]
 
-    def addProperties(self, name, value):
-        self.properties[name] = value
-
     def getProperties(self, name):
         if name in self.properties:
             # if name == "pt1":
@@ -106,18 +103,14 @@ class Partners:
                 total = 2
                 weight_initial = 1
                 i = self.get_partner_index(partner_ingredient.name)
-                if i < 0:
-                    import ipdb; ipdb.set_trace()
                 if i < len(self.positions):
-                    partner = self.add_partner(
+                    self.add_partner(
                         partner_ingredient,
                         weight=w,
                         properties={"position": self.positions[i]},
                     )
                 else:
-                    partner = self.add_partner(partner_ingredient, weight=w, properties={})
-                # for p in partner_ingredient.properties:
-                #     partner.addProperties(p, partner_ingredient.properties[p])
+                    self.add_partner(partner_ingredient, weight=w, properties={})
                 w += ((1 - weight_initial) / (total - 1)) - weight_initial
     
     def is_partner(self, full_ingredient_name):
