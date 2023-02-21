@@ -7,40 +7,11 @@ class FirebaseHandler(object):
         login = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(login)
         self.db = firestore.client()
-
-    def get_doc_by_name(self, collection, name):
-        db = self.db
-        data_ref = db.collection(collection)
-        docs = data_ref.where("name", "==", name).get()  # docs is an array
-        return docs
-
-    def set_doc(self, collection, id, data):
-        doc, doc_ref = self.get_doc_by_id(collection, id)
-        if not doc:
-            doc_ref = self.db.collection(collection).document(id)
-            doc_ref.set(data)
-            print(f"successfully uploaded to path: {doc_ref.path}")
-            return doc_ref
-        else:
-            print(f"ERROR, already data at this path:{collection}/{id}")
-            return
-
-    def upload_doc(self, collection, data):
-        return self.db.collection(collection).add(data)
+        self.name = "firebase"
 
     @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
-
-    # `doc` is a DocumentSnapshot object
-    # `doc_ref` is a DocumentReference object to perform operations on the doc
-    def get_doc_by_id(self, collection, id):
-        doc_ref = self.db.collection(collection).document(id)
-        doc = doc_ref.get()
-        if doc.exists:
-            return doc.to_dict(), doc_ref
-        else:
-            return None, None
 
     @staticmethod
     def get_collection_id_from_path(path):
@@ -60,7 +31,46 @@ class FirebaseHandler(object):
         doc_ref.update({index: firestore.ArrayUnion([new_item_ref])})
 
     @staticmethod
-    def is_firebase(path):
+    def is_reference(path):
+        if path is None:
+            return False
         if path.startswith("firebase:"):
             return True
         return False
+
+    def get_doc_by_name(self, collection, name):
+        db = self.db
+        data_ref = db.collection(collection)
+        docs = data_ref.where("name", "==", name).get()  # docs is an array
+        return docs
+
+    # `doc` is a DocumentSnapshot object
+    # `doc_ref` is a DocumentReference object to perform operations on the doc
+    def get_doc_by_id(self, collection, id):
+        doc_ref = self.db.collection(collection).document(id)
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict(), doc_ref
+        else:
+            return None, None
+
+    def get_doc_by_ref(self, path):
+        collection, id = FirebaseHandler.get_collection_id_from_path(path)
+        return self.get_doc_by_id(collection, id)
+
+    def set_doc(self, collection, id, data):
+        doc, doc_ref = self.get_doc_by_id(collection, id)
+        if not doc:
+            doc_ref = self.db.collection(collection).document(id)
+            doc_ref.set(data)
+            print(f"successfully uploaded to path: {doc_ref.path}")
+            return doc_ref
+        else:
+            print(f"ERROR, already data at this path:{collection}/{id}")
+            return
+
+    def upload_doc(self, collection, data):
+        return self.db.collection(collection).add(data)
+
+
+

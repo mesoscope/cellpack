@@ -85,7 +85,7 @@ class Recipe:
         compartment_keys = []
         referenced_objects = []
         for key, entry in composition_dict.items():
-            for region_name, obj_keys in entry.get(
+            for _, obj_keys in entry.get(
                 "regions", {}
             ).items():  # check if entry in compositions has regions
                 if (
