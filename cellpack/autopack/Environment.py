@@ -375,11 +375,9 @@ class Environment(CompartmentList):
 
     def set_partners_ingredient(self, ingr):
         if ingr.partners is not None:
-            for name in ingr.partners.names:
-                partner = self.getIngrFromName(name)
-                ingr.partners.set_partner(partner)
-            for name in ingr.partners.excluded_names:
-                ingr.addExcludedPartner(name)  
+            for partner in ingr.partners.all_partners:
+                partner_ingr = self.getIngrFromName(partner.name)
+                partner.set_ingredient(partner_ingr)
         if ingr.type == "Grow":
             ingr.prepare_alternates()
 

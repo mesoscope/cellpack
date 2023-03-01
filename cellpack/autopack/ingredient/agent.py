@@ -15,6 +15,7 @@ class Agent:
         packing_mode="random",
         partners=None,
         place_method="jitter",
+        weight=0.2
     ):
         self.name = name
         self.concentration = concentration
@@ -38,30 +39,28 @@ class Agent:
         self.distance_function = distance_function
         self.distance_expression = distance_expression
         self.overwrite_distance_function = overwrite_distance_function
-        self.overwrite_distance_function = True
         self.gradient = gradient
         self.cb = None
         self.radii = None
         self.recipe = None  # weak ref to recipe
         self.tilling = None
+        self.weight = weight
 
-    # TODO: move this function to Partners class
-    # def addExcludedPartner(self, name, properties=None):
-    #     self.excluded_partners[name] = Partner(name, properties=properties)
 
     def get_weights_by_distance(self, placed_partners):
         weights = []
-        w = 0.0
+        total = 0.0
         for _, partner, dist in placed_partners:
             if self.overwrite_distance_function:
                 wd = partner.weight
+                
             else:
                 wd = partner.distanceFunction(dist, expression=partner.distance_expression)
             weights.append(wd)
-            w = w + wd
+            total = total + wd
         # probaArray.append(self.proba_not_binding)
         # w=w+self.proba_not_binding
-        return weights, w
+        return weights, total
 
     def getSubWeighted(self, weights):
         """

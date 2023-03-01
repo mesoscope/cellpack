@@ -39,13 +39,6 @@
             "type": "single_sphere",
             "rejection_threshold": 100,
             "place_method": "jitter",
-            "partners": {
-                "names": [],
-                "positions": [],
-                "excluded_names": [],
-                "probability_binding": 1.0,
-                "probability_repelled": 0.0
-            },
             "rotation_axis": null,
             "use_rotation_axis": false,
             "orient_bias_range": [
@@ -66,15 +59,12 @@
                 0
             ],
             "jitter_attempts": 10,
-            "partners": {
-                "positions": [],
-                "names": [
-                    "Sphere_radius_25p"
-                ],
-                "excluded_names": [],
-                "probability_binding": 1.0,
-                "probability_repelled": 0.0
-            },
+            "partners": [
+                {
+                    "name": "Sphere_radius_25p",
+                    "binding_probability": 1.0
+                }
+            ],
             "rotation_range": 6.2831,
             "max_jitter": [
                 1,

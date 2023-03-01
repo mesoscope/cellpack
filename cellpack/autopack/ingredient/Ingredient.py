@@ -204,6 +204,7 @@ class Ingredient(Agent):
             packing_mode=packing_mode,
             partners=partners,
             place_method=place_method,
+            weight=weight
         )
         self.log = logging.getLogger("ingredient")
         self.log.propagate = False
@@ -2297,10 +2298,11 @@ class Ingredient(Agent):
         bind = True
         self.log.info("look for ingredient %r", translation)
         # roll a dice about proba_not_binding
-        if self.partners.probability_repelled != 0:  # between 0 and 1
-            b = random()
-            if b <= self.partners.probability_repelled:
-                bind = False
+        for partner in self.partners.all_partners:
+            if partner.binding_probability < 0:  # between 0 and 1
+                b = random()
+                if b <= abs(partner.binding_probability):
+                    bind = False
         if bind:
             closesbody_indice = self.getClosestIngredient(
                 translation, self.env, cutoff=self.env.grid.diag
