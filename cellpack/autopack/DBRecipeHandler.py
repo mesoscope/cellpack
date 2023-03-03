@@ -102,7 +102,6 @@ class CompositionDoc(DataDoc):
                             region_item[
                                 "object"
                             ] = objects_to_path_map.get(obj_name)
-                        # replace comps
 
     def should_write(self, db):
         db_docs = db.get_doc_by_name("composition", self.name)
@@ -124,10 +123,12 @@ class CompositionDoc(DataDoc):
                     # found a match, so shouldn't write
                     return False, doc.id
                 else:
-                    # non nested attributes match,
-                    # need to check regions
+                    # non nested attributes match
+                    # TODO next: need to resolve regions and check differences 
+                    # return false if found a match
+                    # prepare_data = {"composition": compositions}
                     self.resolve_regions(db_data, db)
-                    print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
+                    # print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
         return True, None
 
 
@@ -212,9 +213,9 @@ class DBRecipeHandler(object):
         docs = self.db.get_doc_by_name(collection, name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                full_doc_data = self.convert_sub_doc(doc)
-                ddiff = DeepDiff(full_doc_data, data, ignore_order=True)
-                if not ddiff:
+                full_doc_data = self.convert_representation(doc) # if there is repr in obj 
+                difference = DeepDiff(full_doc_data, data, ignore_order=True)
+                if not difference:
                     return doc, doc.id
         return None, None
 
@@ -224,17 +225,22 @@ class DBRecipeHandler(object):
         modified_data = DBRecipeHandler.prep_data_for_db(data)
         if id is None:
             name = modified_data["name"]
-            _, doc_id = self.should_write(collection, name, modified_data)
-            if doc_id:
-                print(f"{collection}/{name} is already exists in firestore")
-                return doc_id, self.db.create_path(collection, doc_id)
-            else:
+            if collection == "composition": # composition has been already checked for duplicates  
                 doc = self.db.upload_doc(collection, modified_data)
-                # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
                 doc_path = doc[1].path
                 doc_id = doc[1].id
                 print(f"successfully uploaded {name} to path: {doc_path}")
-                return doc_id, self.db.create_path(collection, doc_id)
+            else:
+                _, doc_id = self.should_write(collection, name, modified_data)
+                if doc_id:
+                    print(f"{collection}/{name} is already exists in firestore")
+                else:
+                    doc = self.db.upload_doc(collection, modified_data)
+                    # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
+                    doc_path = doc[1].path
+                    doc_id = doc[1].id
+                    print(f"successfully uploaded {name} to path: {doc_path}")
+            return doc_id, self.db.create_path(collection, doc_id)
         else:
             doc_path = f"{collection}/{id}"
             doc = self.db.set_doc(collection, id, modified_data)
@@ -249,7 +255,6 @@ class DBRecipeHandler(object):
 
     def upload_compositions(self, compositions, recipe_to_save):
         references_to_update = {}
-
         for comp_name in compositions:
             comp_obj = compositions[comp_name]
             self.comp_to_path_map[comp_name] = {}
@@ -270,15 +275,10 @@ class DBRecipeHandler(object):
                 path = self.db.create_path("composition", doc_id)
                 self.comp_to_path_map[comp_name]["path"] = path
                 self.comp_to_path_map[comp_name]["id"] = doc_id
-                should_upload = False
                 print(f"composition/{comp_name} is already exists in firestore")
             else:
-                should_upload = True
-                # replace with paths for outer objs in comp
+                # replace with paths for outer objs in comp, then upload 
                 comp_doc.check_and_replace_references(self.objects_to_path_map, references_to_update, self.db)
-
-
-            if should_upload:
                 comp_ready_for_db = comp_doc.as_dict()
                 doc_id, comp_path = self.upload_data("composition", comp_ready_for_db)
                 self.comp_to_path_map[comp_name]["path"] = comp_path
@@ -324,8 +324,7 @@ class DBRecipeHandler(object):
 
     # get doc from database, convert it back to the original text
     # i.e. in object, convert lists back to tuples in representations/packing/positions
-    # i.e. in comp, replace firebase link with the actual data
-    def convert_sub_doc(self, doc):
+    def convert_representation(self, doc):
         doc_data = doc.to_dict()
         convert_doc = copy.deepcopy(doc_data)
         for doc_key, doc_value in doc_data.items():
@@ -338,44 +337,6 @@ class DBRecipeHandler(object):
                 convert_doc["representations"]["packing"][
                     "positions"
                 ] = DBRecipeHandler.convert_positions_in_representation(position_value)
-            if doc_key == "object" and self.db.is_reference(doc_value):
-                sub_doc_collection, sub_doc_id = self.db.get_collection_id_from_path(
-                    doc_value
-                )
-                sub_doc, _ = self.db.get_doc_by_id(sub_doc_collection, sub_doc_id)
-                convert_doc[doc_key] = sub_doc["name"]
-            if doc_key == "regions":
-                for region_name, region_array in doc_data["regions"].items():
-                    for region_item in region_array:
-                        if isinstance(region_item, dict):
-                            if "object" in region_item and self.db.is_reference(
-                                region_item["object"]
-                            ):
-                                (
-                                    sub_doc_collection,
-                                    sub_doc_id,
-                                ) = self.db.get_collection_id_from_path(
-                                    region_item["object"]
-                                )
-                                sub_doc, _ = self.db.get_doc_by_id(
-                                    sub_doc_collection, sub_doc_id
-                                )
-                                convert_doc["regions"][region_name][
-                                    region_array.index(region_item)
-                                ]["object"] = sub_doc["name"]
-                        elif isinstance(region_item, str) and self.db.is_reference(
-                            region_item
-                        ):
-                            (
-                                sub_doc_collection,
-                                sub_doc_id,
-                            ) = self.db.get_collection_id_from_path(region_item)
-                            sub_doc, _ = self.db.get_doc_by_id(
-                                sub_doc_collection, sub_doc_id
-                            )
-                            convert_doc[doc_key][region_name][
-                                region_array.index(region_item)
-                            ] = sub_doc["name"]
         return convert_doc
 
     def upload_collections(
