@@ -1232,7 +1232,7 @@ class Ingredient(Agent):
             ingredient_position = near_by_ingredients[0][i]
             if self.packing_mode == "closePartner":
                 if self.partners.is_partner(packed_ingredient.name):
-                    placed_partners.append([i, self.partners.get_partner_by_name(packed_ingredient.name), near_by_ingredients[3][i]])
+                    placed_partners.append([i, self.partners.get_partner_by_ingr_name(packed_ingredient.name), near_by_ingredients[3][i]])
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if (
                 packed_ingredient.is_attractor
@@ -1242,7 +1242,7 @@ class Ingredient(Agent):
                     and self.name not in packed_ingredient.excluded_partners_name
                     and packed_ingredient.name not in self.excluded_partners_name
                 ):
-                    part = self.partners.get_partner_by_name(packed_ingredient.name)
+                    part = self.partners.get_partner_by_ingr_name(packed_ingredient.name)
                     if part is None:
                         part = self.partners.add_partner(packed_ingredient, weight=packed_ingredient.weight)
                     if packed_ingredient.distance_expression is not None:

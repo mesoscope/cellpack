@@ -84,16 +84,13 @@ class Partners:
             self.all_partners.append(partner)
 
     def is_partner(self, full_ingredient_name):
-        return self.get_partner_index(full_ingredient_name) >= 0
-
-    def get_partner_index(self, full_ingredient_name):
-        for index, partner in enumerate(self.all_partners):
+        for partner in self.all_partners:
             if partner.name in full_ingredient_name:
-                return index
+                return True
         else:
-            return -1
+            return False
 
-    def get_partner_by_name(self, name):
+    def get_partner_by_ingr_name(self, name):
         for partner in self.all_partners:
             if partner.ingredient and partner.ingredient.name == name:
                 return partner
