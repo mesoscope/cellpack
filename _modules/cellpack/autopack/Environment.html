@@ -576,6 +576,15 @@
             <span class="k">if</span> <span class="n">compartment</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">compartment_name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">compartment</span></div>
 
+<div class="viewcode-block" id="Environment.get_bounding_box_limits"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_bounding_box_limits">[docs]</a>    <span class="k">def</span> <span class="nf">get_bounding_box_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the min and max limits for the bounding box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
+        <span class="n">min_bound</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">max_bound</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">min_bound</span><span class="p">,</span> <span class="n">max_bound</span></div>
+
 <div class="viewcode-block" id="Environment.setSeed"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setSeed">[docs]</a>    <span class="k">def</span> <span class="nf">setSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">):</span>
         <span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seedNum</span><span class="p">)</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>  <span class="c1"># for gradient</span>
