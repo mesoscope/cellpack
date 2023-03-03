@@ -1,18 +1,26 @@
-import numpy
-
-
 class Partner:
     def __init__(self, name, position, weight, binding_probability):
         self.name = name
         self.position = position
         self.weight = weight
         self.binding_probability = binding_probability
+        # replaces self.properties
+        # used in grow ingredient
+        self.points = [] 
+        self.margin_in = 0
+        self.margin_out = 0
+        self.dihedral = 0
+        self.length = 0
 
     def set_ingredient(self, ingredient):
         self.ingredient = ingredient
         self.weight = ingredient.weight
 
 
+    def get_point(self, index):
+        if index >= len(self.points):
+            return None
+        return self.points[index]
     # def setup(
     #     self,
     # ):
@@ -37,16 +45,6 @@ class Partner:
     # self.properties["marge_in"] = [margein - 1, margein + 1]
     # self.properties["marge_out"] = [margeout - 1, margeout + 1]
     # self.properties["diehdral"] = [dihedral - 1, dihedral + 1]
-
-    def getProperties(self, name):
-        if name in self.properties:
-            # if name == "pt1":
-            #    return [0,0,0]
-            # if name == "pt2":
-            #    return [0,0,0]
-            return self.properties[name]
-        else:
-            return None
 
     def distanceFunction(self, d, expression=None, function=None):
         # default function that can be overwrite or
