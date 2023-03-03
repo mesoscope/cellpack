@@ -7,7 +7,11 @@ from json import encoder
 import cellpack.autopack as autopack
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.utils import deep_merge, expand_object_using_key
-from cellpack.autopack.interface_objects import Representations, default_recipe_values, GradientData
+from cellpack.autopack.interface_objects import (
+    Representations,
+    default_recipe_values,
+    GradientData,
+)
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
@@ -168,7 +172,7 @@ class RecipeLoader(object):
                 )
             if not INGREDIENT_TYPE.is_member(obj["type"]):
                 raise TypeError(f"{obj['type']} is not an allowed type")
-            
+
         # handle gradients
         if "gradients" in recipe_data:
             gradients = []

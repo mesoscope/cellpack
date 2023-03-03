@@ -604,8 +604,7 @@ class AnalyseAP:
         # need matrix to euler? then access and plot them?
         # also check the measure angle one
         angles = []
-        distA = []
-        ingr_positions = numpy.array(
+        ingredient_positions = numpy.array(
             [
                 self.env.molecules[i][0]
                 for i in range(len(self.env.molecules))
@@ -620,40 +619,57 @@ class AnalyseAP:
             ]
         )
 
-        if len(ingr_positions):
-            delta = numpy.array(ingr_positions) - numpy.array(center)
+        if len(ingredient_positions):
+
+            distances_from_center = numpy.linalg.norm(
+                ingredient_positions - numpy.array(center), axis=1
+            )
+
+            ingredient_position_vector = numpy.array(
+                ingredient_positions
+            ) - numpy.array(center)
             # lets do it on X,Y,Z and also per positions ?
             anglesX = numpy.array(
                 signed_angle_between_vectors(
-                    [[0, 0, 1]] * len(ingr_positions),
+                    [[0, 0, 1]] * len(ingredient_positions),
                     ingr_rotation[:, 0, :3],
-                    -delta,
+                    -ingredient_position_vector,
                     directed=False,
                     axis=1,
                 )
             )
             anglesY = numpy.array(
                 signed_angle_between_vectors(
-                    [[0, 1, 0]] * len(ingr_positions),
+                    [[0, 1, 0]] * len(ingredient_positions),
                     ingr_rotation[:, 1, :3],
-                    -delta,
+                    -ingredient_position_vector,
                     directed=False,
                     axis=1,
                 )
             )
             anglesZ = numpy.array(
                 signed_angle_between_vectors(
-                    [[1, 0, 0]] * len(ingr_positions),
+                    [[1, 0, 0]] * len(ingredient_positions),
                     ingr_rotation[:, 2, :3],
-                    -delta,
+                    -ingredient_position_vector,
                     directed=False,
                     axis=1,
                 )
             )
-            delta *= delta
-            distA = numpy.sqrt(delta.sum(1)).tolist()
-            angles = numpy.array([distA, anglesX, anglesY, anglesZ])
-        return ingr_positions, distA, numpy.degrees(angles)
+
+            distances_between_ingredients = distance.pdist(ingredient_positions)
+            angles = numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
+        else:
+            distances_from_center = numpy.array([])
+            distances_between_ingredients = numpy.array([])
+            angles = numpy.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+            angles,
+        )
 
     def getVolumeShell(self, bbox, radii, center):
         # rectangle_circle_area
@@ -1849,12 +1865,13 @@ class AnalyseAP:
                         if ingr.packing_mode == "gradient" and self.env.use_gradient:
                             self.center = center = self.env.gradients[
                                 ingr.gradient
-                            ].direction
+                            ].mode_settings.get("center", center)
 
                             # get angles wrt gradient
                             (
                                 seed_ingredient_positions,
                                 seed_distances_from_center,
+                                seed_distances_between_ingredients,
                                 seed_angles,
                             ) = self.getDistanceAngle(ingr, center)
 
@@ -2260,14 +2277,14 @@ class AnalyseAP:
             # plot the angle
             if len(total_angles):
                 self.histo(
-                    total_angles[1],
+                    total_angles[0],
                     self.env.out_folder / f"total_angles_X_{self.env.basename}.png",
                 )
                 self.histo(
-                    total_angles[2],
+                    total_angles[1],
                     self.env.out_folder / f"total_angles_Y_{self.env.basename}.png",
                 )
                 self.histo(
-                    total_angles[3],
+                    total_angles[2],
                     self.env.out_folder / f"total_angles_Z_{self.env.basename}.png",
                 )

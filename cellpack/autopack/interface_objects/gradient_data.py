@@ -1,3 +1,4 @@
+import copy
 from cellpack.autopack.utils import deep_merge
 from .meta_enum import MetaEnum
 from .default_values import DEFAULT_GRADIENT_MODE_SETTINGS
@@ -24,6 +25,7 @@ class WeightModes(MetaEnum):
     """
     All available weight modes
     """
+
     LINEAR = "linear"
     SQUARE = "square"
     CUBE = "cube"
@@ -33,6 +35,7 @@ class PickModes(MetaEnum):
     """
     All available pick modes
     """
+
     MAX = "max"
     MIN = "min"
     RND = "rnd"
@@ -46,6 +49,7 @@ class ModeOptions(MetaEnum):
     """
     All available options for individual modes
     """
+
     direction = "direction"
     center = "center"
     radius = "radius"
@@ -55,7 +59,7 @@ class ModeOptions(MetaEnum):
 
 
 REQUIRED_MODE_OPTIONS = {
-    GradientModes.VECTOR: [ModeOptions.direction],
+    GradientModes.VECTOR: [ModeOptions.center, ModeOptions.direction],
     GradientModes.RADIAL: [ModeOptions.center, ModeOptions.radius],
     GradientModes.SURFACE: [ModeOptions.object],
 }
@@ -76,7 +80,7 @@ class GradientData:
         Takes in gradient dictionary from the recipe file to create a
         GradientData instance
         """
-        gradient_data = GradientData.default_values.copy()
+        gradient_data = copy.deepcopy(GradientData.default_values)
         gradient_data["name"] = gradient_name
         gradient_data = deep_merge(gradient_data, gradient_options)
         self.validate_gradient_data(gradient_data)
@@ -117,12 +121,13 @@ class GradientData:
 
     def set_mode_properties(self, gradient_data):
 
+        if not gradient_data.get("mode_settings"):
+            gradient_data["mode_settings"] = {}
+
         if gradient_data["mode"] in [GradientModes.X, GradientModes.Y, GradientModes.Z]:
 
-            if not gradient_data.get("mode_settings"):
-                gradient_data["mode_settings"] = {}
-
             direction_vector = DIRECTION_MAP[gradient_data["mode"]]
+
             if gradient_data.get("reversed"):
                 direction_vector = [-1 * vec for vec in direction_vector]
 

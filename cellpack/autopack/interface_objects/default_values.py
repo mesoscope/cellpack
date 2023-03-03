@@ -8,5 +8,8 @@ DEFAULT_GRADIENT_MODE_SETTINGS = {
     "weight_mode": "linear",
     "pick_mode": "linear",
     "description": "Linear gradient in the X direction",
-    "reversed": False
+    "reversed": False,
+    "mode_settings": {
+        "direction": [1, 0, 0],
+    },
 }

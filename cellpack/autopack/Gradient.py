@@ -52,6 +52,7 @@ import bisect
 from math import cos
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.utils import get_distances_from_point
+from cellpack.autopack.interface_objects.gradient_data import DIRECTION_MAP
 
 
 class Gradient:
@@ -98,12 +99,12 @@ class Gradient:
             center[i] = (self.bb[0][i] + self.bb[1][i]) / 2.0
         return center
 
-    def defaultFunction(self, xyz):
+    def defaultFunction(self, xyz, direction):
         """
         #linear function 0->0.1
         #project xyz on direction
         """
-        x = numpy.dot(xyz, self.direction)
+        x = numpy.dot(xyz, direction)
         v = (x * 1.0) / (self.distance)
         return v
 
@@ -119,7 +120,7 @@ class Gradient:
         """
         if self.mode in self.axes:
             self.build_axis_weight_map(bb, master_grid_positions)
-        elif self.mode == "direction":
+        elif self.mode == "vector":
             self.build_directional_weight_map(bb, master_grid_positions)
         elif self.mode == "radial":
             self.build_radial_weight_map(bb, master_grid_positions)
@@ -142,22 +143,17 @@ class Gradient:
 
     def get_direction_length(self, direction=None):
         if direction is None:
-            direction = self.direction
+            direction = self.mode_settings.get("direction", [1, 0, 0])
         bb = self.bb
         # assume grid orthogonal
-        angles = []
-        axes = ["X", "Y", "Z"]
-        for i, axis_name in enumerate(axes):
-            angle = angle_between_vectors(self.directions[axis_name], direction)
-            angles.append(angle)
-        min_angle = min(angles)
-        axis_with_smallest_angle = angles.index(min_angle)
-        min_bounds_length = (
-            bb[1][axis_with_smallest_angle] - bb[0][axis_with_smallest_angle]
-        )
-        dot_product = numpy.dot(
-            self.directions[axes[axis_with_smallest_angle]], direction
-        )
+        min_angle = numpy.inf
+        for ax_ind, (_, axis_direction) in enumerate(DIRECTION_MAP.items()):
+            angle = angle_between_vectors(axis_direction, direction)
+            if angle < min_angle:
+                direction_with_smallest_angle = axis_direction
+                min_angle = angle
+                min_bounds_length = bb[1][ax_ind] - bb[0][ax_ind]
+        dot_product = numpy.dot(direction_with_smallest_angle, direction)
         length = (1.0 / dot_product) * (cos(min_angle) * min_bounds_length)
         return length
 
@@ -166,10 +162,7 @@ class Gradient:
         center = self.mode_settings.get("center")
         radius = self.mode_settings.get("radius")
         distances = get_distances_from_point(master_grid_positions, center)
-        self.distances = (
-            numpy.where(distances < radius, distances, radius)
-            / radius
-        )
+        self.distances = numpy.where(distances < radius, distances, radius) / radius
         self.set_weights_by_mode()
 
     def build_surface_distance_weight_map(self):
@@ -191,10 +184,10 @@ class Gradient:
         (linear, gauss, etc...)
         """
         self.bb = bb
-        direction = self.direction
+        direction = self.mode_settings["direction"]
         self.weight = []
         center = self.get_center()
-        length = self.get_direction_length()
+        length = self.get_direction_length(direction=direction)
         distances = (
             (length / 2) + numpy.dot(master_grid_positions - center, direction)
         ) / length

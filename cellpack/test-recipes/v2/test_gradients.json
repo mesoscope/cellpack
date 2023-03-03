@@ -15,9 +15,9 @@
         ]
     ],
     "gradients": {
-        "gR": {
+        "radial_gradient": {
             "mode": "radial",
-            "description": "'Direction' is center of radial gradient",
+            "description": "Radial gradient from the center",
             "weight_mode": "cube",
             "pick_mode": "rnd",
             "mode_settings": {
@@ -27,6 +27,24 @@
                     0
                 ],
                 "radius": 100,
+                "center": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        "vector_gradient": {
+            "mode": "vector",
+            "description": "Gradient away from the plane formed by center and vector",
+            "weight_mode": "cube",
+            "pick_mode": "rnd",
+            "mode_settings": {
+                "direction": [
+                    1,
+                    1,
+                    0
+                ],
                 "center": [
                     0,
                     0,
@@ -60,8 +78,8 @@
                 0.5,
                 0.5
             ],
-            "gradient": "gR",
-            "radius": 2.5,
+            "gradient": "vector_gradient",
+            "radius": 5,
             "max_jitter": [
                 1,
                 1,
@@ -79,7 +97,7 @@
         },
         "A": {
             "object": "sphere",
-            "count": 1000
+            "count": 100
         }
     }
 }
