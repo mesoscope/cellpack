@@ -297,6 +297,15 @@ class Environment(CompartmentList):
             if compartment.name == compartment_name:
                 return compartment
 
+    def get_bounding_box_limits(self):
+        """
+        Returns the min and max limits for the bounding box
+        """
+        bb = numpy.array(self.boundingBox)
+        min_bound = numpy.min(bb, axis=0)
+        max_bound = numpy.max(bb, axis=0)
+        return min_bound, max_bound
+
     def setSeed(self, seedNum):
         SEED = int(seedNum)
         numpy.random.seed(SEED)  # for gradient
