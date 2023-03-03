@@ -280,14 +280,8 @@ class Environment(CompartmentList):
             ) = Recipe.resolve_composition(self.recipe_data)
             self.create_objects()
         if self.use_gradient:
-            gradients = self.recipe_data["gradients"]
-            for gradient_name in gradients:
-                gradient_data = gradients[gradient_name]
-                if "surface_name" in gradient_data:
-                    gradient_data["object"] = self.get_compartment_object_by_name(
-                        gradient_data["surface_name"]
-                    )
-                self.set_gradient(gradient_name, gradient_data)
+            for gradient_data in self.recipe_data["gradients"]:
+                self.set_gradient(gradient_data)
 
     def get_compartment_object_by_name(self, compartment_name):
         """
@@ -697,16 +691,20 @@ class Environment(CompartmentList):
             if o.surfaceRecipe:
                 o.surfaceRecipe.sort()
 
-    def set_gradient(self, name, gradient_data):
+    def set_gradient(self, gradient_data):
         """
         create a grdaient
         assign weight to point
         listorganelle influenced
         listingredient influenced
         """
-        gradient = Gradient(name=name, **gradient_data)
+        if "surface_name" in gradient_data:
+            gradient_data["object"] = self.get_compartment_object_by_name(
+                gradient_data["surface_name"]
+            )
+        gradient = Gradient(gradient_data)
         # default gradient 1-linear Decoy X
-        self.gradients[name] = gradient
+        self.gradients[gradient_data["name"]] = gradient
 
     def callFunction(self, function, args=[], kw={}):
         """

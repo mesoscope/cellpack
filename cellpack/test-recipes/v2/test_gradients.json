@@ -1,0 +1,85 @@
+{
+    "version": "default",
+    "format_version": "2.0",
+    "name": "test_gradients",
+    "bounding_box": [
+        [
+            -100,
+            -100,
+            0
+        ],
+        [
+            100,
+            100,
+            1
+        ]
+    ],
+    "gradients": {
+        "gR": {
+            "mode": "radial",
+            "description": "'Direction' is center of radial gradient",
+            "weight_mode": "cube",
+            "pick_mode": "rnd",
+            "mode_settings": {
+                "direction": [
+                    0,
+                    0,
+                    0
+                ],
+                "radius": 100,
+                "center": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    },
+    "objects": {
+        "base": {
+            "packing_mode": "gradient",
+            "principal_vector": [
+                0,
+                0,
+                1
+            ],
+            "place_method": "jitter",
+            "jitter_attempts": 100,
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "sphere": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "gradient": "gR",
+            "radius": 2.5,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere",
+            "count": 1000
+        }
+    }
+}
