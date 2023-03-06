@@ -125,4 +125,4 @@ def test_partner_ingredient():
     ingr = Agent(name=ingr_name, concentration=10)
     partners.all_partners[0].set_ingredient(ingr)
     partner_ingr = partners.get_partner_by_ingr_name(ingr_name)
-    assert  partner_ingr.name == "partner_name_1"
+    assert partner_ingr.name == "partner_name_1"

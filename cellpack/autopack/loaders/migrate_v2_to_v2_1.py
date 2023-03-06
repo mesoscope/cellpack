@@ -8,7 +8,7 @@ def convert_partners(object_data):
         return partners_list
     for index, name in enumerate(object_data["partners"]["names"]):
         positions = object_data["partners"]["positions"]
-        position = [0,0,0]
+        position = [0, 0, 0]
         if positions and index < len(positions):
             position = positions[index]
 
@@ -21,10 +21,11 @@ def convert_partners(object_data):
         partner = {
             "name": name,
             "position": position,
-            "binding_probably": binding_probably
+            "binding_probably": binding_probably,
         }
         partners_list.append(partner)
     return partners_list
+
 
 def convert(recipe_data_2_0):
     new_recipe = copy.deepcopy(recipe_data_2_0)

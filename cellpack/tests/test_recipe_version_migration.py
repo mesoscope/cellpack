@@ -292,7 +292,7 @@ def test_get_v1_ingredient():
                     "orient_bias_range": [6, pi],
                 },
                 "C": {
-                    "partners": {'probability_binding': 0.5},
+                    "partners": {"probability_binding": 0.5},
                     "orient_bias_range": [-pi, 12],
                     "radius": 10,
                     "representations": {

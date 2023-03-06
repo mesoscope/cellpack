@@ -1225,7 +1225,7 @@ class GrowIngredient(MultiCylindersIngr):
                         self.prev_vec = v
                         if nextPoint is not None and dihedral is None:
                             self.prev_alt_pt = newPts[1]
-                
+
                         self.alternate_interval = 0
                         return newPt, True
                     else:

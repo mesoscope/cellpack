@@ -207,4 +207,3 @@ def convert(old_recipe):
     new_recipe["objects"] = objects_dict
     new_recipe["composition"] = composition
     return new_recipe
-

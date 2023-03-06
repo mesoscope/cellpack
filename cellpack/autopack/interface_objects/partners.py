@@ -6,7 +6,7 @@ class Partner:
         self.binding_probability = binding_probability
         # replaces self.properties
         # used in grow ingredient
-        self.points = [] 
+        self.points = []
         self.margin_in = 0
         self.margin_out = 0
         self.dihedral = 0
@@ -16,11 +16,11 @@ class Partner:
         self.ingredient = ingredient
         self.weight = ingredient.weight
 
-
     def get_point(self, index):
         if index >= len(self.points):
             return None
         return self.points[index]
+
     # def setup(
     #     self,
     # ):
@@ -77,9 +77,11 @@ class Partners:
         for partner in partners:
             partner = Partner(
                 partner["name"],
-                partner["position"] if "position" in partner else [0,0,0],
+                partner["position"] if "position" in partner else [0, 0, 0],
                 partner["weight"] if "weight" in partner else 0.2,
-                partner["binding_probability"] if "binding_probability" in partner else 1.0,
+                partner["binding_probability"]
+                if "binding_probability" in partner
+                else 1.0,
             )
             self.all_partners.append(partner)
 

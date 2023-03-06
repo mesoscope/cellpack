@@ -1,6 +1,7 @@
 import numpy
 import math
 
+
 class Agent:
     def __init__(
         self,
@@ -15,7 +16,7 @@ class Agent:
         packing_mode="random",
         partners=None,
         place_method="jitter",
-        weight=0.2
+        weight=0.2,
     ):
         self.name = name
         self.concentration = concentration
@@ -46,16 +47,17 @@ class Agent:
         self.tilling = None
         self.weight = weight
 
-
     def get_weights_by_distance(self, placed_partners):
         weights = []
         total = 0.0
         for _, partner, dist in placed_partners:
             if self.overwrite_distance_function:
                 wd = partner.weight
-                
+
             else:
-                wd = partner.distanceFunction(dist, expression=partner.distance_expression)
+                wd = partner.distanceFunction(
+                    dist, expression=partner.distance_expression
+                )
             weights.append(wd)
             total = total + wd
         # probaArray.append(self.proba_not_binding)
@@ -83,7 +85,9 @@ class Agent:
                 return i
         return None
 
-    def pick_partner_grid_index(self, near_by_ingredients, placed_partners, currentPos=[0, 0, 0]):
+    def pick_partner_grid_index(
+        self, near_by_ingredients, placed_partners, currentPos=[0, 0, 0]
+    ):
         # placed_partners is (i,partner,d)
         # weight using the distance function
         targetPoint = None
@@ -93,8 +97,8 @@ class Agent:
         if i is None:
             return None, None
         partner_index = placed_partners[i][0]  # i,part,dist
-        partner_ingredient = near_by_ingredients[2][partner_index] 
-        self.log.info(F"binding to {partner_ingredient.name}")
+        partner_ingredient = near_by_ingredients[2][partner_index]
+        self.log.info(f"binding to {partner_ingredient.name}")
         targetPoint = near_by_ingredients[0][partner_index]
         if self.compNum > 0:
             #            organelle = self.env.compartments[abs(self.compNum)-1]
@@ -103,7 +107,9 @@ class Agent:
             targetPoint = self.env.grid.getClosestFreeGridPoint(
                 targetPoint,
                 compId=self.compNum,
-                ball=(partner_ingredient.encapsulating_radius + self.encapsulating_radius),
+                ball=(
+                    partner_ingredient.encapsulating_radius + self.encapsulating_radius
+                ),
                 distance=self.encapsulating_radius * 2.0,
             )
             self.log.info(
@@ -122,4 +128,3 @@ class Agent:
             targetPoint = numpy.array(targetPoint) - factor
 
         return targetPoint
-

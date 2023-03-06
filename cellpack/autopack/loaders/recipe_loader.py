@@ -139,12 +139,11 @@ class RecipeLoader(object):
             converted = True
 
             new_recipe = convert_v2_to_v2_1(old_recipe)
-        
-          
+
         if converted:
             if self.save_converted_recipe:
                 self._save_converted_recipe(new_recipe)
-        
+
             return new_recipe
 
         else:

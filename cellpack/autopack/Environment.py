@@ -379,7 +379,7 @@ class Environment(CompartmentList):
                 partner_ingr = self.getIngrFromName(partner.name)
                 partner.set_ingredient(partner_ingr)
         if ingr.type == "Grow":
-            # TODO: I don't think this code is needed, 
+            # TODO: I don't think this code is needed,
             # but I haven't dug into it enough to delete it all yet
             ingr.prepare_alternates()
 

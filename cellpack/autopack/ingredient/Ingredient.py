@@ -190,7 +190,7 @@ class Ingredient(Agent):
         rotation_range=6.2831,
         use_orient_bias=False,
         use_rotation_axis=False,
-        weight=0.2
+        weight=0.2,
     ):
         super().__init__(
             name,
@@ -204,7 +204,7 @@ class Ingredient(Agent):
             packing_mode=packing_mode,
             partners=partners,
             place_method=place_method,
-            weight=weight
+            weight=weight,
         )
         self.log = logging.getLogger("ingredient")
         self.log.propagate = False
@@ -1218,7 +1218,9 @@ class Ingredient(Agent):
         self, histoVol, jtrans, rotMat, organelle, afvi, close_indice=None
     ):
         if close_indice is None:
-            near_by_ingredients = self.getIngredientsInBox(histoVol, jtrans, rotMat, organelle, afvi)
+            near_by_ingredients = self.getIngredientsInBox(
+                histoVol, jtrans, rotMat, organelle, afvi
+            )
         else:
             near_by_ingredients = self.getIngredientsInTree(close_indice)
         placed_partners = []
@@ -1232,7 +1234,15 @@ class Ingredient(Agent):
             ingredient_position = near_by_ingredients[0][i]
             if self.packing_mode == "closePartner":
                 if self.partners.is_partner(packed_ingredient.name):
-                    placed_partners.append([i, self.partners.get_partner_by_ingr_name(packed_ingredient.name), near_by_ingredients[3][i]])
+                    placed_partners.append(
+                        [
+                            i,
+                            self.partners.get_partner_by_ingr_name(
+                                packed_ingredient.name
+                            ),
+                            near_by_ingredients[3][i],
+                        ]
+                    )
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if (
                 packed_ingredient.is_attractor
@@ -1242,9 +1252,13 @@ class Ingredient(Agent):
                     and self.name not in packed_ingredient.excluded_partners_name
                     and packed_ingredient.name not in self.excluded_partners_name
                 ):
-                    part = self.partners.get_partner_by_ingr_name(packed_ingredient.name)
+                    part = self.partners.get_partner_by_ingr_name(
+                        packed_ingredient.name
+                    )
                     if part is None:
-                        part = self.partners.add_partner(packed_ingredient, weight=packed_ingredient.weight)
+                        part = self.partners.add_partner(
+                            packed_ingredient, weight=packed_ingredient.weight
+                        )
                     if packed_ingredient.distance_expression is not None:
                         part.distance_expression = packed_ingredient.distance_expression
                     d = afvi.vi.measure_distance(jtrans, ingredient_position)
