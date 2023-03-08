@@ -93,8 +93,12 @@ class CompositionDoc(DataDoc):
                 else: 
                     comp_name = local_data["regions"][region_name][index]
                     local_data["regions"][region_name][index] = prep_recipe_data["composition"][comp_name]
+                    #TODO: better ways to solve that nested comps don't have default structures? 
+                    #L99-L102 is currently working but not sure with more test recipes
                     local_data["regions"][region_name][index]["name"] = comp_name
-                    local_data["regions"][region_name][index]["molarity"] = self.molarity #check self.molarity 
+                    local_data["regions"][region_name][index]["molarity"] = self.molarity 
+                    if not local_data["regions"][region_name][index].get("regions"):
+                        local_data["regions"][region_name][index]["regions"] = {}
 
                 if "regions" in local_data["regions"][region_name][index] and local_data["regions"][region_name][index]["regions"] is not None:
                     self.resolve_local_regions(local_data["regions"][region_name][index], recipe_data, db)
@@ -156,7 +160,6 @@ class CompositionDoc(DataDoc):
                     self.resolve_db_regions(db_data, db)
                     self.resolve_local_regions(local_data, recipe_data, db)
                     difference = DeepDiff(local_data, db_data, ignore_order=True, ignore_type_in_groups=[tuple,list])
-                    # print("diff----->>>", difference)
                     # print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
                     if not difference:
                         return False, doc.id
