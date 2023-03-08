@@ -94,11 +94,15 @@ class CompositionDoc(DataDoc):
                     comp_name = local_data["regions"][region_name][index]
                     local_data["regions"][region_name][index] = prep_recipe_data["composition"][comp_name]
                     #TODO: better ways to solve that nested comps don't have default structures? 
-                    #L99-L102 is currently working but not sure with more test recipes
-                    local_data["regions"][region_name][index]["name"] = comp_name
-                    local_data["regions"][region_name][index]["molarity"] = self.molarity 
+                    #L99-L106 is currently working but not sure with more test recipes
+                    if not local_data["regions"][region_name][index].get("name"):
+                        local_data["regions"][region_name][index]["name"] = comp_name
+                    if not local_data["regions"][region_name][index].get("molarity"):
+                        local_data["regions"][region_name][index]["molarity"] = None 
                     if not local_data["regions"][region_name][index].get("regions"):
                         local_data["regions"][region_name][index]["regions"] = {}
+                    if not local_data["regions"][region_name][index].get("count"):
+                        local_data["regions"][region_name][index]["count"] = None
 
                 if "regions" in local_data["regions"][region_name][index] and local_data["regions"][region_name][index]["regions"] is not None:
                     self.resolve_local_regions(local_data["regions"][region_name][index], recipe_data, db)
@@ -161,6 +165,7 @@ class CompositionDoc(DataDoc):
                     self.resolve_local_regions(local_data, recipe_data, db)
                     difference = DeepDiff(local_data, db_data, ignore_order=True, ignore_type_in_groups=[tuple,list])
                     # print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
+                    # print("diff--->", difference)
                     if not difference:
                         return False, doc.id
         return True, None
