@@ -71,6 +71,9 @@ class FirebaseHandler(object):
 
     def upload_doc(self, collection, data):
         return self.db.collection(collection).add(data)
-
+    
+    @staticmethod
+    def is_firebase_obj(obj):
+        return isinstance(obj, (firestore.DocumentReference, firestore.DocumentSnapshot))
 
 
