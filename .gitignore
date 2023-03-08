@@ -46,6 +46,7 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+cellpack/tests/outputs/
 
 # Translations
 *.mo
@@ -119,4 +120,3 @@ cellpack/tests/outputs/
 # data
 data/
 **/converted/*
-

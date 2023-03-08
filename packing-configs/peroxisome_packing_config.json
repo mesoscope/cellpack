@@ -1,0 +1,18 @@
+{
+    "name": "grid_spacing_2pt5",
+    "format": "simularium",
+    "inner_grid_method": "trimesh",
+    "live_packing": false,
+    "ordered_packing": false,
+    "num_trials": 1,
+    "out": "out/analyze",
+    "overwrite_place_method": true,
+    "place_method": "spheresSST",
+    "save_analyze_result": true,
+    "show_grid_plot": false,
+    "save_plot_figures": false,
+    "spacing": 2.5,
+    "use_periodicity": false,
+    "show_sphere_trees": false,
+    "load_from_grid_file": true
+}

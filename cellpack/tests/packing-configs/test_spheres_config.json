@@ -1,17 +1,15 @@
 {
-    "name": "grid_spacing_10",
+    "name": "test_spheres_config",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
-    "num_trials": 10,
-    "out": "out/analyze",
+    "out": "cellpack/tests/outputs/",
     "overwrite_place_method": false,
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": false,
-    "spacing": 10,
+    "spacing": 5,
     "use_periodicity": false,
-    "show_sphere_trees": false,
-    "load_from_grid_file": true
+    "show_sphere_trees": true
 }
