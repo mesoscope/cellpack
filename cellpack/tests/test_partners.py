@@ -100,8 +100,8 @@ def test_is_partner():
             },
         ],
     )
-    assert partners.is_partner("partner_name_1_ext") == True
-    assert partners.is_partner("not_partner_ext") == False
+    assert partners.is_partner("partner_name_1_ext")
+    assert not partners.is_partner("not_partner_ext")
 
 
 def test_partner_ingredient():
