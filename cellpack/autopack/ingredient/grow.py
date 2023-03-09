@@ -905,7 +905,7 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         liste_nodes = []
         cutoff = self.env.largestProteinSize + self.uLength
-        closesbody_indice = self.getClosestIngredient(pt2, self.env, cutoff=cutoff)
+        closesbody_indice = self.get_closest_ingredients(pt2, self.env, cutoff=cutoff)
         liste_nodes = self.get_rbNodes(
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
@@ -1088,7 +1088,6 @@ class GrowIngredient(MultiCylindersIngr):
                                     self.vi.updateMesh(pc, vertices=verts)
                                 self.vi.update()
                 attempted += 1
-                print("rejected boundary")
                 continue
             if checkcollision:
                 collision = False
@@ -1139,7 +1138,7 @@ class GrowIngredient(MultiCylindersIngr):
                         prev = None
                         if len(self.env.rTrans) > 2:
                             prev = self.env.rTrans[-1]
-                        closesbody_indice = self.getClosestIngredient(
+                        closesbody_indice = self.get_closest_ingredients(
                             newPt, histoVol, cutoff=cutoff
                         )  # vself.radii[0][0]*2.0
                         if len(closesbody_indice) == 0:

@@ -15,7 +15,7 @@
         ]
     ],
     "objects": {
-        "Sphere_radius_25p": {
+        "Sphere_radius_20p": {
             "color": [
                 0.11,
                 0.47,
@@ -61,8 +61,8 @@
             "jitter_attempts": 10,
             "partners": [
                 {
-                    "name": "Sphere_radius_25p",
-                    "binding_probability": 1.0
+                    "name": "Sphere_radius_20p",
+                    "binding_probability": 0.5
                 }
             ],
             "rotation_range": 6.2831,
@@ -101,13 +101,13 @@
             "regions": {
                 "interior": [
                     {
-                        "object": "Sphere_radius_25p",
+                        "object": "Sphere_radius_20p",
                         "count": 10,
                         "priority": -1
                     },
                     {
                         "object": "Sphere_radius_30r",
-                        "count": 200,
+                        "count": 50,
                         "priority": 0
                     }
                 ]

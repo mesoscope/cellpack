@@ -1,5 +1,8 @@
+from random import random
 import numpy
 import math
+
+from cellpack.autopack.utils import get_distance
 
 
 class Agent:
@@ -49,7 +52,6 @@ class Agent:
 
     def get_weights_by_distance(self, placed_partners):
         weights = []
-        total = 0.0
         for _, partner, dist in placed_partners:
             if self.overwrite_distance_function:
                 wd = partner.weight
@@ -59,10 +61,7 @@ class Agent:
                     dist, expression=partner.distance_expression
                 )
             weights.append(wd)
-            total = total + wd
-        # probaArray.append(self.proba_not_binding)
-        # w=w+self.proba_not_binding
-        return weights, total
+        return weights
 
     def getSubWeighted(self, weights):
         """
@@ -86,45 +85,68 @@ class Agent:
         return None
 
     def pick_partner_grid_index(
-        self, near_by_ingredients, placed_partners, currentPos=[0, 0, 0]
+        self, near_by_ingredients, placed_partners, current_packing_position=[0, 0, 0]
     ):
-        # placed_partners is (i,partner,d)
+        # near_by_ingredient is [
+        #   ingredient pos[], 
+        #   ingredient rot[], 
+        #   ingredient[], 
+        #   distance[]?
+        # ]
+        # placed_partners is (index,placed_partner_ingredient,distance_from_current_point)
         # weight using the distance function
-        targetPoint = None
-        weightD, total = self.get_weights_by_distance(placed_partners)
-        self.log.info(f"w {placed_partners} {total}")
+        packing_position = None
+        weightD = self.get_weights_by_distance(placed_partners)
         i = self.getSubWeighted(weightD)
         if i is None:
-            return None, None
+            return None
         partner_index = placed_partners[i][0]  # i,part,dist
+        partner = placed_partners[i][1]
         partner_ingredient = near_by_ingredients[2][partner_index]
         self.log.info(f"binding to {partner_ingredient.name}")
-        targetPoint = near_by_ingredients[0][partner_index]
+
         if self.compNum > 0:
-            #            organelle = self.env.compartments[abs(self.compNum)-1]
-            #            dist,ind = organelle.OGsrfPtsBht.query(targetPoint)
-            #            organelle.ogsurfacePoints[]
-            targetPoint = self.env.grid.getClosestFreeGridPoint(
-                targetPoint,
+            packing_position = self.env.grid.getClosestFreeGridPoint(
+                packing_position,
                 compId=self.compNum,
                 ball=(
                     partner_ingredient.encapsulating_radius + self.encapsulating_radius
                 ),
                 distance=self.encapsulating_radius * 2.0,
             )
-            self.log.info(
-                f"target point free tree is {targetPoint} {self.encapsulating_radius} {partner_ingredient.encapsulating_radius}"
-            )
+            return packing_position
         else:
-            # get closestFreePoint using freePoint and masterGridPosition
-            # if self.place_method == "rigid-body" or self.place_method == "jitter":
-            # the new point is actually tPt -normalise(tPt-current)*radius
-            # what I need it the closest free point from the target ingredient
-            v = numpy.array(targetPoint) - numpy.array(currentPos)
-            s = numpy.sum(v * v)
-            factor = (v / math.sqrt(s)) * (
-                partner_ingredient.encapsulating_radius + self.encapsulating_radius
-            )
-            targetPoint = numpy.array(targetPoint) - factor
+            binding_probability = partner.binding_probability
+            bind = True
+            chance = random()
+            if binding_probability > 0:
+                bind = chance <= binding_probability
+                if bind:
+                    partner_position = near_by_ingredients[0][partner_index]
 
-        return targetPoint
+                    # get closestFreePoint using freePoint and masterGridPosition
+                    # if self.place_method == "rigid-body" or self.place_method == "jitter":
+                    # the new point is actually tPt -normalise(tPt-current)*radius
+                    # what I need it the closest free point from the target ingredient
+                    v = numpy.array(partner_position) - numpy.array(current_packing_position)
+                    s = numpy.sum(v * v)
+                    factor = (v / math.sqrt(s)) * (
+                        partner_ingredient.encapsulating_radius + self.encapsulating_radius
+                    )
+                    packing_position = numpy.array(partner_position) - factor
+                    return packing_position
+                else: 
+                    return current_packing_position
+            elif binding_probability < 0:
+                for partner in placed_partners:
+                    binding_probability = partner[1].binding_probability
+                    repelled = chance <= abs(binding_probability)
+                    if repelled:
+                        partner_ingr = partner[1].ingredient
+                        needed_distance = partner_ingr.encapsulating_radius + self.encapsulating_radius
+                        distance = partner[2]
+                        if (distance <= needed_distance):
+                            return None
+                return current_packing_position
+            else:
+                return current_packing_position
