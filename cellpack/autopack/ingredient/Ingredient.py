@@ -1214,9 +1214,7 @@ class Ingredient(Agent):
         else:
             return []
 
-    def get_partners(
-        self, jtrans, rotMat, organelle, afvi
-    ):
+    def get_partners(self, jtrans, rotMat, organelle, afvi):
         env = self.env
         closest_ingredients = self.get_closest_ingredients(
             jtrans, cutoff=self.env.grid.diag
@@ -1249,7 +1247,7 @@ class Ingredient(Agent):
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if packed_ingredient.is_attractor:
                 # add all ingredients as possible partners
-                # attractors are universal attractors 
+                # attractors are universal attractors
                 if not self.partners.is_partner(packed_ingredient.name):
                     part = self.partners.get_partner_by_ingr_name(
                         packed_ingredient.name
@@ -1483,7 +1481,7 @@ class Ingredient(Agent):
         return R
 
     def get_closest_ingredients(self, point, cutoff=10.0):
-        
+
         to_return = {"indices": [], "distances": []}
         env = self.env
         numpy.zeros(env.totalNbIngr).astype("i")
@@ -1688,7 +1686,7 @@ class Ingredient(Agent):
                 return False, {}, {}
                 # if no target_grid_pt position
                 # set collitions possible to False
-                # set success to false 
+                # set success to false
         is_fiber = self.type == "Grow" or self.type == "Actine"
         collision_possible = True
         if collision_possible or is_fiber:
@@ -1988,7 +1986,9 @@ class Ingredient(Agent):
         if placed_partners:
             if not self.force_random:
                 targetPoint = self.pick_partner_grid_index(
-                    near_by_ingredients, placed_partners, current_packing_position=jtrans
+                    near_by_ingredients,
+                    placed_partners,
+                    current_packing_position=jtrans,
                 )
                 if targetPoint is None:
                     targetPoint = jtrans
@@ -2219,7 +2219,6 @@ class Ingredient(Agent):
         return False, packing_location, packing_rotation, {}, {}
 
     def lookForNeighbours(self, trans, rotMat, organelle, afvi):
-        
 
         near_by_ingredients, placed_partners = self.get_partners(
             trans, rotMat, organelle, afvi
@@ -2231,7 +2230,9 @@ class Ingredient(Agent):
             if not self.force_random:
                 for jitterPos in range(self.jitter_attempts):  #
                     targetPoint = self.pick_partner_grid_index(
-                        near_by_ingredients, placed_partners, current_packing_position=trans
+                        near_by_ingredients,
+                        placed_partners,
+                        current_packing_position=trans,
                     )
                     if targetPoint is not None:
                         break
@@ -2704,7 +2705,9 @@ class Ingredient(Agent):
                 self.log.info(f"len listePartner: {len(placed_partners)}")
                 if not self.force_random:
                     targetPoint = self.pick_partner_grid_index(
-                        near_by_ingredients, placed_partners, current_packing_position=jtrans
+                        near_by_ingredients,
+                        placed_partners,
+                        current_packing_position=jtrans,
                     )
                     if targetPoint is None:
                         targetPoint = jtrans

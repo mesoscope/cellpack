@@ -84,16 +84,13 @@ class Partners:
                 else 1.0,
             )
             self.all_partners.append(partner)
-    
+
     def add_partner(self, ingredient, probability_binding=0.5):
         partner = Partner(
-                ingredient.name,
-                [0, 0, 0],
-                ingredient.weight,
-                probability_binding)
+            ingredient.name, [0, 0, 0], ingredient.weight, probability_binding
+        )
         partner.set_ingredient(ingredient)
         self.all_partners.append(partner)
-
 
     def is_partner(self, full_ingredient_name):
         for partner in self.all_partners:

@@ -88,9 +88,9 @@ class Agent:
         self, near_by_ingredients, placed_partners, current_packing_position=[0, 0, 0]
     ):
         # near_by_ingredient is [
-        #   ingredient pos[], 
-        #   ingredient rot[], 
-        #   ingredient[], 
+        #   ingredient pos[],
+        #   ingredient rot[],
+        #   ingredient[],
         #   distance[]?
         # ]
         # placed_partners is (index,placed_partner_ingredient,distance_from_current_point)
@@ -128,14 +128,17 @@ class Agent:
                     # if self.place_method == "rigid-body" or self.place_method == "jitter":
                     # the new point is actually tPt -normalise(tPt-current)*radius
                     # what I need it the closest free point from the target ingredient
-                    v = numpy.array(partner_position) - numpy.array(current_packing_position)
+                    v = numpy.array(partner_position) - numpy.array(
+                        current_packing_position
+                    )
                     s = numpy.sum(v * v)
                     factor = (v / math.sqrt(s)) * (
-                        partner_ingredient.encapsulating_radius + self.encapsulating_radius
+                        partner_ingredient.encapsulating_radius
+                        + self.encapsulating_radius
                     )
                     packing_position = numpy.array(partner_position) - factor
                     return packing_position
-                else: 
+                else:
                     return current_packing_position
             elif binding_probability < 0:
                 for partner in placed_partners:
@@ -143,9 +146,12 @@ class Agent:
                     repelled = chance <= abs(binding_probability)
                     if repelled:
                         partner_ingr = partner[1].ingredient
-                        needed_distance = partner_ingr.encapsulating_radius + self.encapsulating_radius
+                        needed_distance = (
+                            partner_ingr.encapsulating_radius
+                            + self.encapsulating_radius
+                        )
                         distance = partner[2]
-                        if (distance <= needed_distance):
+                        if distance <= needed_distance:
                             return None
                 return current_packing_position
             else:
