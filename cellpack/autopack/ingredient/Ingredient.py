@@ -1682,11 +1682,7 @@ class Ingredient(Agent):
                 current_visual_instance,
             )
             if target_grid_point_position is None:
-                # import ipdb; ipdb.set_trace()
                 return False, {}, {}
-                # if no target_grid_pt position
-                # set collitions possible to False
-                # set success to false
         is_fiber = self.type == "Grow" or self.type == "Actine"
         collision_possible = True
         if collision_possible or is_fiber:
