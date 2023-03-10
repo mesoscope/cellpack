@@ -107,6 +107,12 @@ class Gradient:
         x = numpy.dot(xyz, direction)
         v = (x * 1.0) / (self.distance)
         return v
+    
+    def normalize_vector(self, vector):
+        """
+        Normalize to unit vector
+        """
+        return vector / numpy.linalg.norm(vector)
 
     def pickPoint(self, listPts):
         """
@@ -141,22 +147,6 @@ class Gradient:
             weightGauss.append(gauss)
         return numpy.array(weightGauss) * number_of_points
 
-    def get_direction_length(self, direction=None):
-        if direction is None:
-            direction = self.mode_settings.get("direction", [1, 0, 0])
-        bb = self.bb
-        # assume grid orthogonal
-        min_angle = numpy.inf
-        for ax_ind, (_, axis_direction) in enumerate(DIRECTION_MAP.items()):
-            angle = angle_between_vectors(axis_direction, direction)
-            if angle < min_angle:
-                direction_with_smallest_angle = axis_direction
-                min_angle = angle
-                min_bounds_length = bb[1][ax_ind] - bb[0][ax_ind]
-        dot_product = numpy.dot(direction_with_smallest_angle, direction)
-        length = (1.0 / dot_product) * (cos(min_angle) * min_bounds_length)
-        return length
-
     def build_radial_weight_map(self, bb, master_grid_positions):
         self.bb = bb
         center = self.mode_settings.get("center")
@@ -182,19 +172,16 @@ class Gradient:
         """
         from a given direction build a linear weight according the chosen mode
         (linear, gauss, etc...)
-        """
+        """        
         self.bb = bb
         direction = self.mode_settings["direction"]
+        direction = self.normalize_vector(direction)
         self.weight = []
-        center = self.get_center()
-        length = self.get_direction_length(direction=direction)
-        distances = (
-            (length / 2) + numpy.dot(master_grid_positions - center, direction)
-        ) / length
+        center = self.mode_settings.get("center", self.get_center())
+        distances = numpy.dot(master_grid_positions - center, direction)
         max_d = max(distances)
         min_d = min(distances)
-        self.distances = 1 - (distances - min_d) / (max_d - min_d)
-        print(self.distances)
+        self.distances = (distances - min_d) / (max_d - min_d)
         self.set_weights_by_mode()
 
     def build_axis_weight_map(self, bb, master_grid_positions):
