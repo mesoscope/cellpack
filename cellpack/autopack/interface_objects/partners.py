@@ -74,11 +74,18 @@ class Partners:
         #     binding_probably (negative value means repelled)
         # }
         self.all_partners = []
+        #c copied this code in, not sure what exactly these weights 
+        # are for or why they're distributed this way
+        total = len(partners)
+        weight_initial = 0.2
+        weight = weight_initial
         for partner in partners:
+
+            weight += ((1 - weight_initial) / (total)) - weight_initial
             partner = Partner(
                 partner["name"],
                 partner["position"] if "position" in partner else [0, 0, 0],
-                partner["weight"] if "weight" in partner else 0.2,
+                partner["weight"] if "weight" in partner else weight,
                 partner["binding_probability"]
                 if "binding_probability" in partner
                 else 1.0,
