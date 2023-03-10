@@ -1233,6 +1233,7 @@ class Ingredient(Agent):
             self.log.info("nb close ingredient %s", self.name)
         for i in range(len(near_by_ingredients[2])):
             packed_ingredient = near_by_ingredients[2][i]
+            distance = (near_by_ingredients[3][i],)
             if self.packing_mode == "closePartner":
                 if self.partners.is_partner(packed_ingredient.name):
                     placed_partners.append(
@@ -1241,10 +1242,9 @@ class Ingredient(Agent):
                             self.partners.get_partner_by_ingr_name(
                                 packed_ingredient.name
                             ),
-                            near_by_ingredients[3][i],
+                            distance,
                         ]
                     )
-                    #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if packed_ingredient.is_attractor:
                 # add all ingredients as possible partners
                 # attractors are universal attractors
@@ -1258,7 +1258,7 @@ class Ingredient(Agent):
                         )
                     if packed_ingredient.distance_expression is not None:
                         part.distance_expression = packed_ingredient.distance_expression
-                    placed_partners.append([i, part, d])
+                    placed_partners.append([i, part, distance])
         if not placed_partners:
             self.log.info("no partner found in close ingredient %s", self.packing_mode)
             return [], []

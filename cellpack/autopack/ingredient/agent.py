@@ -2,8 +2,6 @@ from random import random
 import numpy
 import math
 
-from cellpack.autopack.utils import get_distance
-
 
 class Agent:
     def __init__(
