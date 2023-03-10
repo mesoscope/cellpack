@@ -74,7 +74,7 @@ class Partners:
         #     binding_probably (negative value means repelled)
         # }
         self.all_partners = []
-        #c copied this code in, not sure what exactly these weights 
+        # c copied this code in, not sure what exactly these weights
         # are for or why they're distributed this way
         total = len(partners)
         weight_initial = 0.2

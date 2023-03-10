@@ -20,7 +20,7 @@ from cellpack.autopack.interface_objects import Partners
                 {
                     "name": "partner_name",
                     "binding_probability": 1.0,
-                    "weight": 0.2,
+                    "weight": 0.8,
                     "position": [0, 0, 0],
                 }
             ],
