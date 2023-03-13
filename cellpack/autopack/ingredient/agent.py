@@ -1,70 +1,6 @@
+from random import random
 import numpy
 import math
-
-
-class Partner:
-    def __init__(self, ingr, weight=0.0, properties=None):
-        if type(ingr) is str:
-            self.name = ingr
-        else:
-            self.name = ingr.name
-        self.ingr = ingr
-        self.weight = weight
-        self.properties = {}
-        self.distance_expression = None
-        if properties is not None:
-            self.properties = properties
-
-    # def setup(
-    #     self,
-    # ):
-    # QUESTION: why is this commented out?
-    # # setup the marge according the pt properties
-    # pt1 = numpy.array(self.getProperties("pt1"))
-    # pt2 = numpy.array(self.getProperties("pt2"))
-    # pt3 = numpy.array(self.getProperties("pt3"))
-    # pt4 = numpy.array(self.getProperties("pt4"))
-
-    # # length = autopack.helper.measure_distance(pt2,pt3)#length
-    # margein = math.degrees(
-    #     autopack.helper.angle_between_vectors(pt2 - pt1, pt3 - pt2)
-    # )  # 4
-    # margeout = math.degrees(
-    #     autopack.helper.angle_between_vectors(pt3 - pt2, pt4 - pt3)
-    # )  # 113
-    # dihedral = math.degrees(
-    #     autopack.helper.angle_between_vectors(pt2 - pt1, pt4 - pt2)
-    # )  # 79
-    # dihedral = autopack.helper.dihedral(pt1, pt2, pt3, pt4)
-    # self.properties["marge_in"] = [margein - 1, margein + 1]
-    # self.properties["marge_out"] = [margeout - 1, margeout + 1]
-    # self.properties["diehdral"] = [dihedral - 1, dihedral + 1]
-
-    def addProperties(self, name, value):
-        self.properties[name] = value
-
-    def getProperties(self, name):
-        if name in self.properties:
-            # if name == "pt1":
-            #    return [0,0,0]
-            # if name == "pt2":
-            #    return [0,0,0]
-            return self.properties[name]
-        else:
-            return None
-
-    def distanceFunction(self, d, expression=None, function=None):
-        # default function that can be overwrite or
-        # can provide an experssion which 1/d or 1/d^2 or d^2etc.w*expression
-        # can provide directly a function that take as
-        # arguments the w and the distance
-        if expression is not None:
-            val = self.weight * expression(d)
-        elif function is not None:
-            val = function(self.weight, d)
-        else:
-            val = self.weight * 1.0 / d
-        return val
 
 
 class Agent:
@@ -81,20 +17,11 @@ class Agent:
         packing_mode="random",
         partners=None,
         place_method="jitter",
-        weight=0.2,  # use for affinity ie partner.weight
+        weight=0.2,
     ):
         self.name = name
         self.concentration = concentration
         self.partners = partners
-        self.excluded_partners = {}
-        # the partner position is the local position
-        self.partners_position = []
-        self.partners_name = []
-        if not self.partners_position:
-            for i in self.partners_name:
-                self.partners_position.append([numpy.identity(4)])
-        excluded_partners_name = []
-        self.excluded_partners_name = excluded_partners_name
         self.packing_mode = packing_mode
 
         assert self.packing_mode in [
@@ -107,125 +34,32 @@ class Agent:
             "squaretile",
             "triangletile",
         ]
-        partners_weight = 0
-        self.partners_weight = partners_weight
-        # assert place_method in ['jitter', 'spring','rigid-body']
         self.place_method = place_method
         self.mesh_3d = None
         self.is_attractor = is_attractor
-        self.weight = weight
         self.force_random = force_random
         self.distance_function = distance_function
         self.distance_expression = distance_expression
         self.overwrite_distance_function = overwrite_distance_function
-        self.overwrite_distance_function = True
-        # chance to actually bind to any partner
         self.gradient = gradient
         self.cb = None
         self.radii = None
         self.recipe = None  # weak ref to recipe
         self.tilling = None
+        self.weight = weight
 
-    def getProbaBinding(self, val=None):
-        # get a value between 0.0 and 1.0and return the weight and success ?
-        if val is None:
-            val = numpy.random()
-        if self.cb is not None:
-            return self.cb(val)
-        if val <= self.weight:
-            return True, val
-        else:
-            return False, val
-
-    def getPartnerweight(self, name):
-        print("Deprecated use self.weight")
-        partner = self.getPartner(name)
-        w = partner.getProperties("weight")
-        if w is not None:
-            return w
-
-    def getPartnersName(self):
-        return list(self.partners.keys())
-
-    def getPartner(self, name):
-        if name in self.partners:
-            return self.partners[name]
-        else:
-            return None
-
-    def addPartner(self, ingr, weight=0.0, properties=None):
-        if ingr.name not in self.partners:
-            self.partners[ingr.name] = Partner(
-                ingr, weight=weight, properties=properties
-            )
-        else:
-            self.partners[ingr.name].weight = weight
-            self.partners[ingr.name].properties = properties
-        return self.partners[ingr.name]
-
-    def getExcludedPartnersName(self):
-        return list(self.excluded_partners.keys())
-
-    def getExcludedPartner(self, name):
-        if name in self.excluded_partners:
-            return self.excluded_partners[name]
-        else:
-            return None
-
-    def addExcludedPartner(self, name, properties=None):
-        self.excluded_partners[name] = Partner(name, properties=properties)
-
-    def sortPartner(self, listeP=None):
-        if listeP is None:
-            listeP = []
-            for i, ingr in list(self.partners.keys()):
-                listeP.append([i, ingr])
-        # extract ing name unic
-        listeIngrInstance = {}
-        for i, ingr in listeP:
-            if ingr.name not in listeIngrInstance:
-                listeIngrInstance[ingr.name] = [ingr.weight, []]
-            listeIngrInstance[ingr.name][1].append(i)
-        # sort according ingredient binding weight (proba to bind)
-        sortedListe = sorted(
-            list(listeIngrInstance.items()), key=lambda elem: elem[1][0]
-        )
-        # sortedListe is [ingr,(weight,(instances indices))]
-        # sort by weight/min->max
-        # wIngrList = []
-        # for i,ingr in listeP:
-        # need to sort by ingr.weight
-        #    wIngrList.append([i,ingr,ingr.weight])
-        # sortedListe = sorted(wIngrList, key=lambda elem: elem[2])   # sort by weight/min->max
-        #        print sortedListe
-        return sortedListe
-
-    def weightListByDistance(self, listePartner):
-        probaArray = []
-        w = 0.0
-        for i, part, dist in listePartner:
-            # print ("i",part,dist,w,part.weight)
+    def get_weights_by_distance(self, placed_partners):
+        weights = []
+        for _, partner, dist in placed_partners:
             if self.overwrite_distance_function:
-                wd = part.weight
-            else:
-                wd = part.distanceFunction(dist, expression=part.distance_expression)
-            # print "calc ",dist, wd
-            probaArray.append(wd)
-            w = w + wd
-        # probaArray.append(self.proba_not_binding)
-        # w=w+self.proba_not_binding
-        return probaArray, w
+                wd = partner.weight
 
-    def getProbaArray(self, weightD, total):
-        probaArray = []
-        final = 0.0
-        for w in weightD:
-            p = w / total
-            #            print "norma ",w,total,p
-            final = final + p
-            probaArray.append(final)
-        probaArray[-1] = 1.0
-        return probaArray
+            else:
+                wd = partner.distanceFunction(
+                    dist, expression=partner.distance_expression
+                )
+            weights.append(wd)
+        return weights
 
     def getSubWeighted(self, weights):
         """
@@ -241,86 +75,82 @@ class Agent:
         """
         rnd = numpy.random.random() * sum(weights)
         if sum(weights) == 0:
-            return None, None
+            return None
         for i, w in enumerate(weights):
             rnd -= w
             if rnd < 0:
-                return i, rnd
-        return None, None
+                return i
+        return None
 
-    def pickPartner(self, mingrs, listePartner, currentPos=[0, 0, 0]):
-        # listePartner is (i,partner,d)
-        # wieght using the distance function
-        #        print "len",len(listePartner)
-        targetPoint = None
-        weightD, total = self.weightListByDistance(listePartner)
-        self.log.info("w %r %d", weightD, total)
-        i, b = self.getSubWeighted(weightD)
+    def pick_partner_grid_index(
+        self, near_by_ingredients, placed_partners, current_packing_position=[0, 0, 0]
+    ):
+        # near_by_ingredient is [
+        #   ingredient pos[],
+        #   ingredient rot[],
+        #   ingredient[],
+        #   distance[]?
+        # ]
+        # placed_partners is (index,placed_partner_ingredient,distance_from_current_point)
+        # weight using the distance function
+        packing_position = None
+        weightD = self.get_weights_by_distance(placed_partners)
+        i = self.getSubWeighted(weightD)
         if i is None:
-            return None, None
-        # probaArray = self.getProbaArray(weightD,total)
-        #        print "p",probaArray
-        #        probaArray=numpy.array(probaArray)
-        #        #where is random in probaArray->index->ingr
-        #        b = random()
-        #        test = b < probaArray
-        #        i = test.tolist().index(True)
-        #        print "proba",i,test,(len(probaArray)-1)
-        #        if i == (len(probaArray)-1) :
-        #            #no binding due to proba not binding....
-        #            print ("no binding due to proba")
-        #            return None,b
+            return None
+        partner_index = placed_partners[i][0]  # i,part,dist
+        partner = placed_partners[i][1]
+        partner_ingredient = near_by_ingredients[2][partner_index]
+        self.log.info(f"binding to {partner_ingredient.name}")
 
-        ing_indice = listePartner[i][0]  # i,part,dist
-        ing = mingrs[2][ing_indice]  # [2]
-        self.log.info("binding to %s" + ing.name)
-        targetPoint = mingrs[0][ing_indice]  # [0]
         if self.compNum > 0:
-            #            organelle = self.env.compartments[abs(self.compNum)-1]
-            #            dist,ind = organelle.OGsrfPtsBht.query(targetPoint)
-            #            organelle.ogsurfacePoints[]
-            targetPoint = self.env.grid.getClosestFreeGridPoint(
-                targetPoint,
+            packing_position = self.env.grid.getClosestFreeGridPoint(
+                packing_position,
                 compId=self.compNum,
-                ball=(ing.encapsulating_radius + self.encapsulating_radius),
+                ball=(
+                    partner_ingredient.encapsulating_radius + self.encapsulating_radius
+                ),
                 distance=self.encapsulating_radius * 2.0,
             )
-            self.log.info(
-                "target point free tree is %r %r %r",
-                targetPoint,
-                self.encapsulating_radius,
-                ing.encapsulating_radius,
-            )
+            return packing_position
         else:
-            # get closestFreePoint using freePoint and masterGridPosition
-            # if self.place_method == "rigid-body" or self.place_method == "jitter":
-            # the new point is actually tPt -normalise(tPt-current)*radius
-            self.log.info(
-                "tP %r %s %r %d", ing_indice, ing.name, targetPoint, ing.radii[0][0]
-            )
-            # what I need it the closest free point from the target ingredient
-            v = numpy.array(targetPoint) - numpy.array(currentPos)
-            s = numpy.sum(v * v)
-            factor = (v / math.sqrt(s)) * (
-                ing.encapsulating_radius + self.encapsulating_radius
-            )  # encapsulating radus ?
-            targetPoint = numpy.array(targetPoint) - factor
+            binding_probability = partner.binding_probability
+            bind = True
+            chance = random()
+            if binding_probability > 0:
+                bind = chance <= binding_probability
+                if bind:
+                    partner_position = near_by_ingredients[0][partner_index]
 
-        return targetPoint, b
-
-    def pickPartnerInstance(self, bindingIngr, mingrs, currentPos=None):
-        # bindingIngr is ingr,(weight,(instances indices))
-        #        print "bindingIngr ",bindingIngr,bindingIngr[1]
-        if currentPos is None:  # random mode
-            picked_I = numpy.random() * len(bindingIngr[1][1])
-            i = bindingIngr[1][1][picked_I]
-        else:  # pick closest one
-            mind = 99999999.9
-            i = 0
-            for ind in bindingIngr[1][1]:
-                v = numpy.array(mingrs[ind][0]) - numpy.array(currentPos)
-                d = numpy.sum(v * v)
-                if d < mind:
-                    mind = d
-                    i = ind
-        return i
+                    # get closestFreePoint using freePoint and masterGridPosition
+                    # if self.place_method == "rigid-body" or self.place_method == "jitter":
+                    # the new point is actually tPt -normalise(tPt-current)*radius
+                    # what I need it the closest free point from the target ingredient
+                    v = numpy.array(partner_position) - numpy.array(
+                        current_packing_position
+                    )
+                    s = numpy.sum(v * v)
+                    factor = (v / math.sqrt(s)) * (
+                        partner_ingredient.encapsulating_radius
+                        + self.encapsulating_radius
+                    )
+                    packing_position = numpy.array(partner_position) - factor
+                    return packing_position
+                else:
+                    return current_packing_position
+            elif binding_probability < 0:
+                for partner in placed_partners:
+                    binding_probability = partner[1].binding_probability
+                    repelled = chance <= abs(binding_probability)
+                    if repelled:
+                        partner_ingr = partner[1].ingredient
+                        needed_distance = (
+                            partner_ingr.encapsulating_radius
+                            + self.encapsulating_radius
+                        )
+                        distance = partner[2]
+                        if distance <= needed_distance:
+                            return None
+                return current_packing_position
+            else:
+                return current_packing_position

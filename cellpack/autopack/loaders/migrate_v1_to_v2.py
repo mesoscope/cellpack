@@ -137,24 +137,30 @@ def get_and_store_v2_object(ingredient_key, ingredient_data, region_list, object
     objects_dict[ingredient_key] = object_info
 
 
-def convert(recipe_data):
+def convert(old_recipe):
+    new_recipe = {}
+
+    new_recipe["format_version"] = "2.0"
+    new_recipe["version"] = old_recipe["recipe"]["version"]
+    new_recipe["name"] = old_recipe["recipe"]["name"]
+    new_recipe["bounding_box"] = old_recipe["options"]["boundingBox"]
     objects_dict = {}
     composition = {"space": {"regions": {}}}
-    if "cytoplasme" in recipe_data:
+    if "cytoplasme" in old_recipe:
         outer_most_region_array = []
         composition["space"]["regions"]["interior"] = outer_most_region_array
-        for ingredient_key in recipe_data["cytoplasme"]["ingredients"]:
-            ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient_key]
+        for ingredient_key in old_recipe["cytoplasme"]["ingredients"]:
+            ingredient_data = old_recipe["cytoplasme"]["ingredients"][ingredient_key]
             get_and_store_v2_object(
                 ingredient_key,
                 ingredient_data,
                 outer_most_region_array,
                 objects_dict,
             )
-    if "compartments" in recipe_data:
-        for compartment_name in recipe_data["compartments"]:
+    if "compartments" in old_recipe:
+        for compartment_name in old_recipe["compartments"]:
             # add the compartment to composition
-            compartment_data = recipe_data["compartments"][compartment_name]
+            compartment_data = old_recipe["compartments"][compartment_name]
             compartment_data["Type"] = "mesh"
 
             composition[compartment_name] = {"object": compartment_name, "regions": {}}
@@ -198,4 +204,6 @@ def convert(recipe_data):
                             interior_array,
                             objects_dict,
                         )
-    return objects_dict, composition
+    new_recipe["objects"] = objects_dict
+    new_recipe["composition"] = composition
+    return new_recipe

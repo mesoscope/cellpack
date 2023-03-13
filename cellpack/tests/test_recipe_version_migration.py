@@ -11,7 +11,7 @@ import pytest
 
 from cellpack.autopack.interface_objects.representations import Representations
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+from cellpack.autopack.loaders.recipe_loader import CURRENT_VERSION, RecipeLoader
 from cellpack.autopack.loaders.migrate_v1_to_v2 import (
     convert,
     get_representations,
@@ -292,8 +292,8 @@ def test_get_v1_ingredient():
                     "orient_bias_range": [6, pi],
                 },
                 "C": {
-                    "orient_bias_range": [-pi, 12],
                     "partners": {"probability_binding": 0.5},
+                    "orient_bias_range": [-pi, 12],
                     "radius": 10,
                     "representations": {
                         "packing": {
@@ -324,9 +324,9 @@ def test_get_v1_ingredient():
 def test_convert_v1_to_v2(
     old_recipe_test_data, expected_object_dict, expected_composition_dict
 ):
-    objects_dict, composition = convert(old_recipe_test_data)
-    assert objects_dict == expected_object_dict
-    assert composition == expected_composition_dict
+    new_recipe = convert(old_recipe_test_data)
+    assert new_recipe["objects"] == expected_object_dict
+    assert new_recipe["composition"] == expected_composition_dict
 
 
 # to-do: fix duplicate /
@@ -335,11 +335,11 @@ def test_convert_v1_to_v2(
     [
         (
             RecipeLoader(
-                input_file_path="cellpack/test-recipes/v1/test_single_spheres.json"
+                input_file_path="cellpack/tests/recipes/v1/test_single_spheres.json"
             ).recipe_data,
             {
                 "version": "1.0",
-                "format_version": "2.0",
+                "format_version": CURRENT_VERSION,
                 "name": "test_single_sphere",
                 "bounding_box": [[0, 0, 0], [500, 500, 500]],
                 "objects": {
@@ -363,7 +363,6 @@ def test_convert_v1_to_v2(
                     "C": {
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "radius": 200,
-                        "partners": {"probability_binding": 0.5},
                         "orient_bias_range": [-pi, 12],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
@@ -406,7 +405,7 @@ def test_migrate_version_error():
     [
         (
             RecipeLoader(
-                input_file_path="cellpack/test-recipes/v1/test_compartment.json"
+                input_file_path="cellpack/tests/recipes/v1/test_compartment.json"
             ).recipe_data,
             {
                 "version": "1.0",
@@ -416,13 +415,6 @@ def test_migrate_version_error():
                 "objects": {
                     "sphere_exterior": {
                         "jitter_attempts": 20,
-                        "partners": {
-                            "positions": [],
-                            "names": [],
-                            "excluded_names": [],
-                            "probability_binding": 0.5,
-                            "probability_repelled": 0.5,
-                        },
                         "rotation_range": 6.2831,
                         "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
@@ -445,7 +437,7 @@ def test_migrate_version_error():
                         "orient_bias_range": [-3.141592653589793, 3.141592653589793],
                         "representations": Representations(
                             mesh={
-                                "path": "cellpack/test-geometry",
+                                "path": "cellpack/test/geometry",
                                 "name": "membrane_1.obj",
                                 "format": ".obj",
                             }
@@ -453,13 +445,6 @@ def test_migrate_version_error():
                     },
                     "sphere_surface": {
                         "jitter_attempts": 20,
-                        "partners": {
-                            "positions": [],
-                            "names": [],
-                            "excluded_names": [],
-                            "probability_binding": 0.5,
-                            "probability_repelled": 0.5,
-                        },
                         "rotation_range": 6.2831,
                         "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
@@ -479,13 +464,6 @@ def test_migrate_version_error():
                     },
                     "sphere_inside": {
                         "jitter_attempts": 20,
-                        "partners": {
-                            "positions": [],
-                            "names": [],
-                            "excluded_names": [],
-                            "probability_binding": 0.5,
-                            "probability_repelled": 0.5,
-                        },
                         "rotation_range": 6.2831,
                         "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
@@ -543,8 +521,11 @@ def test_convert_compartment(converted_compartment_data, expected_compartment_da
     for obj in converted_compartment_data["objects"]:
         data = converted_compartment_data["objects"][obj]
         mock_rep = MagicMock()
+        mock_partners = MagicMock()
         data["representations"] = mock_rep
+        data["partners"] = mock_partners
         expected_compartment_data["objects"][obj]["representations"] = mock_rep
+        expected_compartment_data["objects"][obj]["partners"] = mock_partners
         assert (
             converted_compartment_data["objects"][obj]
             == expected_compartment_data["objects"][obj]
