@@ -1,7 +1,7 @@
 {
     "version": "default",
     "format_version": "2.0",
-    "name": "test_gradients",
+    "name": "gradients",
     "bounding_box": [
         [
             -100,

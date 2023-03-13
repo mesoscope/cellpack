@@ -49,10 +49,7 @@
 import numpy
 from random import random
 import bisect
-from math import cos
-from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.utils import get_distances_from_point
-from cellpack.autopack.interface_objects.gradient_data import DIRECTION_MAP
 
 
 class Gradient:
@@ -107,7 +104,7 @@ class Gradient:
         x = numpy.dot(xyz, direction)
         v = (x * 1.0) / (self.distance)
         return v
-    
+
     def normalize_vector(self, vector):
         """
         Normalize to unit vector
@@ -172,7 +169,7 @@ class Gradient:
         """
         from a given direction build a linear weight according the chosen mode
         (linear, gauss, etc...)
-        """        
+        """
         self.bb = bb
         direction = self.mode_settings["direction"]
         direction = self.normalize_vector(direction)

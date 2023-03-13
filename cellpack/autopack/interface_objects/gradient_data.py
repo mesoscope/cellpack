@@ -64,12 +64,6 @@ REQUIRED_MODE_OPTIONS = {
     GradientModes.SURFACE: [ModeOptions.object],
 }
 
-DIRECTION_MAP = {
-    GradientModes.X: [1, 0, 0],
-    GradientModes.Y: [0, 1, 0],
-    GradientModes.Z: [0, 0, 1],
-}
-
 
 class GradientData:
 
