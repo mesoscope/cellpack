@@ -1,11 +1,14 @@
 import copy
-import json
+
+# import json
 from deepdiff import DeepDiff
 
 from cellpack.autopack.utils import deep_merge
 
+
 def is_key(string_or_dict):
     return not isinstance(string_or_dict, dict)
+
 
 class DataDoc(object):
     def __init__(
@@ -13,13 +16,9 @@ class DataDoc(object):
     ):
         pass
 
-    @staticmethod
-    def convert_to_db_doc(local_data):
-        pass
-
-    def as_local_data(ref):
-        doc = ref.get_doc()
+    def as_local_data(doc):
         data = doc.to_dict()
+        return data
 
 
 class CompositionDoc(DataDoc):
@@ -49,15 +48,13 @@ class CompositionDoc(DataDoc):
             return downloaded_data, None
         else:
             object_dict = key_or_dict
-            if "object" in object_dict and db.is_reference(
-                object_dict["object"]
-            ):
+            if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
-                downloaded_data, _  = db.get_doc_by_ref(key)
+                downloaded_data, _ = db.get_doc_by_ref(key)
                 return downloaded_data, key
             else:
                 return {}, None
-   
+
     def resolve_db_regions(self, db_data, db):
         if "object" in db_data and db_data["object"] is not None:
             downloaded_data, _ = self.get_reference_data(db_data["object"], db)
@@ -70,12 +67,17 @@ class CompositionDoc(DataDoc):
                 else:
                     db_data["regions"][region_name][index] = downloaded_data
 
-                if "regions" in downloaded_data and downloaded_data["regions"] is not None:
+                if (
+                    "regions" in downloaded_data
+                    and downloaded_data["regions"] is not None
+                ):
                     self.resolve_db_regions(downloaded_data, db)
 
     def resolve_local_regions(self, local_data, recipe_data, db):
         unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
-        prep_recipe_data = DBRecipeHandler.convert_representation(unpack_recipe_data, db)
+        prep_recipe_data = DBRecipeHandler.convert_representation(
+            unpack_recipe_data, db
+        )
         if "object" in local_data and local_data["object"] is not None:
             if is_key(local_data["object"]):
                 key_name = local_data["object"]
@@ -87,29 +89,37 @@ class CompositionDoc(DataDoc):
                 if not is_key(key_or_dict):
                     obj_item = local_data["regions"][region_name][index]["object"]
                     if is_key(obj_item):
-                        local_data["regions"][region_name][index]["object"] = prep_recipe_data["objects"][obj_item]
+                        local_data["regions"][region_name][index][
+                            "object"
+                        ] = prep_recipe_data["objects"][obj_item]
                     else:
-                        local_data["regions"][region_name][index]["object"] = prep_recipe_data["objects"][obj_item["name"]]
-                else: 
+                        local_data["regions"][region_name][index][
+                            "object"
+                        ] = prep_recipe_data["objects"][obj_item["name"]]
+                else:
                     comp_name = local_data["regions"][region_name][index]
-                    local_data["regions"][region_name][index] = prep_recipe_data["composition"][comp_name]
-                    #TODO: better ways to solve that nested comps don't have default structures? 
-                    #L99-L106 is currently working but not sure with more test recipes
-                    if not local_data["regions"][region_name][index].get("name"):
-                        local_data["regions"][region_name][index]["name"] = comp_name
-                    if not local_data["regions"][region_name][index].get("molarity"):
-                        local_data["regions"][region_name][index]["molarity"] = None 
-                    if not local_data["regions"][region_name][index].get("regions"):
-                        local_data["regions"][region_name][index]["regions"] = {}
-                    if not local_data["regions"][region_name][index].get("count"):
-                        local_data["regions"][region_name][index]["count"] = None
+                    local_data["regions"][region_name][index] = prep_recipe_data[
+                        "composition"
+                    ][comp_name]
+                    local_data["regions"][region_name][index].setdefault(
+                        "name", comp_name
+                    )
+                    local_data["regions"][region_name][index].setdefault(
+                        "molarity", None
+                    )
+                    local_data["regions"][region_name][index].setdefault("regions", {})
+                    local_data["regions"][region_name][index].setdefault("count", None)
+                if (
+                    "regions" in local_data["regions"][region_name][index]
+                    and local_data["regions"][region_name][index]["regions"] is not None
+                ):
+                    self.resolve_local_regions(
+                        local_data["regions"][region_name][index], recipe_data, db
+                    )
 
-                if "regions" in local_data["regions"][region_name][index] and local_data["regions"][region_name][index]["regions"] is not None:
-                    self.resolve_local_regions(local_data["regions"][region_name][index], recipe_data, db)
-                
-            
-
-    def check_and_replace_references(self, objects_to_path_map, references_to_update, db):
+    def check_and_replace_references(
+        self, objects_to_path_map, references_to_update, db
+    ):
         obj_name = self.object
         if obj_name is not None and not db.is_reference(obj_name):
             obj_database_path = objects_to_path_map.get(obj_name)
@@ -124,21 +134,17 @@ class CompositionDoc(DataDoc):
                             update_field_path = f"regions.{region_name}"
                             if self.name in references_to_update:
                                 references_to_update[self.name].update(
-                                    {"index": update_field_path,
-                                    "name": region_item
-                                    }
+                                    {"index": update_field_path, "name": region_item}
                                 )
                             else:
                                 references_to_update[self.name] = {
                                     "index": update_field_path,
-                                    "name": region_item
+                                    "name": region_item,
                                 }
 
-                        elif not db.is_reference(region_item["object"]) :
+                        elif not db.is_reference(region_item["object"]):
                             obj_name = region_item["object"]
-                            region_item[
-                                "object"
-                            ] = objects_to_path_map.get(obj_name)
+                            region_item["object"] = objects_to_path_map.get(obj_name)
 
     def should_write(self, db, recipe_data):
         db_docs = db.get_doc_by_name("composition", self.name)
@@ -157,15 +163,18 @@ class CompositionDoc(DataDoc):
                     if db_data[item] != local_data[item]:
                         break
                 if local_data["regions"] is None and db_data["regions"] is None:
-                    # TODO: will the attributes in same-named objects vary?   
                     # found a match, so shouldn't write
                     return False, doc.id
                 else:
                     self.resolve_db_regions(db_data, db)
                     self.resolve_local_regions(local_data, recipe_data, db)
-                    difference = DeepDiff(local_data, db_data, ignore_order=True, ignore_type_in_groups=[tuple,list])
+                    difference = DeepDiff(
+                        local_data,
+                        db_data,
+                        ignore_order=True,
+                        ignore_type_in_groups=[tuple, list],
+                    )
                     # print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
-                    # print("diff--->", difference)
                     if not difference:
                         return False, doc.id
         return True, None
@@ -181,13 +190,9 @@ class ObjectDoc(DataDoc):
         self.molarity = molarity
         self.regions = regions
 
-    @staticmethod
-    def convert_to_db_doc(local_data):
-        pass
-
-    def as_local_data(ref):
-        doc = ref.get_doc()
+    def as_local_data(doc):
         data = doc.to_dict()
+        return data
 
 
 class DBRecipeHandler(object):
@@ -221,12 +226,6 @@ class DBRecipeHandler(object):
     @staticmethod
     def prep_data_for_db(data, max_depth=4):
         modified_data = {}
-        # added a depth check to prevent stack overflow
-        # should never hit this though
-        current_depth = 0
-        if current_depth > max_depth:
-            return modified_data
-        current_depth += 1
         for key, value in data.items():
             # convert 2d array to dict
             if DBRecipeHandler.is_nested_list(value):
@@ -245,14 +244,15 @@ class DBRecipeHandler(object):
                 modified_data[key] = DBRecipeHandler.prep_data_for_db(value)
             else:
                 modified_data[key] = value
-        current_depth -= 1
         return modified_data
 
     def should_write(self, collection, name, data):
         docs = self.db.get_doc_by_name(collection, name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                full_doc_data = self.convert_representation(doc, self.db) # if there is repr in obj 
+                full_doc_data = self.convert_representation(
+                    doc, self.db
+                )  # if there is repr in obj
                 difference = DeepDiff(full_doc_data, data, ignore_order=True)
                 if not difference:
                     return doc, doc.id
@@ -264,7 +264,9 @@ class DBRecipeHandler(object):
         modified_data = DBRecipeHandler.prep_data_for_db(data)
         if id is None:
             name = modified_data["name"]
-            if collection == "composition": # composition has been already checked for duplicates  
+            if (
+                collection == "composition"
+            ):  # composition has been already checked for duplicates
                 doc = self.db.upload_doc(collection, modified_data)
                 doc_path = doc[1].path
                 doc_id = doc[1].id
@@ -316,8 +318,10 @@ class DBRecipeHandler(object):
                 self.comp_to_path_map[comp_name]["id"] = doc_id
                 print(f"composition/{comp_name} is already exists in firestore")
             else:
-                # replace with paths for outer objs in comp, then upload 
-                comp_doc.check_and_replace_references(self.objects_to_path_map, references_to_update, self.db)
+                # replace with paths for outer objs in comp, then upload
+                comp_doc.check_and_replace_references(
+                    self.objects_to_path_map, references_to_update, self.db
+                )
                 comp_ready_for_db = comp_doc.as_dict()
                 doc_id, comp_path = self.upload_data("composition", comp_ready_for_db)
                 self.comp_to_path_map[comp_name]["path"] = comp_path
@@ -366,7 +370,7 @@ class DBRecipeHandler(object):
     @staticmethod
     def convert_representation(doc, db):
         if isinstance(doc, object) and db.is_firebase_obj(doc):
-            doc = doc.to_dict()
+            doc = ObjectDoc.as_local_data(doc)
         elif isinstance(doc, object) and "__dict__" in dir(doc):
             doc = vars(doc)
         convert_doc = copy.deepcopy(doc)
@@ -382,9 +386,7 @@ class DBRecipeHandler(object):
                 ] = DBRecipeHandler.convert_positions_in_representation(position_value)
         return convert_doc
 
-    def upload_collections(
-        self, recipe_meta_data, recipe_data
-    ):
+    def upload_collections(self, recipe_meta_data, recipe_data):
         recipe_to_save = copy.deepcopy(recipe_meta_data)
         objects = recipe_data["objects"]
         compositions = recipe_data["composition"]
@@ -393,8 +395,10 @@ class DBRecipeHandler(object):
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
-        references_to_update = self.upload_compositions(compositions, recipe_to_save, recipe_data)
-        # update nested comp in comp        
+        references_to_update = self.upload_compositions(
+            compositions, recipe_to_save, recipe_data
+        )
+        # update nested comp in comp
         if references_to_update:
             for comp_name in references_to_update:
                 inner_data = references_to_update[comp_name]
@@ -415,8 +419,6 @@ class DBRecipeHandler(object):
         if recipe:
             print(f"{recipe_id} is already in firestore")
             # return
-        recipe_to_save = self.upload_collections(
-            recipe_meta_data, recipe_data
-        )
+        recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
