@@ -121,9 +121,7 @@ class PlotlyAnalysis:
         )
 
     def make_and_show_heatmap(self, env):
-
         self.make_grid_heatmap(env)
-
         self.plot.show()
 
     def show(self):

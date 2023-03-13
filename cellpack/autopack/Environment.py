@@ -383,39 +383,14 @@ class Environment(CompartmentList):
             self.afviewer.vi.progressBar(progress=progress, label=label)
 
     def set_partners_ingredient(self, ingr):
-        if ingr.partners_name:
-            weightinitial = ingr.partners_weight
-            total = len(ingr.partners_name)  # this is 1
-            w = float(weightinitial)
-            if len(ingr.partners_name) == 1:
-                w = 1.0
-                total = 2
-                weightinitial = 1
-            for i, iname in enumerate(ingr.partners_name):
-                print("weight", iname, w, ((1.0 - weightinitial) / (total - 1.0)))
-                ingr_partner = self.getIngrFromName(iname)
-                if ingr_partner is None:
-                    continue
-                if i < len(ingr.partners_position):
-                    partner = ingr.addPartner(
-                        ingr_partner,
-                        weight=w,
-                        properties={"position": ingr.partners_position[i]},
-                    )
-                else:
-                    partner = ingr.addPartner(ingr_partner, weight=w, properties={})
-                for p in ingr_partner.properties:
-                    partner.addProperties(p, ingr_partner.properties[p])
-                w += ((1 - weightinitial) / (total - 1)) - weightinitial
-            if ingr.type == "Grow":
-                ingr.prepare_alternates()
-        if ingr.excluded_partners_name:
-            for iname in ingr.excluded_partners_name:
-                ingr.addExcludedPartner(iname)
-        ingr.env = self
-
-    # def unpack_objects(self, objects):
-    #     for key, value in objects.items():
+        if ingr.partners is not None:
+            for partner in ingr.partners.all_partners:
+                partner_ingr = self.getIngrFromName(partner.name)
+                partner.set_ingredient(partner_ingr)
+        if ingr.type == "Grow":
+            # TODO: I don't think this code is needed,
+            # but I haven't dug into it enough to delete it all yet
+            ingr.prepare_alternates()
 
     def save_result(
         self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array

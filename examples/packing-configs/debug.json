@@ -12,5 +12,6 @@
     "spacing": null,
     "use_periodicity": false,
     "show_sphere_trees": true,
-    "load_from_grid_file": false
+    "load_from_grid_file": false,
+    "save_converted_recipe": true
 }
