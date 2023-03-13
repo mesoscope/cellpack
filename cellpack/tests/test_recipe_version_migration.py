@@ -335,7 +335,7 @@ def test_convert_v1_to_v2(
     [
         (
             RecipeLoader(
-                input_file_path="cellpack/test-recipes/v1/test_single_spheres.json"
+                input_file_path="cellpack/tests/recipes/v1/test_single_spheres.json"
             ).recipe_data,
             {
                 "version": "1.0",
@@ -405,7 +405,7 @@ def test_migrate_version_error():
     [
         (
             RecipeLoader(
-                input_file_path="cellpack/test-recipes/v1/test_compartment.json"
+                input_file_path="cellpack/tests/recipes/v1/test_compartment.json"
             ).recipe_data,
             {
                 "version": "1.0",
@@ -437,7 +437,7 @@ def test_migrate_version_error():
                         "orient_bias_range": [-3.141592653589793, 3.141592653589793],
                         "representations": Representations(
                             mesh={
-                                "path": "cellpack/test-geometry",
+                                "path": "cellpack/test/geometry",
                                 "name": "membrane_1.obj",
                                 "format": ".obj",
                             }
