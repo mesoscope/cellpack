@@ -51,6 +51,7 @@ from cellpack.autopack.interface_objects import GradientData
                 "mode_settings": {
                     "center": [0, 0, 0],
                     "radius": 1,
+                    "direction": [1, 0, 0],
                 },
             },
         ),
@@ -85,10 +86,10 @@ def test_gradient_data(input, expected_options):
     [
         (
             (
-                {"mode": "surface"},
+                {"mode": "wrong_mode"},
                 "gradient_name",
             ),
-            "Missing mode settings for surface",
+            "Invalid gradient mode: wrong_mode",
         ),
         (
             (

@@ -59,7 +59,7 @@ class ModeOptions(MetaEnum):
 
 
 REQUIRED_MODE_OPTIONS = {
-    GradientModes.VECTOR: [ModeOptions.center, ModeOptions.direction],
+    GradientModes.VECTOR: [ModeOptions.direction],
     GradientModes.RADIAL: [ModeOptions.center, ModeOptions.radius],
     GradientModes.SURFACE: [ModeOptions.object],
 }
@@ -90,14 +90,14 @@ class GradientData:
     def validate_gradient_data(self, gradient_data):
 
         if not GradientModes.is_member(gradient_data.get("mode")):
-            raise ValueError(f"Invalid gradient mode {gradient_data.get('mode')}")
+            raise ValueError(f"Invalid gradient mode: {gradient_data.get('mode')}")
         if not WeightModes.is_member(gradient_data.get("weight_mode")):
             raise ValueError(
-                f"Invalid gradient weight mode {gradient_data.get('weight_mode')}"
+                f"Invalid gradient weight mode: {gradient_data.get('weight_mode')}"
             )
         if not PickModes.is_member(gradient_data.get("pick_mode")):
             raise ValueError(
-                f"Invalid gradient pick mode {gradient_data.get('pick_mode')}"
+                f"Invalid gradient pick mode: {gradient_data.get('pick_mode')}"
             )
         self.validate_mode_settings(
             gradient_data["mode"], gradient_data.get("mode_settings")

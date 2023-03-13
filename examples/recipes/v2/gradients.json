@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
+    "version": "default",
     "format_version": "2.0",
-    "name": "gradients",
+    "name": "test_gradients",
     "bounding_box": [
         [
             -100,
@@ -15,18 +15,37 @@
         ]
     ],
     "gradients": {
-        "gR": {
-            "direction": [
-                0,
-                0,
-                0
-            ],
-            "radius": 100,
-            "description": "'Direction' is center of radial gradient (we think)",
+        "radial_gradient": {
+            "mode": "radial",
+            "description": "Radial gradient from the center",
             "weight_mode": "cube",
             "pick_mode": "rnd",
-            "gblob": 4,
-            "mode": "radial"
+            "mode_settings": {
+                "direction": [
+                    0,
+                    0,
+                    0
+                ],
+                "radius": 100,
+                "center": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        "vector_gradient": {
+            "mode": "vector",
+            "description": "Gradient away from the plane formed by center and vector",
+            "weight_mode": "cube",
+            "pick_mode": "rnd",
+            "mode_settings": {
+                "direction": [
+                    1,
+                    1,
+                    0
+                ]
+            }
         }
     },
     "objects": {
@@ -54,8 +73,8 @@
                 0.5,
                 0.5
             ],
-            "gradient": "gR",
-            "radius": 2.5,
+            "gradient": "vector_gradient",
+            "radius": 5,
             "max_jitter": [
                 1,
                 1,
@@ -73,7 +92,7 @@
         },
         "A": {
             "object": "sphere",
-            "count": 1000
+            "count": 100
         }
     }
 }
