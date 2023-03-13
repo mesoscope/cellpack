@@ -64,6 +64,7 @@ import panda3d
 
 from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
+import scipy
 
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
@@ -414,8 +415,48 @@ class Environment(CompartmentList):
                 ingr.addExcludedPartner(iname)
         ingr.env = self
 
-    # def unpack_objects(self, objects):
-    #     for key, value in objects.items():
+    def get_all_positions_of_one_ingredient(self, ingredient_name):
+        return numpy.array(
+            [
+                self.molecules[i][0]
+                for i in range(len(self.molecules))
+                if self.molecules[i][2].name == ingredient_name
+            ]
+        )
+    
+    def get_all_positions(self):
+        return numpy.array(
+            [
+                self.molecules[i][0]
+                for i in range(len(self.molecules))
+            ]
+        )
+    
+    def get_all_distances(self):
+        positions = self.get_all_positions()
+        return scipy.spatial.distance.pdist(
+            positions
+        )     
+    
+    def get_distances(self, ingredient_name, center):
+        ingredient_positions = self.get_all_positions_of_one_ingredient(ingredient_name)
+        distances_between_ingredients = scipy.spatial.distance.pdist(
+            ingredient_positions
+        )
+
+        if len(ingredient_positions):
+            distances_from_center = numpy.linalg.norm(
+                ingredient_positions - numpy.array(center), axis=1
+            )
+        else:
+            distances_from_center = numpy.array([])
+            distances_between_ingredients = numpy.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        )
 
     def save_result(
         self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
@@ -1045,29 +1086,6 @@ class Environment(CompartmentList):
         d, pid = self.grid.getClosestGridPoint(point)
         compartment_id = self.grid.compartment_ids[pid]
         return compartment_id
-
-    def longestIngrdientName(self):
-        """
-        Helper function for gui. Return the size of the longest ingredient name
-        """
-        M = 20
-        r = self.exteriorRecipe
-        if r:
-            for ingr in r.ingredients:
-                if len(ingr.name) > M:
-                    M = len(ingr.name)
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if rs:
-                for ingr in rs.ingredients:
-                    if len(ingr.name) > M:
-                        M = len(ingr.name)
-            ri = o.innerRecipe
-            if ri:
-                for ingr in ri.ingredients:
-                    if len(ingr.name) > M:
-                        M = len(ingr.name)
-        return M
 
     def loopThroughIngr(self, cb_function):
         """
@@ -1842,6 +1860,15 @@ class Environment(CompartmentList):
         self.ingr_result = ingredients
         return all_ingr_as_array
 
+    def distance_check_fail(self):
+        distances = self.get_all_distances()
+        if len(distances) == 0:
+            # nothing has been packed yet
+            return False
+        min_distance = min(distances)
+        expected_min_distance = self.smallestProteinSize * 2
+        return min_distance < expected_min_distance 
+
     def pack_grid(
         self,
         seedNum=14,
@@ -2105,7 +2132,13 @@ class Environment(CompartmentList):
                 # problem when the encapsulating_radius is actually wrong
                 if ingr.encapsulating_radius > self.largestProteinSize:
                     self.largestProteinSize = ingr.encapsulating_radius
+
+                
                 PlacedMols += 1
+                ingredient_too_close = self.distance_check_fail()
+                if ingredient_too_close:
+                    print("GOT A FAIL", self.grid.masterGridPositions[ptInd])
+                    nbFreePoints = 0
             else:
                 self.log.info("rejected %r", ingr.rejectionCounter)
 
@@ -2199,11 +2232,6 @@ class Environment(CompartmentList):
                 seedNum=seedNum,
                 all_ingr_as_array=all_ingr_as_array,
             )
-
-    def displayCancelDialog(self):
-        print(
-            "Popup CancelBox: if Cancel Box is up for more than 10 sec, close box and continue loop from here"
-        )
 
     def restore_molecules_array(self, ingr):
         if len(ingr.results):

@@ -6,7 +6,7 @@ import time
 
 from cellpack import autopack
 from cellpack.autopack import upy
-from cellpack.autopack.Analysis import AnalyseAP
+from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.Environment import Environment
 
 from cellpack.autopack.loaders.config_loader import ConfigLoader
@@ -39,7 +39,7 @@ def pack(recipe, config=None):
 
     afviewer = None
     if config_data["save_analyze_result"]:
-        analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+        analyze = Analysis(env=env, viewer=afviewer, result_file=None)
         log.info(f"saving to {env.out_folder}")
         analyze.doloop(
             config_data["num_trials"],

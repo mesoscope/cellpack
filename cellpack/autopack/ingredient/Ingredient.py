@@ -1617,10 +1617,8 @@ class Ingredient(Agent):
         dropped_rotation,
         grid_point_index,
         new_inside_points,
-        new_dist_values,
     ):
         self.nbPts = self.nbPts + len(new_inside_points)
-        # self.update_distances(new_inside_points, new_dist_values)
         compartment.molecules.append(
             [dropped_position, dropped_rotation, self, grid_point_index]
         )
@@ -1810,7 +1808,7 @@ class Ingredient(Agent):
                     current_visual_instance, jtrans, rotMatj
                 )
             self.place(
-                env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
+                env, compartment, jtrans, rotMatj, ptInd, insidePoints
             )
         else:
             if is_realtime:

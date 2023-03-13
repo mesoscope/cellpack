@@ -13,10 +13,11 @@ import fire
 from time import time
 
 # Relative
-from cellpack.autopack.Analysis import AnalyseAP
+from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.loaders.analysis_config_loader import (
     AnalysisConfigLoader,
 )
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -27,6 +28,8 @@ log = logging.getLogger()
 
 def analyze(
     analysis_config_path,
+    recipe_path,
+    results_folder
 ):
     """
     Runs specified analyses based on the config
@@ -40,12 +43,15 @@ def analyze(
     os.makedirs(analysis_config["output_path"], exist_ok=True)
     log.info(f"Input path: {analysis_config['input_path']}\n")
 
-    analysis = AnalyseAP(
+    analysis = Analysis(
         input_path=analysis_config["input_path"],
         output_path=analysis_config["output_path"],
     )
+    recipe_data = RecipeLoader(recipe_path).recipe_data
+
     analysis.run_analysis_workflow(
         analysis_config=analysis_config,
+        recipe_data=recipe_data
     )
     t2 = time()
     print(f"time to run analysis: {t2 - t1}")

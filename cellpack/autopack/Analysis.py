@@ -36,107 +36,7 @@ from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
-def autolabel(rects, ax):
-    # from http://matplotlib.org/examples/api/barchart_demo.html
-    # attach some text labels
-    for rect in rects:
-        height = rect.get_height()
-        ax.text(
-            rect.get_x() + rect.get_width() / 2.0,
-            height / 2.0,
-            "%d" % int(height),
-            ha="center",
-            va="bottom",
-        )
-
-
-def autolabelyerr(ax, rects, err=None):
-    # attach some text labels
-    for i, rect in enumerate(rects):
-        height = rect.get_height()
-        v = "%.2f" % height
-        y = 0.5 * height
-        if err is not None:
-            v = "%.2f" % err[i]
-            y = 1.05 * height
-        ax.text(
-            rect.get_x() + rect.get_width() / 2.0,
-            y,
-            v,
-            ha="center",
-            va="bottom",
-        )
-
-
-def autolabels(loci1, loci2, loci3, ax, yerr1, yerr2, yerr3):
-    # from http://matplotlib.org/examples/api/barchart_demo.html
-    # attach some text labels
-    for i in range(len(loci1)):  # rects:
-        rect1 = loci1[i]
-        rect2 = loci2[i]
-        rect3 = loci3[i]
-        height1 = rect1.get_height()
-        height2 = rect2.get_height()
-        height3 = rect3.get_height()
-        ax.text(
-            rect1.get_x() + rect1.get_width() / 2.0,
-            height1 / 2.0,
-            "%2.1f" % (height1 * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-        ax.text(
-            rect2.get_x() + rect2.get_width() / 2.0,
-            height2 / 2.0 + height1,
-            "%2.1f" % (height2 * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-        ax.text(
-            rect3.get_x() + rect2.get_width() / 2.0,
-            height3 / 2.0 + height1 + height2,
-            "%2.1f" % (height3 * 100.0),
-            ha="center",
-            va="bottom",
-            color="white",
-        )
-        ax.text(
-            rect1.get_x() + rect1.get_width() / 2.0,
-            1.01 * height1,
-            "%2.1f" % (yerr1[i] * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-        ax.text(
-            rect2.get_x() + rect2.get_width() / 2.0,
-            1.01 * (height2 + height1),
-            "%2.1f" % (yerr2[i] * 100.0),
-            ha="center",
-            va="bottom",
-            color="white",
-        )
-        ax.text(
-            rect3.get_x() + rect2.get_width() / 2.0,
-            1.01 * (height3 + height1 + height2),
-            "%2.1f" % (yerr3[i] * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-
-
-def getRndWeighted(listPts, weight, yerr):
-    w = [yerr[i] * numpy.random.random() + weight[i] for i in range(len(weight))]
-    t = numpy.cumsum(w)
-    s = numpy.sum(w)
-    i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]
-    return listPts[i]
-
-
-class AnalyseAP:
+class Analysis:
     def __init__(
         self,
         env=None,
@@ -150,7 +50,8 @@ class AnalyseAP:
         self.largest = 0.0
         if env:
             self.env = env
-            self.smallest, self.largest = self.getMinMaxProteinSize()
+            self.smallest = env.smallestProteinSize
+            self.largest = env.largestProteinSize
         self.afviewer = viewer
         self.helper = None
         if viewer:
@@ -216,24 +117,6 @@ class AnalyseAP:
             delimiter=",",
         )
         f_handle.close()
-
-    def getMinMaxProteinSize(self):
-        smallest = 999999.0
-        largest = 0.0
-        for organelle in self.env.compartments:
-            mini, maxi = organelle.getMinMaxProteinSize()
-            if mini < smallest:
-                smallest = mini
-            if maxi > largest:
-                largest = maxi
-
-        if self.env.exteriorRecipe:
-            mini, maxi = self.env.exteriorRecipe.getMinMaxProteinSize()
-            if mini < smallest:
-                smallest = mini
-            if maxi > largest:
-                largest = maxi
-        return smallest, largest
 
     def getPositionsFromResFile(self):
         # could actually restore file using histoVol.
@@ -571,32 +454,6 @@ class AnalyseAP:
         py = pp[1]
         pz = pp[2]
         return px, py, pz
-
-    def getDistance(self, ingrname, center):
-        ingredient_positions = numpy.array(
-            [
-                self.env.molecules[i][0]
-                for i in range(len(self.env.molecules))
-                if self.env.molecules[i][2].name == ingrname
-            ]
-        )
-
-        if len(ingredient_positions):
-            distances_from_center = numpy.linalg.norm(
-                ingredient_positions - numpy.array(center), axis=1
-            )
-            distances_between_ingredients = scipy.spatial.distance.pdist(
-                ingredient_positions
-            )
-        else:
-            distances_from_center = numpy.array([])
-            distances_between_ingredients = numpy.array([])
-
-        return (
-            ingredient_positions,
-            distances_from_center,
-            distances_between_ingredients,
-        )
 
     def getDistanceAngle(self, ingr, center):
         # need matrix to euler? then access and plot them?
@@ -1079,7 +936,7 @@ class AnalyseAP:
 
         return minimum_packed_distance
 
-    def create_report(self, report_options):
+    def create_report(self, report_options, recipe_data):
         """
         Creates a markdown file report of various analyses
         """
@@ -1102,7 +959,6 @@ class AnalyseAP:
         # results path to use in report
         results_output_path = report_options["results_output_path"]
 
-        recipe_data = RecipeLoader(test_recipe_path).recipe_data
 
         mdFile.new_header(level=1, title="Packing image")
         glob_to_packing_image = results_path.glob("packing_image_*.png")
@@ -1159,6 +1015,7 @@ class AnalyseAP:
     def run_analysis_workflow(
         self,
         analysis_config: dict,
+        recipe_data
     ):
         self.ingredient_key = analysis_config.get("ingredient_key")
 
@@ -1200,7 +1057,7 @@ class AnalyseAP:
             )
 
         if analysis_config.get("create_report"):
-            self.create_report(analysis_config["create_report"])
+            self.create_report(analysis_config["create_report"], recipe_data)
 
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
         packing_inds = numpy.cumsum(
@@ -1837,7 +1694,7 @@ class AnalyseAP:
                                 seed_ingredient_positions,
                                 seed_distances_from_center,
                                 seed_distances_between_ingredients,
-                            ) = self.getDistance(ingr.name, center)
+                            ) = self.env.get_distances(ingr.name, center)
 
                         occurences[ingr.name].append(len(seed_ingredient_positions))
 
@@ -1984,7 +1841,7 @@ class AnalyseAP:
                                 seed_ingredient_positions,
                                 seed_distances_from_center,
                                 seed_distances_between_ingredients,
-                            ) = self.getDistance(ingr.name, center)
+                            ) = self.env.get_distances(ingr.name, center)
                             occurences[ingr.name].append(len(seed_ingredient_positions))
                             if use_file:
 
@@ -2061,7 +1918,7 @@ class AnalyseAP:
                                 seed_ingredient_positions,
                                 seed_distances_from_center,
                                 seed_distances_between_ingredients,
-                            ) = self.getDistance(ingr.name, center)
+                            ) = self.env.get_distances(ingr.name, center)
                             occurences[ingr.name].append(len(seed_ingredient_positions))
                             if use_file:
                                 self.save_array_to_file(
