@@ -42,6 +42,7 @@ def upload(
         recipe_db_handler = DBRecipeHandler(db_handler)
         recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
 
+
 def main():
     fire.Fire(upload)
 
