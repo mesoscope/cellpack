@@ -411,24 +411,30 @@
     <span class="n">objects_dict</span><span class="p">[</span><span class="n">ingredient_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_info</span></div>
 
 
-<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">):</span>
+<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">old_recipe</span><span class="p">):</span>
+    <span class="n">new_recipe</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
+    <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
+    <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+    <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;bounding_box&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">][</span><span class="s2">&quot;boundingBox&quot;</span><span class="p">]</span>
     <span class="n">objects_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">composition</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;regions&quot;</span><span class="p">:</span> <span class="p">{}}}</span>
-    <span class="k">if</span> <span class="s2">&quot;cytoplasme&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;cytoplasme&quot;</span> <span class="ow">in</span> <span class="n">old_recipe</span><span class="p">:</span>
         <span class="n">outer_most_region_array</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">composition</span><span class="p">[</span><span class="s2">&quot;space&quot;</span><span class="p">][</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="s2">&quot;interior&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outer_most_region_array</span>
-        <span class="k">for</span> <span class="n">ingredient_key</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
-            <span class="n">ingredient_data</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingredient_key</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ingredient_key</span> <span class="ow">in</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
+            <span class="n">ingredient_data</span> <span class="o">=</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingredient_key</span><span class="p">]</span>
             <span class="n">get_and_store_v2_object</span><span class="p">(</span>
                 <span class="n">ingredient_key</span><span class="p">,</span>
                 <span class="n">ingredient_data</span><span class="p">,</span>
                 <span class="n">outer_most_region_array</span><span class="p">,</span>
                 <span class="n">objects_dict</span><span class="p">,</span>
             <span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;compartments&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">compartment_name</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s2">&quot;compartments&quot;</span> <span class="ow">in</span> <span class="n">old_recipe</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">compartment_name</span> <span class="ow">in</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">]:</span>
             <span class="c1"># add the compartment to composition</span>
-            <span class="n">compartment_data</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">compartment_name</span><span class="p">]</span>
+            <span class="n">compartment_data</span> <span class="o">=</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">compartment_name</span><span class="p">]</span>
             <span class="n">compartment_data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mesh&quot;</span>
 
             <span class="n">composition</span><span class="p">[</span><span class="n">compartment_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="n">compartment_name</span><span class="p">,</span> <span class="s2">&quot;regions&quot;</span><span class="p">:</span> <span class="p">{}}</span>
@@ -472,7 +478,9 @@
                             <span class="n">interior_array</span><span class="p">,</span>
                             <span class="n">objects_dict</span><span class="p">,</span>
                         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">objects_dict</span><span class="p">,</span> <span class="n">composition</span></div>
+    <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">objects_dict</span>
+    <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">composition</span>
+    <span class="k">return</span> <span class="n">new_recipe</span></div>
 </pre></div>
 
            </div>

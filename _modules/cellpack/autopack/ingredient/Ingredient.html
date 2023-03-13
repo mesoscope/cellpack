@@ -464,7 +464,7 @@
         <span class="n">rotation_range</span><span class="o">=</span><span class="mf">6.2831</span><span class="p">,</span>
         <span class="n">use_orient_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">use_rotation_axis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
+        <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
@@ -1476,61 +1476,68 @@
         <span class="n">mingrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span> <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pointsInCube</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">mingrs</span></div>
 
-<div class="viewcode-block" id="Ingredient.getIngredientsInTree"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInTree">[docs]</a>    <span class="k">def</span> <span class="nf">getIngredientsInTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_indice</span><span class="p">):</span>
+<div class="viewcode-block" id="Ingredient.getIngredientsInTree"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInTree">[docs]</a>    <span class="k">def</span> <span class="nf">getIngredientsInTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closest_ingredients</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rIngr</span><span class="p">):</span>
-            <span class="n">ingrs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rIngr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">close_indice</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]]</span>
+            <span class="n">ingrs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rIngr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">closest_ingredients</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]]</span>
             <span class="k">return</span> <span class="p">[</span>
-                <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)[</span><span class="n">close_indice</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]],</span>
-                <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rRot</span><span class="p">)[</span><span class="n">close_indice</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]],</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)[</span><span class="n">closest_ingredients</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]],</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rRot</span><span class="p">)[</span><span class="n">closest_ingredients</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]],</span>
                 <span class="n">ingrs</span><span class="p">,</span>
-                <span class="n">close_indice</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">],</span>
+                <span class="n">closest_ingredients</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">],</span>
             <span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="Ingredient.getListePartners"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getListePartners">[docs]</a>    <span class="k">def</span> <span class="nf">getListePartners</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">,</span> <span class="n">close_indice</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">):</span>
-        <span class="k">if</span> <span class="n">close_indice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">mingrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientsInBox</span><span class="p">(</span><span class="n">histoVol</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">)</span>
+<div class="viewcode-block" id="Ingredient.get_partners"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_partners">[docs]</a>    <span class="k">def</span> <span class="nf">get_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">):</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
+        <span class="n">closest_ingredients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span>
+            <span class="n">jtrans</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">closest_ingredients</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]):</span>
+            <span class="n">near_by_ingredients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientsInBox</span><span class="p">(</span>
+                <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># mingrs = zip(*mingrs)</span>
-            <span class="n">mingrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientsInTree</span><span class="p">(</span><span class="n">close_indice</span><span class="p">)</span>
-        <span class="n">listePartner</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">mingrs</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">mingrs</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">near_by_ingredients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientsInTree</span><span class="p">(</span><span class="n">closest_ingredients</span><span class="p">)</span>
+        <span class="n">placed_partners</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no close ingredient found&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;nb close ingredient </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">listePartner</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mingrs</span><span class="p">[</span><span class="mi">2</span><span class="p">])):</span>
-            <span class="n">ing</span> <span class="o">=</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">[</span><span class="mi">2</span><span class="p">])):</span>
+            <span class="n">packed_ingredient</span> <span class="o">=</span> <span class="n">near_by_ingredients</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="n">i</span><span class="p">],)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;closePartner&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">o_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span> <span class="ow">or</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span><span class="p">:</span>
-                    <span class="n">listePartner</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">ing</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="n">i</span><span class="p">]])</span>
-                    <span class="c1">#                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">ing</span><span class="o">.</span><span class="n">is_attractor</span>
-            <span class="p">):</span>  <span class="c1"># and self.compNum &lt;= 0: #always attract! or rol a dice ?sself.excluded_partners.has_key(name)</span>
-                <span class="k">if</span> <span class="p">(</span>
-                    <span class="n">ing</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span>
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ing</span><span class="o">.</span><span class="n">excluded_partners_name</span>
-                    <span class="ow">and</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners_name</span>
-                <span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;shoul attract </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPartner</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">is_partner</span><span class="p">(</span><span class="n">packed_ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                    <span class="n">placed_partners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">i</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">get_partner_by_ingr_name</span><span class="p">(</span>
+                                <span class="n">packed_ingredient</span><span class="o">.</span><span class="n">name</span>
+                            <span class="p">),</span>
+                            <span class="n">distance</span><span class="p">,</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+            <span class="k">if</span> <span class="n">packed_ingredient</span><span class="o">.</span><span class="n">is_attractor</span><span class="p">:</span>
+                <span class="c1"># add all ingredients as possible partners</span>
+                <span class="c1"># attractors are universal attractors</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">is_partner</span><span class="p">(</span><span class="n">packed_ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                    <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">get_partner_by_ingr_name</span><span class="p">(</span>
+                        <span class="n">packed_ingredient</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">)</span>
                     <span class="k">if</span> <span class="n">part</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addPartner</span><span class="p">(</span><span class="n">ing</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">ing</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">distance_expression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">part</span><span class="o">.</span><span class="n">distance_expression</span> <span class="o">=</span> <span class="n">ing</span><span class="o">.</span><span class="n">distance_expression</span>
-                    <span class="n">d</span> <span class="o">=</span> <span class="n">afvi</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-                    <span class="n">listePartner</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">listePartner</span><span class="p">:</span>
+                        <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">add_partner</span><span class="p">(</span>
+                            <span class="n">packed_ingredient</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">packed_ingredient</span><span class="o">.</span><span class="n">weight</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">packed_ingredient</span><span class="o">.</span><span class="n">distance_expression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">part</span><span class="o">.</span><span class="n">distance_expression</span> <span class="o">=</span> <span class="n">packed_ingredient</span><span class="o">.</span><span class="n">distance_expression</span>
+                    <span class="n">placed_partners</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">distance</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">placed_partners</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no partner found in close ingredient </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span></div>
+            <span class="k">return</span> <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span></div>
 
 <div class="viewcode-block" id="Ingredient.getTransform"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getTransform">[docs]</a>    <span class="k">def</span> <span class="nf">getTransform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tTrans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">ToVec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getTranslation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">moving</span><span class="p">))</span>
@@ -1745,55 +1752,34 @@
                 <span class="n">R</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">elif</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">ind</span><span class="p">:</span>
                 <span class="n">R</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;getClosePairIngredient &quot;</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;all pairs &quot;</span><span class="p">,</span> <span class="n">pairs</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;query was ind &quot;</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">R</span></div>
 
-<div class="viewcode-block" id="Ingredient.getClosestIngredient"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getClosestIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
-        <span class="c1"># may have to rebuild the whale tree every time we add a point</span>
-        <span class="c1"># grab the current result</span>
-        <span class="c1"># set the bhtree</span>
-        <span class="c1"># get closest ClosePoints()</span>
-        <span class="c1">#        raw_input()</span>
-        <span class="c1">#        return self.getClosePairIngredient(point,histoVol,cutoff=cutoff)</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;indices&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;distances&quot;</span><span class="p">:</span> <span class="p">[]}</span>
-        <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">totalNbIngr</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="Ingredient.get_closest_ingredients"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_closest_ingredients">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+
+        <span class="n">to_return</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;indices&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;distances&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">totalNbIngr</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
         <span class="n">nb</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;treemode </span><span class="si">%s</span><span class="s2">, len rTrans=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">treemode</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">rTrans</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">R</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     if histoVol.treemode == &quot;bhtree&quot;:</span>
-        <span class="c1">#         if histoVol.close_ingr_bhtree is None:</span>
-        <span class="c1">#             histoVol.close_ingr_bhtree = bhtreelib.BHtree(</span>
-        <span class="c1">#                 histoVol.rTrans,</span>
-        <span class="c1">#                 [ing.encapsulating_radius for ing in histoVol.rIngr],</span>
-        <span class="c1">#                 10,</span>
-        <span class="c1">#             )</span>
-        <span class="k">if</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">to_return</span>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># request kdtree</span>
             <span class="n">nb</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;finding partners&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1">#                    nb = histoVol.close_ingr_bhtree.query_ball_point(point,cutoff)</span>
                 <span class="c1">#                else :#use the general query, how many we want</span>
-                <span class="n">distance</span><span class="p">,</span> <span class="n">nb</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">close_ingr_bhtree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-                    <span class="n">point</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">rTrans</span><span class="p">),</span> <span class="n">distance_upper_bound</span><span class="o">=</span><span class="n">cutoff</span>
+                <span class="n">distance</span><span class="p">,</span> <span class="n">nb</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+                    <span class="n">point</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">),</span> <span class="n">distance_upper_bound</span><span class="o">=</span><span class="n">cutoff</span>
                 <span class="p">)</span>  <span class="c1"># len of ingr posed so far</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">distance</span> <span class="o">=</span> <span class="p">[</span><span class="n">distance</span><span class="p">]</span>
                     <span class="n">nb</span> <span class="o">=</span> <span class="p">[</span><span class="n">nb</span><span class="p">]</span>
-                <span class="n">R</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb</span>
-                <span class="n">R</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance</span>  <span class="c1"># sorted by distance short -&gt; long</span>
-            <span class="k">return</span> <span class="n">R</span>
+                <span class="n">to_return</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nb</span>
+                <span class="n">to_return</span><span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance</span>  <span class="c1"># sorted by distance short -&gt; long</span>
+            <span class="k">return</span> <span class="n">to_return</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">R</span></div>
-            <span class="c1">#        closest = histoVol.close_ingr_bhtree.closestPointsArray(tuple(numpy.array([point,])), cutoff, 0)#returnNullIfFail</span>
-            <span class="c1">#        print (&quot;getClosestIngredient&quot;,closest,cutoff )</span>
-            <span class="c1">#        return closest</span>
+            <span class="k">return</span> <span class="n">to_return</span></div>
 
 <div class="viewcode-block" id="Ingredient.update_data_tree"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.update_data_tree">[docs]</a>    <span class="k">def</span> <span class="nf">update_data_tree</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">ptInd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pt1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pt2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">updateTree</span><span class="o">=</span><span class="kc">True</span>
@@ -1961,7 +1947,7 @@
         <span class="n">is_realtime</span> <span class="o">=</span> <span class="n">current_visual_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="c1"># NOTE: move the target point for close partner check.</span>
         <span class="c1"># I think this should be done ealier, when we&#39;re getting the point index</span>
-        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">ingrLookForNeighbours</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;closePartner&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;closePartner&quot;</span><span class="p">:</span>
             <span class="n">target_grid_point_position</span><span class="p">,</span> <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_partner_check</span><span class="p">(</span>
                 <span class="n">target_grid_point_position</span><span class="p">,</span>
                 <span class="n">rotation_matrix</span><span class="p">,</span>
@@ -1969,6 +1955,8 @@
                 <span class="n">env</span><span class="o">.</span><span class="n">afviewer</span><span class="p">,</span>
                 <span class="n">current_visual_instance</span><span class="p">,</span>
             <span class="p">)</span>
+            <span class="k">if</span> <span class="n">target_grid_point_position</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
         <span class="n">is_fiber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span>
         <span class="n">collision_possible</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">collision_possible</span> <span class="ow">or</span> <span class="n">is_fiber</span><span class="p">:</span>
@@ -2107,8 +2095,8 @@
             <span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotVectToVect</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PROBLEM &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PROBLEM: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># this is where we could apply biased rotation ie gradient/attractor</span>
@@ -2232,10 +2220,10 @@
         <span class="k">if</span> <span class="n">is_realtime</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_display_rt</span><span class="p">(</span><span class="n">moving</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">)</span>
         <span class="c1"># 2- get the neighboring object from ptInd</span>
-        <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getListePartners</span><span class="p">(</span>
+        <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partners</span><span class="p">(</span>
             <span class="n">histoVol</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span>
         <span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mingrs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">):</span>
             <span class="n">ing</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -2265,11 +2253,12 @@
                 <span class="p">)</span>
                 <span class="n">static</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ipoly</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">listePartner</span><span class="p">:</span>  <span class="c1"># self.packing_mode==&quot;closePartner&quot;:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;len listePartner = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">listePartner</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">placed_partners</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_random</span><span class="p">:</span>
-                <span class="n">targetPoint</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickPartner</span><span class="p">(</span>
-                    <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span><span class="p">,</span> <span class="n">currentPos</span><span class="o">=</span><span class="n">jtrans</span>
+                <span class="n">targetPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_partner_grid_index</span><span class="p">(</span>
+                    <span class="n">near_by_ingredients</span><span class="p">,</span>
+                    <span class="n">placed_partners</span><span class="p">,</span>
+                    <span class="n">current_packing_position</span><span class="o">=</span><span class="n">jtrans</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">targetPoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">jtrans</span>
@@ -2499,23 +2488,27 @@
                 <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">packing_rotation</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="Ingredient.lookForNeighbours"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.lookForNeighbours">[docs]</a>    <span class="k">def</span> <span class="nf">lookForNeighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">,</span> <span class="n">closest_indice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getListePartners</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">,</span> <span class="n">close_indice</span><span class="o">=</span><span class="n">closest_indice</span>
+<div class="viewcode-block" id="Ingredient.lookForNeighbours"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.lookForNeighbours">[docs]</a>    <span class="k">def</span> <span class="nf">lookForNeighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">):</span>
+
+        <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partners</span><span class="p">(</span>
+            <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span>
         <span class="p">)</span>
         <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">trans</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">listePartner</span><span class="p">:</span>  <span class="c1"># self.packing_mode==&quot;closePartner&quot;:</span>
+        <span class="k">if</span> <span class="n">placed_partners</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;partner found&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_random</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">jitterPos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitter_attempts</span><span class="p">):</span>  <span class="c1">#</span>
-                    <span class="n">targetPoint</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickPartner</span><span class="p">(</span>
-                        <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span><span class="p">,</span> <span class="n">currentPos</span><span class="o">=</span><span class="n">trans</span>
+                    <span class="n">targetPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_partner_grid_index</span><span class="p">(</span>
+                        <span class="n">near_by_ingredients</span><span class="p">,</span>
+                        <span class="n">placed_partners</span><span class="p">,</span>
+                        <span class="n">current_packing_position</span><span class="o">=</span><span class="n">trans</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="n">targetPoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="k">break</span>
                 <span class="k">if</span> <span class="n">targetPoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">trans</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">return</span> <span class="n">targetPoint</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">found</span>
                 <span class="k">else</span><span class="p">:</span>  <span class="c1"># maybe get the ptid that can have it</span>
                     <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -2542,9 +2535,8 @@
         <span class="n">collision</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">liste_nodes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getClosestIngredient</span><span class="p">(</span>
+            <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span>
                 <span class="n">pos</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
                 <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">largestProteinSize</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span>
             <span class="p">)</span>  <span class="c1"># vself.radii[0][0]*2.0</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">closesbody_indice</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -2576,32 +2568,21 @@
             <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Ingredient.close_partner_check"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.close_partner_check">[docs]</a>    <span class="k">def</span> <span class="nf">close_partner_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span><span class="p">,</span> <span class="n">moving</span><span class="p">):</span>
-        <span class="n">bind</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;look for ingredient </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span>
-        <span class="c1"># roll a dice about proba_not_binding</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proba_not_binding</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># between 0 and 1</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proba_not_binding</span><span class="p">:</span>
-                <span class="n">bind</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">bind</span><span class="p">:</span>
-            <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getClosestIngredient</span><span class="p">(</span>
-                <span class="n">translation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span>
-            <span class="p">)</span>  <span class="c1"># vself.radii[0][0]*2.0</span>
-            <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookForNeighbours</span><span class="p">(</span>
-                <span class="n">translation</span><span class="p">,</span>
-                <span class="n">rotation</span><span class="p">,</span>
-                <span class="n">compartment</span><span class="p">,</span>
-                <span class="n">afvi</span><span class="p">,</span>
-                <span class="n">closest_indice</span><span class="o">=</span><span class="n">closesbody_indice</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
-                <span class="k">return</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span>
 
-            <span class="c1"># if partner:pickNewPoit like in fill3</span>
-            <span class="k">if</span> <span class="n">moving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_display_rt</span><span class="p">(</span><span class="n">moving</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span></div>
+        <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookForNeighbours</span><span class="p">(</span>
+            <span class="n">translation</span><span class="p">,</span>
+            <span class="n">rotation</span><span class="p">,</span>
+            <span class="n">compartment</span><span class="p">,</span>
+            <span class="n">afvi</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="c1"># if partner:pickNewPoit like in fill3</span>
+        <span class="k">if</span> <span class="n">moving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_display_rt</span><span class="p">(</span><span class="n">moving</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span></div>
 
 <div class="viewcode-block" id="Ingredient.handle_real_time_visualization"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.handle_real_time_visualization">[docs]</a>    <span class="k">def</span> <span class="nf">handle_real_time_visualization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">helper</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -2960,10 +2941,10 @@
                     <span class="p">)</span>
         <span class="c1"># 2- get the neighboring object from ptInd</span>
         <span class="k">if</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">ingrLookForNeighbours</span><span class="p">:</span>
-            <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getListePartners</span><span class="p">(</span>
+            <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partners</span><span class="p">(</span>
                 <span class="n">histoVol</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mingrs</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">):</span>
                 <span class="n">ing</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
                 <span class="n">t</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">r</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -2990,11 +2971,13 @@
                         <span class="n">name</span><span class="p">,</span> <span class="n">afvi</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ing</span><span class="p">],</span> <span class="n">parent</span><span class="o">=</span><span class="n">afvi</span><span class="o">.</span><span class="n">staticMesh</span>
                     <span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">listePartner</span><span class="p">:</span>  <span class="c1"># self.packing_mode==&quot;closePartner&quot;:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;len listePartner = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">listePartner</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">placed_partners</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;len listePartner: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">placed_partners</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_random</span><span class="p">:</span>
-                    <span class="n">targetPoint</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickPartner</span><span class="p">(</span>
-                        <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span><span class="p">,</span> <span class="n">currentPos</span><span class="o">=</span><span class="n">jtrans</span>
+                    <span class="n">targetPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_partner_grid_index</span><span class="p">(</span>
+                        <span class="n">near_by_ingredients</span><span class="p">,</span>
+                        <span class="n">placed_partners</span><span class="p">,</span>
+                        <span class="n">current_packing_position</span><span class="o">=</span><span class="n">jtrans</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="n">targetPoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">jtrans</span>

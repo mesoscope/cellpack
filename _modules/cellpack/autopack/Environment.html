@@ -657,39 +657,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">progressBar</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.set_partners_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_partners_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">set_partners_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners_name</span><span class="p">:</span>
-            <span class="n">weightinitial</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners_weight</span>
-            <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">partners_name</span><span class="p">)</span>  <span class="c1"># this is 1</span>
-            <span class="n">w</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">weightinitial</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">partners_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span>
-                <span class="n">total</span> <span class="o">=</span> <span class="mi">2</span>
-                <span class="n">weightinitial</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">iname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">partners_name</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">iname</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">weightinitial</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">total</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)))</span>
-                <span class="n">ingr_partner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngrFromName</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">ingr_partner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">partners_position</span><span class="p">):</span>
-                    <span class="n">partner</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">addPartner</span><span class="p">(</span>
-                        <span class="n">ingr_partner</span><span class="p">,</span>
-                        <span class="n">weight</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
-                        <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners_position</span><span class="p">[</span><span class="n">i</span><span class="p">]},</span>
-                    <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">partner</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">addPartner</span><span class="p">(</span><span class="n">ingr_partner</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{})</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ingr_partner</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-                    <span class="n">partner</span><span class="o">.</span><span class="n">addProperties</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">ingr_partner</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
-                <span class="n">w</span> <span class="o">+=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weightinitial</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">total</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">weightinitial</span>
-            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">prepare_alternates</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">excluded_partners_name</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">iname</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">excluded_partners_name</span><span class="p">:</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">addExcludedPartner</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span>
-        <span class="n">ingr</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">self</span></div>
-
-    <span class="c1"># def unpack_objects(self, objects):</span>
-    <span class="c1">#     for key, value in objects.items():</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">partner</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">all_partners</span><span class="p">:</span>
+                <span class="n">partner_ingr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngrFromName</span><span class="p">(</span><span class="n">partner</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">partner</span><span class="o">.</span><span class="n">set_ingredient</span><span class="p">(</span><span class="n">partner_ingr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+            <span class="c1"># TODO: I don&#39;t think this code is needed,</span>
+            <span class="c1"># but I haven&#39;t dug into it enough to delete it all yet</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">prepare_alternates</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Environment.save_result"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result">[docs]</a>    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">,</span> <span class="n">all_ingr_as_array</span>

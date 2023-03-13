@@ -360,6 +360,54 @@
 </dd></dl>
 
 </section>
+<section id="module-cellpack.autopack.interface_objects.partners">
+<span id="cellpack-autopack-interface-objects-partners-module"></span><h2>cellpack.autopack.interface_objects.partners module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.partners" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.partners.</span></span><span class="sig-name descname"><span class="pre">Partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binding_probability</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner.distanceFunction">
+<span class="sig-name descname"><span class="pre">distanceFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.distanceFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.distanceFunction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner.get_point">
+<span class="sig-name descname"><span class="pre">get_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.get_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.get_point" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner.set_ingredient">
+<span class="sig-name descname"><span class="pre">set_ingredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.set_ingredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.set_ingredient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.partners.</span></span><span class="sig-name descname"><span class="pre">Partners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">partners</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<section id="this-object-holds-the-partner-data">
+<h3>This object holds the partner data<a class="headerlink" href="#this-object-holds-the-partner-data" title="Permalink to this heading">¶</a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners.add_partner">
+<span class="sig-name descname"><span class="pre">add_partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_binding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.add_partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.add_partner" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name">
+<span class="sig-name descname"><span class="pre">get_partner_by_ingr_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.get_partner_by_ingr_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners.is_partner">
+<span class="sig-name descname"><span class="pre">is_partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_ingredient_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.is_partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.is_partner" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
 <section id="module-cellpack.autopack.interface_objects.representations">
 <span id="cellpack-autopack-interface-objects-representations-module"></span><h2>cellpack.autopack.interface_objects.representations module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.representations" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">

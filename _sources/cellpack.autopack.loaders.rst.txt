@@ -28,6 +28,14 @@ cellpack.autopack.loaders.migrate\_v1\_to\_v2 module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.loaders.migrate\_v2\_to\_v2\_1 module
+-------------------------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.migrate_v2_to_v2_1
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.loaders.recipe\_loader module
 -----------------------------------------------
 
