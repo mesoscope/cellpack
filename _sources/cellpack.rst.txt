@@ -10,17 +10,6 @@ Subpackages
    cellpack.autopack
    cellpack.bin
 
-Submodules
-----------
-
-cellpack.example module
------------------------
-
-.. automodule:: cellpack.example
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 
