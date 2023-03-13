@@ -21,7 +21,7 @@ jobs:
         pip install .[all]
     - name: Pack test recipe
       run: |
-        pack -r cellpack/tests/recipes/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
+        pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
         analyze -a cellpack/tests/analysis-configs/PR_analysis_config.json
     - name: Upload results
       uses: actions/upload-artifact@v3

@@ -24,7 +24,7 @@ test_pdb_id_obj_with_offset = {"id": pdb_id, "transform": {"translate": [10, 10,
 test_pdb_url_obj = {"path": "test_path/", "name": "test.pdb", "format": "pdb"}
 
 test_sphere_tree_obj = {
-    "path": "cellpack/test-geometry/",
+    "path": "cellpack/tests/geometry/",
     "name": "test.sph",
     "format": "sph",
 }
