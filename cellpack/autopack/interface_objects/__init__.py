@@ -7,3 +7,5 @@ from .default_values import (
 from .gradient_data import GradientData  # noqa: F401
 from .ingredient_types import INGREDIENT_TYPE  # noqa: F401
 from .representations import Representations  # noqa: F401
+
+from .partners import Partners  # noqa: F401

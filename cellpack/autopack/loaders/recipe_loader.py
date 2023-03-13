@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import os
 
 import json
@@ -6,16 +7,18 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
+from cellpack.autopack.interface_objects.partners import Partners
 from cellpack.autopack.utils import deep_merge, expand_object_using_key
 from cellpack.autopack.interface_objects import (
     Representations,
     default_recipe_values,
     GradientData,
 )
-from cellpack.autopack.loaders.migrate_v1_to_v2 import convert
+from cellpack.autopack.loaders.migrate_v1_to_v2 import convert as convert_v1_to_v2
+from cellpack.autopack.loaders.migrate_v2_to_v2_1 import convert as convert_v2_to_v2_1
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-CURRENT_VERSION = "2.0"
+CURRENT_VERSION = "2.1"
 
 
 class RecipeLoader(object):
@@ -127,25 +130,29 @@ class RecipeLoader(object):
             format_version = recipe_data["format_version"]
         return format_version
 
-    def _migrate_version(self, recipe):
-        new_recipe = {}
+    def _migrate_version(self, old_recipe):
+        converted = False
+        if old_recipe["format_version"] == "1.0":
+            converted = True
+            new_recipe = convert_v1_to_v2(old_recipe)
+            old_recipe = copy.deepcopy(new_recipe)
 
-        if recipe["format_version"] == "1.0":
-            new_recipe["version"] = recipe["recipe"]["version"]
-            new_recipe["format_version"] = self.current_version
-            new_recipe["name"] = recipe["recipe"]["name"]
-            new_recipe["bounding_box"] = recipe["options"]["boundingBox"]
-            (
-                new_recipe["objects"],
-                new_recipe["composition"],
-            ) = convert(recipe)
+        if old_recipe["format_version"] == "2.0":
+            new_recipe = copy.deepcopy(old_recipe)
+            converted = True
+
+            new_recipe = convert_v2_to_v2_1(old_recipe)
+
+        if converted:
             if self.save_converted_recipe:
                 self._save_converted_recipe(new_recipe)
+
+            return new_recipe
+
         else:
             raise ValueError(
-                f"{recipe['format_version']} is not a format version we support"
+                f"{old_recipe['format_version']} is not a format version we support"
             )
-        return new_recipe
 
     def _read(self):
         new_values = autopack.load_file(self.file_path, cache="recipes")
@@ -170,6 +177,8 @@ class RecipeLoader(object):
                     atomic=reps.get("atomic", None),
                     packing=reps.get("packing", None),
                 )
+                partner_settings = obj["partners"] if "partners" in obj else []
+                obj["partners"] = Partners(partner_settings)
             if not INGREDIENT_TYPE.is_member(obj["type"]):
                 raise TypeError(f"{obj['type']} is not an allowed type")
 
