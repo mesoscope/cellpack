@@ -1015,7 +1015,7 @@ class Analysis:
     def run_analysis_workflow(
         self,
         analysis_config: dict,
-        recipe_data
+        recipe_data=None
     ):
         self.ingredient_key = analysis_config.get("ingredient_key")
 

@@ -28,8 +28,8 @@ log = logging.getLogger()
 
 def analyze(
     analysis_config_path,
-    recipe_path,
-    results_folder
+    recipe_path=None,
+    results_folder=None,
 ):
     """
     Runs specified analyses based on the config
@@ -47,8 +47,10 @@ def analyze(
         input_path=analysis_config["input_path"],
         output_path=analysis_config["output_path"],
     )
-    recipe_data = RecipeLoader(recipe_path).recipe_data
-
+    if recipe_path is not None:
+        recipe_data = RecipeLoader(recipe_path).recipe_data
+    else:
+        recipe_data = None
     analysis.run_analysis_workflow(
         analysis_config=analysis_config,
         recipe_data=recipe_data
