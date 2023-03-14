@@ -190,7 +190,7 @@ class Ingredient(Agent):
         rotation_range=6.2831,
         use_orient_bias=False,
         use_rotation_axis=False,
-        weight=0.2,  # use for affinity ie partner.weight
+        weight=0.2,
     ):
         super().__init__(
             name,
@@ -1202,61 +1202,68 @@ class Ingredient(Agent):
         mingrs = [m for m in compartment.molecules if m[3] in pointsInCube]
         return mingrs
 
-    def getIngredientsInTree(self, close_indice):
+    def getIngredientsInTree(self, closest_ingredients):
         if len(self.env.rIngr):
-            ingrs = [self.env.rIngr[i] for i in close_indice["indices"]]
+            ingrs = [self.env.rIngr[i] for i in closest_ingredients["indices"]]
             return [
-                numpy.array(self.env.rTrans)[close_indice["indices"]],
-                numpy.array(self.env.rRot)[close_indice["indices"]],
+                numpy.array(self.env.rTrans)[closest_ingredients["indices"]],
+                numpy.array(self.env.rRot)[closest_ingredients["indices"]],
                 ingrs,
-                close_indice["distances"],
+                closest_ingredients["distances"],
             ]
         else:
             return []
 
-    def getListePartners(
-        self, histoVol, jtrans, rotMat, organelle, afvi, close_indice=None
-    ):
-        if close_indice is None:
-            mingrs = self.getIngredientsInBox(histoVol, jtrans, rotMat, organelle, afvi)
+    def get_partners(self, jtrans, rotMat, organelle, afvi):
+        env = self.env
+        closest_ingredients = self.get_closest_ingredients(
+            jtrans, cutoff=self.env.grid.diag
+        )
+        if not len(closest_ingredients["indices"]):
+            near_by_ingredients = self.getIngredientsInBox(
+                env, jtrans, rotMat, organelle, afvi
+            )
         else:
-            # mingrs = zip(*mingrs)
-            mingrs = self.getIngredientsInTree(close_indice)
-        listePartner = []
-        if not len(mingrs) or not len(mingrs[2]):
+            near_by_ingredients = self.getIngredientsInTree(closest_ingredients)
+        placed_partners = []
+        if not len(near_by_ingredients) or not len(near_by_ingredients[2]):
             self.log.info("no close ingredient found")
             return [], []
         else:
             self.log.info("nb close ingredient %s", self.name)
-        listePartner = []
-        for i in range(len(mingrs[2])):
-            ing = mingrs[2][i]
-            t = mingrs[0][i]
+        for i in range(len(near_by_ingredients[2])):
+            packed_ingredient = near_by_ingredients[2][i]
+            distance = (near_by_ingredients[3][i],)
             if self.packing_mode == "closePartner":
-                if ing.o_name in self.partners_name or ing.name in self.partners_name:
-                    listePartner.append([i, self.partners[ing.name], mingrs[3][i]])
-                    #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
-            if (
-                ing.is_attractor
-            ):  # and self.compNum <= 0: #always attract! or rol a dice ?sself.excluded_partners.has_key(name)
-                if (
-                    ing.name not in self.partners_name
-                    and self.name not in ing.excluded_partners_name
-                    and ing.name not in self.excluded_partners_name
-                ):
-                    self.log.info("shoul attract %s" + self.name)
-                    part = self.getPartner(ing.name)
+                if self.partners.is_partner(packed_ingredient.name):
+                    placed_partners.append(
+                        [
+                            i,
+                            self.partners.get_partner_by_ingr_name(
+                                packed_ingredient.name
+                            ),
+                            distance,
+                        ]
+                    )
+            if packed_ingredient.is_attractor:
+                # add all ingredients as possible partners
+                # attractors are universal attractors
+                if not self.partners.is_partner(packed_ingredient.name):
+                    part = self.partners.get_partner_by_ingr_name(
+                        packed_ingredient.name
+                    )
                     if part is None:
-                        part = self.addPartner(ing, weight=ing.weight)
-                    if ing.distance_expression is not None:
-                        part.distance_expression = ing.distance_expression
-                    d = afvi.vi.measure_distance(jtrans, t)
-                    listePartner.append([i, part, d])
-        if not listePartner:
+                        part = self.partners.add_partner(
+                            packed_ingredient, weight=packed_ingredient.weight
+                        )
+                    if packed_ingredient.distance_expression is not None:
+                        part.distance_expression = packed_ingredient.distance_expression
+                    placed_partners.append([i, part, distance])
+        if not placed_partners:
             self.log.info("no partner found in close ingredient %s", self.packing_mode)
             return [], []
         else:
-            return mingrs, listePartner
+            return near_by_ingredients, placed_partners
 
     def getTransform(self):
         tTrans = self.vi.ToVec(self.vi.getTranslation(self.moving))
@@ -1471,55 +1478,34 @@ class Ingredient(Agent):
                 R["indices"].append(p[1])
             elif p[1] == ind:
                 R["indices"].append(p[0])
-        print("getClosePairIngredient ", R)
-        print("all pairs ", pairs)
-        print("query was ind ", ind)
         return R
 
-    def getClosestIngredient(self, point, histoVol, cutoff=10.0):
-        # may have to rebuild the whale tree every time we add a point
-        # grab the current result
-        # set the bhtree
-        # get closest ClosePoints()
-        #        raw_input()
-        #        return self.getClosePairIngredient(point,histoVol,cutoff=cutoff)
-        R = {"indices": [], "distances": []}
-        numpy.zeros(histoVol.totalNbIngr).astype("i")
+    def get_closest_ingredients(self, point, cutoff=10.0):
+
+        to_return = {"indices": [], "distances": []}
+        env = self.env
+        numpy.zeros(env.totalNbIngr).astype("i")
         nb = 0
-        self.log.info(
-            "treemode %s, len rTrans=%d", histoVol.treemode, len(histoVol.rTrans)
-        )
-        if not len(histoVol.rTrans):
-            return R
-        # else:
-        #     if histoVol.treemode == "bhtree":
-        #         if histoVol.close_ingr_bhtree is None:
-        #             histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-        #                 histoVol.rTrans,
-        #                 [ing.encapsulating_radius for ing in histoVol.rIngr],
-        #                 10,
-        #             )
-        if histoVol.close_ingr_bhtree is not None:
+        if not len(env.rTrans):
+            return to_return
+        if env.close_ingr_bhtree is not None:
             # request kdtree
             nb = []
             self.log.info("finding partners")
-            if len(histoVol.rTrans) >= 1:
+            if len(env.rTrans) >= 1:
                 #                    nb = histoVol.close_ingr_bhtree.query_ball_point(point,cutoff)
                 #                else :#use the general query, how many we want
-                distance, nb = histoVol.close_ingr_bhtree.query(
-                    point, len(histoVol.rTrans), distance_upper_bound=cutoff
+                distance, nb = env.close_ingr_bhtree.query(
+                    point, len(env.rTrans), distance_upper_bound=cutoff
                 )  # len of ingr posed so far
-                if len(histoVol.rTrans) == 1:
+                if len(env.rTrans) == 1:
                     distance = [distance]
                     nb = [nb]
-                R["indices"] = nb
-                R["distances"] = distance  # sorted by distance short -> long
-            return R
+                to_return["indices"] = nb
+                to_return["distances"] = distance  # sorted by distance short -> long
+            return to_return
         else:
-            return R
-            #        closest = histoVol.close_ingr_bhtree.closestPointsArray(tuple(numpy.array([point,])), cutoff, 0)#returnNullIfFail
-            #        print ("getClosestIngredient",closest,cutoff )
-            #        return closest
+            return to_return
 
     def update_data_tree(
         self, jtrans, rotMatj, ptInd=0, pt1=None, pt2=None, updateTree=True
@@ -1687,7 +1673,7 @@ class Ingredient(Agent):
         is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
         # I think this should be done ealier, when we're getting the point index
-        if env.ingrLookForNeighbours and self.packing_mode == "closePartner":
+        if self.packing_mode == "closePartner":
             target_grid_point_position, rotation_matrix = self.close_partner_check(
                 target_grid_point_position,
                 rotation_matrix,
@@ -1695,6 +1681,8 @@ class Ingredient(Agent):
                 env.afviewer,
                 current_visual_instance,
             )
+            if target_grid_point_position is None:
+                return False, {}, {}
         is_fiber = self.type == "Grow" or self.type == "Actine"
         collision_possible = True
         if collision_possible or is_fiber:
@@ -1833,8 +1821,8 @@ class Ingredient(Agent):
             )
             try:
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception:
-                print("PROBLEM ", self.name)
+            except Exception as e:
+                print(f"PROBLEM: {self.name}, {e}")
                 rot_mat = numpy.identity(4)
         else:
             # this is where we could apply biased rotation ie gradient/attractor
@@ -1958,10 +1946,10 @@ class Ingredient(Agent):
         if is_realtime:
             self.update_display_rt(moving, jtrans, rotMatj)
         # 2- get the neighboring object from ptInd
-        mingrs, listePartner = self.getListePartners(
+        near_by_ingredients, placed_partners = self.get_partners(
             histoVol, jtrans, rotation_matrix, compartment, afvi
         )
-        for i, elem in enumerate(mingrs):
+        for i, elem in enumerate(near_by_ingredients):
             ing = elem[2]
             t = elem[0]
             r = elem[1]
@@ -1991,11 +1979,12 @@ class Ingredient(Agent):
                 )
                 static.append(ipoly)
 
-        if listePartner:  # self.packing_mode=="closePartner":
-            self.log.info("len listePartner = %d", len(listePartner))
+        if placed_partners:
             if not self.force_random:
-                targetPoint, weight = self.pickPartner(
-                    mingrs, listePartner, currentPos=jtrans
+                targetPoint = self.pick_partner_grid_index(
+                    near_by_ingredients,
+                    placed_partners,
+                    current_packing_position=jtrans,
                 )
                 if targetPoint is None:
                     targetPoint = jtrans
@@ -2225,23 +2214,27 @@ class Ingredient(Agent):
                 )
         return False, packing_location, packing_rotation, {}, {}
 
-    def lookForNeighbours(self, trans, rotMat, organelle, afvi, closest_indice=None):
-        mingrs, listePartner = self.getListePartners(
-            self.env, trans, rotMat, organelle, afvi, close_indice=closest_indice
+    def lookForNeighbours(self, trans, rotMat, organelle, afvi):
+
+        near_by_ingredients, placed_partners = self.get_partners(
+            trans, rotMat, organelle, afvi
         )
         targetPoint = trans
         found = False
-        if listePartner:  # self.packing_mode=="closePartner":
+        if placed_partners:
             self.log.info("partner found")
             if not self.force_random:
                 for jitterPos in range(self.jitter_attempts):  #
-                    targetPoint, weight = self.pickPartner(
-                        mingrs, listePartner, currentPos=trans
+                    targetPoint = self.pick_partner_grid_index(
+                        near_by_ingredients,
+                        placed_partners,
+                        current_packing_position=trans,
                     )
                     if targetPoint is not None:
                         break
                 if targetPoint is None:
-                    targetPoint = trans
+                    found = False
+                    return targetPoint, rotMat, found
                 else:  # maybe get the ptid that can have it
                     found = True
                     if self.compNum > 0:
@@ -2268,9 +2261,8 @@ class Ingredient(Agent):
         collision = False
         liste_nodes = []
         if len(self.env.rTrans) != 0:
-            closesbody_indice = self.getClosestIngredient(
+            closesbody_indice = self.get_closest_ingredients(
                 pos,
-                self.env,
                 cutoff=self.env.largestProteinSize + self.encapsulating_radius * 2.0,
             )  # vself.radii[0][0]*2.0
             if len(closesbody_indice["indices"]) != 0:
@@ -2302,32 +2294,21 @@ class Ingredient(Agent):
             return env.compartments[abs(self.compNum) - 1]
 
     def close_partner_check(self, translation, rotation, compartment, afvi, moving):
-        bind = True
-        self.log.info("look for ingredient %r", translation)
-        # roll a dice about proba_not_binding
-        if self.proba_not_binding != 0:  # between 0 and 1
-            b = random()
-            if b <= self.proba_not_binding:
-                bind = False
-        if bind:
-            closesbody_indice = self.getClosestIngredient(
-                translation, self.env, cutoff=self.env.grid.diag
-            )  # vself.radii[0][0]*2.0
-            target_point, rot_matrix, found = self.lookForNeighbours(
-                translation,
-                rotation,
-                compartment,
-                afvi,
-                closest_indice=closesbody_indice,
-            )
-            if not found and self.counter != 0:
-                self.reject()
-                return translation, rotation
 
-            # if partner:pickNewPoit like in fill3
-            if moving is not None:
-                self.update_display_rt(moving, target_point, rot_matrix)
-            return target_point, rot_matrix
+        target_point, rot_matrix, found = self.lookForNeighbours(
+            translation,
+            rotation,
+            compartment,
+            afvi,
+        )
+        if not found and self.counter != 0:
+            self.reject()
+            return None, None
+
+        # if partner:pickNewPoit like in fill3
+        if moving is not None:
+            self.update_display_rt(moving, target_point, rot_matrix)
+        return target_point, rot_matrix
 
     def handle_real_time_visualization(self, helper, ptInd, target_point, rot_mat):
         name = self.name
@@ -2686,10 +2667,10 @@ class Ingredient(Agent):
                     )
         # 2- get the neighboring object from ptInd
         if histoVol.ingrLookForNeighbours:
-            mingrs, listePartner = self.getListePartners(
+            near_by_ingredients, placed_partners = self.get_partners(
                 histoVol, jtrans, rotation_matrix, compartment, afvi
             )
-            for i, elem in enumerate(mingrs):
+            for i, elem in enumerate(near_by_ingredients):
                 ing = elem[2]
                 t = elem[0]
                 r = elem[1]
@@ -2716,11 +2697,13 @@ class Ingredient(Agent):
                         name, afvi.orgaToMasterGeom[ing], parent=afvi.staticMesh
                     )
 
-            if listePartner:  # self.packing_mode=="closePartner":
-                self.log.info("len listePartner = %d", len(listePartner))
+            if placed_partners:
+                self.log.info(f"len listePartner: {len(placed_partners)}")
                 if not self.force_random:
-                    targetPoint, weight = self.pickPartner(
-                        mingrs, listePartner, currentPos=jtrans
+                    targetPoint = self.pick_partner_grid_index(
+                        near_by_ingredients,
+                        placed_partners,
+                        current_packing_position=jtrans,
                     )
                     if targetPoint is None:
                         targetPoint = jtrans

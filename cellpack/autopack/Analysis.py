@@ -1594,6 +1594,14 @@ class AnalyseAP:
         print("time to run pack_grid", self.env.place_method, t2 - t1)
         print("num placed", len(self.env.molecules))
         if show_plotly_plot:
+            min_bound, max_bound = self.env.get_bounding_box_limits()
+            width = max_bound - min_bound
+            self.plotly.plot.update_xaxes(
+                range=[min_bound[0] - 0.2 * width[0], max_bound[0] + 0.2 * width[0]]
+            )
+            self.plotly.plot.update_yaxes(
+                range=[min_bound[1] - 0.2 * width[1], max_bound[1] + 0.2 * width[1]]
+            )
             self.plotly.update_title(
                 f"{self.env.place_method} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
             )

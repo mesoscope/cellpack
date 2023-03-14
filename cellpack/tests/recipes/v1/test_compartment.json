@@ -108,10 +108,10 @@
     },
     "compartments": {
         "compartment_A": {
-            "geom": "cellpack/test-geometry/membrane_1.obj",
+            "geom": "cellpack/tests/geometry/membrane_1.obj",
             "name": "compartment_A",
             "rep": "compartment_A",
-            "rep_file": "cellpack/test-geometry/membrane_1.obj",
+            "rep_file": "cellpack/tests/geometry/membrane_1.obj",
             "surface": {
                 "ingredients": {
                     "sphere_surface": {
