@@ -9,7 +9,6 @@ import os
 import pickle
 
 import numpy
-import json
 from json import encoder
 from collections import OrderedDict
 
