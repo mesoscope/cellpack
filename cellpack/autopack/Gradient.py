@@ -146,7 +146,7 @@ class Gradient:
 
     def build_radial_weight_map(self, bb, master_grid_positions):
         self.bb = bb
-        center = self.mode_settings.get("center")
+        center = self.mode_settings.get("center", self.get_center())
         radius = self.mode_settings.get("radius")
         distances = get_distances_from_point(master_grid_positions, center)
         self.distances = numpy.where(distances < radius, distances, radius) / radius

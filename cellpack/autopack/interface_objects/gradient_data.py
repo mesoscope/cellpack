@@ -60,8 +60,14 @@ class ModeOptions(MetaEnum):
 
 REQUIRED_MODE_OPTIONS = {
     GradientModes.VECTOR: [ModeOptions.direction],
-    GradientModes.RADIAL: [ModeOptions.center, ModeOptions.radius],
+    GradientModes.RADIAL: [ModeOptions.radius],
     GradientModes.SURFACE: [ModeOptions.object],
+}
+
+DIRECTION_MAP = {
+    GradientModes.X: [1, 0, 0],
+    GradientModes.Y: [0, 1, 0],
+    GradientModes.Z: [0, 0, 1],
 }
 
 

@@ -204,6 +204,10 @@ def convert(old_recipe):
                             interior_array,
                             objects_dict,
                         )
+
+    if "gradients" in old_recipe:
+        new_recipe["gradients"] = old_recipe["gradients"]
+
     new_recipe["objects"] = objects_dict
     new_recipe["composition"] = composition
     return new_recipe
