@@ -17,6 +17,7 @@ from cellpack.autopack.Analysis import AnalyseAP
 from cellpack.autopack.loaders.analysis_config_loader import (
     AnalysisConfigLoader,
 )
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -27,6 +28,7 @@ log = logging.getLogger()
 
 def analyze(
     analysis_config_path,
+    recipe_path,
 ):
     """
     Runs specified analyses based on the config
@@ -37,16 +39,19 @@ def analyze(
     """
     t1 = time()
     analysis_config = AnalysisConfigLoader(analysis_config_path).config
+    recipe_data = RecipeLoader(recipe_path, False).recipe_data
     os.makedirs(analysis_config["output_path"], exist_ok=True)
-    log.info(f"Input path: {analysis_config['input_path']}\n")
 
-    analysis = AnalyseAP(
-        input_path=analysis_config["input_path"],
-        output_path=analysis_config["output_path"],
-    )
-    analysis.run_analysis_workflow(
-        analysis_config=analysis_config,
-    )
+    for input_path in analysis_config["input_path_list"]:
+        log.info(f"Input path: {input_path}\n")
+        analysis = AnalyseAP(
+            input_path=input_path,
+            output_path=analysis_config["output_path"],
+        )
+        analysis.run_analysis_workflow(
+            analysis_config=analysis_config,
+            recipe_data=recipe_data,
+        )
     t2 = time()
     print(f"time to run analysis: {t2 - t1}")
 

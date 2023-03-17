@@ -37,7 +37,6 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
 def autolabel(rects, ax):
@@ -1100,9 +1099,25 @@ class AnalyseAP:
 
         return minimum_packed_distance
 
-    def create_report(self, report_options):
+    def create_report(
+        self,
+        recipe_data,
+        results_output_path=None,
+        run_distance_analysis=True,
+    ):
         """
-        Creates a markdown file report of various analyses
+        Creates a markdown file with various analyses included
+
+        Parameters
+        ----------
+        self: AnalyseAP
+            instance of AnalyseAP class
+        input_path: Path
+            path to look for results from packing
+        results_output_path: Path
+            this is the path to look for output images for the markdown file
+        recipe_data: dict
+            dictionary containing recipe data for the packing being analyzed
         """
         mdFile = MdUtils(
             file_name=str(self.output_path / "analysis_report"),
@@ -1110,23 +1125,15 @@ class AnalyseAP:
         )
         mdFile.new_line(f"Analysis for packing results located at {self.input_path}\n")
 
-        if "path_to_results" not in report_options:
-            raise ValueError("Path to results is required to generate report")
-
-        if "path_to_test_recipe" not in report_options:
-            raise ValueError("Path to test recipe is required to generate report")
+        # path to save report and other outputs
+        if results_output_path is None:
+            results_output_path = self.output_path
 
         # actual path where results are stored
-        results_path = Path(report_options["path_to_results"])
-        # path to test recipe used for packing
-        test_recipe_path = report_options["path_to_test_recipe"]
-        # results path to use in report
-        results_output_path = report_options["results_output_path"]
-
-        recipe_data = RecipeLoader(test_recipe_path).recipe_data
+        input_path = self.input_path
 
         mdFile.new_header(level=1, title="Packing image")
-        glob_to_packing_image = results_path.glob("packing_image_*.png")
+        glob_to_packing_image = input_path.glob("packing_image_*.png")
         for img_path in glob_to_packing_image:
             mdFile.new_line(
                 mdFile.new_inline_image(
@@ -1136,13 +1143,13 @@ class AnalyseAP:
             )
         mdFile.new_line("")
 
-        if "run_distance_analysis" in report_options:
+        if run_distance_analysis:
 
             expected_minimum_distance = self.get_minimum_expected_distance_from_recipe(
                 recipe_data
             )
-            glob_to_distance_file = results_path.glob("ingredient_distances_*.txt")
 
+            glob_to_distance_file = input_path.glob("ingredient_distances_*.txt")
             packed_minimum_distance = self.get_packed_minimum_distance(
                 glob_to_distance_file
             )
@@ -1163,7 +1170,7 @@ class AnalyseAP:
                     ]
                 )
 
-            distance_histo_path = results_path.glob("total_ingredient_distances_*.png")
+            distance_histo_path = input_path.glob("total_ingredient_distances_*.png")
             if distance_histo_path:
                 mdFile.new_line("Distance distribution:")
 
@@ -1180,27 +1187,13 @@ class AnalyseAP:
     def run_analysis_workflow(
         self,
         analysis_config: dict,
+        recipe_data: dict,
     ):
-        self.ingredient_key = analysis_config.get("ingredient_key")
-
-        if analysis_config.get("mesh_paths"):
-            if "inner" in analysis_config["mesh_paths"]:
-                self.inner_mesh_path = analysis_config["mesh_paths"]["inner"]
-            if "outer" in analysis_config["mesh_paths"]:
-                self.outer_mesh_path = analysis_config["mesh_paths"]["outer"]
-        else:
-            self.inner_mesh_path = self.outer_mesh_path = None
-
         all_objs, all_pos_list = self.get_obj_dict(self.input_path)
         self.num_packings = len(all_pos_list)
         self.num_seeds_per_packing = numpy.array(
             [len(packing_dict) for packing_dict in all_pos_list]
         )
-
-        if self.ingredient_key not in all_objs:
-            raise ValueError(
-                f"Ingredient key {self.ingredient_key} not found at {self.input_path}"
-            )
 
         print(f"Saving analysis outputs to {self.output_path}")
 
@@ -1216,7 +1209,10 @@ class AnalyseAP:
             )
 
         if analysis_config.get("create_report"):
-            self.create_report(analysis_config["create_report"])
+            self.create_report(
+                recipe_data=recipe_data,
+                **analysis_config["create_report"],
+            )
 
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
         packing_inds = numpy.cumsum(
@@ -1240,23 +1236,22 @@ class AnalyseAP:
                 ]
         return avg_similarity_values
 
-    def calc_similarity_df(self, all_objs):
+    def calc_similarity_df(self, all_objs, ingredient_key):
         """
         Calculates a dataframe of similarity values between packings
         """
-        ingr_key = self.ingredient_key
-        key_list = list(all_objs[ingr_key].keys())
+        key_list = list(all_objs[ingredient_key].keys())
         similarity_df = pd.DataFrame(
             index=key_list,
             columns=pd.MultiIndex.from_product([self.get_list_of_dims(), key_list]),
             dtype=float,
         )
         similarity_df["packing_id"] = 0
-        for seed1, pos_dict1 in tqdm(all_objs[ingr_key].items()):
+        for seed1, pos_dict1 in tqdm(all_objs[ingredient_key].items()):
             similarity_df.loc[seed1, "packing_id"] = self.packing_id_dict[
                 int(seed1.split("_")[-1])
             ]
-            for seed2, pos_dict2 in all_objs[ingr_key].items():
+            for seed2, pos_dict2 in all_objs[ingredient_key].items():
                 for dim in self.get_list_of_dims():
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
@@ -1281,13 +1276,13 @@ class AnalyseAP:
                         scaled_sig = (ad_stat.pvalue - 0.001) / (0.25 - 0.001)
                     similarity_df.loc[seed1, (dim, seed2)] = scaled_sig
 
-        dfpath = self.output_path / f"similarity_df_{self.ingredient_key}.csv"
+        dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
         print(f"Saving similarity df to {dfpath}")
         similarity_df.to_csv(dfpath)
 
         return similarity_df
 
-    def plot_and_save_similarity_heatmaps(self, similarity_df):
+    def plot_and_save_similarity_heatmaps(self, similarity_df, ingredient_key):
         """
         Plots heatmaps with hierarchical clustering using similarity scores
         """
@@ -1304,7 +1299,7 @@ class AnalyseAP:
                 similarity_df[dim].values
             )
             numpy.savetxt(
-                figdir / f"avg_similarity_{self.ingredient_key}_{dim}.txt",
+                figdir / f"avg_similarity_{ingredient_key}_{dim}.txt",
                 avg_similarity_values,
             )
 
@@ -1331,33 +1326,42 @@ class AnalyseAP:
                 loc="upper right",
             )
             g.ax_col_dendrogram.set_visible(False)
-            g.ax_heatmap.set_xlabel(f"{self.ingredient_key}_{dim}")
-            g.savefig(figdir / f"clustermap_{self.ingredient_key}_{dim}", dpi=300)
+            g.ax_heatmap.set_xlabel(f"{ingredient_key}_{dim}")
+            g.savefig(figdir / f"clustermap_{ingredient_key}_{dim}", dpi=300)
 
     def run_similarity_analysis(
-        self, all_objs, load_from_file=False, save_heatmaps=False
+        self, all_objs, ingredient_key, load_from_file=False, save_heatmaps=False
     ):
         """
         TODO: add docs
         """
         print("Running similarity analysis...")
+        if ingredient_key not in all_objs:
+            raise ValueError(f"Missing ingredient: {ingredient_key}")
 
         if load_from_file:
-            dfpath = self.output_path / f"similarity_df_{self.ingredient_key}.csv"
+            dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
             if dfpath.is_file():
                 print(f"Loading similarity values from {dfpath}")
                 similarity_df = pd.read_csv(dfpath, header=[0, 1])
             else:
-                similarity_df = self.calc_similarity_df(all_objs)
+                similarity_df = self.calc_similarity_df(
+                    all_objs,
+                    ingredient_key=ingredient_key,
+                )
 
         if save_heatmaps:
-            self.plot_and_save_similarity_heatmaps(similarity_df)
+            self.plot_and_save_similarity_heatmaps(
+                similarity_df,
+                ingredient_key=ingredient_key,
+            )
 
         return similarity_df
 
     def calc_and_save_correlations(
         self,
         all_spilr_scaled,
+        ingredient_key,
     ):
         key_list = [
             f"{pc}_{sc}"
@@ -1398,9 +1402,7 @@ class AnalyseAP:
             row_colors=row_colors,
             cbar_kws={"label": "spilr correlation"},
         )
-        g.savefig(
-            self.output_path / f"spilr_correlation_{self.ingredient_key}", dpi=300
-        )
+        g.savefig(self.output_path / f"spilr_correlation_{ingredient_key}", dpi=300)
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
         fig, ax = plt.subplots()
@@ -1424,22 +1426,25 @@ class AnalyseAP:
     def get_parametrized_representation(
         self,
         all_pos_list,
+        ingredient_key=None,
+        mesh_paths={},
         num_angular_points=64,
         save_plots=False,
         max_plots_to_save=1,
         get_correlations=False,
     ):
         print("creating parametrized representations...")
-        if self.inner_mesh_path is None or self.outer_mesh_path is None:
-            raise ValueError(
-                "Provide inner and outer mesh paths to create parametrized representations."
-            )
         theta_vals = numpy.linspace(0, numpy.pi, 1 + num_angular_points)
         phi_vals = numpy.linspace(0, 2 * numpy.pi, 1 + 2 * num_angular_points)
         rad_vals = numpy.linspace(0, 1, 1 + num_angular_points)
 
-        inner_mesh = trimesh.load_mesh(self.inner_mesh_path)
-        outer_mesh = trimesh.load_mesh(self.outer_mesh_path)
+        if "inner" not in mesh_paths or "outer" not in mesh_paths:
+            raise ValueError(
+                "Missing mesh paths required to generate parametrized representations"
+            )
+
+        inner_mesh = trimesh.load_mesh(mesh_paths.get("inner"))
+        outer_mesh = trimesh.load_mesh(mesh_paths.get("outer"))
 
         all_spilr = {}
         for scaled_val in ["raw", "scaled"]:
@@ -1462,7 +1467,7 @@ class AnalyseAP:
         ):
             num_saved_plots = 0
             for sc, (_, pos_dict) in enumerate(packing_dict.items()):
-                pos_list = numpy.array(pos_dict[self.ingredient_key])
+                pos_list = numpy.array(pos_dict[ingredient_key])
                 sph_pts = self.cartesian_to_sph(pos_list)
 
                 (
@@ -1511,7 +1516,7 @@ class AnalyseAP:
                         label_str = f"Distance from Nuclear Surface, {packing_id}_{sc}, {scaled_val}"
                         file_path = (
                             save_dir
-                            / f"heatmap_{scaled_val}_{packing_id}_{sc}_{self.ingredient_key}"
+                            / f"heatmap_{scaled_val}_{packing_id}_{sc}_{ingredient_key}"
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1522,6 +1527,7 @@ class AnalyseAP:
             print("calculating correlations...")
             self.calc_and_save_correlations(
                 all_spilr["scaled"],
+                ingredient_key=ingredient_key,
             )
 
         if save_plots:
@@ -1533,7 +1539,7 @@ class AnalyseAP:
                     )
                     file_path = (
                         save_dir
-                        / f"avg_heatmap_{scaled_val}_{packing_id}_{self.ingredient_key}"
+                        / f"avg_heatmap_{scaled_val}_{packing_id}_{ingredient_key}"
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 
