@@ -1274,7 +1274,7 @@ class AnalyseAP:
         Plots heatmaps with hierarchical clustering using similarity scores
         """
         # accounting for changes when reading from csv
-        if similarity_df["packing_id"].ndim > 1: 
+        if similarity_df["packing_id"].ndim > 1:
             packing_ids = similarity_df["packing_id"].iloc[:, 0]
         else:
             packing_ids = similarity_df["packing_id"]
