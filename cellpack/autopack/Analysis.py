@@ -1099,9 +1099,32 @@ class AnalyseAP:
 
         return minimum_packed_distance
 
+    def get_number_of_ingredients_packed(
+        self,
+        ingredient_key=None,
+    ):
+        """
+        Returns the number of ingredients packed
+
+        Parameters
+        ----------
+        ingredient_key: str
+            ingredient key in self.all_pos_list
+        """
+        ingredient_packing_dict = self.all_objs.get(ingredient_key)
+        if not ingredient_packing_dict:
+            return 0
+
+        ingredients_packed = 0
+        for packing_dict in ingredient_packing_dict.values():
+            ingredients_packed += len(packing_dict["r"])
+
+        return ingredients_packed / self.num_packings
+
     def create_report(
         self,
         recipe_data,
+        ingredient_key=None,
         results_output_path=None,
         run_distance_analysis=True,
     ):
@@ -1123,7 +1146,20 @@ class AnalyseAP:
             file_name=str(self.output_path / "analysis_report"),
             title="Packing analysis report",
         )
-        mdFile.new_line(f"Analysis for packing results located at {self.input_path}\n")
+        mdFile.new_header(
+            level=2,
+            title=f"Analysis for packing results located at {self.input_path}\n\n",
+            add_table_of_contents="n",
+        )
+
+        mdFile.new_line(f"Ingredient analyzed: {ingredient_key}\n")
+
+        avg_num_packed = self.get_number_of_ingredients_packed(
+            ingredient_key=ingredient_key
+        )
+        mdFile.new_line(
+            f"Average number of {ingredient_key} packed: {avg_num_packed}\n"
+        )
 
         # path to save report and other outputs
         if results_output_path is None:
@@ -1161,7 +1197,9 @@ class AnalyseAP:
             mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}\n")
 
             if expected_minimum_distance > packed_minimum_distance:
-                mdFile.new_line("Possible errors:")
+                mdFile.new_header(
+                    level=2, title="Possible errors", add_table_of_contents="n"
+                )
                 mdFile.new_list(
                     [
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
@@ -1172,7 +1210,9 @@ class AnalyseAP:
 
             distance_histo_path = input_path.glob("total_ingredient_distances_*.png")
             if distance_histo_path:
-                mdFile.new_line("Distance distribution:")
+                mdFile.new_header(
+                    level=2, title="Distance distribution", add_table_of_contents="n"
+                )
 
             for img_path in distance_histo_path:
                 mdFile.new_line(
