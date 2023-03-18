@@ -1237,9 +1237,7 @@ class AnalyseAP:
         )
         similarity_df["packing_id"] = 0
         for seed1, pos_dict1 in tqdm(all_objs[ingr_key].items()):
-            similarity_df.loc[seed1, "packing_id"] = self.packing_id_dict[
-                int(seed1.split("_")[-1])
-            ]
+            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
             for seed2, pos_dict2 in all_objs[ingr_key].items():
                 for dim in self.get_list_of_dims():
                     arr1 = pos_dict1[dim]
@@ -1275,7 +1273,11 @@ class AnalyseAP:
         """
         Plots heatmaps with hierarchical clustering using similarity scores
         """
-        packing_ids = similarity_df["packing_id"].iloc[:, 0]
+        # accounting for changes when reading from csv
+        if similarity_df["packing_id"].ndim > 1: 
+            packing_ids = similarity_df["packing_id"].iloc[:, 0]
+        else:
+            packing_ids = similarity_df["packing_id"]
         lut = dict(zip(packing_ids.unique(), sns.color_palette()))
         row_colors = packing_ids.map(lut)
         row_colors.rename("Packing ID", inplace=True)
