@@ -2,7 +2,6 @@ from enum import Enum
 import fire
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
-from cellpack.autopack.Recipe import Recipe
 
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
