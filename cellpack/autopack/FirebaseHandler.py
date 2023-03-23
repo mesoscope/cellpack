@@ -10,6 +10,10 @@ class FirebaseHandler(object):
         self.name = "firebase"
 
     @staticmethod
+    def doc_to_dict(doc):
+        return doc.to_dict()
+
+    @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
 

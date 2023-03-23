@@ -23,22 +23,12 @@ def upload(
     :return: void
     """
     if db_id == DATABASE_IDS.FIREBASE:
-        # testing path for setup
         cred_path = cred_path
         # fetch the service key json file
-
         db_handler = FirebaseHandler(cred_path)
         recipe_loader = RecipeLoader(recipe_path)
         recipe_full_data = recipe_loader.recipe_data
         recipe_meta_data = recipe_loader.get_only_recipe_metadata()
-        if "composition" in recipe_full_data:
-            (
-                root_compartment,
-                compartment_keys,
-                reference_dict,
-                referenced_objects,
-            ) = Recipe.resolve_composition(recipe_full_data)
-            # self.create_objects()
         recipe_db_handler = DBRecipeHandler(db_handler)
         recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
 

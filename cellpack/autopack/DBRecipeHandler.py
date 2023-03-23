@@ -1,7 +1,9 @@
 import copy
+from math import pi
 
 # import json
 from deepdiff import DeepDiff
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 from cellpack.autopack.utils import deep_merge
 
@@ -16,15 +18,26 @@ class DataDoc(object):
     ):
         pass
 
-    def as_local_data(doc):
-        data = doc.to_dict()
-        return data
+    def as_dict():
+        pass
+
+    def should_write():
+        pass
 
 class CompositionDoc(DataDoc):
     SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
 
-    def __init__(self, name, object_key=None, count=None, regions=None, molarity=None, object=None):
+    def __init__(
+        self,
+        name,
+        object_key=None,
+        count=None,
+        regions=None,
+        molarity=None,
+        object=None,
+    ):
+        super().__init__()
         self.name = name
         self.object = object_key or object
         self.count = count
@@ -74,9 +87,7 @@ class CompositionDoc(DataDoc):
 
     def resolve_local_regions(self, local_data, recipe_data, db):
         unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
-        prep_recipe_data = DBRecipeHandler.convert_representation(
-            unpack_recipe_data, db
-        )
+        prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
         if "object" in local_data and local_data["object"] is not None:
             if is_key(local_data["object"]):
                 key_name = local_data["object"]
@@ -99,7 +110,9 @@ class CompositionDoc(DataDoc):
                     comp_name = local_data["regions"][region_name][index]
                     prep_comp_data = prep_recipe_data["composition"][comp_name]
                     prep_comp_data["name"] = comp_name
-                    local_data["regions"][region_name][index] = CompositionDoc(**prep_comp_data).as_dict()
+                    local_data["regions"][region_name][index] = CompositionDoc(
+                        **prep_comp_data
+                    ).as_dict()
                 if (
                     "regions" in local_data["regions"][region_name][index]
                     and local_data["regions"][region_name][index]["regions"] is not None
@@ -149,7 +162,7 @@ class CompositionDoc(DataDoc):
 
         if db_docs and len(db_docs) >= 1:
             for doc in db_docs:
-                db_data = doc.to_dict()
+                db_data = db.doc_to_dict(doc)
                 for item in CompositionDoc.SHALLOW_MATCH:
                     if db_data[item] != local_data[item]:
                         break
@@ -171,18 +184,56 @@ class CompositionDoc(DataDoc):
         return True, None
 
 
-# class ObjectDoc(DataDoc):
-#     def __init__(self, name, object_key=None, count=None, regions=None, molarity=None):
-#         super().__init__()
-#         self.name = name
-#         self.object = object_key
-#         self.count = count
-#         self.molarity = molarity
-#         self.regions = regions
+class ObjectDoc(DataDoc):
+    def __init__(
+            self,
+            name,
+            settings
 
-#     def as_local_data(doc):
-#         data = doc.to_dict()
-#         return data
+        ):
+        super().__init__()
+        self.name = name
+        self.settings = settings
+
+    # get doc from database, convert it back to the original text
+    # i.e. in object, convert lists back to tuples in representations/packing/positions
+    @staticmethod
+    def convert_representation(doc, db):
+        if isinstance(doc, object) and db.is_firebase_obj(doc):
+            doc = db.doc_to_dict(doc)
+        elif isinstance(doc, object) and "__dict__" in dir(doc):
+            doc = vars(doc)
+        convert_doc = copy.deepcopy(doc)
+        for doc_key, doc_value in doc.items():
+            if (
+                doc_key == "representations"
+                and "packing" in doc_value
+                and doc_value["packing"] is not None
+            ):
+                position_value = doc_value["packing"]["positions"]
+                convert_doc["representations"]["packing"][
+                    "positions"
+                ] = DBRecipeHandler.convert_positions_in_representation(position_value)
+        return convert_doc
+
+    def as_dict(self):
+        data = dict()
+        data["name"] = self.name
+        for key in self.settings:
+            data[key] = self.settings[key]
+        return data
+
+    def should_write(self, db):
+        docs = db.get_doc_by_name("objects", self.name)
+        if docs and len(docs) >= 1:
+            for doc in docs:
+                full_doc_data = ObjectDoc.convert_representation(
+                    doc, db
+                )  # if there is repr in obj
+                difference = DeepDiff(full_doc_data, self.as_dict(), ignore_order=True)
+                if not difference:
+                    return doc, doc.id
+        return None, None
 
 
 class DBRecipeHandler(object):
@@ -236,41 +287,17 @@ class DBRecipeHandler(object):
                 modified_data[key] = value
         return modified_data
 
-    def should_write(self, collection, name, data):
-        docs = self.db.get_doc_by_name(collection, name)
-        if docs and len(docs) >= 1:
-            for doc in docs:
-                full_doc_data = self.convert_representation(
-                    doc, self.db
-                )  # if there is repr in obj
-                difference = DeepDiff(full_doc_data, data, ignore_order=True)
-                if not difference:
-                    return doc, doc.id
-        return None, None
-
     # add documents with auto IDs
     def upload_data(self, collection, data, id=None):
         # check if we need to convert part of the data(2d arrays and objs to dict)
         modified_data = DBRecipeHandler.prep_data_for_db(data)
         if id is None:
             name = modified_data["name"]
-            if (
-                collection == "composition"
-            ):  # composition has been already checked for duplicates
-                doc = self.db.upload_doc(collection, modified_data)
-                doc_path = doc[1].path
-                doc_id = doc[1].id
-                print(f"successfully uploaded {name} to path: {doc_path}")
-            else:
-                _, doc_id = self.should_write(collection, name, modified_data)
-                if doc_id:
-                    print(f"{collection}/{name} is already exists in firestore")
-                else:
-                    doc = self.db.upload_doc(collection, modified_data)
-                    # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
-                    doc_path = doc[1].path
-                    doc_id = doc[1].id
-                    print(f"successfully uploaded {name} to path: {doc_path}")
+            doc = self.db.upload_doc(collection, modified_data)
+            # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
+            doc_path = doc[1].path
+            doc_id = doc[1].id
+            print(f"successfully uploaded {name} to path: {doc_path}")
             return doc_id, self.db.create_path(collection, doc_id)
         else:
             doc_path = f"{collection}/{id}"
@@ -279,10 +306,13 @@ class DBRecipeHandler(object):
 
     def upload_objects(self, objects):
         for obj_name in objects:
-            object_doc = objects[obj_name]
-            object_doc["name"] = obj_name
-            _, obj_path = self.upload_data("objects", object_doc)
-            self.objects_to_path_map[obj_name] = obj_path
+            object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])            
+            _, doc_id = object_doc.should_write(self.db)
+            if doc_id:
+                print(f"objects/{object_doc.name} is already exists in firestore")
+            else:
+                _, obj_path = self.upload_data("objects", object_doc.as_dict())
+                self.objects_to_path_map[obj_name] = obj_path
 
     def upload_compositions(self, compositions, recipe_to_save, recipe_data):
         references_to_update = {}
@@ -355,27 +385,6 @@ class DBRecipeHandler(object):
             else:
                 self.db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
-    # get doc from database, convert it back to the original text
-    # i.e. in object, convert lists back to tuples in representations/packing/positions
-    @staticmethod
-    def convert_representation(doc, db):
-        if isinstance(doc, object) and db.is_firebase_obj(doc):
-            doc = DataDoc.as_local_data(doc)
-        elif isinstance(doc, object) and "__dict__" in dir(doc):
-            doc = vars(doc)
-        convert_doc = copy.deepcopy(doc)
-        for doc_key, doc_value in doc.items():
-            if (
-                doc_key == "representations"
-                and "packing" in doc_value
-                and doc_value["packing"] is not None
-            ):
-                position_value = doc_value["packing"]["positions"]
-                convert_doc["representations"]["packing"][
-                    "positions"
-                ] = DBRecipeHandler.convert_positions_in_representation(position_value)
-        return convert_doc
-
     def upload_collections(self, recipe_meta_data, recipe_data):
         recipe_to_save = copy.deepcopy(recipe_meta_data)
         objects = recipe_data["objects"]
@@ -408,7 +417,7 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            # return
+            return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
