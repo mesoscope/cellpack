@@ -168,7 +168,7 @@ class CompositionDoc(DataDoc):
                         break
                 if local_data["regions"] is None and db_data["regions"] is None:
                     # found a match, so shouldn't write
-                    return False, doc.id
+                    return False, db.doc_id(doc)
                 else:
                     self.resolve_db_regions(db_data, db)
                     self.resolve_local_regions(local_data, recipe_data, db)
@@ -180,7 +180,7 @@ class CompositionDoc(DataDoc):
                     )
                     # print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
                     if not difference:
-                        return False, doc.id
+                        return False, db.doc_id(doc)
         return True, None
 
 
@@ -232,7 +232,7 @@ class ObjectDoc(DataDoc):
                 )  # if there is repr in obj
                 difference = DeepDiff(full_doc_data, self.as_dict(), ignore_order=True)
                 if not difference:
-                    return doc, doc.id
+                    return doc, db.doc_id(doc)
         return None, None
 
 
@@ -296,7 +296,7 @@ class DBRecipeHandler(object):
             doc = self.db.upload_doc(collection, modified_data)
             # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
             doc_path = doc[1].path
-            doc_id = doc[1].id
+            doc_id = self.db.doc_id(doc[1])
             print(f"successfully uploaded {name} to path: {doc_path}")
             return doc_id, self.db.create_path(collection, doc_id)
         else:
