@@ -20,17 +20,16 @@ class DataDoc(object):
         data = doc.to_dict()
         return data
 
-
 class CompositionDoc(DataDoc):
     SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
 
-    def __init__(self, name, object_key=None, count=None, regions=None, molarity=None):
+    def __init__(self, name, object_key=None, count=None, regions=None, molarity=None, object=None):
         self.name = name
-        self.object = object_key
+        self.object = object_key or object
         self.count = count
         self.molarity = molarity
-        self.regions = regions
+        self.regions = regions or {}
 
     def as_dict(self):
         data = dict()
@@ -98,17 +97,9 @@ class CompositionDoc(DataDoc):
                         ] = prep_recipe_data["objects"][obj_item["name"]]
                 else:
                     comp_name = local_data["regions"][region_name][index]
-                    local_data["regions"][region_name][index] = prep_recipe_data[
-                        "composition"
-                    ][comp_name]
-                    local_data["regions"][region_name][index].setdefault(
-                        "name", comp_name
-                    )
-                    local_data["regions"][region_name][index].setdefault(
-                        "molarity", None
-                    )
-                    local_data["regions"][region_name][index].setdefault("regions", {})
-                    local_data["regions"][region_name][index].setdefault("count", None)
+                    prep_comp_data = prep_recipe_data["composition"][comp_name]
+                    prep_comp_data["name"] = comp_name
+                    local_data["regions"][region_name][index] = CompositionDoc(**prep_comp_data).as_dict()
                 if (
                     "regions" in local_data["regions"][region_name][index]
                     and local_data["regions"][region_name][index]["regions"] is not None
@@ -180,19 +171,18 @@ class CompositionDoc(DataDoc):
         return True, None
 
 
-class ObjectDoc(DataDoc):
-    def __init__(self, name, object_key=None, count=None, regions=None, molarity=None):
-        super().__init__()
+# class ObjectDoc(DataDoc):
+#     def __init__(self, name, object_key=None, count=None, regions=None, molarity=None):
+#         super().__init__()
+#         self.name = name
+#         self.object = object_key
+#         self.count = count
+#         self.molarity = molarity
+#         self.regions = regions
 
-        self.name = name
-        self.object = object_key
-        self.count = count
-        self.molarity = molarity
-        self.regions = regions
-
-    def as_local_data(doc):
-        data = doc.to_dict()
-        return data
+#     def as_local_data(doc):
+#         data = doc.to_dict()
+#         return data
 
 
 class DBRecipeHandler(object):
@@ -224,7 +214,7 @@ class DBRecipeHandler(object):
         )
 
     @staticmethod
-    def prep_data_for_db(data, max_depth=4):
+    def prep_data_for_db(data):
         modified_data = {}
         for key, value in data.items():
             # convert 2d array to dict
@@ -370,7 +360,7 @@ class DBRecipeHandler(object):
     @staticmethod
     def convert_representation(doc, db):
         if isinstance(doc, object) and db.is_firebase_obj(doc):
-            doc = ObjectDoc.as_local_data(doc)
+            doc = DataDoc.as_local_data(doc)
         elif isinstance(doc, object) and "__dict__" in dir(doc):
             doc = vars(doc)
         convert_doc = copy.deepcopy(doc)
