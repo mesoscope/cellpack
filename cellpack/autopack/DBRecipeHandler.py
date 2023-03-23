@@ -1,15 +1,11 @@
 import copy
-from math import pi
 
-# import json
 from deepdiff import DeepDiff
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 from cellpack.autopack.utils import deep_merge
 
 
-def is_key(string_or_dict):
-    return not isinstance(string_or_dict, dict)
+
 
 
 class DataDoc(object):
@@ -23,6 +19,10 @@ class DataDoc(object):
 
     def should_write():
         pass
+
+    @staticmethod
+    def is_key(string_or_dict):
+        return not isinstance(string_or_dict, dict)
 
 class CompositionDoc(DataDoc):
     SHALLOW_MATCH = ["object", "count", "molarity"]
@@ -54,7 +54,7 @@ class CompositionDoc(DataDoc):
         return data
 
     def get_reference_data(self, key_or_dict, db):
-        if is_key(key_or_dict) and db.is_reference(key_or_dict):
+        if DataDoc.is_key(key_or_dict) and db.is_reference(key_or_dict):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
             return downloaded_data, None
@@ -89,16 +89,16 @@ class CompositionDoc(DataDoc):
         unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
         prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
         if "object" in local_data and local_data["object"] is not None:
-            if is_key(local_data["object"]):
+            if DataDoc.is_key(local_data["object"]):
                 key_name = local_data["object"]
             else:
                 key_name = local_data["object"]["name"]
             local_data["object"] = prep_recipe_data["objects"][key_name]
         for region_name in local_data["regions"]:
             for index, key_or_dict in enumerate(local_data["regions"][region_name]):
-                if not is_key(key_or_dict):
+                if not DataDoc.is_key(key_or_dict):
                     obj_item = local_data["regions"][region_name][index]["object"]
-                    if is_key(obj_item):
+                    if DataDoc.is_key(obj_item):
                         local_data["regions"][region_name][index][
                             "object"
                         ] = prep_recipe_data["objects"][obj_item]
@@ -134,7 +134,7 @@ class CompositionDoc(DataDoc):
                 if len(region_array) > 0:
                     for region_item in region_array:
                         # replace nested objs in comp["regions"]
-                        if is_key(region_item):
+                        if DataDoc.is_key(region_item):
                             update_field_path = f"regions.{region_name}"
                             if self.name in references_to_update:
                                 references_to_update[self.name].update(
@@ -178,7 +178,6 @@ class CompositionDoc(DataDoc):
                         ignore_order=True,
                         ignore_type_in_groups=[tuple, list],
                     )
-                    # print("LOCAL DATA", json.dumps(local_data, sort_keys=True, indent=4), "DB DATA", json.dumps(db_data, sort_keys=True, indent=4))
                     if not difference:
                         return False, db.doc_id(doc)
         return True, None
@@ -194,6 +193,20 @@ class ObjectDoc(DataDoc):
         super().__init__()
         self.name = name
         self.settings = settings
+
+    @staticmethod
+    def convert_positions_in_representation(data):
+        convert_data = {}
+        for key, value in data.items():
+            if isinstance(value, list):
+                convert_data[key] = tuple(value)
+            elif isinstance(value, dict):
+                convert_data[key] = ObjectDoc.convert_positions_in_representation(
+                    value
+                )
+            else:
+                data[key] = value
+        return convert_data
 
     # get doc from database, convert it back to the original text
     # i.e. in object, convert lists back to tuples in representations/packing/positions
@@ -213,7 +226,7 @@ class ObjectDoc(DataDoc):
                 position_value = doc_value["packing"]["positions"]
                 convert_doc["representations"]["packing"][
                     "positions"
-                ] = DBRecipeHandler.convert_positions_in_representation(position_value)
+                ] = ObjectDoc.convert_positions_in_representation(position_value)
         return convert_doc
 
     def as_dict(self):
@@ -230,7 +243,8 @@ class ObjectDoc(DataDoc):
                 full_doc_data = ObjectDoc.convert_representation(
                     doc, db
                 )  # if there is repr in obj
-                difference = DeepDiff(full_doc_data, self.as_dict(), ignore_order=True)
+                local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
+                difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
                 if not difference:
                     return doc, db.doc_id(doc)
         return None, None
@@ -241,20 +255,6 @@ class DBRecipeHandler(object):
         self.db = db_handler
         self.objects_to_path_map = {}
         self.comp_to_path_map = {}
-
-    @staticmethod
-    def convert_positions_in_representation(data):
-        convert_data = {}
-        for key, value in data.items():
-            if isinstance(value, list):
-                convert_data[key] = tuple(value)
-            elif isinstance(value, dict):
-                convert_data[key] = DBRecipeHandler.convert_positions_in_representation(
-                    value
-                )
-            else:
-                data[key] = value
-        return convert_data
 
     @staticmethod
     def is_nested_list(item):
@@ -306,6 +306,7 @@ class DBRecipeHandler(object):
 
     def upload_objects(self, objects):
         for obj_name in objects:
+            objects[obj_name]["name"] = obj_name
             object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])            
             _, doc_id = object_doc.should_write(self.db)
             if doc_id:
