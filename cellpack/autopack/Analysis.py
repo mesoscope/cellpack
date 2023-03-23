@@ -959,7 +959,6 @@ class Analysis:
         # results path to use in report
         results_output_path = report_options["results_output_path"]
 
-
         mdFile.new_header(level=1, title="Packing image")
         glob_to_packing_image = results_path.glob("packing_image_*.png")
         for img_path in glob_to_packing_image:
@@ -1012,11 +1011,7 @@ class Analysis:
 
         mdFile.create_md_file()
 
-    def run_analysis_workflow(
-        self,
-        analysis_config: dict,
-        recipe_data=None
-    ):
+    def run_analysis_workflow(self, analysis_config: dict, recipe_data=None):
         self.ingredient_key = analysis_config.get("ingredient_key")
 
         if analysis_config.get("mesh_paths"):

@@ -1,5 +1,5 @@
 import numpy
-from math import pi
+from math import pi, sqrt
 from panda3d.bullet import BulletRigidBodyNode, BulletSphereShape
 from panda3d.core import Point3, TransformState, Vec3
 from panda3d.ode import OdeBody, OdeMass, OdeSphereGeom
@@ -115,7 +115,6 @@ class SingleSphereIngr(Ingredient):
             radius_of_ing_being_packed + dpad
         )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
         #  TODO: add realtime render here that shows all the points being checked by the collision
-
         pointsToCheck = env.grid.getPointsInSphere(
             position, radius_of_area_to_check
         )  # indices
@@ -130,9 +129,29 @@ class SingleSphereIngr(Ingredient):
                 pti
             ]  # is that point's distance from the center of the sphere (packing location)
             # distance is an array of distance of closest contact to anything currently in the grid
+            buffer = 0
 
+            if current_grid_distances[grid_point_index] < 0:
+                # max_distance_to_surface = sqrt(
+                #     env.smallestProteinSize**2
+                #     + (
+                #         env.smallestProteinSize
+                #         - abs(current_grid_distances[grid_point_index])
+                #     )
+                #     ** 2
+                # )
+                max_distance_to_surface = (
+                    distance_to_packing_location
+                    * current_grid_distances[grid_point_index]
+                    / (gridPointsCoords[grid_point_index][0] - position[0])
+                )
+                buffer = max_distance_to_surface - abs(
+                    current_grid_distances[grid_point_index]
+                )
             collision = (
-                current_grid_distances[grid_point_index] + distance_to_packing_location
+                current_grid_distances[grid_point_index]
+                + distance_to_packing_location
+                - buffer
                 <= radius_of_ing_being_packed
             )
 

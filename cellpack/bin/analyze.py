@@ -52,8 +52,7 @@ def analyze(
     else:
         recipe_data = None
     analysis.run_analysis_workflow(
-        analysis_config=analysis_config,
-        recipe_data=recipe_data
+        analysis_config=analysis_config, recipe_data=recipe_data
     )
     t2 = time()
     print(f"time to run analysis: {t2 - t1}")

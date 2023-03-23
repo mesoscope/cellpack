@@ -716,13 +716,13 @@ class Ingredient(Agent):
             return self.min_distance
         radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
-
+        # radius of smallest ingredient * 1
         if self.packing_mode == "close":
-            cut = radius - jitter
+            cuttoff_value = radius - jitter
         else:
-            cut = radius - jitter
-        self.min_distance = cut
-        return cut
+            cuttoff_value = radius
+        self.min_distance = cuttoff_value
+        return cuttoff_value
 
     def checkIfUpdate(self, nbFreePoints, threshold):
         """Check if we need to update the distance array. Part of the hack free points"""
@@ -1807,9 +1807,14 @@ class Ingredient(Agent):
                 autopack.helper.set_object_static(
                     current_visual_instance, jtrans, rotMatj
                 )
-            self.place(
-                env, compartment, jtrans, rotMatj, ptInd, insidePoints
-            )
+            ingredient_too_close = env.check_new_placement(jtrans)
+            if ingredient_too_close:
+                print("TOO CLOSE")
+                self.reject()
+                return False, {}, {}
+            else:
+                self.place(env, compartment, jtrans, rotMatj, ptInd, insidePoints)
+
         else:
             if is_realtime:
                 self.remove_from_realtime_display(current_visual_instance)

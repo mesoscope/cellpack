@@ -423,21 +423,19 @@ class Environment(CompartmentList):
                 if self.molecules[i][2].name == ingredient_name
             ]
         )
-    
+
     def get_all_positions(self):
-        return numpy.array(
-            [
-                self.molecules[i][0]
-                for i in range(len(self.molecules))
-            ]
-        )
-    
-    def get_all_distances(self):
+        return numpy.array([self.molecules[i][0] for i in range(len(self.molecules))])
+
+    def get_all_distances(self, position=None):
         positions = self.get_all_positions()
-        return scipy.spatial.distance.pdist(
-            positions
-        )     
-    
+        if len(positions) == 0:
+            return numpy.array([])
+        elif position is not None:
+            return numpy.linalg.norm(positions - numpy.array(position), axis=1)
+        else:
+            return scipy.spatial.distance.pdist(positions)
+
     def get_distances(self, ingredient_name, center):
         ingredient_positions = self.get_all_positions_of_one_ingredient(ingredient_name)
         distances_between_ingredients = scipy.spatial.distance.pdist(
@@ -1860,14 +1858,25 @@ class Environment(CompartmentList):
         self.ingr_result = ingredients
         return all_ingr_as_array
 
-    def distance_check_fail(self):
+    def check_new_placement(self, new_position):
+        distances = self.get_all_distances(new_position)
+        if len(distances) == 0:
+            # nothing has been packed yet
+            return False
+        min_distance = min(distances)
+        expected_min_distance = self.smallestProteinSize * 2
+        if min_distance < expected_min_distance:
+            print(expected_min_distance - min_distance)
+        return min_distance < expected_min_distance
+
+    def distance_check_failed(self):
         distances = self.get_all_distances()
         if len(distances) == 0:
             # nothing has been packed yet
             return False
         min_distance = min(distances)
         expected_min_distance = self.smallestProteinSize * 2
-        return min_distance < expected_min_distance 
+        return min_distance < expected_min_distance + 0.001
 
     def pack_grid(
         self,
@@ -2133,12 +2142,12 @@ class Environment(CompartmentList):
                 if ingr.encapsulating_radius > self.largestProteinSize:
                     self.largestProteinSize = ingr.encapsulating_radius
 
-                
                 PlacedMols += 1
-                ingredient_too_close = self.distance_check_fail()
-                if ingredient_too_close:
-                    print("GOT A FAIL", self.grid.masterGridPositions[ptInd])
-                    nbFreePoints = 0
+                # if self.stop_on_collision:
+                # ingredient_too_close = self.distance_check_failed()
+                # if ingredient_too_close:
+                #     print("GOT A FAIL", self.grid.masterGridPositions[ptInd])
+                #     nbFreePoints = 0
             else:
                 self.log.info("rejected %r", ingr.rejectionCounter)
 

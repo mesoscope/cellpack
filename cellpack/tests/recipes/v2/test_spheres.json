@@ -36,7 +36,7 @@
                 1
             ],
             "rejection_threshold": 50,
-            "place_method": "jitter",
+            "place_method": "spheresSST",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,
