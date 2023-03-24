@@ -4,7 +4,6 @@ Created on Mon May  6 22:58:44 2013
 
 @author: ludo
 """
-import copy
 import csv
 import json
 import math
@@ -37,6 +36,7 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
+from cellpack.autopack.utils import check_paired_key
 
 
 def autolabel(rects, ax):
@@ -575,89 +575,77 @@ class AnalyseAP:
         pz = pp[2]
         return px, py, pz
 
-    def getDistance(self, ingrname, center):
-        ingredient_positions = numpy.array(
+    def get_positions_for_ingredient(self, ingredient_name):
+        return numpy.array(
             [
                 self.env.molecules[i][0]
                 for i in range(len(self.env.molecules))
-                if self.env.molecules[i][2].name == ingrname
+                if self.env.molecules[i][2].name == ingredient_name
             ]
         )
 
-        if len(ingredient_positions):
-            distances_from_center = numpy.linalg.norm(
-                ingredient_positions - numpy.array(center), axis=1
-            )
-            distances_between_ingredients = distance.pdist(ingredient_positions)
-        else:
-            distances_from_center = numpy.array([])
-            distances_between_ingredients = numpy.array([])
-
-        return (
-            ingredient_positions,
-            distances_from_center,
-            distances_between_ingredients,
-        )
-
-    def getDistanceAngle(self, ingr, center):
-        # need matrix to euler? then access and plot them?
-        # also check the measure angle one
-        angles = []
-        ingredient_positions = numpy.array(
-            [
-                self.env.molecules[i][0]
-                for i in range(len(self.env.molecules))
-                if self.env.molecules[i][2].name == ingr.name
-            ]
-        )
-        ingr_rotation = numpy.array(
+    def get_rotations_for_ingredient(self, ingredient_name):
+        return numpy.array(
             [
                 self.env.molecules[i][1]
                 for i in range(len(self.env.molecules))
-                if self.env.molecules[i][2].name == ingr.name
+                if self.env.molecules[i][2].name == ingredient_name
             ]
         )
 
-        if len(ingredient_positions):
+    def get_distances_and_angles(self, ingrname, center, get_angles=False):
+        """
+        Returns distances and angles for a given ingredient
+        """
+        ingredient_positions = self.get_positions_for_ingredient(
+            ingredient_name=ingrname
+        )
 
+        if len(ingredient_positions):
             distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
 
-            ingredient_position_vector = numpy.array(
-                ingredient_positions
-            ) - numpy.array(center)
-            # lets do it on X,Y,Z and also per positions ?
-            anglesX = numpy.array(
-                signed_angle_between_vectors(
-                    [[0, 0, 1]] * len(ingredient_positions),
-                    ingr_rotation[:, 0, :3],
-                    -ingredient_position_vector,
-                    directed=False,
-                    axis=1,
-                )
-            )
-            anglesY = numpy.array(
-                signed_angle_between_vectors(
-                    [[0, 1, 0]] * len(ingredient_positions),
-                    ingr_rotation[:, 1, :3],
-                    -ingredient_position_vector,
-                    directed=False,
-                    axis=1,
-                )
-            )
-            anglesZ = numpy.array(
-                signed_angle_between_vectors(
-                    [[1, 0, 0]] * len(ingredient_positions),
-                    ingr_rotation[:, 2, :3],
-                    -ingredient_position_vector,
-                    directed=False,
-                    axis=1,
-                )
-            )
-
             distances_between_ingredients = distance.pdist(ingredient_positions)
-            angles = numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
+
+            if get_angles:
+                ingredient_rotation = self.get_rotations_for_ingredient(
+                    ingredient_name=ingrname,
+                )
+                ingredient_position_vector = numpy.array(
+                    ingredient_positions
+                ) - numpy.array(center)
+
+                anglesX = numpy.array(
+                    signed_angle_between_vectors(
+                        [[0, 0, 1]] * len(ingredient_positions),
+                        ingredient_rotation[:, 0, :3],
+                        -ingredient_position_vector,
+                        directed=False,
+                        axis=1,
+                    )
+                )
+                anglesY = numpy.array(
+                    signed_angle_between_vectors(
+                        [[0, 1, 0]] * len(ingredient_positions),
+                        ingredient_rotation[:, 1, :3],
+                        -ingredient_position_vector,
+                        directed=False,
+                        axis=1,
+                    )
+                )
+                anglesZ = numpy.array(
+                    signed_angle_between_vectors(
+                        [[1, 0, 0]] * len(ingredient_positions),
+                        ingredient_rotation[:, 2, :3],
+                        -ingredient_position_vector,
+                        directed=False,
+                        axis=1,
+                    )
+                )
+                angles = numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
+            else:
+                angles = numpy.array([])
         else:
             distances_from_center = numpy.array([])
             distances_between_ingredients = numpy.array([])
@@ -669,6 +657,14 @@ class AnalyseAP:
             distances_between_ingredients,
             angles,
         )
+
+    def calc_pairwise_distances(self, ingr1name, ingr2name):
+        """
+        Returns pairwise distances between ingredients of different types
+        """
+        ingr_pos_1 = self.get_positions_for_ingredient(ingredient_name=ingr1name)
+        ingr_pos_2 = self.get_positions_for_ingredient(ingredient_name=ingr2name)
+        return numpy.ravel(distance.cdist(ingr_pos_1, ingr_pos_2))
 
     def getVolumeShell(self, bbox, radii, center):
         # rectangle_circle_area
@@ -854,18 +850,14 @@ class AnalyseAP:
         )
 
     def axis_distribution_total(self, all_positions):
-        numpy.savetxt(
-            self.env.out_folder / f"ingredient_positions_{self.env.basename}.csv",
-            numpy.array(all_positions),
-            delimiter=",",
-        )
         pos_xyz = numpy.array(all_positions)
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
             self.histo(
                 all_pos[:, ind],
-                self.env.out_folder / f"total_histo_{dim}_{self.env.basename}.png",
+                self.env.out_folder
+                / f"all_ingredient_histo_{dim}_{self.env.basename}.png",
             )
 
     def axis_distribution(self, ingr):
@@ -1047,7 +1039,7 @@ class AnalyseAP:
         Returns the object dictionary from the input path folder.
         TODO: add description of object dictionary
         """
-        file_list = Path(input_path).glob("all_positions_*")
+        file_list = Path(input_path).glob("positions_*.json")
         all_pos_list = []
         packing_id_dict = {}
         for packing_index, file_path in enumerate(file_list):
@@ -1079,7 +1071,7 @@ class AnalyseAP:
         """
         Returns 2x the smallest radius of objects in the recipe
         """
-        minimum_distance = 9999
+        minimum_distance = numpy.Inf
         for object_values in recipe_data.get("objects").values():
             if "radius" in object_values:
                 if 2 * object_values["radius"] < minimum_distance:
@@ -1092,7 +1084,12 @@ class AnalyseAP:
         """
         minimum_packed_distance = numpy.Inf
         for path_to_distance_file in glob_to_distance_files:
-            distance_values = numpy.genfromtxt(path_to_distance_file)
+            pairwise_distance_dict = self.loadJSON(path_to_distance_file)
+            distance_values = numpy.array(
+                self.combine_results_from_ingredients(
+                    self.combine_results_from_seeds(pairwise_distance_dict)
+                )
+            )
             current_minimum_distance = numpy.min(distance_values)
             if current_minimum_distance < minimum_packed_distance:
                 minimum_packed_distance = current_minimum_distance
@@ -1101,7 +1098,7 @@ class AnalyseAP:
 
     def get_number_of_ingredients_packed(
         self,
-        ingredient_key=None,
+        ingredient_keys=None,
     ):
         """
         Returns the number of ingredients packed
@@ -1111,20 +1108,24 @@ class AnalyseAP:
         ingredient_key: str
             ingredient key in self.all_pos_list
         """
-        ingredient_packing_dict = self.all_objs.get(ingredient_key)
-        if not ingredient_packing_dict:
-            return 0
+        avg_num_packed = []
+        for ingr_key in ingredient_keys:
+            ingredient_packing_dict = self.all_objs.get(ingr_key)
+            if not ingredient_packing_dict:
+                val = 0
+            else:
+                ingredients_packed = 0
+                for packing_dict in ingredient_packing_dict.values():
+                    ingredients_packed += len(packing_dict["r"])
+                val = ingredients_packed / self.num_packings
+            avg_num_packed.append(val)
 
-        ingredients_packed = 0
-        for packing_dict in ingredient_packing_dict.values():
-            ingredients_packed += len(packing_dict["r"])
-
-        return ingredients_packed / self.num_packings
+        return avg_num_packed
 
     def create_report(
         self,
         recipe_data,
-        ingredient_key=None,
+        ingredient_keys=None,
         results_output_path=None,
         run_distance_analysis=True,
     ):
@@ -1148,17 +1149,23 @@ class AnalyseAP:
         )
         mdFile.new_header(
             level=2,
-            title=f"Analysis for packing results located at {self.input_path}\n\n",
+            title=f"Analysis for packing results located at {self.input_path}",
             add_table_of_contents="n",
         )
 
-        mdFile.new_line(f"Ingredient analyzed: {ingredient_key}\n")
-
         avg_num_packed = self.get_number_of_ingredients_packed(
-            ingredient_key=ingredient_key
+            ingredient_keys=ingredient_keys
         )
-        mdFile.new_line(
-            f"Average number of {ingredient_key} packed: {avg_num_packed}\n"
+        text_list = [
+            "Ingredient name",
+            "Average number packed",
+            *[val for pair in zip(ingredient_keys, avg_num_packed) for val in pair],
+        ]
+        mdFile.new_table(
+            columns=2,
+            rows=(len(ingredient_keys) + 1),
+            text=text_list,
+            text_align="center",
         )
 
         # path to save report and other outputs
@@ -1185,7 +1192,7 @@ class AnalyseAP:
                 recipe_data
             )
 
-            glob_to_distance_file = input_path.glob("ingredient_distances_*.txt")
+            glob_to_distance_file = input_path.glob("pairwise_distances_*.json")
             packed_minimum_distance = self.get_packed_minimum_distance(
                 glob_to_distance_file
             )
@@ -1208,7 +1215,7 @@ class AnalyseAP:
                     ]
                 )
 
-            distance_histo_path = input_path.glob("total_ingredient_distances_*.png")
+            distance_histo_path = input_path.glob("all_ingredient_distances_*.png")
             if distance_histo_path:
                 mdFile.new_header(
                     level=2, title="Distance distribution", add_table_of_contents="n"
@@ -1230,6 +1237,7 @@ class AnalyseAP:
         recipe_data: dict,
     ):
         all_objs, all_pos_list = self.get_obj_dict(self.input_path)
+
         self.num_packings = len(all_pos_list)
         self.num_seeds_per_packing = numpy.array(
             [len(packing_dict) for packing_dict in all_pos_list]
@@ -1599,7 +1607,7 @@ class AnalyseAP:
         for bc in range(nbins):
             dist_vals = distances[bin_inds == (bc + 1)]
             if len(dist_vals) > 1:
-                err_vals[bc] = numpy.std(dist_vals) / numpy.sqrt(len(dist_vals))
+                err_vals[bc] = numpy.std(dist_vals)
             else:
                 err_vals[bc] = 0
 
@@ -1776,6 +1784,107 @@ class AnalyseAP:
         plt.savefig(filename)
         return x, y, z, s, c
 
+    def set_ingredient_color(self, ingr):
+        """
+        Sets the color of an ingredient
+        """
+        color = None
+
+        if ingr.color is not None:
+            color = (
+                ingr.color
+                if all([x <= 1 for x in ingr.color])
+                else numpy.array(ingr.color) / 255
+            )
+
+        return color
+
+    def add_ingredient_positions_to_plot(
+        self, ax, ingr, color, seed_index, ingredient_position_dict, width
+    ):
+        """
+        Adds 2D images of ingredient positions to axis
+        """
+        seed_ingredient_positions = ingredient_position_dict[seed_index][ingr.name]
+        for i, pos in enumerate(seed_ingredient_positions):
+            ax.add_patch(
+                Circle(
+                    (pos[0], pos[1]),
+                    ingr.encapsulating_radius,
+                    edgecolor="black",
+                    facecolor=color,
+                )
+            )
+
+            #  Plot "image" particles to verify that periodic boundary conditions are working
+            radius = ingr.encapsulating_radius
+            if autopack.testPeriodicity:
+                if pos[0] < radius:
+                    ax.add_patch(
+                        Circle(
+                            (pos[0] + width[0], pos[1]),
+                            radius,
+                            facecolor=color,
+                        )
+                    )
+                elif pos[0] > (width[0] - radius):
+                    ax.add_patch(
+                        Circle(
+                            (pos[0] - width[0], pos[1]),
+                            radius,
+                            facecolor=color,
+                        )
+                    )
+                if pos[1] < radius:
+                    ax.add_patch(
+                        Circle(
+                            (pos[0], pos[1] + width[1]),
+                            radius,
+                            facecolor=color,
+                        )
+                    )
+                elif pos[1] > (width[1] - radius):
+                    ax.add_patch(
+                        Circle(
+                            (pos[0], pos[1] - width[1]),
+                            radius,
+                            facecolor=color,
+                        )
+                    )
+
+            if i == 0:  # len(ingrpos)-1:
+                continue
+
+            if ingr.type == "Grow":
+                plt.plot(
+                    [
+                        seed_ingredient_positions[-i][0],
+                        seed_ingredient_positions[-i - 1][0],
+                    ],
+                    [
+                        seed_ingredient_positions[-i][1],
+                        seed_ingredient_positions[-i - 1][1],
+                    ],
+                    "k-",
+                    lw=2,
+                )
+                # plot the sphere
+                if ingr.use_rbsphere:
+                    (ext_recipe, pts,) = ingr.getInterpolatedSphere(
+                        seed_ingredient_positions[-i - 1],
+                        seed_ingredient_positions[-i],
+                    )
+                    for pt in pts:
+                        ax.add_patch(
+                            Circle(
+                                (pt[0], pt[1]),
+                                ingr.min_radius,
+                                edgecolor="black",
+                                facecolor=color,
+                            )
+                        )
+        return ax
+
     def one_exp(self, seed, output_path, eid=0, nmol=1, periodicity=True, dim=2):
         output = output_path + str(nmol)
         if periodicity:
@@ -1797,6 +1906,172 @@ class AnalyseAP:
         _, indices_u = numpy.unique(seeds_int, return_index=True)
         seeds_i = numpy.array(seeds_int[numpy.sort(indices_u)])[:n]
         return seeds_i
+
+    def update_distance_distribution_dictionaries(
+        self,
+        ingr,
+        center_distance_dict,
+        pairwise_distance_dict,
+        ingredient_position_dict,
+        ingredient_angle_dict,
+        ingredient_occurence_dict,
+        seed_index,
+        center,
+    ):
+        """
+        Update dictionaries that store distance and angle information
+        """
+        if ingr.name not in center_distance_dict[seed_index]:
+            center_distance_dict[seed_index][ingr.name] = []
+            pairwise_distance_dict[seed_index][ingr.name] = []
+            ingredient_position_dict[seed_index][ingr.name] = []
+            ingredient_angle_dict[seed_index][ingr.name] = []
+            ingredient_occurence_dict[seed_index][ingr.name] = []
+
+        get_angles = False
+        if ingr.packing_mode == "gradient" and self.env.use_gradient:
+            self.center = center = self.env.gradients[ingr.gradient].mode_settings.get(
+                "center", center
+            )
+            get_angles = True
+
+        # get angles wrt gradient
+        (
+            seed_ingredient_positions,
+            seed_distances_from_center,
+            seed_distances_between_ingredients,
+            seed_angles,
+        ) = self.get_distances_and_angles(ingr.name, center, get_angles=get_angles)
+
+        center_distance_dict[seed_index][
+            ingr.name
+        ] = seed_distances_from_center.tolist()
+        pairwise_distance_dict[seed_index][
+            ingr.name
+        ] = seed_distances_between_ingredients.tolist()
+        ingredient_position_dict[seed_index][
+            ingr.name
+        ] = seed_ingredient_positions.tolist()
+        ingredient_angle_dict[seed_index][ingr.name] = seed_angles.tolist()
+        ingredient_occurence_dict[seed_index][ingr.name].append(
+            len(seed_ingredient_positions)
+        )
+
+        return (
+            center_distance_dict,
+            pairwise_distance_dict,
+            ingredient_position_dict,
+            ingredient_angle_dict,
+            ingredient_occurence_dict,
+        )
+
+    def update_crosswise_distances(
+        self, ingr, recipe, pairwise_distance_dict, seed_index
+    ):
+        """
+        Adds cross-ingredient distances for pairwise distance dictionary
+        """
+        for ingr2 in recipe.ingredients:
+            if ingr2.name == ingr.name:
+                continue
+            if not check_paired_key(
+                pairwise_distance_dict[seed_index],
+                ingr.name,
+                ingr2.name,
+            ):
+                pairwise_distance_dict[seed_index][
+                    f"{ingr.name}_{ingr2.name}"
+                ] = self.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
+
+        return pairwise_distance_dict
+
+    def process_ingredients_in_recipe(
+        self,
+        recipe,
+        center_distance_dict,
+        pairwise_distance_dict,
+        ingredient_position_dict,
+        ingredient_angle_dict,
+        ingredient_occurence_dict,
+        seed_index,
+        center,
+        ax,
+        plot_figures,
+        two_d,
+        width,
+    ):
+        """
+        Updates distance/angle dictionaries and creates plots for ingredients in recipe
+        """
+        for ingr in recipe.ingredients:
+            # set ingredient color
+            color = self.set_ingredient_color(ingr)
+
+            # calculate distances and angles for ingredient
+            (
+                center_distance_dict,
+                pairwise_distance_dict,
+                ingredient_position_dict,
+                ingredient_angle_dict,
+                ingredient_occurence_dict,
+            ) = self.update_distance_distribution_dictionaries(
+                ingr,
+                center_distance_dict,
+                pairwise_distance_dict,
+                ingredient_position_dict,
+                ingredient_angle_dict,
+                ingredient_occurence_dict,
+                seed_index,
+                center,
+            )
+
+            # calculate cross ingredient_distances
+            pairwise_distance_dict = self.update_crosswise_distances(
+                ingr, recipe, pairwise_distance_dict, seed_index
+            )
+
+            if plot_figures and two_d:
+                ax = self.add_ingredient_positions_to_plot(
+                    ax,
+                    ingr,
+                    color,
+                    seed_index,
+                    ingredient_position_dict,
+                    width,
+                )
+
+        return (
+            center_distance_dict,
+            pairwise_distance_dict,
+            ingredient_position_dict,
+            ingredient_angle_dict,
+            ingredient_occurence_dict,
+            ax,
+        )
+
+    def combine_results_from_seeds(self, input_dict):
+        """
+        Combines results from multiple seeds into one dictionary
+        Dictionary keys are ingredient names
+        """
+        output_dict = {}
+        for seed_index, ingr_dict in input_dict.items():
+            for ingr_name, value_list in ingr_dict.items():
+                if ingr_name not in output_dict:
+                    output_dict[ingr_name] = value_list
+                else:
+                    output_dict[ingr_name].extend(value_list)
+
+        return output_dict
+
+    def combine_results_from_ingredients(self, input_dict):
+        """
+        Combines results from multiple ingredients into one list
+        """
+        output_list = []
+        for ingr_name, value_list in input_dict.items():
+            output_list.extend(value_list)
+        return output_list
 
     def doloop(
         self,
@@ -1820,40 +2095,43 @@ class AnalyseAP:
         #    Results will appear in the result folder of your recipe path
         # where n is the number of loop, seed = i
         # analyse.doloop(n)
+
         if seed_list is None:
             seed_list = self.getHaltonUnique(num_seeds)
+
         packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
         numpy.savetxt(
             self.env.out_folder / f"seeds_{packing_basename}.txt",
             seed_list,
             delimiter=",",
         )
-        angle_file = self.env.out_folder / f"angles_{packing_basename}.txt"
-        position_file = self.env.out_folder / f"positions_{packing_basename}.txt"
-        all_pos_file = self.env.out_folder / f"all_positions_{packing_basename}.json"
+
         center_distance_file = (
-            self.env.out_folder / f"center_distances_{packing_basename}.txt"
+            self.env.out_folder / f"center_distances_{packing_basename}.json"
         )
-        ingredient_distance_file = (
-            self.env.out_folder / f"ingredient_distances_{packing_basename}.txt"
+        pairwise_distance_file = (
+            self.env.out_folder / f"pairwise_distances_{packing_basename}.json"
         )
-        occurences_file = self.env.out_folder / f"occurence_{packing_basename}.json"
-        rangeseed = range(num_seeds)
-        center_distances_dict = {}
-        ingredient_distances_dict = {}
-        ingredient_positions_dict = {}
-        ingredient_angles_dict = {}
-        occurences = {}
-        all_positions_dict = {}
-        total_positions = []
-        total_center_distances = []
-        total_angles = []
+        ingredient_position_file = (
+            self.env.out_folder / f"positions_{packing_basename}.json"
+        )
+        ingredient_angle_file = self.env.out_folder / f"angles_{packing_basename}.json"
+        ingredient_occurences_file = (
+            self.env.out_folder / f"occurences_{packing_basename}.json"
+        )
+
+        center_distance_dict = {}
+        pairwise_distance_dict = {}
+        ingredient_position_dict = {}
+        ingredient_angle_dict = {}
+        ingredient_occurence_dict = {}
+
         rebuild = True
 
         for seed_index in range(num_seeds):
-            seed_basename = f"seed{seed_index}_{packing_basename}"
+            seed_basename = f"seed_{seed_index}_{packing_basename}"
             self.env.result_file = str(
-                self.env.out_folder / f"seed_{seed_index}_{packing_basename}"
+                self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
             )
             # Clear
             if self.afviewer:
@@ -1875,6 +2153,7 @@ class AnalyseAP:
                 # TODO: fix this to disable plotly if using simularium
                 show_plotly_plot=(show_grid and two_d) and not use_simularium,
             )
+
             self.center = self.env.grid.getCenter()
             if render:
                 # render/save scene if hosted otherwise nothing
@@ -1887,359 +2166,88 @@ class AnalyseAP:
                 ax = fig.add_subplot(111)
 
             if get_distance_distribution:
+
+                center_distance_dict[seed_index] = {}
+                pairwise_distance_dict[seed_index] = {}
+                ingredient_position_dict[seed_index] = {}
+                ingredient_angle_dict[seed_index] = {}
+                ingredient_occurence_dict[seed_index] = {}
+
                 center = self.env.grid.getCenter()  # center of the grid
+
                 ext_recipe = self.env.exteriorRecipe
                 if ext_recipe:
-                    for ingr in ext_recipe.ingredients:
-
-                        # set ingredient color
-                        if ingr.color is not None:
-                            color = (
-                                ingr.color
-                                if ingr.color[0] <= 1
-                                else numpy.array(ingr.color) / 255
-                            )
-                        else:
-                            color = None
-
-                        if ingr.name not in center_distances_dict:
-                            center_distances_dict[ingr.name] = []
-                            ingredient_positions_dict[ingr.name] = []
-                            ingredient_angles_dict[ingr.name] = []
-                            occurences[ingr.name] = []
-
-                        if ingr.packing_mode == "gradient" and self.env.use_gradient:
-                            self.center = center = self.env.gradients[
-                                ingr.gradient
-                            ].mode_settings.get("center", center)
-
-                            # get angles wrt gradient
-                            (
-                                seed_ingredient_positions,
-                                seed_distances_from_center,
-                                seed_distances_between_ingredients,
-                                seed_angles,
-                            ) = self.getDistanceAngle(ingr, center)
-
-                            if use_file:
-                                self.save_array_to_file(
-                                    seed_angles, angle_file, seed_index
-                                )
-
-                                ingredient_angles_dict[ingr.name] = seed_angles.tolist()
-                            else:
-                                ingredient_angles_dict[ingr.name].extend(seed_angles)
-                                total_angles.extend(seed_angles)
-                        else:
-                            (
-                                seed_ingredient_positions,
-                                seed_distances_from_center,
-                                seed_distances_between_ingredients,
-                            ) = self.getDistance(ingr.name, center)
-
-                        occurences[ingr.name].append(len(seed_ingredient_positions))
-
-                        if use_file:
-                            # overwrite files if this is the first seed,
-                            # otherwise, append
-                            self.save_array_to_file(
-                                seed_ingredient_positions,
-                                position_file,
-                                seed_index,
-                            )
-
-                            self.save_array_to_file(
-                                seed_distances_from_center,
-                                center_distance_file,
-                                seed_index,
-                            )
-
-                            self.save_array_to_file(
-                                seed_distances_between_ingredients,
-                                ingredient_distance_file,
-                                seed_index,
-                            )
-
-                            center_distances_dict[
-                                ingr.name
-                            ] = seed_distances_from_center.tolist()
-                            ingredient_distances_dict[
-                                ingr.name
-                            ] = seed_distances_between_ingredients.tolist()
-                            ingredient_positions_dict[
-                                ingr.name
-                            ] = seed_ingredient_positions.tolist()
-
-                        else:
-                            center_distances_dict[ingr.name].extend(
-                                seed_distances_from_center.tolist()
-                            )
-                            ingredient_distances_dict[ingr.name].extend(
-                                seed_distances_between_ingredients.tolist()
-                            )
-                            ingredient_positions_dict[ingr.name].extend(
-                                seed_ingredient_positions.tolist()
-                            )
-
-                            total_positions.extend(seed_ingredient_positions.tolist())
-                            total_center_distances.extend(
-                                seed_distances_from_center.tolist()
-                            )
-
-                        if plot_figures and two_d:
-                            for i, p in enumerate(seed_ingredient_positions):
-                                ax.add_patch(
-                                    Circle(
-                                        (p[0], p[1]),
-                                        ingr.encapsulating_radius,
-                                        edgecolor="black",
-                                        facecolor=color,
-                                    )
-                                )
-                                #  Plot "image" particles to verify that periodic boundary conditions are working
-                                radius = ingr.encapsulating_radius
-                                if autopack.testPeriodicity:
-                                    if p[0] < radius:
-                                        ax.add_patch(
-                                            Circle(
-                                                (p[0] + width[0], p[1]),
-                                                radius,
-                                                facecolor=color,
-                                            )
-                                        )
-                                    elif p[0] > (width[0] - radius):
-                                        ax.add_patch(
-                                            Circle(
-                                                (p[0] - width[0], p[1]),
-                                                radius,
-                                                facecolor=color,
-                                            )
-                                        )
-                                    if p[1] < radius:
-                                        ax.add_patch(
-                                            Circle(
-                                                (p[0], p[1] + width[1]),
-                                                radius,
-                                                facecolor=color,
-                                            )
-                                        )
-                                    elif p[1] > (width[1] - radius):
-                                        ax.add_patch(
-                                            Circle(
-                                                (p[0], p[1] - width[1]),
-                                                radius,
-                                                facecolor=color,
-                                            )
-                                        )
-
-                                if i == 0:  # len(ingrpos)-1:
-                                    continue
-
-                                if ingr.type == "Grow":
-                                    plt.plot(
-                                        [
-                                            seed_ingredient_positions[-i][0],
-                                            seed_ingredient_positions[-i - 1][0],
-                                        ],
-                                        [
-                                            seed_ingredient_positions[-i][1],
-                                            seed_ingredient_positions[-i - 1][1],
-                                        ],
-                                        "k-",
-                                        lw=2,
-                                    )
-                                    # plot the sphere
-                                    if ingr.use_rbsphere:
-                                        (ext_recipe, pts,) = ingr.getInterpolatedSphere(
-                                            seed_ingredient_positions[-i - 1],
-                                            seed_ingredient_positions[-i],
-                                        )
-                                        for pt in pts:
-                                            ax.add_patch(
-                                                Circle(
-                                                    (pt[0], pt[1]),
-                                                    ingr.min_radius,
-                                                    edgecolor="black",
-                                                    facecolor=color,
-                                                )
-                                            )
+                    (
+                        center_distance_dict,
+                        pairwise_distance_dict,
+                        ingredient_position_dict,
+                        ingredient_angle_dict,
+                        ingredient_occurence_dict,
+                        ax,
+                    ) = self.process_ingredients_in_recipe(
+                        recipe=ext_recipe,
+                        center_distance_dict=center_distance_dict,
+                        pairwise_distance_dict=pairwise_distance_dict,
+                        ingredient_position_dict=ingredient_position_dict,
+                        ingredient_angle_dict=ingredient_angle_dict,
+                        ingredient_occurence_dict=ingredient_occurence_dict,
+                        seed_index=seed_index,
+                        center=center,
+                        ax=ax,
+                        plot_figures=plot_figures,
+                        two_d=two_d,
+                        width=width,
+                    )
 
                 for comparment in self.env.compartments:
+
                     surface_recipe = comparment.surfaceRecipe
                     if surface_recipe:
-                        for ingr in surface_recipe.ingredients:
-                            if ingr.name not in center_distances_dict:
-                                center_distances_dict[ingr.name] = []
-                                ingredient_distances_dict[ingr.name] = []
-                                ingredient_positions_dict[ingr.name] = []
-                                occurences[ingr.name] = []
-                            if (
-                                ingr.packing_mode == "gradient"
-                                and self.env.use_gradient
-                            ):
-                                center = self.env.gradients[ingr.gradient].direction
-                            (
-                                seed_ingredient_positions,
-                                seed_distances_from_center,
-                                seed_distances_between_ingredients,
-                            ) = self.getDistance(ingr.name, center)
-                            occurences[ingr.name].append(len(seed_ingredient_positions))
-                            if use_file:
-
-                                self.save_array_to_file(
-                                    seed_ingredient_positions,
-                                    position_file,
-                                    seed_index,
-                                )
-
-                                self.save_array_to_file(
-                                    seed_distances_from_center,
-                                    center_distance_file,
-                                    seed_index,
-                                )
-
-                                self.save_array_to_file(
-                                    seed_distances_between_ingredients,
-                                    ingredient_distance_file,
-                                    seed_index,
-                                )
-
-                                center_distances_dict[
-                                    ingr.name
-                                ] = seed_distances_from_center.tolist()
-                                ingredient_distances_dict[
-                                    ingr.name
-                                ] = seed_distances_between_ingredients.tolist()
-                                ingredient_positions_dict[
-                                    ingr.name
-                                ] = seed_ingredient_positions.tolist()
-                            else:
-                                center_distances_dict[ingr.name].extend(
-                                    seed_distances_from_center.tolist()
-                                )
-                                ingredient_distances_dict[ingr.name].extend(
-                                    seed_distances_between_ingredients.tolist()
-                                )
-                                ingredient_positions_dict[ingr.name].extend(
-                                    seed_ingredient_positions.tolist()
-                                )
-                                total_positions.extend(
-                                    seed_ingredient_positions.tolist()
-                                )
-                                total_center_distances.extend(
-                                    seed_distances_from_center.tolist()
-                                )
-
-                            if plot_figures and two_d:
-                                for p in seed_ingredient_positions:
-                                    ax.add_patch(
-                                        Circle(
-                                            (p[0], p[1]),
-                                            ingr.encapsulating_radius,
-                                            edgecolor="black",
-                                            facecolor=ingr.color,
-                                        )
-                                    )
+                        (
+                            center_distance_dict,
+                            pairwise_distance_dict,
+                            ingredient_position_dict,
+                            ingredient_angle_dict,
+                            ingredient_occurence_dict,
+                            ax,
+                        ) = self.process_ingredients_in_recipe(
+                            surface_recipe,
+                            center_distance_dict,
+                            pairwise_distance_dict,
+                            ingredient_position_dict,
+                            ingredient_angle_dict,
+                            ingredient_occurence_dict,
+                            seed_index,
+                            center,
+                            ax,
+                            plot_figures,
+                            two_d,
+                            width,
+                        )
 
                     inner_recipe = comparment.innerRecipe
                     if inner_recipe:
-                        for ingr in inner_recipe.ingredients:
-                            if ingr.name not in center_distances_dict:
-                                center_distances_dict[ingr.name] = []
-                                ingredient_distances_dict[ingr.name] = []
-                                ingredient_positions_dict[ingr.name] = []
-                                occurences[ingr.name] = []
-
-                            if (
-                                ingr.packing_mode == "gradient"
-                                and self.env.use_gradient
-                            ):
-                                center = self.env.gradients[ingr.gradient].direction
-                            (
-                                seed_ingredient_positions,
-                                seed_distances_from_center,
-                                seed_distances_between_ingredients,
-                            ) = self.getDistance(ingr.name, center)
-                            occurences[ingr.name].append(len(seed_ingredient_positions))
-                            if use_file:
-                                self.save_array_to_file(
-                                    seed_ingredient_positions,
-                                    position_file,
-                                    seed_index,
-                                )
-
-                                self.save_array_to_file(
-                                    seed_distances_from_center,
-                                    center_distance_file,
-                                    seed_index,
-                                )
-
-                                self.save_array_to_file(
-                                    seed_distances_between_ingredients,
-                                    ingredient_distance_file,
-                                    seed_index,
-                                )
-
-                                center_distances_dict[
-                                    ingr.name
-                                ] = seed_distances_from_center.tolist()
-                                ingredient_distances_dict[
-                                    ingr.name
-                                ] = seed_distances_between_ingredients.tolist()
-                                ingredient_positions_dict[
-                                    ingr.name
-                                ] = seed_ingredient_positions.tolist()
-                            else:
-                                center_distances_dict[ingr.name].extend(
-                                    seed_distances_from_center.tolist()
-                                )
-                                ingredient_distances_dict[ingr.name].extend(
-                                    seed_distances_between_ingredients.tolist()
-                                )
-                                ingredient_positions_dict[ingr.name].extend(
-                                    seed_ingredient_positions.tolist()
-                                )
-                                total_positions.extend(
-                                    seed_ingredient_positions.tolist()
-                                )
-                                total_center_distances.extend(
-                                    seed_distances_from_center.tolist()
-                                )
-
-                            if plot_figures and two_d:
-                                for p in seed_ingredient_positions:
-                                    ax.add_patch(
-                                        Circle(
-                                            (p[0], p[1]),
-                                            ingr.encapsulating_radius,
-                                            edgecolor="black",
-                                            facecolor=ingr.color,
-                                        )
-                                    )
-
-                # write to file
-                all_positions_dict[seed_index] = copy.deepcopy(
-                    ingredient_positions_dict
-                )
-                if use_file:
-                    self.writeJSON(
-                        self.env.out_folder
-                        / f"ingredient_positions_{seed_basename}.json",
-                        ingredient_positions_dict,
-                    )
-                    self.writeJSON(
-                        self.env.out_folder / f"center_distances_{seed_basename}.json",
-                        center_distances_dict,
-                    )
-                    self.writeJSON(
-                        self.env.out_folder
-                        / f"ingredient_distances_{seed_basename}.json",
-                        ingredient_distances_dict,
-                    )
-                    self.writeJSON(
-                        self.env.out_folder / f"ingredient_angles_{seed_basename}.json",
-                        ingredient_angles_dict,
-                    )
+                        (
+                            center_distance_dict,
+                            pairwise_distance_dict,
+                            ingredient_position_dict,
+                            ingredient_angle_dict,
+                            ingredient_occurence_dict,
+                            ax,
+                        ) = self.process_ingredients_in_recipe(
+                            surface_recipe,
+                            center_distance_dict,
+                            pairwise_distance_dict,
+                            ingredient_position_dict,
+                            ingredient_angle_dict,
+                            ingredient_occurence_dict,
+                            seed_index,
+                            center,
+                            ax,
+                            plot_figures,
+                            two_d,
+                            width,
+                        )
 
                 if plot_figures and two_d:
                     ax.set_aspect(1.0)
@@ -2260,77 +2268,70 @@ class AnalyseAP:
                     )
                     plt.close()  # closes the current figure
 
-        if use_file:
-            total_positions = numpy.genfromtxt(position_file, delimiter=",")
-            total_center_distances = numpy.genfromtxt(
-                center_distance_file, delimiter=","
-            )
-            total_ingredient_distances = numpy.genfromtxt(
-                ingredient_distance_file, delimiter=","
-            )
-            try:
-                total_angles = numpy.genfromtxt(angle_file, delimiter=",")
-            except Exception:
-                total_angles = []
-            # gatherall result
-            all_ingredient_positions = {}
-            all_ingredient_distances = {}
-            all_ingredient_angles = {}
-            for seed_index in rangeseed:
-                seed_basename = f"seed{seed_index}_{packing_basename}"
-                dict1 = self.loadJSON(
-                    self.env.out_folder / f"ingredient_positions_{seed_basename}.json"
-                )
-                all_ingredient_positions = dict(
-                    self.merge(all_ingredient_positions, dict1)
-                )
+        all_ingredient_positions = self.combine_results_from_seeds(
+            ingredient_position_dict
+        )
+        all_center_distances = self.combine_results_from_seeds(center_distance_dict)
+        all_ingredient_distances = self.combine_results_from_seeds(
+            pairwise_distance_dict
+        )
+        all_ingredient_occurences = self.combine_results_from_seeds(
+            ingredient_occurence_dict
+        )
+        all_ingredient_angles = self.combine_results_from_seeds(ingredient_angle_dict)
 
-                dict1 = self.loadJSON(
-                    self.env.out_folder / f"ingredient_distances_{seed_basename}.json"
-                )
-                all_ingredient_distances = dict(
-                    self.merge(all_ingredient_distances, dict1)
-                )
+        all_center_distance_array = numpy.array(
+            self.combine_results_from_ingredients(all_center_distances)
+        )
+        all_pairwise_distance_array = numpy.array(
+            self.combine_results_from_ingredients(all_ingredient_distances)
+        )
+        all_ingredient_position_array = numpy.array(
+            self.combine_results_from_ingredients(all_ingredient_positions)
+        )
+        all_ingredient_angle_array = numpy.array(
+            self.combine_results_from_ingredients(all_ingredient_angles)
+        )
 
-                dict1 = self.loadJSON(
-                    self.env.out_folder / f"ingredient_angles_{seed_basename}.json"
-                )
-                all_ingredient_angles = dict(self.merge(all_ingredient_angles, dict1))
-
-        self.writeJSON(all_pos_file, all_positions_dict)
-        self.writeJSON(occurences_file, occurences)
+        self.writeJSON(center_distance_file, center_distance_dict)
+        self.writeJSON(pairwise_distance_file, pairwise_distance_dict)
+        self.writeJSON(ingredient_position_file, ingredient_position_dict)
+        self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
+        self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
 
         self.env.ingredient_positions = all_ingredient_positions
         self.env.distances = all_ingredient_distances
         self.env.basename = packing_basename
-        self.env.occurences = occurences
-        self.env.angles = total_angles
+        self.env.occurences = all_ingredient_occurences
+        self.env.angles = all_ingredient_angles
+
         if plot_figures:
             self.env.loopThroughIngr(self.axis_distribution)
             self.env.loopThroughIngr(self.occurence_distribution)
-            self.axis_distribution_total(total_positions)
+            self.axis_distribution_total(all_ingredient_position_array)
             # plot the distances
             self.histo(
-                total_center_distances,
-                self.env.out_folder / f"total_center_distances_{self.env.basename}.png",
+                all_center_distance_array,
+                self.env.out_folder
+                / f"all_ingredient_center_distances_{self.env.basename}.png",
             )
 
             self.histo(
-                total_ingredient_distances,
+                all_pairwise_distance_array,
                 self.env.out_folder
-                / f"total_ingredient_distances_{self.env.basename}.png",
+                / f"all_ingredient_distances_{self.env.basename}.png",
             )
             # plot the angle
-            if len(total_angles):
+            if len(all_ingredient_angle_array):
                 self.histo(
-                    total_angles[0],
-                    self.env.out_folder / f"total_angles_X_{self.env.basename}.png",
+                    all_ingredient_angle_array[0],
+                    self.env.out_folder / f"all_angles_X_{self.env.basename}.png",
                 )
                 self.histo(
-                    total_angles[1],
-                    self.env.out_folder / f"total_angles_Y_{self.env.basename}.png",
+                    all_ingredient_angle_array[1],
+                    self.env.out_folder / f"all_angles_Y_{self.env.basename}.png",
                 )
                 self.histo(
-                    total_angles[2],
-                    self.env.out_folder / f"total_angles_Z_{self.env.basename}.png",
+                    all_ingredient_angle_array[2],
+                    self.env.out_folder / f"all_angles_Z_{self.env.basename}.png",
                 )
