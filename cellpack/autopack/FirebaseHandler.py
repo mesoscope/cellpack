@@ -3,6 +3,9 @@ from firebase_admin import credentials, firestore
 
 
 class FirebaseHandler(object):
+    """
+    Retrieve data and perform common tasks when working with firebase.
+    """
     def __init__(self, cred_path):
         login = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(login)

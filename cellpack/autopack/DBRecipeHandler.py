@@ -5,9 +5,6 @@ from deepdiff import DeepDiff
 from cellpack.autopack.utils import deep_merge
 
 
-
-
-
 class DataDoc(object):
     def __init__(
         self,
@@ -25,6 +22,10 @@ class DataDoc(object):
         return not isinstance(string_or_dict, dict)
 
 class CompositionDoc(DataDoc):
+    """
+    Declares required attributes for comps in the constructor, set default values.
+    Handles the logic for comparing the local and db data to determine the uploading process.
+    """
     SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
 
@@ -54,6 +55,11 @@ class CompositionDoc(DataDoc):
         return data
 
     def get_reference_data(self, key_or_dict, db):
+        """
+        Returns the db data for a reference, and the key if it exists.
+        Key --> the name of a composition
+        Dict --> the object data
+        """
         if DataDoc.is_key(key_or_dict) and db.is_reference(key_or_dict):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
@@ -68,6 +74,9 @@ class CompositionDoc(DataDoc):
                 return {}, None
 
     def resolve_db_regions(self, db_data, db):
+        """
+        Recursively resolves the regions of a composition from db.
+        """
         if "object" in db_data and db_data["object"] is not None:
             downloaded_data, _ = self.get_reference_data(db_data["object"], db)
             db_data["object"] = downloaded_data
@@ -86,6 +95,10 @@ class CompositionDoc(DataDoc):
                     self.resolve_db_regions(downloaded_data, db)
 
     def resolve_local_regions(self, local_data, recipe_data, db):
+        """
+        Recursively resolves the regions of a composition from local data.
+        Restructure the local data to match the db data.
+        """
         unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
         prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
         if "object" in local_data and local_data["object"] is not None:
@@ -124,6 +137,10 @@ class CompositionDoc(DataDoc):
     def check_and_replace_references(
         self, objects_to_path_map, references_to_update, db
     ):
+        """
+        Within one recipe upload, we store the references for uploaded comps and objs.
+        Checks if the object or comp is a reference in the nesting regions, and replaces it with the referenced db path.
+        """
         obj_name = self.object
         if obj_name is not None and not db.is_reference(obj_name):
             obj_database_path = objects_to_path_map.get(obj_name)
@@ -151,6 +168,10 @@ class CompositionDoc(DataDoc):
                             region_item["object"] = objects_to_path_map.get(obj_name)
 
     def should_write(self, db, recipe_data):
+        """
+        Compares the resolved local composition to the resolved db composition.
+        To determine whether the composition data already exists or if it needs to be written to the database.
+        """
         db_docs = db.get_doc_by_name("composition", self.name)
         local_data = {
             "name": self.name,
@@ -208,10 +229,12 @@ class ObjectDoc(DataDoc):
                 data[key] = value
         return convert_data
 
-    # get doc from database, convert it back to the original text
-    # i.e. in object, convert lists back to tuples in representations/packing/positions
     @staticmethod
     def convert_representation(doc, db):
+        """
+        Get object doc from database, convert it back to the original text
+        i.e. in object, convert lists back to tuples in representations/packing/positions
+        """
         if isinstance(doc, object) and db.is_firebase_obj(doc):
             doc = db.doc_to_dict(doc)
         elif isinstance(doc, object) and "__dict__" in dir(doc):
@@ -240,9 +263,11 @@ class ObjectDoc(DataDoc):
         docs = db.get_doc_by_name("objects", self.name)
         if docs and len(docs) >= 1:
             for doc in docs:
+                # if there is repr in the obj doc from db
                 full_doc_data = ObjectDoc.convert_representation(
                     doc, db
-                )  # if there is repr in obj
+                )  
+                # unpack objects to dicts in local data for comparison
                 local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
                 difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
                 if not difference:
@@ -266,6 +291,9 @@ class DBRecipeHandler(object):
 
     @staticmethod
     def prep_data_for_db(data):
+        """
+        Recursively convert data to a format that can be written to the database.
+        """
         modified_data = {}
         for key, value in data.items():
             # convert 2d array to dict
@@ -287,8 +315,11 @@ class DBRecipeHandler(object):
                 modified_data[key] = value
         return modified_data
 
-    # add documents with auto IDs
+    # 
     def upload_data(self, collection, data, id=None):
+        """
+        If should_write is true, upload the data to the database
+        """
         # check if we need to convert part of the data(2d arrays and objs to dict)
         modified_data = DBRecipeHandler.prep_data_for_db(data)
         if id is None:
@@ -360,6 +391,9 @@ class DBRecipeHandler(object):
         return references_to_update
 
     def get_recipe_id(self, recipe_data):
+        """
+        We use customized recipe id to declare recipe's name and version
+        """
         recipe_name = recipe_data["name"]
         recipe_version = recipe_data["version"]
         key = f"{recipe_name}_v{recipe_version}"
@@ -373,6 +407,9 @@ class DBRecipeHandler(object):
         remove_comp_name,
         update_in_array=False,
     ):
+        """
+        Update comp references in the recipe
+        """
         doc, doc_ref = self.db.get_doc_by_id("composition", composition_id)
         if doc is None:
             return
@@ -387,6 +424,9 @@ class DBRecipeHandler(object):
                 self.db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
     def upload_collections(self, recipe_meta_data, recipe_data):
+        """
+        Separate collections from recipe data and upload them to db
+        """
         recipe_to_save = copy.deepcopy(recipe_meta_data)
         objects = recipe_data["objects"]
         compositions = recipe_data["composition"]
@@ -398,7 +438,7 @@ class DBRecipeHandler(object):
         references_to_update = self.upload_compositions(
             compositions, recipe_to_save, recipe_data
         )
-        # update nested comp in comp
+        # update nested comp in composition
         if references_to_update:
             for comp_name in references_to_update:
                 inner_data = references_to_update[comp_name]
@@ -413,6 +453,9 @@ class DBRecipeHandler(object):
         return recipe_to_save
 
     def upload_recipe(self, recipe_meta_data, recipe_data):
+        """
+        After all other collections are checked or uploaded, upload the recipe with references into db  
+        """
         recipe_id = self.get_recipe_id(recipe_data)
         # if the recipe is already exists in db, just return
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
