@@ -1103,9 +1103,11 @@ class Compartment(CompartmentList):
             scaled_distance_to_next_surface = numpy.full(
                 master_grid_positions.shape[0], numpy.nan
             )
-            scaled_distance_to_next_surface[
-                grid_pts_between_surfaces
-            ] = env.mesh_store.get_scaled_distances_between_surfaces(
+            (
+                scaled_distance_to_next_surface[grid_pts_between_surfaces],
+                _,
+                _,
+            ) = env.mesh_store.get_scaled_distances_between_surfaces(
                 grid_pt_to_calc,
                 self.gname,
                 self.parent.gname,

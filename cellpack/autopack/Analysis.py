@@ -13,10 +13,13 @@ from pathlib import Path
 from time import time
 
 import matplotlib
+from matplotlib.patches import Patch
 import numpy
 from numpy import arange, average, histogram, pi, sqrt, where, zeros
 import pandas as pd
-import scipy
+from scipy import stats
+from scipy.spatial import distance
+from scipy.cluster import hierarchy
 import seaborn as sns
 import trimesh
 from matplotlib import pyplot as plt
@@ -29,6 +32,7 @@ from tqdm import tqdm
 import cellpack.autopack as autopack
 from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
 from cellpack.autopack.ldSequence import halton
+from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
@@ -585,9 +589,7 @@ class AnalyseAP:
             distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
-            distances_between_ingredients = scipy.spatial.distance.pdist(
-                ingredient_positions
-            )
+            distances_between_ingredients = distance.pdist(ingredient_positions)
         else:
             distances_from_center = numpy.array([])
             distances_between_ingredients = numpy.array([])
@@ -741,7 +743,7 @@ class AnalyseAP:
         edges = numpy.arange(dr, rMax + 1.1 * dr, dr)
         k = numpy.zeros((N, len(edges)))
         for i, p in enumerate(positions):
-            di = scipy.spatial.distance.cdist(
+            di = distance.cdist(
                 positions,
                 [p],
                 "euclidean",
@@ -768,7 +770,7 @@ class AnalyseAP:
         dv = []
         density = float(N) / float(V)
         for i, p in enumerate(positions):
-            di = scipy.spatial.distance.cdist(
+            di = distance.cdist(
                 positions,
                 [p],
                 "euclidean",
@@ -1032,12 +1034,14 @@ class AnalyseAP:
         """
         file_list = Path(input_path).glob("all_positions_*")
         all_pos_list = []
-        for file_path in file_list:
+        packing_id_dict = {}
+        for packing_index, file_path in enumerate(file_list):
+            packing_id_dict[packing_index] = str(file_path).split("_")[-1].split(".")[0]
             with open(file_path, "r") as j:
                 all_pos_list.append(json.loads(j.read()))
 
         all_objs = {}
-        for packing_id, all_pos in enumerate(all_pos_list):
+        for packing_id, all_pos in zip(packing_id_dict.values(), all_pos_list):
             for seed, object_dict in all_pos.items():
                 for obj, positions in object_dict.items():
                     positions = numpy.array(positions)
@@ -1053,6 +1057,7 @@ class AnalyseAP:
                         all_objs[obj][seed_key][dim] = sph_pts[:, ct]
         self.all_objs = all_objs
         self.all_pos_list = all_pos_list
+        self.packing_id_dict = packing_id_dict
         return all_objs, all_pos_list
 
     def get_minimum_expected_distance_from_recipe(self, recipe_data):
@@ -1183,20 +1188,15 @@ class AnalyseAP:
 
         print(f"Saving analysis outputs to {self.output_path}")
 
-        if analysis_config.get("run_similarity_analysis"):
+        if analysis_config.get("similarity_analysis"):
             self.run_similarity_analysis(
-                all_objs,
+                all_objs, **analysis_config["similarity_analysis"]
             )
 
-        if analysis_config.get("get_parametrized_representation"):
+        if analysis_config.get("parametrized_representation"):
             self.get_parametrized_representation(
                 all_pos_list=all_pos_list,
-                angular_spacing=numpy.pi / 64,
-                inner_mesh_path=self.inner_mesh_path,
-                outer_mesh_path=self.outer_mesh_path,
-                save_plots=analysis_config.get("save_plots"),
-                max_plots_to_save=analysis_config.get("max_plots_to_save"),
-                get_correlations=analysis_config.get("get_correlations"),
+                **analysis_config["parametrized_representation"],
             )
 
         if analysis_config.get("create_report"):
@@ -1224,7 +1224,10 @@ class AnalyseAP:
                 ]
         return avg_similarity_values
 
-    def run_similarity_analysis(self, all_objs):
+    def calc_similarity_df(self, all_objs):
+        """
+        Calculates a dataframe of similarity values between packings
+        """
         ingr_key = self.ingredient_key
         key_list = list(all_objs[ingr_key].keys())
         similarity_df = pd.DataFrame(
@@ -1232,11 +1235,9 @@ class AnalyseAP:
             columns=pd.MultiIndex.from_product([self.get_list_of_dims(), key_list]),
             dtype=float,
         )
-        print("Running similarity analysis...")
         similarity_df["packing_id"] = 0
-
-        for seed1, pos_dict1 in all_objs[ingr_key].items():
-            similarity_df.loc[seed1, "packing_id"] = int(seed1.split("_")[-1])
+        for seed1, pos_dict1 in tqdm(all_objs[ingr_key].items()):
+            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
             for seed2, pos_dict2 in all_objs[ingr_key].items():
                 for dim in self.get_list_of_dims():
                     arr1 = pos_dict1[dim]
@@ -1258,15 +1259,30 @@ class AnalyseAP:
                             # one of the packings has more than one unique value, cannot compare
                             scaled_sig = 0
                     else:
-                        ad_stat = scipy.stats.anderson_ksamp([arr1, arr2])
-                        scaled_sig = (ad_stat.significance_level - 0.001) / (
-                            0.25 - 0.001
-                        )
+                        ad_stat = stats.anderson_ksamp([arr1, arr2])
+                        scaled_sig = (ad_stat.pvalue - 0.001) / (0.25 - 0.001)
                     similarity_df.loc[seed1, (dim, seed2)] = scaled_sig
 
-        df_packing = similarity_df["packing_id"]
-        lut = dict(zip(df_packing.unique(), sns.color_palette()))
-        row_colors = df_packing.map(lut)
+        dfpath = self.output_path / f"similarity_df_{self.ingredient_key}.csv"
+        print(f"Saving similarity df to {dfpath}")
+        similarity_df.to_csv(dfpath)
+
+        return similarity_df
+
+    def plot_and_save_similarity_heatmaps(self, similarity_df):
+        """
+        Plots heatmaps with hierarchical clustering using similarity scores
+        """
+        # accounting for changes when reading from csv
+        if similarity_df["packing_id"].ndim > 1:
+            packing_ids = similarity_df["packing_id"].iloc[:, 0]
+        else:
+            packing_ids = similarity_df["packing_id"]
+        lut = dict(zip(packing_ids.unique(), sns.color_palette()))
+        row_colors = packing_ids.map(lut)
+        row_colors.rename("Packing ID", inplace=True)
+        figdir = self.output_path / "clustering"
+        figdir.mkdir(parents=True, exist_ok=True)
 
         for dim in self.get_list_of_dims():
 
@@ -1274,19 +1290,54 @@ class AnalyseAP:
                 similarity_df[dim].values
             )
             numpy.savetxt(
-                self.output_path / f"avg_similarity_{ingr_key}_{dim}.txt",
+                figdir / f"avg_similarity_{self.ingredient_key}_{dim}.txt",
                 avg_similarity_values,
+            )
+
+            row_linkage = hierarchy.linkage(
+                1 - distance.squareform(similarity_df[dim], checks=False),
+                method="ward",
+                optimal_ordering=True,
             )
 
             g = sns.clustermap(
                 similarity_df[dim],
                 row_colors=row_colors,
-                dendrogram_ratio=(0.15, 0.16),
+                row_linkage=row_linkage,
+                col_linkage=row_linkage,
                 cbar_kws={"label": "similarity score"},
             )
+            handles = [Patch(facecolor=lut[name]) for name in lut]
+            plt.legend(
+                handles,
+                lut,
+                title="Packing IDs",
+                bbox_to_anchor=(1, 1),
+                bbox_transform=plt.gcf().transFigure,
+                loc="upper right",
+            )
             g.ax_col_dendrogram.set_visible(False)
-            g.ax_heatmap.set_xlabel(f"{ingr_key}_{dim}")
-            g.savefig(self.output_path / f"clustermap_{ingr_key}_{dim}", dpi=300)
+            g.ax_heatmap.set_xlabel(f"{self.ingredient_key}_{dim}")
+            g.savefig(figdir / f"clustermap_{self.ingredient_key}_{dim}", dpi=300)
+
+    def run_similarity_analysis(
+        self, all_objs, load_from_file=False, save_heatmaps=False
+    ):
+        """
+        TODO: add docs
+        """
+        print("Running similarity analysis...")
+
+        if load_from_file:
+            dfpath = self.output_path / f"similarity_df_{self.ingredient_key}.csv"
+            if dfpath.is_file():
+                print(f"Loading similarity values from {dfpath}")
+                similarity_df = pd.read_csv(dfpath, header=[0, 1])
+            else:
+                similarity_df = self.calc_similarity_df(all_objs)
+
+        if save_heatmaps:
+            self.plot_and_save_similarity_heatmaps(similarity_df)
 
         return similarity_df
 
@@ -1359,9 +1410,7 @@ class AnalyseAP:
     def get_parametrized_representation(
         self,
         all_pos_list,
-        angular_spacing=numpy.pi / 64,
-        inner_mesh_path=None,
-        outer_mesh_path=None,
+        num_angular_points=64,
         save_plots=False,
         max_plots_to_save=1,
         get_correlations=False,
@@ -1371,14 +1420,12 @@ class AnalyseAP:
             raise ValueError(
                 "Provide inner and outer mesh paths to create parametrized representations."
             )
-        theta_vals = numpy.linspace(0, numpy.pi, 1 + int(numpy.pi / angular_spacing))
-        phi_vals = numpy.linspace(
-            0, 2 * numpy.pi, 1 + int(2 * numpy.pi / angular_spacing)
-        )
-        rad_vals = numpy.linspace(0, 1, 1 + int(numpy.pi / angular_spacing))
+        theta_vals = numpy.linspace(0, numpy.pi, 1 + num_angular_points)
+        phi_vals = numpy.linspace(0, 2 * numpy.pi, 1 + 2 * num_angular_points)
+        rad_vals = numpy.linspace(0, 1, 1 + num_angular_points)
 
-        inner_mesh = trimesh.load_mesh(inner_mesh_path)
-        outer_mesh = trimesh.load_mesh(outer_mesh_path)
+        inner_mesh = trimesh.load_mesh(self.inner_mesh_path)
+        outer_mesh = trimesh.load_mesh(self.outer_mesh_path)
 
         all_spilr = {}
         for scaled_val in ["raw", "scaled"]:
@@ -1393,34 +1440,24 @@ class AnalyseAP:
             )
 
         if save_plots:
-            save_dir = self.output_path / "heatmaps"
+            save_dir = self.output_path / "spilr_heatmaps"
             os.makedirs(save_dir, exist_ok=True)
 
-        for pc, packing_dict in enumerate(all_pos_list):
+        for pc, (packing_id, packing_dict) in enumerate(
+            zip(self.packing_id_dict.values(), all_pos_list)
+        ):
             num_saved_plots = 0
             for sc, (_, pos_dict) in enumerate(packing_dict.items()):
                 pos_list = numpy.array(pos_dict[self.ingredient_key])
                 sph_pts = self.cartesian_to_sph(pos_list)
 
-                inner_loc = numpy.zeros(pos_list.shape)
-                outer_loc = numpy.zeros(pos_list.shape)
-
-                query = trimesh.proximity.ProximityQuery(inner_mesh)
-
-                # closest points on the inner mesh surface
-                inner_loc, inner_surface_distances, _ = query.on_surface(pos_list)
-
-                # intersecting points on the outer surface
-                outer_loc, _, _ = outer_mesh.ray.intersects_location(
-                    ray_origins=inner_loc,
-                    ray_directions=(pos_list - inner_loc),
+                (
+                    scaled_rad,
+                    distance_between_surfaces,
+                    inner_surface_distances,
+                ) = MeshStore.calc_scaled_distances_for_positions(
+                    pos_list, inner_mesh, outer_mesh
                 )
-
-                distance_between_surfaces = numpy.linalg.norm(
-                    outer_loc - inner_loc, axis=1
-                )
-
-                scaled_rad = inner_surface_distances / distance_between_surfaces
 
                 trial_spilr = {}
                 for scaled_val in ["raw", "scaled"]:
@@ -1457,12 +1494,10 @@ class AnalyseAP:
                     )
 
                     if save_plots and (num_saved_plots <= max_plots_to_save):
-                        label_str = (
-                            f"Distance from Nuclear Surface, {pc}_{sc}, {scaled_val}"
-                        )
+                        label_str = f"Distance from Nuclear Surface, {packing_id}_{sc}, {scaled_val}"
                         file_path = (
                             save_dir
-                            / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingredient_key}"
+                            / f"heatmap_{scaled_val}_{packing_id}_{sc}_{self.ingredient_key}"
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1478,11 +1513,13 @@ class AnalyseAP:
         if save_plots:
             for scaled_val in ["raw", "scaled"]:
                 average_spilr = numpy.nanmean(all_spilr[scaled_val], axis=1)
-                for pc in range(average_spilr.shape[0]):
-                    label_str = f"Distance from Nuclear Surface, avg {pc}, {scaled_val}"
+                for pc, packing_id in enumerate(self.packing_id_dict.values()):
+                    label_str = (
+                        f"Distance from Nuclear Surface, avg {packing_id}, {scaled_val}"
+                    )
                     file_path = (
                         save_dir
-                        / f"avg_heatmap_{scaled_val}_{pc}_{self.ingredient_key}"
+                        / f"avg_heatmap_{scaled_val}_{packing_id}_{self.ingredient_key}"
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 

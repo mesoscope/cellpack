@@ -295,8 +295,8 @@ class Gradient:
         build a map of weights based on the distance from a surface
         assumes self.distances include surface distances
         """
-        if self.object.surface_distances is None:
-            raise ValueError("Map created without specifying distances")
+        if getattr(self.object, "surface_distances", None) is None:
+            raise ValueError("Surface distances are not set")
         elif self.scale_to_next_surface:
             self.distances = self.object.scaled_distance_to_next_surface
         else:

@@ -4,11 +4,11 @@ Created on Sun Jan 27 09:04:10 2013
 
 @author: Ludovic Autin
 """
+import json
 import os
 import pickle
 
 import numpy
-import json
 from json import encoder
 from collections import OrderedDict
 
