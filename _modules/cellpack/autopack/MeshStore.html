@@ -599,17 +599,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_mesh_to_scene</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">geometry</span></div>
 
-<div class="viewcode-block" id="MeshStore.get_scaled_distances_between_surfaces"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_scaled_distances_between_surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">get_scaled_distances_between_surfaces</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">position_list</span><span class="p">,</span> <span class="n">inner_mesh_name</span><span class="p">,</span> <span class="n">outer_mesh_name</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Calculate scaled distances from inner mesh for position_list</span>
-<span class="sd">        Inner mesh surface is 0</span>
-<span class="sd">        Outer mesh surface is 1</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">inner_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="n">inner_mesh_name</span><span class="p">)</span>
-        <span class="n">outer_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="n">outer_mesh_name</span><span class="p">)</span>
+<div class="viewcode-block" id="MeshStore.calc_scaled_distances_for_positions"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.calc_scaled_distances_for_positions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calc_scaled_distances_for_positions</span><span class="p">(</span><span class="n">position_list</span><span class="p">,</span> <span class="n">inner_mesh</span><span class="p">,</span> <span class="n">outer_mesh</span><span class="p">):</span>
+        <span class="c1"># first, calculates intersection points and distances</span>
+        <span class="c1"># between given position_list and inner_mesh</span>
+        <span class="c1"># then, calculates the distances between inner_mesh and outer_mesh</span>
+        <span class="c1"># via rays joining inner_mesh intersection points and position_list</span>
 
         <span class="n">query</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">proximity</span><span class="o">.</span><span class="n">ProximityQuery</span><span class="p">(</span><span class="n">inner_mesh</span><span class="p">)</span>
 
@@ -623,8 +618,9 @@
                 <span class="n">ray_origins</span><span class="o">=</span><span class="p">[</span><span class="n">inner_loc</span><span class="p">[</span><span class="n">ind</span><span class="p">]],</span> <span class="n">ray_directions</span><span class="o">=</span><span class="p">[</span><span class="n">position</span> <span class="o">-</span> <span class="n">inner_loc</span><span class="p">[</span><span class="n">ind</span><span class="p">]]</span>
             <span class="p">)</span>
 
-        <span class="n">scaled_distance_between_surfaces</span> <span class="o">=</span> <span class="n">inner_surface_distances</span> <span class="o">/</span> <span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">outer_loc</span> <span class="o">-</span> <span class="n">inner_loc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">distance_between_surfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">outer_loc</span> <span class="o">-</span> <span class="n">inner_loc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">scaled_distance_between_surfaces</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">inner_surface_distances</span> <span class="o">/</span> <span class="n">distance_between_surfaces</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">scaled_distance_between_surfaces</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
@@ -632,7 +628,27 @@
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Check distances between surfaces&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">scaled_distance_between_surfaces</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">scaled_distance_between_surfaces</span><span class="p">,</span>
+            <span class="n">distance_between_surfaces</span><span class="p">,</span>
+            <span class="n">inner_surface_distances</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_scaled_distances_between_surfaces"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_scaled_distances_between_surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">get_scaled_distances_between_surfaces</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">position_list</span><span class="p">,</span> <span class="n">inner_mesh_name</span><span class="p">,</span> <span class="n">outer_mesh_name</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate scaled distances from inner mesh for position_list</span>
+<span class="sd">        Inner mesh surface is 0</span>
+<span class="sd">        Outer mesh surface is 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">inner_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="n">inner_mesh_name</span><span class="p">)</span>
+        <span class="n">outer_mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="n">outer_mesh_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_scaled_distances_for_positions</span><span class="p">(</span>
+            <span class="n">position_list</span><span class="p">,</span> <span class="n">inner_mesh</span><span class="p">,</span> <span class="n">outer_mesh</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="MeshStore.decompose_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.decompose_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">decompose_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">):</span>

@@ -1377,9 +1377,11 @@
             <span class="n">scaled_distance_to_next_surface</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
                 <span class="n">master_grid_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
             <span class="p">)</span>
-            <span class="n">scaled_distance_to_next_surface</span><span class="p">[</span>
-                <span class="n">grid_pts_between_surfaces</span>
-            <span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span><span class="o">.</span><span class="n">get_scaled_distances_between_surfaces</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">scaled_distance_to_next_surface</span><span class="p">[</span><span class="n">grid_pts_between_surfaces</span><span class="p">],</span>
+                <span class="n">_</span><span class="p">,</span>
+                <span class="n">_</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span><span class="o">.</span><span class="n">get_scaled_distances_between_surfaces</span><span class="p">(</span>
                 <span class="n">grid_pt_to_calc</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span>

@@ -1020,6 +1020,12 @@ interior_z z coordinates of reference particles</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.calc_similarity_df">
+<span class="sig-name descname"><span class="pre">calc_similarity_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_objs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.calc_similarity_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.calc_similarity_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a dataframe of similarity values between packings</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.cartesian_to_sph">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cartesian_to_sph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xyz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.cartesian_to_sph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.cartesian_to_sph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts cartesian to spherical coordinates</p>
@@ -1150,7 +1156,7 @@ TODO: add description of object dictionary</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.get_parametrized_representation">
-<span class="sig-name descname"><span class="pre">get_parametrized_representation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_pos_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.04908738521234052</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inner_mesh_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_mesh_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_plots_to_save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_correlations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.get_parametrized_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.get_parametrized_representation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_parametrized_representation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_pos_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_angular_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_plots_to_save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_correlations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.get_parametrized_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.get_parametrized_representation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1211,6 +1217,12 @@ in all_pos_dict</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.plot_and_save_similarity_heatmaps">
+<span class="sig-name descname"><span class="pre">plot_and_save_similarity_heatmaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.plot_and_save_similarity_heatmaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.plot_and_save_similarity_heatmaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots heatmaps with hierarchical clustering using similarity scores</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.plot_one_result_2d">
 <span class="sig-name descname"><span class="pre">plot_one_result_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[0.0,</span> <span class="pre">0,</span> <span class="pre">0.0],</span> <span class="pre">[1000.0,</span> <span class="pre">1000.0,</span> <span class="pre">1000.0]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.plot_one_result_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.plot_one_result_2d" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1252,8 +1264,9 @@ in all_pos_dict</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.run_similarity_analysis">
-<span class="sig-name descname"><span class="pre">run_similarity_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_objs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.run_similarity_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.run_similarity_analysis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">run_similarity_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_objs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_from_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_heatmaps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.run_similarity_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.run_similarity_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: add docs</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP.save_array_to_file">
@@ -3608,6 +3621,11 @@ be write in the xml file.</p>
 <span class="sig-name descname"><span class="pre">build_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.build_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.build_mesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a polygon mesh object from a dictionary verts,faces,normals</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.calc_scaled_distances_for_positions">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calc_scaled_distances_for_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inner_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.calc_scaled_distances_for_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.calc_scaled_distances_for_positions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.contains_point">
