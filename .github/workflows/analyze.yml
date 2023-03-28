@@ -21,7 +21,7 @@ jobs:
         pip install .[all]
     - name: Set PR name environment variable 
       run: | 
-        echo "PR_NAME=$(( github.head_ref }}" >> $GITHUB_ENV
+        echo "PR_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
     - name: Pack test recipe
       run: |
         pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
@@ -52,8 +52,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2
     - uses: actions/download-artifact@v3
-    - name: Remove files in results bucket
-      run: aws s3 rm  s3://cellpack-results --recursive
     - name: Copy files to results bucket
       run: aws s3 cp ./results s3://cellpack-results/$PR_NAME --recursive --acl public-read 
     - uses: iterative/setup-cml@v1
