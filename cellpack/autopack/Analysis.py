@@ -166,12 +166,23 @@ class AnalyseAP:
         self.current_pos = None
         self.current_distance = None
         self.plotly = PlotlyAnalysis()
-        self.input_path = None
-        self.output_path = Path("out/")
+
         if input_path is not None:
             self.input_path = Path(input_path)
+        elif self.env is not None:
+            self.input_path = Path(self.env.out_folder)
+        else:
+            self.input_path = None
+
         if output_path is not None:
             self.output_path = Path(output_path)
+        elif self.env is not None:
+            self.output_path = Path(self.env.out_folder)
+        else:
+            self.output_path = Path("out/")
+
+        self.figures_path = self.output_path / "figures"
+        self.figures_path.mkdir(parents=True, exist_ok=True)
 
         autopack._colors = None
 
@@ -856,7 +867,7 @@ class AnalyseAP:
         for ind, dim in enumerate(self.get_list_of_dims()):
             self.histo(
                 all_pos[:, ind],
-                self.env.out_folder
+                self.figures_path
                 / f"all_ingredient_histo_{dim}_{self.env.basename}.png",
             )
 
@@ -867,7 +878,7 @@ class AnalyseAP:
         for ind, dim in enumerate(self.get_list_of_dims()):
             self.histo(
                 all_pos[:, ind],
-                self.env.out_folder
+                self.figures_path
                 / f"{ingr.name}_histo_{dim}_{self.env.basename}.png",
             )
 
@@ -876,7 +887,7 @@ class AnalyseAP:
         self.simpleplot(
             range(len(occ)),
             occ,
-            self.env.out_folder / f"{ingr.name}_occurrence_{self.env.basename}.png",
+            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
         )
 
     def correlation(self, ingr):
@@ -1071,12 +1082,9 @@ class AnalyseAP:
         """
         Returns 2x the smallest radius of objects in the recipe
         """
-        minimum_distance = numpy.Inf
-        for object_values in recipe_data.get("objects").values():
-            if "radius" in object_values:
-                if 2 * object_values["radius"] < minimum_distance:
-                    minimum_distance = 2 * object_values["radius"]
-        return minimum_distance
+        return 2 * min(
+            [val for val in self.get_ingredient_radii(recipe_data=recipe_data).values()]
+        )
 
     def get_packed_minimum_distance(self, glob_to_distance_files):
         """
@@ -1108,7 +1116,7 @@ class AnalyseAP:
         ingredient_key: str
             ingredient key in self.all_pos_list
         """
-        avg_num_packed = []
+        avg_num_packed = {}
         for ingr_key in ingredient_keys:
             ingredient_packing_dict = self.all_objs.get(ingr_key)
             if not ingredient_packing_dict:
@@ -1118,15 +1126,43 @@ class AnalyseAP:
                 for packing_dict in ingredient_packing_dict.values():
                     ingredients_packed += len(packing_dict["r"])
                 val = ingredients_packed / self.num_packings
-            avg_num_packed.append(val)
+            avg_num_packed[ingr_key] = val
 
         return avg_num_packed
+
+    def get_ingredient_radii(
+        self,
+        recipe_data,
+    ):
+        """
+        Returns the radii of ingredients packed
+
+        Parameters
+        ----------
+        ingredient_key: str
+            ingredient key in self.all_pos_list
+        """
+        ingredient_radii = {}
+        for object_key, object_values in recipe_data.get("objects").items():
+            if "radius" in object_values:
+                ingredient_radii[object_key] = object_values["radius"]
+        return ingredient_radii
+
+    def get_ingredient_keys(
+        self,
+        recipe_data,
+    ):
+        """
+        Returns the keys of ingredients specified in the recipe.
+        May not be the same as the keys of packed ingredients
+        """
+        return [key for key in recipe_data.get("objects")]
 
     def create_report(
         self,
         recipe_data,
         ingredient_keys=None,
-        results_output_path=None,
+        output_image_location=None,
         run_distance_analysis=True,
     ):
         """
@@ -1138,7 +1174,7 @@ class AnalyseAP:
             instance of AnalyseAP class
         input_path: Path
             path to look for results from packing
-        results_output_path: Path
+        output_image_location: Path
             this is the path to look for output images for the markdown file
         recipe_data: dict
             dictionary containing recipe data for the packing being analyzed
@@ -1153,35 +1189,47 @@ class AnalyseAP:
             add_table_of_contents="n",
         )
 
+        if ingredient_keys is None:
+            ingredient_keys = self.get_ingredient_keys(recipe_data=recipe_data)
+
         avg_num_packed = self.get_number_of_ingredients_packed(
             ingredient_keys=ingredient_keys
         )
+        ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
+
+        val_list = []
+        for (key, radius, num_packed) in zip(
+            ingredient_keys, ingredient_radii.values(), avg_num_packed.values()
+        ):
+            val_list.extend([key, radius, num_packed])
         text_list = [
             "Ingredient name",
+            "Encapsulating radius",
             "Average number packed",
-            *[val for pair in zip(ingredient_keys, avg_num_packed) for val in pair],
+            *val_list,
         ]
         mdFile.new_table(
-            columns=2,
+            columns=3,
             rows=(len(ingredient_keys) + 1),
             text=text_list,
             text_align="center",
         )
 
         # path to save report and other outputs
-        if results_output_path is None:
-            results_output_path = self.output_path
+        if output_image_location is None:
+            output_image_location = self.output_path
 
         # actual path where results are stored
         input_path = self.input_path
+        figure_path = self.input_path / "figures"
 
         mdFile.new_header(level=1, title="Packing image")
-        glob_to_packing_image = input_path.glob("packing_image_*.png")
+        glob_to_packing_image = figure_path.glob("packing_image_*.png")
         for img_path in glob_to_packing_image:
             mdFile.new_line(
                 mdFile.new_inline_image(
                     text="Packing image",
-                    path=f"{results_output_path}/{img_path.name}",
+                    path=f"{output_image_location}/{img_path.name}",
                 )
             )
         mdFile.new_line("")
@@ -1215,7 +1263,7 @@ class AnalyseAP:
                     ]
                 )
 
-            distance_histo_path = input_path.glob("all_ingredient_distances_*.png")
+            distance_histo_path = figure_path.glob("all_ingredient_distances_*.png")
             if distance_histo_path:
                 mdFile.new_header(
                     level=2, title="Distance distribution", add_table_of_contents="n"
@@ -1225,7 +1273,7 @@ class AnalyseAP:
                 mdFile.new_line(
                     mdFile.new_inline_image(
                         text="Distance distribution",
-                        path=f"{results_output_path}/{img_path.name}",
+                        path=f"{output_image_location}/{img_path.name}",
                     )
                 )
 
@@ -1342,7 +1390,7 @@ class AnalyseAP:
         lut = dict(zip(packing_ids.unique(), sns.color_palette()))
         row_colors = packing_ids.map(lut)
         row_colors.rename("Packing ID", inplace=True)
-        figdir = self.output_path / "clustering"
+        figdir = self.figures_path / "clustering"
         figdir.mkdir(parents=True, exist_ok=True)
 
         for dim in self.get_list_of_dims():
@@ -1454,7 +1502,7 @@ class AnalyseAP:
             row_colors=row_colors,
             cbar_kws={"label": "spilr correlation"},
         )
-        g.savefig(self.output_path / f"spilr_correlation_{ingredient_key}", dpi=300)
+        g.savefig(self.figures_path / f"spilr_correlation_{ingredient_key}.png", dpi=300)
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
         fig, ax = plt.subplots()
@@ -1491,7 +1539,7 @@ class AnalyseAP:
             raise ValueError(
                 "Missing mesh paths required to generate parametrized representations"
             )
-        
+
         inner_mesh = trimesh.load_mesh(mesh_paths.get("inner"))
         outer_mesh = trimesh.load_mesh(mesh_paths.get("outer"))
 
@@ -1512,7 +1560,7 @@ class AnalyseAP:
             )
 
         if save_plots:
-            save_dir = self.output_path / "spilr_heatmaps"
+            save_dir = self.figures_path / "spilr_heatmaps"
             os.makedirs(save_dir, exist_ok=True)
 
         for pc, (packing_id, packing_dict) in enumerate(
@@ -1632,10 +1680,10 @@ class AnalyseAP:
         plt.ylabel(r"radial distribution function $g(r)$")
         plt.savefig(file_name)
 
-    def simpleplot(self, X, Y, filenameme, w=3):
+    def simpleplot(self, X, Y, filename, w=3):
         plt.clf()
         plt.plot(X, Y, linewidth=w)
-        plt.savefig(filenameme)
+        plt.savefig(filename)
 
     def build_grid(
         self,
@@ -2269,7 +2317,7 @@ class AnalyseAP:
                         ]
                     )
                     plt.savefig(
-                        self.env.out_folder / f"packing_image_{seed_basename}.png"
+                        self.figures_path / f"packing_image_{seed_basename}.png"
                     )
                     plt.close()  # closes the current figure
 
@@ -2317,26 +2365,26 @@ class AnalyseAP:
             # plot the distances
             self.histo(
                 all_center_distance_array,
-                self.env.out_folder
+                self.figures_path
                 / f"all_ingredient_center_distances_{self.env.basename}.png",
             )
 
             self.histo(
                 all_pairwise_distance_array,
-                self.env.out_folder
+                self.figures_path
                 / f"all_ingredient_distances_{self.env.basename}.png",
             )
             # plot the angle
             if len(all_ingredient_angle_array):
                 self.histo(
                     all_ingredient_angle_array[0],
-                    self.env.out_folder / f"all_angles_X_{self.env.basename}.png",
+                    self.figures_path / f"all_angles_X_{self.env.basename}.png",
                 )
                 self.histo(
                     all_ingredient_angle_array[1],
-                    self.env.out_folder / f"all_angles_Y_{self.env.basename}.png",
+                    self.figures_path / f"all_angles_Y_{self.env.basename}.png",
                 )
                 self.histo(
                     all_ingredient_angle_array[2],
-                    self.env.out_folder / f"all_angles_Z_{self.env.basename}.png",
+                    self.figures_path / f"all_angles_Z_{self.env.basename}.png",
                 )
