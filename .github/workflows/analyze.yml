@@ -19,10 +19,22 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install .[all]
+    - name: Set PR name environment variable 
+      run: | 
+        echo "PR_NAME=$(( github.head_ref }}" >> $GITHUB_ENV
     - name: Pack test recipe
       run: |
         pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
-        analyze -a cellpack/tests/analysis-configs/PR_analysis_config.json
+    - name: Modify JSON with PR sub_directory path
+      run: |
+        JSON=$(cat cellpack/tests/analysis-configs/PR_analysis_config.json)
+
+        NEW_JSON=$(echo "JSON" | jq '. + {"results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/${PR_NAME}/jitter"})
+
+        echo "$NEW_JSON" > cellpack/tests/analysis-configs/PR_analysis_config.json
+    -name: Run analysis code
+      run: |
+        analyze -a cellpack/tests/analysis-configs/PR_analysis_config.json 
     - name: Upload results
       uses: actions/upload-artifact@v3
       with:
@@ -43,7 +55,7 @@ jobs:
     - name: Remove files in results bucket
       run: aws s3 rm  s3://cellpack-results --recursive
     - name: Copy files to results bucket
-      run: aws s3 cp ./results s3://cellpack-results --recursive --acl public-read 
+      run: aws s3 cp ./results s3://cellpack-results/$PR_NAME --recursive --acl public-read 
     - uses: iterative/setup-cml@v1
     - name: Update comment
       env:
