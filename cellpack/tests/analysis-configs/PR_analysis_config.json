@@ -1,0 +1,13 @@
+{
+    "version": "1.0.0",
+    "format_version": "1.0",
+    "input_path": "cellpack/tests/outputs/test_spheres/jitter",
+    "output_path": "cellpack/tests/outputs/test_spheres",
+    "ingredient_key" : "ext_A",
+    "create_report": {
+        "run_distance_analysis": true,
+        "path_to_test_recipe": "cellpack/tests/recipes/v2/test_spheres.json",
+        "path_to_results": "cellpack/tests/outputs/test_spheres/jitter",
+        "results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/jitter"
+    }
+}

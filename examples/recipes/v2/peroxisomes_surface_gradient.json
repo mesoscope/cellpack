@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
+    "version": "linear",
     "format_version": "2.0",
-    "name": "peroxisomes_test",
+    "name": "peroxisomes_surface_gradient",
     "bounding_box": [
         [
             -110,
@@ -14,6 +14,17 @@
             62
         ]
     ],
+    "gradients": {
+        "nucleus_surface_gradient": {
+            "description": "gradient based on distance from the surface of a mesh",
+            "surface_name": "nucleus",
+            "weight_mode": "linear",
+            "pick_mode": "rnd",
+            "mode": "surface",
+            "direction" : [0,0,0],
+            "scale_to_next_surface": true
+        }
+    },
     "objects": {
         "mean_membrane": {
             "type": "mesh",
@@ -53,7 +64,9 @@
                 0.70,
                 0.10
             ],
-            "radius": 2.30
+            "radius": 2.30,
+            "gradient" : "nucleus_surface_gradient",
+            "packing_mode": "gradient"
         }
     },
     "composition": {

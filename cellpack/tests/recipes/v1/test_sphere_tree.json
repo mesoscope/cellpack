@@ -103,7 +103,7 @@
                     1
                 ],
                 "rotRange": 6.2831,
-                "sphereFile": "cellpack/test-geometry/test.sph",
+                "sphereFile": "cellpack/tests/geometry/test.sph",
                 "useOrientBias": false,
                 "useRotAxis": true,
                 "weight": 0.2

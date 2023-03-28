@@ -465,9 +465,9 @@ class GrowIngredient(MultiCylindersIngr):
         # pick the point that are close to pt2-pt3
         # align v to pt1-pt2, apply to pt2-pt3
         # mesure angle
-        pta = self.partners[alternate].getProperties("pt1")
-        ptb = self.partners[alternate].getProperties("pt2")
-        ptc = self.partners[alternate].getProperties("pt3")
+        pta = self.partners[alternate].get_point(0)
+        ptb = self.partners[alternate].get_point(1)
+        ptc = self.partners[alternate].get_point(2)
         toalign = numpy.array(ptb) - numpy.array(pta)
         m = numpy.array(rotVectToVect(toalign, v)).transpose()
         m[3, :3] = numpy.array(pt)  # jtrans
@@ -905,7 +905,7 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         liste_nodes = []
         cutoff = self.env.largestProteinSize + self.uLength
-        closesbody_indice = self.getClosestIngredient(pt2, self.env, cutoff=cutoff)
+        closesbody_indice = self.get_closest_ingredients(pt2, self.env, cutoff=cutoff)
         liste_nodes = self.get_rbNodes(
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
@@ -924,10 +924,9 @@ class GrowIngredient(MultiCylindersIngr):
         newPts = []
         if self.prev_alt is not None:  # and self.prev_alt_pt is not None:
             p_alternate = self.partners[self.prev_alt]
-            dihedral = p_alternate.getProperties("diehdral")
-            nextPoint = p_alternate.getProperties("pt2")
-            # v3=numpy.array(p_alternate.getProperties("pt4"))-numpy.array(p_alternate.getProperties("pt3"))
-            marge_out = p_alternate.getProperties("marge_out")  # marge out ?
+            dihedral = p_alternate.dihedral
+            nextPoint = p_alternate.get_point(1)
+            marge_out = p_alternate.margin_out  # marge out ?
             if dihedral is not None:
                 self.mask_sphere_points(
                     v,
@@ -947,12 +946,11 @@ class GrowIngredient(MultiCylindersIngr):
             p_alternate = self.partners[
                 alternate
             ]  # self.env.getIngrFromNameInRecipe(alternate,self.recipe )
-            # if p_alternate.getProperties("bend"):
-            entrypoint = p_alternate.getProperties("pt1")
-            nextPoint = p_alternate.getProperties("pt2")
-            marge_in = p_alternate.getProperties("marge_in")
-            dihedral = p_alternate.getProperties("diehdral")  # for next point
-            length = p_alternate.getProperties("length")  # for next point
+            entrypoint = p_alternate.get_point(0)
+            nextPoint = p_alternate.get_point(1)
+            marge_in = p_alternate.margin_in
+            dihedral = p_alternate.dihedral  # for next point
+            length = p_alternate.length  # for next point
             if entrypoint is not None:
                 self.mask_sphere_points(
                     v,
@@ -1090,7 +1088,6 @@ class GrowIngredient(MultiCylindersIngr):
                                     self.vi.updateMesh(pc, vertices=verts)
                                 self.vi.update()
                 attempted += 1
-                print("rejected boundary")
                 continue
             if checkcollision:
                 collision = False
@@ -1141,7 +1138,7 @@ class GrowIngredient(MultiCylindersIngr):
                         prev = None
                         if len(self.env.rTrans) > 2:
                             prev = self.env.rTrans[-1]
-                        closesbody_indice = self.getClosestIngredient(
+                        closesbody_indice = self.get_closest_ingredients(
                             newPt, histoVol, cutoff=cutoff
                         )  # vself.radii[0][0]*2.0
                         if len(closesbody_indice) == 0:
@@ -1227,22 +1224,7 @@ class GrowIngredient(MultiCylindersIngr):
                         self.prev_vec = v
                         if nextPoint is not None and dihedral is None:
                             self.prev_alt_pt = newPts[1]
-                        # treat special case of starting other ingr
-                        start_ingr_name = self.partners[alternate].getProperties(
-                            "st_ingr"
-                        )
-                        if start_ingr_name is not None:
-                            # add new starting positions
-                            start_ingr = self.env.getIngrFromName(start_ingr_name)
-                            matrice = numpy.array(rotMatj)  # .transpose()
-                            matrice[3, :3] = jtrans
-                            newPts = self.get_alternate_starting_point(
-                                numpy.array(pt2).flatten(), newPt, alternate
-                            )
-                            start_ingr.start_positions.append([newPts[0], newPts[1]])
-                            start_ingr.left_to_place += 1
-                            # add a mol
-                        # we need to store
+
                         self.alternate_interval = 0
                         return newPt, True
                     else:
@@ -1302,212 +1284,6 @@ class GrowIngredient(MultiCylindersIngr):
             print("end loop add attempt ", attempted)
             attempted += 1
         # histoVol.callFunction(histoVol.delRB,(rbnode,))
-        return numpy.array(pt2).flatten() + numpy.array(pt), True
-
-    def walkSpherePandaOLD(
-        self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
-    ):
-        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
-        v, d = self.vi.measure_distance(pt1, pt2, vec=True)
-        found = False
-        attempted = 0
-        pt = [0.0, 0.0, 0.0]
-        angle = 0.0
-        safetycutoff = 1000
-        if self.constraintMarge:
-            safetycutoff = 200
-        if self.runTimeDisplay:
-            name = "walking" + self.name
-            sp = self.vi.getObject(name)
-            if sp is None:
-                sp = self.vi.Sphere(name, radius=2.0)[0]
-            # sp.SetAbsPos(self.vi.FromVec(startingPoint))
-            self.vi.update()
-        liste_nodes = []
-        while not found:
-            print("attempt ", attempted, marge)
-            # main loop thattryto found the next point (similar to jitter)
-            if attempted >= safetycutoff:
-                print("break too much attempt ", attempted, safetycutoff)
-                return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
-            # pt = numpy.array(self.vi.randpoint_onsphere(self.uLength,biased=(uniform(0.,1.0)*marge)/360.0))*numpy.array([1,1,0])
-            test = False
-            if self.useHalton:
-                self.mask_sphere_points(v, pt2, marge + 2.0, liste_nodes, 0)
-                p = self.getNextPoint()
-                if p is None:
-                    print("no sphere points available")
-                    return (
-                        None,
-                        False,
-                    )  # numpy.array(pt2).flatten()+numpy.array(pt),False
-                p = numpy.array(p) * self.uLength
-                pt = numpy.array(p) * numpy.array(self.max_jitter)  # ?
-                newPt = numpy.array(pt2).flatten() + numpy.array(pt)
-                if self.runTimeDisplay >= 2:
-                    self.vi.setTranslation(sp, newPt)
-                    self.vi.update()
-                test = True
-            else:
-                p = self.vi.advance_randpoint_onsphere(
-                    self.uLength, marge=math.radians(marge), vector=v
-                )
-                pt = numpy.array(p) * numpy.array(self.max_jitter)  # ?
-                # the new position is the previous point (pt2) plus the random point
-                newPt = numpy.array(pt2).flatten() + numpy.array(pt)
-                if self.runTimeDisplay >= 2:
-                    self.vi.setTranslation(sp, newPt)
-                    self.vi.update()
-                # compute the angle between the previous direction (pt1->pt2) and the new random one (pt)
-                angle = self.vi.angle_between_vectors(numpy.array(v), numpy.array(pt))
-                test = abs(math.degrees(angle)) <= marge + 2.0
-            if test:
-                r = [False]
-                # check if in bounding box
-                inComp = True
-                closeS = False
-                inside = histoVol.grid.checkPointInside(
-                    newPt, dist=self.cutoff_boundary, jitter=self.max_jitter
-                )
-                if inside:
-                    inComp = self.is_point_in_correct_region(newPt)
-                    if inComp:
-                        # check how far from surface ?
-                        closeS = self.far_enough_from_surfaces(
-                            newPt, cutoff=self.cutoff_surface
-                        )
-                if not inside or closeS or not inComp:
-                    print(
-                        "inside,closeS ", not inside, closeS, not inComp, newPt, marge
-                    )
-                    if not self.constraintMarge:
-                        if marge >= 175:
-                            print("no second point not constraintMarge 1 ", marge)
-                            return None, False
-                        marge += 1
-                    else:
-                        print("inside,closeS ", inside, closeS, inComp, newPt, marge)
-                        attempted += 1
-                    continue
-                # optionally check for collision
-                if checkcollision:
-                    # this s where we use panda
-                    rotMatj = [
-                        [1.0, 0.0, 0.0, 0.0],
-                        [0.0, 1.0, 0.0, 0.0],
-                        [0.0, 0.0, 1.0, 0.0],
-                        [0.0, 0.0, 0.0, 1.0],
-                    ]
-                    jtrans = [0.0, 0.0, 0.0]
-                    # move it or generate it inplace
-                    oldpos1 = self.positions
-                    oldpos2 = self.positions2
-                    self.positions = [
-                        [numpy.array(pt2).flatten()],
-                    ]
-                    self.positions2 = [
-                        [newPt],
-                    ]
-                    if self.use_rbsphere:
-                        print("new RB ")
-                        rbnode = self.addRBsegment(numpy.array(pt2).flatten(), newPt)
-                    else:
-                        rbnode = histoVol.callFunction(
-                            histoVol.addRB,
-                            (
-                                self,
-                                numpy.array(jtrans),
-                                numpy.array(rotMatj),
-                            ),
-                            {"rtype": self.type},
-                        )  # cylinder
-                    # histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))
-                    # if inside organelle check for collision with it ?
-                    self.positions = oldpos1
-                    self.positions2 = oldpos2
-                    # check collision using bullet
-                    # get closest object?
-                    cutoff = histoVol.largestProteinSize + self.uLength
-                    if len(self.env.rTrans) == 0:
-                        r = [False]
-                    else:
-                        prev = None
-                        if len(self.env.rTrans) > 2:
-                            prev = self.env.rTrans[-1]
-                        closesbody_indice = self.getClosestIngredient(
-                            newPt, histoVol, cutoff=cutoff
-                        )  # vself.radii[0][0]*2.0
-                        if len(closesbody_indice) == 0:
-                            r = [False]  # closesbody_indice[0] == -1
-                        else:
-                            liste_nodes = self.get_rbNodes(
-                                closesbody_indice, jtrans, prevpoint=prev, getInfo=True
-                            )
-                            if usePP:
-                                # use self.grab_cb and self.pp_server
-                                # Divide the task or just submit job
-                                n = 0
-                                self.env.grab_cb.reset()
-                                for i in range(len(liste_nodes) / autopack.ncpus):
-                                    for c in range(autopack.ncpus):
-                                        self.env.pp_server.submit(
-                                            self.env.world.contactTestPair,
-                                            (rbnode, liste_nodes[n][0]),
-                                            callback=self.env.grab_cb.grab,
-                                        )
-                                        n += 1
-                                    self.env.pp_server.wait()
-                                    r.extend(self.env.grab_cb.collision[:])
-                                    if True in r:
-                                        break
-                            else:
-                                for node in liste_nodes:
-                                    col = (
-                                        self.env.world.contactTestPair(
-                                            rbnode, node[0]
-                                        ).getNumContacts()
-                                        > 0
-                                    )
-                                    r = [col]
-                                    if col:
-                                        break
-                    collision = True in r
-                    if not collision:
-                        histoVol.static.append(rbnode)
-                        histoVol.moving = None
-                        found = True
-                        histoVol.nb_ingredient += 1
-                        histoVol.rTrans.append(numpy.array(pt2).flatten())
-                        histoVol.rRot.append(numpy.array(rotMatj))  # rotMatj r
-                        histoVol.rIngr.append(self)
-                        histoVol.result.append(
-                            [[numpy.array(pt2).flatten(), newPt], rotMatj, self, 0]
-                        )
-                        histoVol.callFunction(histoVol.delRB, (rbnode,))
-                        # rebuild kdtree
-                        if len(self.env.rTrans) > 1:
-                            histoVol.close_ingr_bhtree = spatial.cKDTree(
-                                histoVol.rTrans, leafsize=10
-                            )
-                        return numpy.array(pt2).flatten() + numpy.array(pt), True
-                    else:  # increment the range
-                        if not self.constraintMarge:
-                            if marge >= 180:  # pi
-                                return None, False
-                            marge += 1
-                        else:
-                            attempted += 1
-                        continue
-                else:
-                    found = True
-                    histoVol.callFunction(histoVol.delRB, (rbnode,))
-                    return numpy.array(pt2).flatten() + numpy.array(pt), True
-            else:
-                print("not in the marge ", abs(math.degrees(angle)), marge)
-                attempted += 1
-                continue
-            attempted += 1
-        histoVol.callFunction(histoVol.delRB, (rbnode,))
         return numpy.array(pt2).flatten() + numpy.array(pt), True
 
     def pickHalton(self, pt1, pt2):
@@ -2070,7 +1846,7 @@ class GrowIngredient(MultiCylindersIngr):
     def prepare_alternates(
         self,
     ):
-        if len(self.partners):
+        if len(self.partners.all_partners):
             self.alternates_names = (
                 self.partners.keys()
             )  # self.partners_name#[p.name for p in self.partners.values()]
@@ -2137,7 +1913,7 @@ class GrowIngredient(MultiCylindersIngr):
         return alt_name, i
 
     def get_alternate_position(self, alternate, alti, v, pt1, pt2):
-        length = self.partners[alternate].getProperties("length")
+        length = self.partners[alternate].length
         # rotation that align snake orientation to current segment
         rotMatj, jtrans = self.getJtransRot_r(
             numpy.array(pt1).flatten(), numpy.array(pt2).flatten(), length=length
@@ -2150,8 +1926,8 @@ class GrowIngredient(MultiCylindersIngr):
         # oldv is v we can ether align to v or newv
         newv = numpy.array(pt2) - numpy.array(pt1)
         # use v ? for additional point ?
-        ptb = self.partners[alternate].getProperties("pt2")
-        ptc = self.partners[alternate].getProperties("pt3")
+        ptb = self.partners[alternate].get_point(1)
+        ptc = self.partners[alternate].get_point(2)
         toalign = numpy.array(ptc) - numpy.array(ptb)
         m = numpy.array(rotVectToVect(toalign, newv)).transpose()
         m[3, :3] = numpy.array(pt1)  # jtrans
@@ -2193,7 +1969,7 @@ class GrowIngredient(MultiCylindersIngr):
         return jtrans, rotMatj
 
     def get_alternate_position_p(self, alternate, alti, v, pt1, pt2):
-        length = self.partners[alternate].getProperties("length")
+        length = self.partners[alternate].length
         rotMatj, jtrans = self.getJtransRot_r(
             numpy.array(pt1).flatten(), numpy.array(pt2).flatten(), length=length
         )
@@ -2212,7 +1988,7 @@ class GrowIngredient(MultiCylindersIngr):
         return jtrans, rotMatj
 
     def getV3(self, pt1, pt2, alternate):
-        length = self.partners[alternate].getProperties("length")
+        length = self.partners[alternate].length
         rotMatj, jtrans = self.getJtransRot_r(
             numpy.array(pt1).flatten(), numpy.array(pt2).flatten(), length=length
         )
@@ -2220,9 +1996,9 @@ class GrowIngredient(MultiCylindersIngr):
         prevMat = numpy.array(rotMatj)
         prevMat[3, :3] = numpy.array(pt1)  # jtrans
         newv = numpy.array(pt2) - numpy.array(pt1)
-        ptb = self.partners[alternate].getProperties("pt2")
-        ptc = self.partners[alternate].getProperties("pt3")
-        ptd = self.partners[alternate].getProperties("pt4")
+        ptb = self.partners[alternate].get_point(1)
+        ptc = self.partners[alternate].get_point(2)
+        ptd = self.partners[alternate].get_point(3)
         toalign = numpy.array(ptc) - numpy.array(ptb)
         m = numpy.array(rotVectToVect(toalign, newv)).transpose()
         m[3, :3] = numpy.array(pt1)  # jtrans
@@ -2232,34 +2008,11 @@ class GrowIngredient(MultiCylindersIngr):
         newPts = autopack.helper.ApplyMatrix([ptc, ptd], m.transpose())  # transpose ?
         return numpy.array(newPts[1]) - numpy.array(newPts[0])
 
-    def get_alternate_starting_point(self, pt1, pt2, alternate):
-        spt1 = self.partners[alternate].getProperties("st_pt1")
-        spt2 = self.partners[alternate].getProperties("st_pt2")
-
-        length = self.partners[alternate].getProperties("length")
-        rotMatj, jtrans = self.getJtransRot_r(
-            numpy.array(pt1).flatten(), numpy.array(pt2).flatten(), length=length
-        )
-        # jtrans is the position between pt1 and pt2
-        prevMat = numpy.array(rotMatj)
-        prevMat[3, :3] = numpy.array(pt1)  # jtrans
-        newv = numpy.array(pt2) - numpy.array(pt1)
-        ptb = self.partners[alternate].getProperties("pt2")
-        ptc = self.partners[alternate].getProperties("pt3")
-        toalign = numpy.array(ptc) - numpy.array(ptb)
-        m = numpy.array(rotVectToVect(toalign, newv)).transpose()
-        m[3, :3] = numpy.array(pt1)  # jtrans
-        pts = autopack.helper.ApplyMatrix([ptb], m.transpose())  # transpose ?
-        v = numpy.array(pt1) - pts[0]
-        m[3, :3] = numpy.array(pt1) + v
-        newPts = autopack.helper.ApplyMatrix([spt1, spt2], m.transpose())  # transpose ?
-        return newPts
-
     def place_alternate(self, alternate, alti, v, pt1, pt2):
-        pta = self.partners[alternate].getProperties("pt1")
-        ptb = self.partners[alternate].getProperties("pt2")
-        ptc = self.partners[alternate].getProperties("pt3")
-        ptd = self.partners[alternate].getProperties("pt4")
+        pta = self.partners[alternate].get_point(0)
+        ptb = self.partners[alternate].get_point(1)
+        ptc = self.partners[alternate].get_point(2)
+        ptd = self.partners[alternate].get_point(3)
         prevMat = numpy.identity(4)
         if ptb is not None:
             rotMatj, jtrans = self.getJtransRot_r(
@@ -2293,9 +2046,8 @@ class GrowIngredient(MultiCylindersIngr):
         p_alternate = self.partners[
             alternate
         ]  # self.env.getIngrFromNameInRecipe(alternate,self.recipe )
-        # if p_alternate.getProperties("bend"):
-        out1 = p_alternate.getProperties("pt1")
-        out2 = p_alternate.getProperties("pt2")
+        out1 = p_alternate.get_point(0)
+        out2 = p_alternate.get_point(1)
         if out1 is not None:
             rotMatj, jtrans = self.getJtransRot_r(
                 numpy.array(pt1).flatten(), numpy.array(pt2).flatten()
