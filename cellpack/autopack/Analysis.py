@@ -605,7 +605,6 @@ class AnalyseAP:
             distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
-<<<<<<< HEAD
 
             distances_between_ingredients = distance.pdist(ingredient_positions)
 
@@ -647,9 +646,6 @@ class AnalyseAP:
                 angles = numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
             else:
                 angles = numpy.array([])
-=======
-            distances_between_ingredients = distance.pdist(ingredient_positions)
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
         else:
             distances_from_center = numpy.array([])
             distances_between_ingredients = numpy.array([])
@@ -1288,37 +1284,22 @@ class AnalyseAP:
                 ]
         return avg_similarity_values
 
-<<<<<<< HEAD
     def calc_similarity_df(self, all_objs, ingredient_key):
         """
         Calculates a dataframe of similarity values between packings
         """
         key_list = list(all_objs[ingredient_key].keys())
-=======
-    def calc_similarity_df(self, all_objs):
-        """
-        Calculates a dataframe of similarity values between packings
-        """
-        ingr_key = self.ingredient_key
-        key_list = list(all_objs[ingr_key].keys())
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
         similarity_df = pd.DataFrame(
             index=key_list,
             columns=pd.MultiIndex.from_product([self.get_list_of_dims(), key_list]),
             dtype=float,
         )
         similarity_df["packing_id"] = 0
-<<<<<<< HEAD
         for seed1, pos_dict1 in tqdm(all_objs[ingredient_key].items()):
             similarity_df.loc[seed1, "packing_id"] = self.packing_id_dict[
                 int(seed1.split("_")[-1])
             ]
             for seed2, pos_dict2 in all_objs[ingredient_key].items():
-=======
-        for seed1, pos_dict1 in tqdm(all_objs[ingr_key].items()):
-            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
-            for seed2, pos_dict2 in all_objs[ingr_key].items():
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
                 for dim in self.get_list_of_dims():
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
@@ -1343,24 +1324,13 @@ class AnalyseAP:
                         scaled_sig = (ad_stat.pvalue - 0.001) / (0.25 - 0.001)
                     similarity_df.loc[seed1, (dim, seed2)] = scaled_sig
 
-<<<<<<< HEAD
         dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
-=======
-        dfpath = self.output_path / f"similarity_df_{self.ingredient_key}.csv"
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
         print(f"Saving similarity df to {dfpath}")
         similarity_df.to_csv(dfpath)
 
         return similarity_df
 
-<<<<<<< HEAD
     def plot_and_save_similarity_heatmaps(self, similarity_df, ingredient_key):
-        """
-        Plots heatmaps with hierarchical clustering using similarity scores
-        """
-        packing_ids = similarity_df["packing_id"].iloc[:, 0]
-=======
-    def plot_and_save_similarity_heatmaps(self, similarity_df):
         """
         Plots heatmaps with hierarchical clustering using similarity scores
         """
@@ -1369,7 +1339,6 @@ class AnalyseAP:
             packing_ids = similarity_df["packing_id"].iloc[:, 0]
         else:
             packing_ids = similarity_df["packing_id"]
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
         lut = dict(zip(packing_ids.unique(), sns.color_palette()))
         row_colors = packing_ids.map(lut)
         row_colors.rename("Packing ID", inplace=True)
@@ -1382,11 +1351,7 @@ class AnalyseAP:
                 similarity_df[dim].values
             )
             numpy.savetxt(
-<<<<<<< HEAD
                 figdir / f"avg_similarity_{ingredient_key}_{dim}.txt",
-=======
-                figdir / f"avg_similarity_{self.ingredient_key}_{dim}.txt",
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
                 avg_similarity_values,
             )
 
@@ -1413,40 +1378,25 @@ class AnalyseAP:
                 loc="upper right",
             )
             g.ax_col_dendrogram.set_visible(False)
-<<<<<<< HEAD
             g.ax_heatmap.set_xlabel(f"{ingredient_key}_{dim}")
             g.savefig(figdir / f"clustermap_{ingredient_key}_{dim}", dpi=300)
 
     def run_similarity_analysis(
         self, all_objs, ingredient_key, load_from_file=False, save_heatmaps=False
-=======
-            g.ax_heatmap.set_xlabel(f"{self.ingredient_key}_{dim}")
-            g.savefig(figdir / f"clustermap_{self.ingredient_key}_{dim}", dpi=300)
-
-    def run_similarity_analysis(
-        self, all_objs, load_from_file=False, save_heatmaps=False
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
     ):
         """
         TODO: add docs
         """
         print("Running similarity analysis...")
-<<<<<<< HEAD
         if ingredient_key not in all_objs:
             raise ValueError(f"Missing ingredient: {ingredient_key}")
 
         if load_from_file:
             dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
-=======
-
-        if load_from_file:
-            dfpath = self.output_path / f"similarity_df_{self.ingredient_key}.csv"
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
             if dfpath.is_file():
                 print(f"Loading similarity values from {dfpath}")
                 similarity_df = pd.read_csv(dfpath, header=[0, 1])
             else:
-<<<<<<< HEAD
                 similarity_df = self.calc_similarity_df(
                     all_objs,
                     ingredient_key=ingredient_key,
@@ -1457,12 +1407,6 @@ class AnalyseAP:
                 similarity_df,
                 ingredient_key=ingredient_key,
             )
-=======
-                similarity_df = self.calc_similarity_df(all_objs)
-
-        if save_heatmaps:
-            self.plot_and_save_similarity_heatmaps(similarity_df)
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
 
         return similarity_df
 
@@ -1534,37 +1478,26 @@ class AnalyseAP:
     def get_parametrized_representation(
         self,
         all_pos_list,
-<<<<<<< HEAD
         ingredient_key=None,
         mesh_paths={},
-=======
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
         num_angular_points=64,
         save_plots=False,
         max_plots_to_save=1,
         get_correlations=False,
     ):
         print("creating parametrized representations...")
-        theta_vals = numpy.linspace(0, numpy.pi, 1 + num_angular_points)
-        phi_vals = numpy.linspace(0, 2 * numpy.pi, 1 + 2 * num_angular_points)
-        rad_vals = numpy.linspace(0, 1, 1 + num_angular_points)
 
         if "inner" not in mesh_paths or "outer" not in mesh_paths:
             raise ValueError(
                 "Missing mesh paths required to generate parametrized representations"
             )
-<<<<<<< HEAD
-
+        
         inner_mesh = trimesh.load_mesh(mesh_paths.get("inner"))
         outer_mesh = trimesh.load_mesh(mesh_paths.get("outer"))
-=======
+
         theta_vals = numpy.linspace(0, numpy.pi, 1 + num_angular_points)
         phi_vals = numpy.linspace(0, 2 * numpy.pi, 1 + 2 * num_angular_points)
         rad_vals = numpy.linspace(0, 1, 1 + num_angular_points)
-
-        inner_mesh = trimesh.load_mesh(self.inner_mesh_path)
-        outer_mesh = trimesh.load_mesh(self.outer_mesh_path)
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
 
         all_spilr = {}
         for scaled_val in ["raw", "scaled"]:
@@ -1636,11 +1569,7 @@ class AnalyseAP:
                         label_str = f"Distance from Nuclear Surface, {packing_id}_{sc}, {scaled_val}"
                         file_path = (
                             save_dir
-<<<<<<< HEAD
                             / f"heatmap_{scaled_val}_{packing_id}_{sc}_{ingredient_key}"
-=======
-                            / f"heatmap_{scaled_val}_{packing_id}_{sc}_{self.ingredient_key}"
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1663,11 +1592,7 @@ class AnalyseAP:
                     )
                     file_path = (
                         save_dir
-<<<<<<< HEAD
                         / f"avg_heatmap_{scaled_val}_{packing_id}_{ingredient_key}"
-=======
-                        / f"avg_heatmap_{scaled_val}_{packing_id}_{self.ingredient_key}"
->>>>>>> 1a86c52d7b9dd749d9ca6295094684082f424f9b
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 
