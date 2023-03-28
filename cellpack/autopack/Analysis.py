@@ -1291,7 +1291,11 @@ class AnalyseAP:
         """
         Plots heatmaps with hierarchical clustering using similarity scores
         """
-        packing_ids = similarity_df["packing_id"].iloc[:, 0]
+        # accounting for changes when reading from csv
+        if similarity_df["packing_id"].ndim > 1:
+            packing_ids = similarity_df["packing_id"].iloc[:, 0]
+        else:
+            packing_ids = similarity_df["packing_id"]
         lut = dict(zip(packing_ids.unique(), sns.color_palette()))
         row_colors = packing_ids.map(lut)
         row_colors.rename("Packing ID", inplace=True)
