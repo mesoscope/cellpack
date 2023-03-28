@@ -93,6 +93,6 @@ jobs:
     
     steps:
     - name: Create environment variable from PR name
-      run: echo "BRANCH_NAME"=${{ github.ref }}" > $GITHUB_ENV
+      run: echo "BRANCH_NAME=${{ github.ref }}" > $GITHUB_ENV
     - name: Remove files in results bucket
       run: aws s3 rm  s3://cellpack-results/$BRANCH_NAME --recursive
