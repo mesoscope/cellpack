@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "1.0",
-    "input_path_list": [
+    "packing_result_path_list": [
         "out/analyze/peroxisomes_surface_gradient/spheresSST/"
     ],
     "output_path": "out/analyze/peroxisomes_surface_gradient/",

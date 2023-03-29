@@ -1042,7 +1042,7 @@ class Environment(CompartmentList):
                         M = len(ingr.name)
         return M
 
-    def loopThroughIngr(self, cb_function):
+    def loopThroughIngr(self, cb_function, kwargs={}):
         """
         Helper function that loops through all ingredients of all recipes and applies the given
         callback function on each ingredients.
@@ -1050,16 +1050,16 @@ class Environment(CompartmentList):
         recipe = self.exteriorRecipe
         if recipe:
             for ingr in recipe.ingredients:
-                cb_function(ingr)
+                cb_function(ingr, **kwargs)
         for compartment in self.compartments:
             surface_recipe = compartment.surfaceRecipe
             if surface_recipe:
                 for ingr in surface_recipe.ingredients:
-                    cb_function(ingr)
+                    cb_function(ingr, **kwargs)
             inner_recipe = compartment.innerRecipe
             if inner_recipe:
                 for ingr in inner_recipe.ingredients:
-                    cb_function(ingr)
+                    cb_function(ingr, **kwargs)
 
     def getIngrFromNameInRecipe(self, name, r):
         """

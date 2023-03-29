@@ -42,10 +42,10 @@ def analyze(
     recipe_data = RecipeLoader(recipe_path, False).recipe_data
     os.makedirs(analysis_config["output_path"], exist_ok=True)
 
-    for input_path in analysis_config["input_path_list"]:
-        log.info(f"Input path: {input_path}\n")
+    for packing_result_path in analysis_config["packing_result_path_list"]:
+        log.info(f"Input path: {packing_result_path}\n")
         analysis = AnalyseAP(
-            input_path=input_path,
+            packing_results_path=packing_result_path,
             output_path=analysis_config["output_path"],
         )
         analysis.run_analysis_workflow(

@@ -1,7 +1,9 @@
 {
     "version": "1.0.0",
     "format_version": "1.0",
-    "input_path": "cellpack/tests/outputs/test_spheres/jitter",
+    "packing_result_path_list": [
+        "cellpack/tests/outputs/test_spheres/jitter"
+    ],
     "output_path": "cellpack/tests/outputs/test_spheres",
     "ingredient_key" : "ext_A",
     "create_report": {

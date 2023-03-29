@@ -145,7 +145,7 @@ class AnalyseAP:
         env=None,
         viewer=None,
         result_file=None,
-        input_path=None,
+        packing_results_path=None,
         output_path=None,
     ):
         self.env = None
@@ -167,12 +167,12 @@ class AnalyseAP:
         self.current_distance = None
         self.plotly = PlotlyAnalysis()
 
-        if input_path is not None:
-            self.input_path = Path(input_path)
+        if packing_results_path is not None:
+            self.packing_results_path = Path(packing_results_path)
         elif self.env is not None:
-            self.input_path = Path(self.env.out_folder)
+            self.packing_results_path = Path(self.env.out_folder)
         else:
-            self.input_path = None
+            self.packing_results_path = Path()
 
         if output_path is not None:
             self.output_path = Path(output_path)
@@ -180,7 +180,6 @@ class AnalyseAP:
             self.output_path = Path(self.env.out_folder)
         else:
             self.output_path = Path("out/")
-
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
 
@@ -860,7 +859,7 @@ class AnalyseAP:
             basename + ingr.name + "_rdf_simple.png",
         )
 
-    def axis_distribution_total(self, all_positions):
+    def plot_position_distribution_total(self, all_positions):
         pos_xyz = numpy.array(all_positions)
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
@@ -869,26 +868,49 @@ class AnalyseAP:
                 all_pos[:, ind],
                 self.figures_path
                 / f"all_ingredient_histo_{dim}_{self.env.basename}.png",
+                title_str="all_ingredients",
+                x_label=dim,
+                y_label="count",
             )
 
-    def axis_distribution(self, ingr):
+    def plot_position_distribution(self, ingr):
         pos_xyz = numpy.array(self.env.ingredient_positions[ingr.name])
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
             self.histo(
                 all_pos[:, ind],
-                self.figures_path
-                / f"{ingr.name}_histo_{dim}_{self.env.basename}.png",
+                self.figures_path / f"{ingr.name}_histo_{dim}_{self.env.basename}.png",
+                title_str=ingr.name,
+                x_label=dim,
+                y_label="count",
             )
 
-    def occurence_distribution(self, ingr):
+    def plot_occurence_distribution(self, ingr):
         occ = self.env.occurences[ingr.name]
-        self.simpleplot(
-            range(len(occ)),
-            occ,
-            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
-        )
+        if len(occ) > 1:
+            self.simpleplot(
+                range(len(occ)),
+                occ,
+                self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
+                # title_str=ingr.name,
+                # x_label="seed",
+                # y_label="occurences"
+            )
+
+    def plot_distance_distribution(self, all_ingredient_distances):
+        """
+        Plots the distribution of distances for ingredient and pairs of ingredients
+        """
+        for ingr_key, distances in all_ingredient_distances.items():
+            self.histo(
+                distances=numpy.array(distances),
+                filename=self.figures_path
+                / f"{ingr_key}_pairwise_distances_{self.env.basename}.png",
+                title_str=ingr_key,
+                x_label="pairwise distance",
+                y_label="count",
+            )
 
     def correlation(self, ingr):
         basename = self.env.basename
@@ -1045,12 +1067,12 @@ class AnalyseAP:
 
         return (g_average, radii, interior_indices)
 
-    def get_obj_dict(self, input_path):
+    def get_obj_dict(self, packing_results_path):
         """
         Returns the object dictionary from the input path folder.
         TODO: add description of object dictionary
         """
-        file_list = Path(input_path).glob("positions_*.json")
+        file_list = Path(packing_results_path).glob("positions_*.json")
         all_pos_list = []
         packing_id_dict = {}
         for packing_index, file_path in enumerate(file_list):
@@ -1086,23 +1108,15 @@ class AnalyseAP:
             [val for val in self.get_ingredient_radii(recipe_data=recipe_data).values()]
         )
 
-    def get_packed_minimum_distance(self, glob_to_distance_files):
+    def get_packed_minimum_distance(self, pairwise_distance_dict):
         """
         Returns the minimum distance between packed objects
         """
-        minimum_packed_distance = numpy.Inf
-        for path_to_distance_file in glob_to_distance_files:
-            pairwise_distance_dict = self.loadJSON(path_to_distance_file)
-            distance_values = numpy.array(
-                self.combine_results_from_ingredients(
-                    self.combine_results_from_seeds(pairwise_distance_dict)
-                )
+        return min(
+            self.combine_results_from_ingredients(
+                self.combine_results_from_seeds(pairwise_distance_dict)
             )
-            current_minimum_distance = numpy.min(distance_values)
-            if current_minimum_distance < minimum_packed_distance:
-                minimum_packed_distance = current_minimum_distance
-
-        return minimum_packed_distance
+        )
 
     def get_number_of_ingredients_packed(
         self,
@@ -1158,6 +1172,17 @@ class AnalyseAP:
         """
         return [key for key in recipe_data.get("objects")]
 
+    def get_dict_from_glob(
+        self,
+        glob_str,
+    ):
+        glob_to_distance_file = self.packing_results_path.glob(glob_str)
+        for path_to_distance_file in glob_to_distance_file:
+            if path_to_distance_file.is_file() and (
+                path_to_distance_file.suffix == ".json"
+            ):
+                return self.loadJSON(path_to_distance_file)
+
     def create_report(
         self,
         recipe_data,
@@ -1172,12 +1197,12 @@ class AnalyseAP:
         ----------
         self: AnalyseAP
             instance of AnalyseAP class
-        input_path: Path
-            path to look for results from packing
-        output_image_location: Path
-            this is the path to look for output images for the markdown file
         recipe_data: dict
             dictionary containing recipe data for the packing being analyzed
+        ingredient_keys: List[str]
+            list of ingredient keys to analyze
+        output_image_location: Path
+            this is the path to look for output images for the markdown file
         """
         mdFile = MdUtils(
             file_name=str(self.output_path / "analysis_report"),
@@ -1185,7 +1210,7 @@ class AnalyseAP:
         )
         mdFile.new_header(
             level=2,
-            title=f"Analysis for packing results located at {self.input_path}",
+            title=f"Analysis for packing results located at {self.packing_results_path}",
             add_table_of_contents="n",
         )
 
@@ -1219,9 +1244,9 @@ class AnalyseAP:
         if output_image_location is None:
             output_image_location = self.output_path
 
-        # actual path where results are stored
-        input_path = self.input_path
-        figure_path = self.input_path / "figures"
+        # path where packing results are stored
+        packing_results_path = self.packing_results_path
+        figure_path = packing_results_path / "figures"
 
         mdFile.new_header(level=1, title="Packing image")
         glob_to_packing_image = figure_path.glob("packing_image_*.png")
@@ -1235,46 +1260,68 @@ class AnalyseAP:
         mdFile.new_line("")
 
         if run_distance_analysis:
-
+            # TODO: take packing distance dict as direct input for live mode
             expected_minimum_distance = self.get_minimum_expected_distance_from_recipe(
                 recipe_data
             )
 
-            glob_to_distance_file = input_path.glob("pairwise_distances_*.json")
-            packed_minimum_distance = self.get_packed_minimum_distance(
-                glob_to_distance_file
+            pairwise_distance_dict = self.get_dict_from_glob(
+                "pairwise_distances_*.json"
             )
-
-            mdFile.new_header(level=1, title="Distance analysis")
-            mdFile.new_line(
-                f"Expected minimum distance: {expected_minimum_distance:.2f}"
-            )
-            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}\n")
-
-            if expected_minimum_distance > packed_minimum_distance:
-                mdFile.new_header(
-                    level=2, title="Possible errors", add_table_of_contents="n"
-                )
-                mdFile.new_list(
-                    [
-                        f"Packed minimum distance {packed_minimum_distance:.2f}"
-                        " is less than the "
-                        f"expected minimum distance {expected_minimum_distance:.2f}\n"
-                    ]
+            if pairwise_distance_dict:
+                all_pairwise_distances = self.combine_results_from_seeds(
+                    pairwise_distance_dict
                 )
 
-            distance_histo_path = figure_path.glob("all_ingredient_distances_*.png")
-            if distance_histo_path:
-                mdFile.new_header(
-                    level=2, title="Distance distribution", add_table_of_contents="n"
+                packed_minimum_distance = self.get_packed_minimum_distance(
+                    pairwise_distance_dict
                 )
 
-            for img_path in distance_histo_path:
+                mdFile.new_header(level=1, title="Distance analysis")
                 mdFile.new_line(
-                    mdFile.new_inline_image(
-                        text="Distance distribution",
-                        path=f"{output_image_location}/{img_path.name}",
+                    f"Expected minimum distance: {expected_minimum_distance:.2f}"
+                )
+                mdFile.new_line(
+                    f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
+                )
+
+                if expected_minimum_distance > packed_minimum_distance:
+                    mdFile.new_header(
+                        level=2, title="Possible errors", add_table_of_contents="n"
                     )
+                    mdFile.new_list(
+                        [
+                            f"Packed minimum distance {packed_minimum_distance:.2f}"
+                            " is less than the "
+                            f"expected minimum distance {expected_minimum_distance:.2f}\n"
+                        ]
+                    )
+
+                num_keys = len(all_pairwise_distances.keys())
+                img_list = []
+                for ingr_key in all_pairwise_distances:
+                    ingr_distance_histo_path = figure_path.glob(
+                        f"{ingr_key}_pairwise_distances_*.png"
+                    )
+                    for img_path in ingr_distance_histo_path:
+                        img_list.append(
+                            mdFile.new_inline_image(
+                                text=f"Distance distribution {ingr_key}",
+                                path=f"{output_image_location}/{img_path.name}",
+                            )
+                        )
+                text_list = [
+                    "Ingredient key",
+                    "Pairwise distance distribution",
+                    *[
+                        val
+                        for pair in zip(all_pairwise_distances.keys(), img_list)
+                        for val in pair
+                    ],
+                ]
+
+                mdFile.new_table(
+                    columns=2, rows=(num_keys + 1), text=text_list, text_align="center"
                 )
 
         mdFile.create_md_file()
@@ -1284,7 +1331,7 @@ class AnalyseAP:
         analysis_config: dict,
         recipe_data: dict,
     ):
-        all_objs, all_pos_list = self.get_obj_dict(self.input_path)
+        all_objs, all_pos_list = self.get_obj_dict(self.packing_results_path)
 
         self.num_packings = len(all_pos_list)
         self.num_seeds_per_packing = numpy.array(
@@ -1502,7 +1549,9 @@ class AnalyseAP:
             row_colors=row_colors,
             cbar_kws={"label": "spilr correlation"},
         )
-        g.savefig(self.figures_path / f"spilr_correlation_{ingredient_key}.png", dpi=300)
+        g.savefig(
+            self.figures_path / f"spilr_correlation_{ingredient_key}.png", dpi=300
+        )
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
         fig, ax = plt.subplots()
@@ -1646,27 +1695,32 @@ class AnalyseAP:
 
         return all_spilr
 
-    def histo(self, distances, filename):
+    def histo(self, distances, filename, title_str="", x_label="", y_label=""):
         plt.clf()
         # calculate histogram
-
         nbins = int(numpy.sqrt(len(distances)))
         y, bin_edges = numpy.histogram(distances, bins=nbins)
         bincenters = 0.5 * (bin_edges[1:] + bin_edges[:-1])
 
         # calculate standard error for values in each bin
         bin_inds = numpy.digitize(distances, bin_edges)
-        err_vals = numpy.zeros(y.shape)
+        x_err_vals = numpy.zeros(y.shape)
         for bc in range(nbins):
             dist_vals = distances[bin_inds == (bc + 1)]
             if len(dist_vals) > 1:
-                err_vals[bc] = numpy.std(dist_vals)
+                x_err_vals[bc] = numpy.std(dist_vals)
             else:
-                err_vals[bc] = 0
-
+                x_err_vals[bc] = 0
+        y_err_vals = numpy.sqrt(y * (1 - y / numpy.sum(y)))
         # set bin width
         dbin = 0.9 * (bincenters[1] - bincenters[0])
-        plt.bar(bincenters, y, width=dbin, color="r", yerr=err_vals)
+        plt.bar(bincenters, y, width=dbin, color="r", xerr=x_err_vals, yerr=y_err_vals)
+        if len(title_str):
+            plt.title(title_str)
+        if len(x_label):
+            plt.xlabel(x_label)
+        if len(y_label):
+            plt.ylabel(y_label)
         plt.savefig(filename)
         plt.close()
 
@@ -2213,6 +2267,8 @@ class AnalyseAP:
                 self.helper.render(seed_basename + ".jpg", 640, 480)
                 self.helper.write(seed_basename + ".c4d", [])
 
+            ax = None
+            width = 0
             if plot_figures and two_d:
                 width = self.env.get_size_of_bounding_box()
                 fig = plt.figure()
@@ -2359,32 +2415,54 @@ class AnalyseAP:
         self.env.angles = all_ingredient_angles
 
         if plot_figures:
-            self.env.loopThroughIngr(self.axis_distribution)
-            self.env.loopThroughIngr(self.occurence_distribution)
-            self.axis_distribution_total(all_ingredient_position_array)
-            # plot the distances
+            self.env.loopThroughIngr(self.plot_position_distribution)
+            self.env.loopThroughIngr(self.plot_occurence_distribution)
+
+            # plot pairwise distance histograms
+            self.plot_distance_distribution(all_ingredient_distances)
+
+            # plot distribution of positions for all combined seeds and ingredients
+            self.plot_position_distribution_total(all_ingredient_position_array)
+
+            # plot histograms for all combined distances
             self.histo(
                 all_center_distance_array,
                 self.figures_path
                 / f"all_ingredient_center_distances_{self.env.basename}.png",
+                title_str="all_ingredients",
+                x_label="center distance",
+                y_label="count",
             )
 
             self.histo(
                 all_pairwise_distance_array,
                 self.figures_path
-                / f"all_ingredient_distances_{self.env.basename}.png",
+                / f"all_ingredient_pairwise_distances_{self.env.basename}.png",
+                title_str="all_ingredients",
+                x_label="pairwise distances",
+                y_label="count",
             )
+
             # plot the angle
             if len(all_ingredient_angle_array):
                 self.histo(
                     all_ingredient_angle_array[0],
                     self.figures_path / f"all_angles_X_{self.env.basename}.png",
+                    title_str="all_ingredients",
+                    x_label="angles X",
+                    y_label="count",
                 )
                 self.histo(
                     all_ingredient_angle_array[1],
                     self.figures_path / f"all_angles_Y_{self.env.basename}.png",
+                    title_str="all_ingredients",
+                    x_label="angles Y",
+                    y_label="count",
                 )
                 self.histo(
                     all_ingredient_angle_array[2],
                     self.figures_path / f"all_angles_Z_{self.env.basename}.png",
+                    title_str="all_ingredients",
+                    x_label="angles Z",
+                    y_label="count",
                 )
