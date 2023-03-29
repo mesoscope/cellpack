@@ -14,11 +14,14 @@ class MockDB(object):
         return doc
     
     def get_doc_by_name(self, _, name):
-        if name in self.data:
-            return self.data[name]
+        if len(self.data) >= 1:
+            if name in self.data["name"]:
+                return [self.data]
         else:
             return None
         
     def doc_id(self, doc):
+        if doc:
+            doc["id"] = "test_id"
         return doc["id"]
     
