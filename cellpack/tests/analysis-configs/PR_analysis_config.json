@@ -1,15 +1,15 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "format_version": "1.0",
     "packing_result_path_list": [
-        "cellpack/tests/outputs/test_spheres/jitter"
+        "cellpack/tests/outputs/test_spheres/spheresSST"
     ],
     "output_path": "cellpack/tests/outputs/test_spheres",
-    "ingredient_key" : "ext_A",
     "create_report": {
+        "ingredient_keys" : [
+            "ext_A"
+        ],
         "run_distance_analysis": true,
-        "path_to_test_recipe": "cellpack/tests/recipes/v2/test_spheres.json",
-        "path_to_results": "cellpack/tests/outputs/test_spheres/jitter",
-        "output_image_location": "https://cellpack-results.s3.us-west-2.amazonaws.com/jitter"
+        "output_image_location": "https://cellpack-results.s3.us-west-2.amazonaws.com/spheresSST/figures"
     }
 }
