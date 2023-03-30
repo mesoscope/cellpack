@@ -5,7 +5,7 @@ mock_db = MockDB({})
 
 
 def test_object_doc_should_write_with_no_existing_doc():
-    object_doc = ObjectDoc("test", {"test_setting": "test_value"})
+    object_doc = ObjectDoc("test", {"test_key": "test_value"})
     doc, doc_id = object_doc.should_write(mock_db)
     assert doc_id is None
     assert doc is None
@@ -14,10 +14,11 @@ def test_object_doc_should_write_with_no_existing_doc():
 def test_object_doc_should_write_with_existing_doc():
     existing_doc = {
         "name": "test",
-        "test_setting": "test_value"
+        "test_key": "test_value"
     }
     mock_db.data = existing_doc
-    object_doc = ObjectDoc("test", {"test_setting": "test_value"})
+    object_doc = ObjectDoc("test", {"test_key": "test_value"})
+    
     doc, doc_id = object_doc.should_write(mock_db)
     assert doc_id is not None
     assert doc == existing_doc
@@ -34,10 +35,19 @@ def test_convert_position_in_representation():
     assert convert_position_to_tuple == converted_position_data
 
 def test_convert_representation_with_object():
-    obj = ObjectDoc("test", {"test_setting": "test_value"})
-    doc = vars(obj)
-    expected_result = {"name": "test", "settings": {"test_setting": "test_value"}}
-    result = ObjectDoc.convert_representation(doc, mock_db)
+    test_data = {
+        "name": "test_name", 
+        "other_value": "other_value", 
+        "representations": {
+            "packing": {"positions" : {"0": {}, "1": {}}
+        }}}
+    expected_result = {
+        "name": "test_name", 
+        "other_value": "other_value", 
+        "representations": {
+            "packing": {"positions" : {"0": {}, "1": {}}
+        }}}
+    result = ObjectDoc.convert_representation(test_data, mock_db)
     assert result == expected_result
 
 

@@ -214,6 +214,13 @@ class ObjectDoc(DataDoc):
         super().__init__()
         self.name = name
         self.settings = settings
+    
+    def as_dict(self):
+        data = dict()
+        data["name"] = self.name
+        for key in self.settings:
+            data[key] = self.settings[key]
+        return data
 
     @staticmethod
     def convert_positions_in_representation(data):
@@ -252,12 +259,6 @@ class ObjectDoc(DataDoc):
                 ] = ObjectDoc.convert_positions_in_representation(position_value)
         return convert_doc
 
-    def as_dict(self):
-        data = dict()
-        data["name"] = self.name
-        for key in self.settings:
-            data[key] = self.settings[key]
-        return data
 
     def should_write(self, db):
         docs = db.get_doc_by_name("objects", self.name)
