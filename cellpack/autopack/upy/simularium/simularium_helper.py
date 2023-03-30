@@ -11,6 +11,7 @@ from simulariumio import (
     AgentData,
     UnitData,
     MetaData,
+    ModelMetaData,
     CameraData,
     DisplayData,
 )
@@ -1227,7 +1228,7 @@ class simulariumHelper(hostHelper.Helper):
     def write(self, listObj, **kw):
         pass
 
-    def writeToFile(self, polygon, file_name, bb):
+    def writeToFile(self, file_name, bb, recipe_name, version):
         """
         Write to simularium file
         """
@@ -1310,6 +1311,12 @@ class simulariumHelper(hostHelper.Helper):
                     position=np.array([10.0, 0.0, camera_z_position]),
                     look_at_position=np.array([0.0, 0.0, 0.0]),
                     fov_degrees=60.0,
+                ),
+                # TODO: use input_data_url in ModelMetaData to store the online path to the recipe 
+                model_meta_data=ModelMetaData(
+                    title=recipe_name,
+                    version=version,
+                    source_code_license_url="https://github.com/mesoscope/cellpack/blob/main/LICENSE",
                 ),
             ),
             agent_data=AgentData(

@@ -140,12 +140,12 @@ class Environment(CompartmentList):
         self.spacing = config["spacing"]
         self.load_from_grid_file = config["load_from_grid_file"]
         self.name = name
-
+        self.version = recipe.get('version', 'default')
         # saving/pickle option
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
-        self.result_file = f"{self.out_folder}/{self.name}_{config['name']}_{recipe.get('version', 'default')}"
-        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_{recipe.get('version', 'default')}_grid.dat"
+        self.result_file = f"{self.out_folder}/{self.name}_{config['name']}_{self.version}"
+        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_{self.version}_grid.dat"
 
         should_load_grid_file = (
             os.path.isfile(self.grid_file_out) and self.load_from_grid_file
@@ -1789,7 +1789,7 @@ class Environment(CompartmentList):
         self.distanceAfterFill = distances[:]
 
         if self.runTimeDisplay and autopack.helper.host == "simularium":
-            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
+            autopack.helper.writeToFile("./realtime", self.boundingBox)
 
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(label="Filling Complete")

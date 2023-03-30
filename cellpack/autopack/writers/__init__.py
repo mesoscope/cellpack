@@ -78,7 +78,7 @@ class Writer(object):
         vdic[attrname] = value
         return vdic
 
-    def save_as_simularium(self, env, setupfile, all_ingr_as_array, compartments):
+    def save_as_simularium(self, env, result_file_path, all_ingr_as_array, compartments):
         autopack.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
@@ -100,7 +100,7 @@ class Writer(object):
                     f"{gradient.name}-distances", grid_positions, values
                 )
 
-        autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
+        autopack.helper.writeToFile(f"{result_file_path}_results", env.boundingBox, env.name, env.version)
 
     def save_Mixed_asJson(
         self,
