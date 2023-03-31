@@ -24,11 +24,7 @@ jobs:
         pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
     - name: Modify JSON with PR sub_directory path
       run: |
-        JSON=$(cat cellpack/tests/analysis-configs/PR_analysis_config.json)
-
-        NEW_JSON=$(echo "JSON" | jq '. + {"results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/$GITHUB_REF_NAME/spheresSST"}')
-
-        echo "$NEW_JSON" > cellpack/tests/analysis-configs/PR_analysis_config.json
+        jq -i --arg branch_name "$GITHUB_REF_NAME" '.create_report.results_output_path |= "https://cellpack-results.s3.us-west-2.amazonaws.com/\($branch_name)/spheresSST"' path/to/file.json
     - name: Run analysis code
       run: analyze -a cellpack/tests/analysis-configs/PR_analysis_config.json 
     - name: Upload results
