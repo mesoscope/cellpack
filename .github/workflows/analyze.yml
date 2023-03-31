@@ -26,7 +26,7 @@ jobs:
       run: |
         JSON=$(cat cellpack/tests/analysis-configs/PR_analysis_config.json)
 
-        NEW_JSON=$(echo "JSON" | jq '.' + {"results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/$GITHUB_REF_NAME/spheresSST"})
+        NEW_JSON=$(echo "JSON" | jq '. + {"results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/$GITHUB_REF_NAME/spheresSST"}')
 
         echo "$NEW_JSON" > cellpack/tests/analysis-configs/PR_analysis_config.json
     - name: Run analysis code
