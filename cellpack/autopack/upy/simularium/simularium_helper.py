@@ -1312,7 +1312,7 @@ class simulariumHelper(hostHelper.Helper):
                     look_at_position=np.array([0.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),
-                # TODO: use input_data_url in ModelMetaData to store the online path to the recipe 
+                # TODO: use input_data_url in ModelMetaData to store the online path to the recipe
                 model_meta_data=ModelMetaData(
                     title=recipe_name,
                     version=version,
