@@ -1,0 +1,22 @@
+name: cleanup
+
+on: 
+  pull_request:
+    types: [closed]
+  
+jobs:
+
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y awscli
+    - name: Remove files in results sub_dir
+      run: |
+        if aws s3 ls s3://cellpack-results/$GITHUB_REF/ ; then
+          aws s3 rm s3://cellpack-results/$GITHUB_REF --recursive
+        else:
+          echo "The specified path does not exist"
+        fi

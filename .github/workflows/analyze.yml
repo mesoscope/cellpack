@@ -19,16 +19,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install .[all]
-    - name: Set PR name environment variable
-      run: | 
-        echo "PR_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
     - name: Pack test recipe
       run: |
         pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
     - name: Modify JSON with PR sub_directory path
       run: |
         JSON=$(cat cellpack/tests/analysis-configs/PR_analysis_config.json)
-        NEW_JSON=$(echo "JSON" | jq '.' + {"results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/${PR_NAME}/jitter"})
+
+        NEW_JSON=$(echo "JSON" | jq '. + {"results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/$GITHUB_HEAD_REF/spheresSST"})
 
         echo "$NEW_JSON" > cellpack/tests/analysis-configs/PR_analysis_config.json
     - name: Run analysis code

@@ -87,20 +87,3 @@ jobs:
       with:
         user: meganrm
         password: ${{ secrets.PYPI_TOKEN }}
-
-  cleanup:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create environment variable from PR name
-      run: echo "BRANCH_NAME=${{ github.ref }}" > $GITHUB_ENV
-    - name: Install AWS CLI
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y awscli
-    - name: Remove files in results sub_dir
-      run: |
-        if aws s3 ls s3://cellpack-results/$BRANCH_NAME/ ; then
-          aws s3 rm s3://cellpack-results/$BRANCH_NAME --recursive
-        else:
-          echo "The specified path does not exist"
-        fi
