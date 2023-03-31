@@ -1,0 +1,113 @@
+{
+    "version": "1.1",
+    "format_version": "2.1",
+    "name": "partner_packing",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1
+        ]
+    ],
+    "objects": {
+        "target": {
+            "color": [
+                0.11,
+                0.47,
+                0.69
+            ],
+            "jitter_attempts": 20,
+            "rotation_range": 6.2831,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "packing_mode": "random",
+            "type": "single_sphere",
+            "rejection_threshold": 100,
+            "radius": 20
+        },
+        "binder": {
+            "color": [
+                1,
+                0.41,
+                0
+            ],
+            "jitter_attempts": 10,
+            "rotation_range": 6.2831,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "packing_mode": "closePartner",
+            "type": "single_sphere",
+            "rejection_threshold": 1000,
+            "radius": 30
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A",
+                    "B",
+                    {
+                        "object": "binder",
+                        "count": 10,
+                        "priority": -1,
+                        "partners": [
+                            {
+                                "name": "target",
+                                "binding_probability": 0.5
+                            }
+                        ]
+                    },
+                    {
+                        "object": "binder",
+                        "count": 10,
+                        "priority": -1,
+                        "partners": [
+                            {
+                                "name": "A",
+                                "binding_probability": 0.5
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "A": {
+            "object": "target",
+            "count": 10,
+            "priority": -1
+        },
+        "B": {
+            "object": "binder",
+            "count": 50,
+            "priority": 0,
+            "partners": [
+                {
+                    "name": "A",
+                    "binding_probability": 0.5
+                }
+            ]
+        }
+    }
+}
