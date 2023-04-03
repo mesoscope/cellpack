@@ -287,6 +287,7 @@
     <span class="n">AgentData</span><span class="p">,</span>
     <span class="n">UnitData</span><span class="p">,</span>
     <span class="n">MetaData</span><span class="p">,</span>
+    <span class="n">ModelMetaData</span><span class="p">,</span>
     <span class="n">CameraData</span><span class="p">,</span>
     <span class="n">DisplayData</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1503,7 +1504,7 @@
 <div class="viewcode-block" id="simulariumHelper.write"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listObj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="simulariumHelper.writeToFile"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.writeToFile">[docs]</a>    <span class="k">def</span> <span class="nf">writeToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">bb</span><span class="p">):</span>
+<div class="viewcode-block" id="simulariumHelper.writeToFile"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.writeToFile">[docs]</a>    <span class="k">def</span> <span class="nf">writeToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">recipe_name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write to simularium file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1586,6 +1587,12 @@
                     <span class="n">position</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">camera_z_position</span><span class="p">]),</span>
                     <span class="n">look_at_position</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
                     <span class="n">fov_degrees</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="c1"># TODO: use input_data_url in ModelMetaData to store the online path to the recipe</span>
+                <span class="n">model_meta_data</span><span class="o">=</span><span class="n">ModelMetaData</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">recipe_name</span><span class="p">,</span>
+                    <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
+                    <span class="n">source_code_license_url</span><span class="o">=</span><span class="s2">&quot;https://github.com/mesoscope/cellpack/blob/main/LICENSE&quot;</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">),</span>
             <span class="n">agent_data</span><span class="o">=</span><span class="n">AgentData</span><span class="p">(</span>

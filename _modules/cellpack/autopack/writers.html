@@ -352,7 +352,9 @@
         <span class="n">vdic</span><span class="p">[</span><span class="n">attrname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">vdic</span></div>
 
-<div class="viewcode-block" id="Writer.save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_as_simularium">[docs]</a>    <span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">):</span>
+<div class="viewcode-block" id="Writer.save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_as_simularium">[docs]</a>    <span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">result_file_path</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span>
+    <span class="p">):</span>
         <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
         <span class="n">grid_positions</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">show_grid_spheres</span> <span class="k">else</span> <span class="kc">None</span>
@@ -374,7 +376,9 @@
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gradient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-distances&quot;</span><span class="p">,</span> <span class="n">grid_positions</span><span class="p">,</span> <span class="n">values</span>
                 <span class="p">)</span>
 
-        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setupfile</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span></div>
+        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_file_path</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Writer.save_Mixed_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_Mixed_asJson">[docs]</a>    <span class="k">def</span> <span class="nf">save_Mixed_asJson</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
