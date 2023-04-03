@@ -189,13 +189,6 @@ class RecipeLoader(object):
                 gradients.append(GradientData(gradient_dict, gradient_name).data)
             recipe_data["gradients"] = gradients
 
-        # handle gradients
-        if "gradients" in recipe_data:
-            gradients = []
-            for gradient_name, gradient_dict in recipe_data["gradients"].items():
-                gradients.append(GradientData(gradient_dict, gradient_name).data)
-            recipe_data["gradients"] = gradients
-
         return recipe_data
 
     def _load_json(self):
