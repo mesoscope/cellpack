@@ -295,6 +295,175 @@
 <section id="module-cellpack.autopack.interface_objects.default_values">
 <span id="cellpack-autopack-interface-objects-default-values-module"></span><h2>cellpack.autopack.interface_objects.default_values module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.default_values" title="Permalink to this heading">¶</a></h2>
 </section>
+<section id="module-cellpack.autopack.interface_objects.gradient_data">
+<span id="cellpack-autopack-interface-objects-gradient-data-module"></span><h2>cellpack.autopack.interface_objects.gradient_data module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.gradient_data" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">GradientData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Takes in gradient dictionary from the recipe file to create a
+GradientData instance</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.default_values">
+<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{'direction':</span> <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear'}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties">
+<span class="sig-name descname"><span class="pre">set_mode_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.set_mode_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data">
+<span class="sig-name descname"><span class="pre">validate_gradient_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_gradient_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings">
+<span class="sig-name descname"><span class="pre">validate_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">GradientModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
+<p>All available gradient modes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.RADIAL">
+<span class="sig-name descname"><span class="pre">RADIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radial'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.RADIAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.SURFACE">
+<span class="sig-name descname"><span class="pre">SURFACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'surface'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.SURFACE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.VECTOR">
+<span class="sig-name descname"><span class="pre">VECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vector'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.VECTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.X">
+<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.X" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.Y">
+<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Y'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.Z">
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Z'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">ModeOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#ModeOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
+<p>All available options for individual modes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.center">
+<span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'center'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.direction">
+<span class="sig-name descname"><span class="pre">direction</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'direction'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.gblob">
+<span class="sig-name descname"><span class="pre">gblob</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gblob'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.gblob" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.object">
+<span class="sig-name descname"><span class="pre">object</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.object" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.radius">
+<span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radius'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.radius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.scale_distance_between">
+<span class="sig-name descname"><span class="pre">scale_distance_between</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scale_distance_between'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.scale_distance_between" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">PickModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#PickModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
+<p>All available pick modes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.BINARY">
+<span class="sig-name descname"><span class="pre">BINARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'binary'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.BINARY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.LINEAR">
+<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.LINEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.MAX">
+<span class="sig-name descname"><span class="pre">MAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'max'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.MIN">
+<span class="sig-name descname"><span class="pre">MIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'min'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.REG">
+<span class="sig-name descname"><span class="pre">REG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reg'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.REG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.RND">
+<span class="sig-name descname"><span class="pre">RND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rnd'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.RND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.SUB">
+<span class="sig-name descname"><span class="pre">SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sub'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.SUB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
+<p>All available weight modes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE">
+<span class="sig-name descname"><span class="pre">CUBE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cube'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR">
+<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE">
+<span class="sig-name descname"><span class="pre">SQUARE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'square'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-cellpack.autopack.interface_objects.ingredient_types">
 <span id="cellpack-autopack-interface-objects-ingredient-types-module"></span><h2>cellpack.autopack.interface_objects.ingredient_types module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.ingredient_types" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">

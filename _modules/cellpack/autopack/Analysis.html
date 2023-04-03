@@ -878,8 +878,7 @@
         <span class="c1"># need matrix to euler? then access and plot them?</span>
         <span class="c1"># also check the measure angle one</span>
         <span class="n">angles</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">distA</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">ingr_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="n">ingredient_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">))</span>
@@ -894,40 +893,57 @@
             <span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">):</span>
-            <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">):</span>
+
+            <span class="n">distances_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+                <span class="n">ingredient_positions</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+
+            <span class="n">ingredient_position_vector</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="n">ingredient_positions</span>
+            <span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
             <span class="c1"># lets do it on X,Y,Z and also per positions ?</span>
             <span class="n">anglesX</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
-                    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">),</span>
+                    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">),</span>
                     <span class="n">ingr_rotation</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-                    <span class="o">-</span><span class="n">delta</span><span class="p">,</span>
+                    <span class="o">-</span><span class="n">ingredient_position_vector</span><span class="p">,</span>
                     <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">anglesY</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
-                    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">),</span>
+                    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">),</span>
                     <span class="n">ingr_rotation</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-                    <span class="o">-</span><span class="n">delta</span><span class="p">,</span>
+                    <span class="o">-</span><span class="n">ingredient_position_vector</span><span class="p">,</span>
                     <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">anglesZ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
-                    <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">),</span>
+                    <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">),</span>
                     <span class="n">ingr_rotation</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
-                    <span class="o">-</span><span class="n">delta</span><span class="p">,</span>
+                    <span class="o">-</span><span class="n">ingredient_position_vector</span><span class="p">,</span>
                     <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
-            <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">distA</span><span class="p">,</span> <span class="n">anglesX</span><span class="p">,</span> <span class="n">anglesY</span><span class="p">,</span> <span class="n">anglesZ</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">ingr_positions</span><span class="p">,</span> <span class="n">distA</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span></div>
+
+            <span class="n">distances_between_ingredients</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">)</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">anglesX</span><span class="p">,</span> <span class="n">anglesY</span><span class="p">,</span> <span class="n">anglesZ</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">distances_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="n">distances_between_ingredients</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">ingredient_positions</span><span class="p">,</span>
+            <span class="n">distances_from_center</span><span class="p">,</span>
+            <span class="n">distances_between_ingredients</span><span class="p">,</span>
+            <span class="n">angles</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AnalyseAP.getVolumeShell"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getVolumeShell">[docs]</a>    <span class="k">def</span> <span class="nf">getVolumeShell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
         <span class="c1"># rectangle_circle_area</span>
@@ -1511,7 +1527,9 @@
         <span class="p">)</span>
         <span class="n">similarity_df</span><span class="p">[</span><span class="s2">&quot;packing_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">seed1</span><span class="p">,</span> <span class="n">pos_dict1</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">all_objs</span><span class="p">[</span><span class="n">ingr_key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">seed1</span><span class="p">,</span> <span class="s2">&quot;packing_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">seed1</span><span class="p">,</span> <span class="s2">&quot;packing_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_id_dict</span><span class="p">[</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">seed1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">]</span>
             <span class="k">for</span> <span class="n">seed2</span><span class="p">,</span> <span class="n">pos_dict2</span> <span class="ow">in</span> <span class="n">all_objs</span><span class="p">[</span><span class="n">ingr_key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">():</span>
                     <span class="n">arr1</span> <span class="o">=</span> <span class="n">pos_dict1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
@@ -2125,12 +2143,13 @@
                         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">use_gradient</span><span class="p">:</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span>
                                 <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span>
-                            <span class="p">]</span><span class="o">.</span><span class="n">direction</span>
+                            <span class="p">]</span><span class="o">.</span><span class="n">mode_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
 
                             <span class="c1"># get angles wrt gradient</span>
                             <span class="p">(</span>
                                 <span class="n">seed_ingredient_positions</span><span class="p">,</span>
                                 <span class="n">seed_distances_from_center</span><span class="p">,</span>
+                                <span class="n">seed_distances_between_ingredients</span><span class="p">,</span>
                                 <span class="n">seed_angles</span><span class="p">,</span>
                             <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDistanceAngle</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
 
@@ -2536,15 +2555,15 @@
             <span class="c1"># plot the angle</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">total_angles</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
-                    <span class="n">total_angles</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">total_angles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;total_angles_X_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
-                    <span class="n">total_angles</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">total_angles</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;total_angles_Y_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
-                    <span class="n">total_angles</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="n">total_angles</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;total_angles_Z_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                 <span class="p">)</span></div></div>
 </pre></div>

@@ -12,6 +12,14 @@ cellpack.autopack.interface\_objects.default\_values module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.interface\_objects.gradient\_data module
+----------------------------------------------------------
+
+.. automodule:: cellpack.autopack.interface_objects.gradient_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.interface\_objects.ingredient\_types module
 -------------------------------------------------------------
 

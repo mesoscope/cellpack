@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.autopack.interface_objects.gradient_data &mdash; cellPack 1.0.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#name">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#version">version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../recipe-schema.html#example">example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#options-properties">Options properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#saveresult">saveResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#result-file">result_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pickrandpt">pickRandPt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#boundingbox">boundingBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-method">place_method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-periodicity">use_periodicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#timer">_timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#radii">radii</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#positions">positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#positions2">positions2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#spherefile">sphereFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#priority">priority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pdb">pdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#color">color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#meshfile">meshFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#meshname">meshName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#coordsystem">coordsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#type">type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#offset">offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id162">place_method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#proba-binding">proba_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#is-attractor">is_attractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#weight">weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-name">partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-position">partners_position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-weight">partners_weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#properties">properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#score">score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#organism">organism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#example-ingredient">example ingredient</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../../autopack.html">cellpack.autopack</a> &raquo;</li>
+        
+      <li>cellpack.autopack.interface_objects.gradient_data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.autopack.interface_objects.gradient_data</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">deep_merge</span>
+<span class="kn">from</span> <span class="nn">.meta_enum</span> <span class="kn">import</span> <span class="n">MetaEnum</span>
+<span class="kn">from</span> <span class="nn">.default_values</span> <span class="kn">import</span> <span class="n">DEFAULT_GRADIENT_MODE_SETTINGS</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">GradientData provides a class to pass sanitized arguments to create gradients</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="GradientModes"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientModes">[docs]</a><span class="k">class</span> <span class="nc">GradientModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All available gradient modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="s2">&quot;Y&quot;</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="s2">&quot;Z&quot;</span>
+    <span class="n">VECTOR</span> <span class="o">=</span> <span class="s2">&quot;vector&quot;</span>
+    <span class="n">RADIAL</span> <span class="o">=</span> <span class="s2">&quot;radial&quot;</span>
+    <span class="n">SURFACE</span> <span class="o">=</span> <span class="s2">&quot;surface&quot;</span></div>
+
+
+<div class="viewcode-block" id="WeightModes"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.WeightModes">[docs]</a><span class="k">class</span> <span class="nc">WeightModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All available weight modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
+    <span class="n">SQUARE</span> <span class="o">=</span> <span class="s2">&quot;square&quot;</span>
+    <span class="n">CUBE</span> <span class="o">=</span> <span class="s2">&quot;cube&quot;</span></div>
+
+
+<div class="viewcode-block" id="PickModes"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.PickModes">[docs]</a><span class="k">class</span> <span class="nc">PickModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All available pick modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span>
+    <span class="n">MIN</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span>
+    <span class="n">RND</span> <span class="o">=</span> <span class="s2">&quot;rnd&quot;</span>
+    <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
+    <span class="n">BINARY</span> <span class="o">=</span> <span class="s2">&quot;binary&quot;</span>
+    <span class="n">SUB</span> <span class="o">=</span> <span class="s2">&quot;sub&quot;</span>
+    <span class="n">REG</span> <span class="o">=</span> <span class="s2">&quot;reg&quot;</span></div>
+
+
+<div class="viewcode-block" id="ModeOptions"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.ModeOptions">[docs]</a><span class="k">class</span> <span class="nc">ModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All available options for individual modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">direction</span> <span class="o">=</span> <span class="s2">&quot;direction&quot;</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="s2">&quot;radius&quot;</span>
+    <span class="n">gblob</span> <span class="o">=</span> <span class="s2">&quot;gblob&quot;</span>
+    <span class="nb">object</span> <span class="o">=</span> <span class="s2">&quot;object&quot;</span>
+    <span class="n">scale_distance_between</span> <span class="o">=</span> <span class="s2">&quot;scale_distance_between&quot;</span></div>
+
+
+<span class="n">REQUIRED_MODE_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">GradientModes</span><span class="o">.</span><span class="n">VECTOR</span><span class="p">:</span> <span class="p">[</span><span class="n">ModeOptions</span><span class="o">.</span><span class="n">direction</span><span class="p">],</span>
+    <span class="n">GradientModes</span><span class="o">.</span><span class="n">RADIAL</span><span class="p">:</span> <span class="p">[</span><span class="n">ModeOptions</span><span class="o">.</span><span class="n">radius</span><span class="p">],</span>
+    <span class="n">GradientModes</span><span class="o">.</span><span class="n">SURFACE</span><span class="p">:</span> <span class="p">[</span><span class="n">ModeOptions</span><span class="o">.</span><span class="n">object</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">DIRECTION_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">GradientModes</span><span class="o">.</span><span class="n">X</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">GradientModes</span><span class="o">.</span><span class="n">Y</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">GradientModes</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="GradientData"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData">[docs]</a><span class="k">class</span> <span class="nc">GradientData</span><span class="p">:</span>
+
+    <span class="n">default_values</span> <span class="o">=</span> <span class="n">DEFAULT_GRADIENT_MODE_SETTINGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_options</span><span class="p">,</span> <span class="n">gradient_name</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes in gradient dictionary from the recipe file to create a</span>
+<span class="sd">        GradientData instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gradient_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">GradientData</span><span class="o">.</span><span class="n">default_values</span><span class="p">)</span>
+        <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient_name</span>
+        <span class="n">gradient_data</span> <span class="o">=</span> <span class="n">deep_merge</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">,</span> <span class="n">gradient_options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_gradient_data</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_mode_properties</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">gradient_data</span>
+
+<div class="viewcode-block" id="GradientData.validate_gradient_data"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data">[docs]</a>    <span class="k">def</span> <span class="nf">validate_gradient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">GradientModes</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid gradient mode: </span><span class="si">{</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WeightModes</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weight_mode&quot;</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid gradient weight mode: </span><span class="si">{</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;weight_mode&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PickModes</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pick_mode&quot;</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid gradient pick mode: </span><span class="si">{</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pick_mode&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_mode_settings</span><span class="p">(</span>
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">],</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GradientData.validate_mode_settings"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings">[docs]</a>    <span class="k">def</span> <span class="nf">validate_mode_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_name</span><span class="p">,</span> <span class="n">mode_settings_dict</span><span class="p">):</span>
+
+        <span class="n">required_options</span> <span class="o">=</span> <span class="n">REQUIRED_MODE_OPTIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mode_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">required_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mode_settings_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing mode settings for </span><span class="si">{</span><span class="n">mode_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">required_options</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mode_settings_dict</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Missing required mode setting </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">mode_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GradientData.set_mode_properties"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties">[docs]</a>    <span class="k">def</span> <span class="nf">set_mode_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">):</span>
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">GradientModes</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">GradientModes</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">GradientModes</span><span class="o">.</span><span class="n">Z</span><span class="p">]:</span>
+
+            <span class="n">direction_vector</span> <span class="o">=</span> <span class="n">DIRECTION_MAP</span><span class="p">[</span><span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]]</span>
+
+            <span class="k">if</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reversed&quot;</span><span class="p">):</span>
+                <span class="n">direction_vector</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">vec</span> <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">direction_vector</span><span class="p">]</span>
+
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span><span class="s2">&quot;direction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">direction_vector</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

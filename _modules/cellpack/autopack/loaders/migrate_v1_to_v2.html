@@ -478,6 +478,10 @@
                             <span class="n">interior_array</span><span class="p">,</span>
                             <span class="n">objects_dict</span><span class="p">,</span>
                         <span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;gradients&quot;</span> <span class="ow">in</span> <span class="n">old_recipe</span><span class="p">:</span>
+        <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span>
+
     <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">objects_dict</span>
     <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">composition</span>
     <span class="k">return</span> <span class="n">new_recipe</span></div>
