@@ -200,8 +200,8 @@ class CompositionDoc(DataDoc):
                         ignore_type_in_groups=[tuple, list],
                     )
                     if not difference:
-                        return False, db.doc_id(doc)
-        return True, None
+                        return doc, db.doc_id(doc)
+        return None, None
 
 
 class ObjectDoc(DataDoc):
@@ -462,7 +462,7 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            return
+            # return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
