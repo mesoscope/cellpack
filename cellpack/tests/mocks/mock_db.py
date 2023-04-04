@@ -16,7 +16,6 @@ class MockDB(object):
     def get_doc_by_name(self, _, name):
         if len(self.data) >= 1:
             if name in self.data["name"]:
-                print("self.data--- ", self.data)
                 return [self.data]
         else:
             return None
@@ -26,9 +25,14 @@ class MockDB(object):
             doc["id"] = "test_id"
         return doc["id"]
     
-    def if_reference(path):
+    @staticmethod
+    def is_reference(path):
         return True
     
-    def get_doc_by_ref(obj):
-        return {}, None
+    @staticmethod
+    def get_doc_by_ref(key):
+        if key:
+            return {"test": "downloaded_data"}, key
+        else:
+            return {}, None
     
