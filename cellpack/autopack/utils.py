@@ -160,3 +160,12 @@ def check_paired_key(val_dict, key1=None, key2=None):
         if (key1 in key) and (key2 in key):
             return True
     return False
+
+
+def get_paired_key(val_dict, key1=None, key2=None):
+    """
+    Get the combined key from dict
+    """
+    for key in val_dict:
+        if (key1 in key) and (key2 in key):
+            return key

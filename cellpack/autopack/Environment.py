@@ -321,6 +321,7 @@ class Environment(CompartmentList):
         ingredient_info["name"] = (
             ingredient_name if ingredient_name is not None else object_key
         )
+        ingredient_info["object_name"] = object_key
         return ingredient_info
 
     def _step_down(self, compartment_key, prev_compartment=None):
@@ -1078,17 +1079,17 @@ class Environment(CompartmentList):
             for ingr in r.ingredients:
                 if name == ingr.name:
                     return ingr
-                elif name == ingr.o_name:
+                elif name == ingr.composition_name:
                     return ingr
-                #                elif name.find(ingr.o_name) != -1 :
+                #                elif name.find(ingr.composition_name) != -1 :
                 #                    #check for
                 #                    return ingr
             for ingr in r.exclude:
                 if name == ingr.name:
                     return ingr
-                elif name == ingr.o_name:
+                elif name == ingr.composition_name:
                     return ingr
-                #                elif name.find(ingr.o_name) != -1 :
+                #                elif name.find(ingr.composition_name) != -1 :
                 #                    return ingr
         return None
 
@@ -2312,7 +2313,7 @@ class Environment(CompartmentList):
     def getOneIngrJson(self, ingr, ingrdic):
         #        name_ingr = ingr.name
         #        if name_ingr not in ingrdic:
-        #            name_ingr = ingr.o_name
+        #            name_ingr = ingr.composition_name
         #        for r in ingr.results:
         #            ingrdic[name_ingr]["results"].append([r[0]],r[1],)
         #        print ("growingr?",ingr,ingr.name,isinstance(ingr, GrowIngredient))
@@ -2324,7 +2325,7 @@ class Environment(CompartmentList):
             #            print ("nbCurve?",ingr.nbCurve,ingrdic["nbCurve"])
         return (
             ingrdic["results"],
-            ingr.o_name,
+            ingr.composition_name,
             ingr.compNum,
             1,
             ingr.encapsulating_radius,
@@ -2415,10 +2416,13 @@ class Environment(CompartmentList):
                     name_ingr = ingr.name
                     if name_ingr not in self.result_json["exteriorRecipe"]:
                         # backward compatiblity
-                        if ingr.o_name not in self.result_json["exteriorRecipe"]:
+                        if (
+                            ingr.composition_name
+                            not in self.result_json["exteriorRecipe"]
+                        ):
                             continue
                         else:
-                            name_ingr = ingr.o_name
+                            name_ingr = ingr.composition_name
                     iresults, ingrname, ingrcompNum, ptInd, rad = self.getOneIngrJson(
                         ingr, self.result_json["exteriorRecipe"][name_ingr]
                     )
@@ -2442,22 +2446,22 @@ class Environment(CompartmentList):
                         name_ingr = ingr.name
                         # replace number by name ?
                         if (
-                            orga.name + "_surf_" + ingr.o_name
+                            orga.name + "_surf_" + ingr.composition_name
                             in self.result_json[orga.name + "_surfaceRecipe"]
                         ):
-                            name_ingr = orga.name + "_surf_" + ingr.o_name
+                            name_ingr = orga.name + "_surf_" + ingr.composition_name
                         if (
                             name_ingr
                             not in self.result_json[orga.name + "_surfaceRecipe"]
                         ):
                             # backward compatiblity
                             if (
-                                ingr.o_name
+                                ingr.composition_name
                                 not in self.result_json[orga.name + "_surfaceRecipe"]
                             ):
                                 continue
                             else:
-                                name_ingr = ingr.o_name
+                                name_ingr = ingr.composition_name
                         (
                             iresults,
                             ingrname,
@@ -2484,22 +2488,22 @@ class Environment(CompartmentList):
                     for ingr in ri.ingredients:
                         name_ingr = ingr.name
                         if (
-                            orga.name + "_int_" + ingr.o_name
+                            orga.name + "_int_" + ingr.composition_name
                             in self.result_json[orga.name + "_innerRecipe"]
                         ):
-                            name_ingr = orga.name + "_int_" + ingr.o_name
+                            name_ingr = orga.name + "_int_" + ingr.composition_name
                         if (
                             name_ingr
                             not in self.result_json[orga.name + "_innerRecipe"]
                         ):
                             # backward compatiblity
                             if (
-                                ingr.o_name
+                                ingr.composition_name
                                 not in self.result_json[orga.name + "_innerRecipe"]
                             ):
                                 continue
                             else:
-                                name_ingr = ingr.o_name
+                                name_ingr = ingr.composition_name
                         (
                             iresults,
                             ingrname,
@@ -2565,9 +2569,9 @@ class Environment(CompartmentList):
         if r:
             self.result_json["exteriorRecipe"] = OrderedDict()
             for ingr in r.ingredients:
-                self.result_json["exteriorRecipe"][ingr.o_name] = self.dropOneIngrJson(
-                    ingr, self.result_json["exteriorRecipe"]
-                )
+                self.result_json["exteriorRecipe"][
+                    ingr.composition_name
+                ] = self.dropOneIngrJson(ingr, self.result_json["exteriorRecipe"])
 
         # compartment ingr
         for orga in self.compartments:
@@ -2577,7 +2581,7 @@ class Environment(CompartmentList):
                 self.result_json[orga.name + "_surfaceRecipe"] = OrderedDict()
                 for ingr in rs.ingredients:
                     self.result_json[orga.name + "_surfaceRecipe"][
-                        ingr.o_name
+                        ingr.composition_name
                     ] = self.dropOneIngrJson(
                         ingr, self.result_json[orga.name + "_surfaceRecipe"]
                     )
@@ -2587,7 +2591,7 @@ class Environment(CompartmentList):
                 self.result_json[orga.name + "_innerRecipe"] = OrderedDict()
                 for ingr in ri.ingredients:
                     self.result_json[orga.name + "_innerRecipe"][
-                        ingr.o_name
+                        ingr.composition_name
                     ] = self.dropOneIngrJson(
                         ingr, self.result_json[orga.name + "_innerRecipe"]
                     )

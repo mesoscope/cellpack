@@ -36,7 +36,7 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
-from cellpack.autopack.utils import check_paired_key
+from cellpack.autopack.utils import check_paired_key, get_paired_key
 
 
 def autolabel(rects, ax):
@@ -1162,16 +1162,6 @@ class AnalyseAP:
                 ingredient_radii[object_key] = object_values["radius"]
         return ingredient_radii
 
-    def get_ingredient_keys(
-        self,
-        recipe_data,
-    ):
-        """
-        Returns the keys of ingredients specified in the recipe.
-        May not be the same as the keys of packed ingredients
-        """
-        return [key for key in recipe_data.get("objects")]
-
     def get_dict_from_glob(
         self,
         glob_str,
@@ -1183,12 +1173,193 @@ class AnalyseAP:
             ):
                 return self.loadJSON(path_to_distance_file)
 
+    def run_distance_analysis(
+        self,
+        report_md,
+        recipe_data,
+        pairwise_distance_dict,
+        figure_path,
+        output_image_location,
+    ):
+        """
+        Runs distance analysis on the given packing and adds it to
+        the analysis report
+        """
+        expected_minimum_distance = self.get_minimum_expected_distance_from_recipe(
+            recipe_data
+        )
+        if pairwise_distance_dict is not None:
+            all_pairwise_distances = self.combine_results_from_seeds(
+                pairwise_distance_dict
+            )
+
+            packed_minimum_distance = self.get_packed_minimum_distance(
+                pairwise_distance_dict
+            )
+
+            report_md.new_header(level=1, title="Distance analysis")
+            report_md.new_line(
+                f"Expected minimum distance: {expected_minimum_distance:.2f}"
+            )
+            report_md.new_line(
+                f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
+            )
+
+            if expected_minimum_distance > packed_minimum_distance:
+                report_md.new_header(
+                    level=2, title="Possible errors", add_table_of_contents="n"
+                )
+                report_md.new_list(
+                    [
+                        f"Packed minimum distance {packed_minimum_distance:.2f}"
+                        " is less than the "
+                        f"expected minimum distance {expected_minimum_distance:.2f}\n"
+                    ]
+                )
+
+            num_keys = len(all_pairwise_distances.keys())
+            img_list = []
+            for ingr_key in all_pairwise_distances:
+                ingr_distance_histo_path = figure_path.glob(
+                    f"{ingr_key}_pairwise_distances_*.png"
+                )
+                for img_path in ingr_distance_histo_path:
+                    img_list.append(
+                        report_md.new_inline_image(
+                            text=f"Distance distribution {ingr_key}",
+                            path=f"{output_image_location}/{img_path.name}",
+                        )
+                    )
+            text_list = [
+                "Ingredient key",
+                "Pairwise distance distribution",
+                *[
+                    val
+                    for pair in zip(all_pairwise_distances.keys(), img_list)
+                    for val in pair
+                ],
+            ]
+
+            report_md.new_table(
+                columns=2, rows=(num_keys + 1), text=text_list, text_align="center"
+            )
+
+    def get_ingredient_key_from_object_or_comp_name(
+        self, search_name, ingredient_key_dict
+    ):
+        """
+        Returns the ingredient key if object or composition name is given
+        """
+        for ingredient_key, name_mappings in ingredient_key_dict.items():
+            if search_name in name_mappings.values():
+                return ingredient_key
+
+    def get_partner_pair_dict(
+        self,
+        recipe_data,
+        combined_pairwise_distance_dict,
+        ingredient_radii,
+        avg_num_packed,
+    ):
+        """
+        Creates a partner pair dictionary as follows:
+        {
+            key_from_pairwise_distance_dict: {
+                "binding_probability": value,
+                "touching_radius": value,
+            },
+            ...
+        }
+        """
+        partner_pair_dict = {}
+        for ingredient_key, name_mappings in self.ingredient_key_dict.items():
+            object_name = name_mappings["object_name"]
+            if "partners" in recipe_data["objects"][object_name]:
+                partner_list = recipe_data["objects"][object_name]["partners"]
+                ingredient_radius = recipe_data["objects"][object_name]["radius"]
+                for partner in partner_list.all_partners:
+                    partner_object_name = partner.name
+                    binding_probability = partner.binding_probability
+                    partner_radius = recipe_data["objects"][partner_object_name][
+                        "radius"
+                    ]
+                    partner_ingr_key = self.get_ingredient_key_from_object_or_comp_name(
+                        partner_object_name, self.ingredient_key_dict
+                    )
+                    paired_key = get_paired_key(
+                        combined_pairwise_distance_dict,
+                        ingredient_key,
+                        partner_ingr_key,
+                    )
+                    if paired_key not in partner_pair_dict:
+                        partner_pair_dict[paired_key] = {
+                            "binding_probability": binding_probability,
+                            "touching_radius": ingredient_radius + partner_radius,
+                            "num_packed": avg_num_packed[ingredient_key],
+                        }
+
+        return partner_pair_dict
+
+    def run_partner_analysis(
+        self,
+        report_md,
+        recipe_data,
+        combined_pairwise_distance_dict,
+        ingredient_radii,
+        avg_num_packed,
+    ):
+        """
+        runs an analysis of partner packings
+        """
+        partner_pair_dict = self.get_partner_pair_dict(
+            recipe_data,
+            combined_pairwise_distance_dict,
+            ingredient_radii,
+            avg_num_packed,
+        )
+        if len(partner_pair_dict):
+            report_md.new_header(level=1, title="Partner Analysis")
+
+            val_list = []
+            for paired_key, partner_values in partner_pair_dict.items():
+                pairwise_distances = numpy.array(
+                    combined_pairwise_distance_dict[paired_key]
+                )
+                padded_radius = 1.2 * partner_values["touching_radius"]
+                close_fraction = (
+                    numpy.count_nonzero(pairwise_distances < padded_radius)
+                    / partner_values["num_packed"]
+                )
+                val_list.extend(
+                    [
+                        paired_key,
+                        partner_values["touching_radius"],
+                        partner_values["binding_probability"],
+                        close_fraction,
+                    ]
+                )
+
+            text_list = [
+                "Partner pair",
+                "Touching radius",
+                "Binding probability",
+                "Close packed fraction",
+                *val_list,
+            ]
+            report_md.new_table(
+                columns=4,
+                rows=(len(partner_pair_dict) + 1),
+                text=text_list,
+                text_align="center",
+            )
+
     def create_report(
         self,
         recipe_data,
         ingredient_keys=None,
         output_image_location=None,
         run_distance_analysis=True,
+        run_partner_analysis=True,
     ):
         """
         Creates a markdown file with various analyses included
@@ -1203,24 +1374,31 @@ class AnalyseAP:
             list of ingredient keys to analyze
         output_image_location: Path
             this is the path to look for output images for the markdown file
+        run_*_analysis: bool
+            whether to run specific analysis
         """
-        mdFile = MdUtils(
+        report_md = MdUtils(
             file_name=str(self.output_path / "analysis_report"),
             title="Packing analysis report",
         )
-        mdFile.new_header(
+        report_md.new_header(
             level=2,
             title=f"Analysis for packing results located at {self.packing_results_path}",
             add_table_of_contents="n",
         )
 
+        self.ingredient_key_dict = self.get_dict_from_glob("ingredient_keys_*")
         if ingredient_keys is None:
-            ingredient_keys = self.get_ingredient_keys(recipe_data=recipe_data)
+            ingredient_keys = list(self.ingredient_key_dict.keys())
 
         avg_num_packed = self.get_number_of_ingredients_packed(
             ingredient_keys=ingredient_keys
         )
         ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
+        pairwise_distance_dict = self.get_dict_from_glob("pairwise_distances_*.json")
+        combined_pairwise_distance_dict = self.combine_results_from_seeds(
+            pairwise_distance_dict
+        )
 
         val_list = []
         for (key, radius, num_packed) in zip(
@@ -1233,7 +1411,7 @@ class AnalyseAP:
             "Average number packed",
             *val_list,
         ]
-        mdFile.new_table(
+        report_md.new_table(
             columns=3,
             rows=(len(ingredient_keys) + 1),
             text=text_list,
@@ -1248,83 +1426,37 @@ class AnalyseAP:
         packing_results_path = self.packing_results_path
         figure_path = packing_results_path / "figures"
 
-        mdFile.new_header(level=1, title="Packing image")
+        report_md.new_header(level=1, title="Packing image")
         glob_to_packing_image = figure_path.glob("packing_image_*.png")
         for img_path in glob_to_packing_image:
-            mdFile.new_line(
-                mdFile.new_inline_image(
+            report_md.new_line(
+                report_md.new_inline_image(
                     text="Packing image",
                     path=f"{output_image_location}/{img_path.name}",
                 )
             )
-        mdFile.new_line("")
+        report_md.new_line("")
 
         if run_distance_analysis:
             # TODO: take packing distance dict as direct input for live mode
-            expected_minimum_distance = self.get_minimum_expected_distance_from_recipe(
-                recipe_data
+            self.run_distance_analysis(
+                report_md,
+                recipe_data,
+                pairwise_distance_dict,
+                figure_path,
+                output_image_location,
             )
 
-            pairwise_distance_dict = self.get_dict_from_glob(
-                "pairwise_distances_*.json"
+        if run_partner_analysis:
+            self.run_partner_analysis(
+                report_md,
+                recipe_data,
+                combined_pairwise_distance_dict,
+                ingredient_radii,
+                avg_num_packed,
             )
-            if pairwise_distance_dict:
-                all_pairwise_distances = self.combine_results_from_seeds(
-                    pairwise_distance_dict
-                )
 
-                packed_minimum_distance = self.get_packed_minimum_distance(
-                    pairwise_distance_dict
-                )
-
-                mdFile.new_header(level=1, title="Distance analysis")
-                mdFile.new_line(
-                    f"Expected minimum distance: {expected_minimum_distance:.2f}"
-                )
-                mdFile.new_line(
-                    f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
-                )
-
-                if expected_minimum_distance > packed_minimum_distance:
-                    mdFile.new_header(
-                        level=2, title="Possible errors", add_table_of_contents="n"
-                    )
-                    mdFile.new_list(
-                        [
-                            f"Packed minimum distance {packed_minimum_distance:.2f}"
-                            " is less than the "
-                            f"expected minimum distance {expected_minimum_distance:.2f}\n"
-                        ]
-                    )
-
-                num_keys = len(all_pairwise_distances.keys())
-                img_list = []
-                for ingr_key in all_pairwise_distances:
-                    ingr_distance_histo_path = figure_path.glob(
-                        f"{ingr_key}_pairwise_distances_*.png"
-                    )
-                    for img_path in ingr_distance_histo_path:
-                        img_list.append(
-                            mdFile.new_inline_image(
-                                text=f"Distance distribution {ingr_key}",
-                                path=f"{output_image_location}/{img_path.name}",
-                            )
-                        )
-                text_list = [
-                    "Ingredient key",
-                    "Pairwise distance distribution",
-                    *[
-                        val
-                        for pair in zip(all_pairwise_distances.keys(), img_list)
-                        for val in pair
-                    ],
-                ]
-
-                mdFile.new_table(
-                    columns=2, rows=(num_keys + 1), text=text_list, text_align="center"
-                )
-
-        mdFile.create_md_file()
+        report_md.create_md_file()
 
     def run_analysis_workflow(
         self,
@@ -2100,6 +2232,7 @@ class AnalyseAP:
         ingredient_position_dict,
         ingredient_angle_dict,
         ingredient_occurence_dict,
+        ingredient_key_dict,
         seed_index,
         center,
         ax,
@@ -2113,6 +2246,13 @@ class AnalyseAP:
         for ingr in recipe.ingredients:
             # set ingredient color
             color = self.set_ingredient_color(ingr)
+
+            if ingr.name not in ingredient_key_dict:
+                ingredient_key_dict[ingr.name] = {}
+                ingredient_key_dict[ingr.name][
+                    "composition_name"
+                ] = ingr.composition_name
+                ingredient_key_dict[ingr.name]["object_name"] = ingr.object_name
 
             # calculate distances and angles for ingredient
             (
@@ -2153,6 +2293,7 @@ class AnalyseAP:
             ingredient_position_dict,
             ingredient_angle_dict,
             ingredient_occurence_dict,
+            ingredient_key_dict,
             ax,
         )
 
@@ -2226,12 +2367,16 @@ class AnalyseAP:
         ingredient_occurences_file = (
             self.env.out_folder / f"occurences_{packing_basename}.json"
         )
+        ingredient_key_file = (
+            self.env.out_folder / f"ingredient_keys_{packing_basename}.json"
+        )
 
         center_distance_dict = {}
         pairwise_distance_dict = {}
         ingredient_position_dict = {}
         ingredient_angle_dict = {}
         ingredient_occurence_dict = {}
+        ingredient_key_dict = {}
 
         rebuild = True
 
@@ -2292,6 +2437,7 @@ class AnalyseAP:
                         ingredient_position_dict,
                         ingredient_angle_dict,
                         ingredient_occurence_dict,
+                        ingredient_key_dict,
                         ax,
                     ) = self.process_ingredients_in_recipe(
                         recipe=ext_recipe,
@@ -2300,6 +2446,7 @@ class AnalyseAP:
                         ingredient_position_dict=ingredient_position_dict,
                         ingredient_angle_dict=ingredient_angle_dict,
                         ingredient_occurence_dict=ingredient_occurence_dict,
+                        ingredient_key_dict=ingredient_key_dict,
                         seed_index=seed_index,
                         center=center,
                         ax=ax,
@@ -2318,20 +2465,22 @@ class AnalyseAP:
                             ingredient_position_dict,
                             ingredient_angle_dict,
                             ingredient_occurence_dict,
+                            ingredient_key_dict,
                             ax,
                         ) = self.process_ingredients_in_recipe(
-                            surface_recipe,
-                            center_distance_dict,
-                            pairwise_distance_dict,
-                            ingredient_position_dict,
-                            ingredient_angle_dict,
-                            ingredient_occurence_dict,
-                            seed_index,
-                            center,
-                            ax,
-                            plot_figures,
-                            two_d,
-                            width,
+                            recipe=surface_recipe,
+                            center_distance_dict=center_distance_dict,
+                            pairwise_distance_dict=pairwise_distance_dict,
+                            ingredient_position_dict=ingredient_position_dict,
+                            ingredient_angle_dict=ingredient_angle_dict,
+                            ingredient_occurence_dict=ingredient_occurence_dict,
+                            ingredient_key_dict=ingredient_key_dict,
+                            seed_index=seed_index,
+                            center=center,
+                            ax=ax,
+                            plot_figures=plot_figures,
+                            two_d=two_d,
+                            width=width,
                         )
 
                     inner_recipe = comparment.innerRecipe
@@ -2342,20 +2491,22 @@ class AnalyseAP:
                             ingredient_position_dict,
                             ingredient_angle_dict,
                             ingredient_occurence_dict,
+                            ingredient_key_dict,
                             ax,
                         ) = self.process_ingredients_in_recipe(
-                            surface_recipe,
-                            center_distance_dict,
-                            pairwise_distance_dict,
-                            ingredient_position_dict,
-                            ingredient_angle_dict,
-                            ingredient_occurence_dict,
-                            seed_index,
-                            center,
-                            ax,
-                            plot_figures,
-                            two_d,
-                            width,
+                            recipe=inner_recipe,
+                            center_distance_dict=center_distance_dict,
+                            pairwise_distance_dict=pairwise_distance_dict,
+                            ingredient_position_dict=ingredient_position_dict,
+                            ingredient_angle_dict=ingredient_angle_dict,
+                            ingredient_occurence_dict=ingredient_occurence_dict,
+                            ingredient_key_dict=ingredient_key_dict,
+                            seed_index=seed_index,
+                            center=center,
+                            ax=ax,
+                            plot_figures=plot_figures,
+                            two_d=two_d,
+                            width=width,
                         )
 
                 if plot_figures and two_d:
@@ -2407,6 +2558,7 @@ class AnalyseAP:
         self.writeJSON(ingredient_position_file, ingredient_position_dict)
         self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
         self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
+        self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
         self.env.ingredient_positions = all_ingredient_positions
         self.env.distances = all_ingredient_distances
