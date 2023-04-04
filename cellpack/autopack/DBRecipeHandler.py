@@ -54,7 +54,8 @@ class CompositionDoc(DataDoc):
         data["regions"] = self.regions
         return data
 
-    def get_reference_data(self, key_or_dict, db):
+    @staticmethod
+    def get_reference_data(key_or_dict, db):
         """
         Returns the db data for a reference, and the key if it exists.
         Key --> the name of a composition
@@ -166,6 +167,30 @@ class CompositionDoc(DataDoc):
                         elif not db.is_reference(region_item["object"]):
                             obj_name = region_item["object"]
                             region_item["object"] = objects_to_path_map.get(obj_name)
+    @staticmethod
+    def update_reference(
+        db,
+        composition_id,
+        referring_comp_id,
+        index,
+        remove_comp_name,
+        update_in_array=False,
+    ):
+        """
+        Update comp references in the recipe
+        """
+        doc, doc_ref = db.get_doc_by_id("composition", composition_id)
+        if doc is None:
+            return
+        else:
+            _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
+            update_ref_path = f"{db.name}:{new_item_ref.path}"
+            if update_in_array:
+                db.update_elements_in_array(
+                    doc_ref, index, update_ref_path, remove_comp_name
+                )
+            else:
+                db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
     def should_write(self, db, recipe_data):
         """
@@ -400,29 +425,29 @@ class DBRecipeHandler(object):
         key = f"{recipe_name}_v{recipe_version}"
         return key
 
-    def update_reference(
-        self,
-        composition_id,
-        referring_comp_id,
-        index,
-        remove_comp_name,
-        update_in_array=False,
-    ):
-        """
-        Update comp references in the recipe
-        """
-        doc, doc_ref = self.db.get_doc_by_id("composition", composition_id)
-        if doc is None:
-            return
-        else:
-            _, new_item_ref = self.db.get_doc_by_id("composition", referring_comp_id)
-            update_ref_path = f"{self.db.name}:{new_item_ref.path}"
-            if update_in_array:
-                self.db.update_elements_in_array(
-                    doc_ref, index, update_ref_path, remove_comp_name
-                )
-            else:
-                self.db.update_reference_on_doc(doc_ref, index, update_ref_path)
+    # def update_reference(
+    #     self,
+    #     composition_id,
+    #     referring_comp_id,
+    #     index,
+    #     remove_comp_name,
+    #     update_in_array=False,
+    # ):
+    #     """
+    #     Update comp references in the recipe
+    #     """
+    #     doc, doc_ref = self.db.get_doc_by_id("composition", composition_id)
+    #     if doc is None:
+    #         return
+    #     else:
+    #         _, new_item_ref = self.db.get_doc_by_id("composition", referring_comp_id)
+    #         update_ref_path = f"{self.db.name}:{new_item_ref.path}"
+    #         if update_in_array:
+    #             self.db.update_elements_in_array(
+    #                 doc_ref, index, update_ref_path, remove_comp_name
+    #             )
+    #         else:
+    #             self.db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
     def upload_collections(self, recipe_meta_data, recipe_data):
         """
@@ -448,8 +473,8 @@ class DBRecipeHandler(object):
                 name = inner_data["name"]
 
                 item_id = self.comp_to_path_map[name]["id"]
-                self.update_reference(
-                    comp_id, item_id, index, name, update_in_array=True
+                CompositionDoc.update_reference(
+                    self.db, comp_id, item_id, index, name, update_in_array=True
                 )
         return recipe_to_save
 
