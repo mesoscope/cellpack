@@ -1,14 +1,11 @@
 {
     "version": "1.0.1",
-    "format_version": "1.0",
+    "format_version": "1.1",
     "packing_result_path_list": [
         "cellpack/tests/outputs/test_spheres/spheresSST"
     ],
     "output_path": "cellpack/tests/outputs/test_spheres",
     "create_report": {
-        "ingredient_keys" : [
-            "ext_A"
-        ],
         "run_distance_analysis": true,
         "output_image_location": "https://cellpack-results.s3.us-west-2.amazonaws.com/spheresSST/figures"
     }
