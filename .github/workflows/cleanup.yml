@@ -15,8 +15,8 @@ jobs:
         sudo apt-get install -y awscli
     - name: Remove files in results sub_dir
       run: |
-        if aws s3 ls s3://cellpack-results/${{  github.ref  }}/ ; then
-          aws s3 rm s3://cellpack-results/${{  github.ref }} --recursive
+        if aws s3 ls s3://cellpack-results/${{  github.ref_name  }}/ ; then
+          aws s3 rm s3://cellpack-results/${{  github.ref_name  }} --recursive
         else:
           echo "The specified path does not exist"
         fi
