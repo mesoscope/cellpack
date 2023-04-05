@@ -46,7 +46,7 @@ jobs:
         aws-region: us-west-2
     - uses: actions/download-artifact@v3
     - name: Copy files to results bucket
-      run: aws s3 cp ./results s3://cellpack-results/$GITHUB_REF_NAME/ --recursive --acl public-read 
+      run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read 
     - uses: iterative/setup-cml@v1
     - name: Update comment
       env:
