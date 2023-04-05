@@ -65,14 +65,13 @@ class CompositionDoc(DataDoc):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
             return downloaded_data, None
-        else:
+        elif key_or_dict and isinstance(key_or_dict, dict):
             object_dict = key_or_dict
             if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
                 downloaded_data, _ = db.get_doc_by_ref(key)
                 return downloaded_data, key
-            else:
-                return {}, None
+        return {}, None
 
     def resolve_db_regions(self, db_data, db):
         """
@@ -163,7 +162,6 @@ class CompositionDoc(DataDoc):
                                     "index": update_field_path,
                                     "name": region_item,
                                 }
-
                         elif not db.is_reference(region_item["object"]):
                             obj_name = region_item["object"]
                             region_item["object"] = objects_to_path_map.get(obj_name)
@@ -424,30 +422,6 @@ class DBRecipeHandler(object):
         recipe_version = recipe_data["version"]
         key = f"{recipe_name}_v{recipe_version}"
         return key
-
-    # def update_reference(
-    #     self,
-    #     composition_id,
-    #     referring_comp_id,
-    #     index,
-    #     remove_comp_name,
-    #     update_in_array=False,
-    # ):
-    #     """
-    #     Update comp references in the recipe
-    #     """
-    #     doc, doc_ref = self.db.get_doc_by_id("composition", composition_id)
-    #     if doc is None:
-    #         return
-    #     else:
-    #         _, new_item_ref = self.db.get_doc_by_id("composition", referring_comp_id)
-    #         update_ref_path = f"{self.db.name}:{new_item_ref.path}"
-    #         if update_in_array:
-    #             self.db.update_elements_in_array(
-    #                 doc_ref, index, update_ref_path, remove_comp_name
-    #             )
-    #         else:
-    #             self.db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
     def upload_collections(self, recipe_meta_data, recipe_data):
         """
