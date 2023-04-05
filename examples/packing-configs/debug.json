@@ -9,6 +9,7 @@
     "place_method": "jitter",
     "save_analyze_result": true,
     "show_grid_plot": true,
+    "number_of_packings": 1,
     "spacing": null,
     "use_periodicity": false,
     "show_sphere_trees": true,
