@@ -27,7 +27,11 @@ class MockDB(object):
     
     @staticmethod
     def is_reference(path):
-        return True
+        if path is None:
+            return False
+        if path.startswith("firebase:"):
+            return True
+        return False
     
     @staticmethod
     def get_doc_by_ref(key):

@@ -171,27 +171,21 @@ def test_resolve_local_regions():
     local_data.resolve_local_regions(local_data.as_dict(), full_recipe_data, mock_db)
     assert local_data.as_dict() == resolved_data
 
-# def test_check_and_replace_references():
-#     objects_to_path_map = {"test_obj": "firebase:objects/testuid"}
-#     references_to_update = {
-#         "test_comp": {
-#             "index": "regions.interior",
-#             "name": "nested_comp",
-#             "comp_id": "firebase:composition/testuid",
-#         }
-#     }
-#     composition_doc = CompositionDoc(
-#         name="test",
-#         count=1,
-#         object={"object": "firebase:objects/testuid"},
-#         regions={},
-#         molarity=None,
-#     )
-#     composition_doc.check_and_replace_references(
-#         objects_to_path_map, references_to_update, mock_db
-#     )
-#     print("6", composition_doc.as_dict())
-#     assert composition_doc.as_dict()["object"] == {"test": "downloaded_data"}
+def test_check_and_replace_references():
+    objects_to_path_map = {"test_obj": "firebase:objects/testuid"}
+    references_to_update = {}
+    composition_doc = CompositionDoc(
+        name="test",
+        count=1,
+        object="firebase:objects/testuid",
+        regions={"interior": [{"object": "test_obj", "count": 1}]},
+        molarity=None,
+    )
+    composition_doc.check_and_replace_references(
+        objects_to_path_map, references_to_update, mock_db
+    )
+    assert composition_doc.as_dict()["object"] == "firebase:objects/testuid"
+    assert composition_doc.as_dict()["regions"] == {"interior": [{"object": "firebase:objects/testuid", "count": 1}]}
 
 
 def test_composition_oc_should_write_with_no_existing_doc():
