@@ -29,7 +29,7 @@ class ConfigLoader(object):
         "load_from_grid_file": False,
         "inner_grid_method": "trimesh",
         "live_packing": False,
-        "num_trials": 1,
+        "number_of_packings": 1,
         "name": "default",
         "ordered_packing": False,
         "out": "out/",

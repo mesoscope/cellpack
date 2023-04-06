@@ -1616,6 +1616,8 @@ class AnalyseAP:
         if show_plotly_plot:
             min_bound, max_bound = self.env.get_bounding_box_limits()
             width = max_bound - min_bound
+            self.plotly.plot["data"] = []
+            self.plotly.plot.layout.shapes = ()
             self.plotly.plot.update_xaxes(
                 range=[min_bound[0] - 0.2 * width[0], max_bound[0] + 0.2 * width[0]]
             )
