@@ -13,7 +13,7 @@ import fire
 from time import time
 
 # Relative
-from cellpack.autopack.Analysis import AnalyseAP
+from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.loaders.analysis_config_loader import (
     AnalysisConfigLoader,
 )
@@ -44,7 +44,7 @@ def analyze(
 
     for packing_result_path in analysis_config["packing_result_path_list"]:
         log.info(f"Input path: {packing_result_path}\n")
-        analysis = AnalyseAP(
+        analysis = Analysis(
             packing_results_path=packing_result_path,
             output_path=analysis_config["output_path"],
         )

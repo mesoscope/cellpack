@@ -39,107 +39,7 @@ from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
 
 
-def autolabel(rects, ax):
-    # from http://matplotlib.org/examples/api/barchart_demo.html
-    # attach some text labels
-    for rect in rects:
-        height = rect.get_height()
-        ax.text(
-            rect.get_x() + rect.get_width() / 2.0,
-            height / 2.0,
-            "%d" % int(height),
-            ha="center",
-            va="bottom",
-        )
-
-
-def autolabelyerr(ax, rects, err=None):
-    # attach some text labels
-    for i, rect in enumerate(rects):
-        height = rect.get_height()
-        v = "%.2f" % height
-        y = 0.5 * height
-        if err is not None:
-            v = "%.2f" % err[i]
-            y = 1.05 * height
-        ax.text(
-            rect.get_x() + rect.get_width() / 2.0,
-            y,
-            v,
-            ha="center",
-            va="bottom",
-        )
-
-
-def autolabels(loci1, loci2, loci3, ax, yerr1, yerr2, yerr3):
-    # from http://matplotlib.org/examples/api/barchart_demo.html
-    # attach some text labels
-    for i in range(len(loci1)):  # rects:
-        rect1 = loci1[i]
-        rect2 = loci2[i]
-        rect3 = loci3[i]
-        height1 = rect1.get_height()
-        height2 = rect2.get_height()
-        height3 = rect3.get_height()
-        ax.text(
-            rect1.get_x() + rect1.get_width() / 2.0,
-            height1 / 2.0,
-            "%2.1f" % (height1 * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-        ax.text(
-            rect2.get_x() + rect2.get_width() / 2.0,
-            height2 / 2.0 + height1,
-            "%2.1f" % (height2 * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-        ax.text(
-            rect3.get_x() + rect2.get_width() / 2.0,
-            height3 / 2.0 + height1 + height2,
-            "%2.1f" % (height3 * 100.0),
-            ha="center",
-            va="bottom",
-            color="white",
-        )
-        ax.text(
-            rect1.get_x() + rect1.get_width() / 2.0,
-            1.01 * height1,
-            "%2.1f" % (yerr1[i] * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-        ax.text(
-            rect2.get_x() + rect2.get_width() / 2.0,
-            1.01 * (height2 + height1),
-            "%2.1f" % (yerr2[i] * 100.0),
-            ha="center",
-            va="bottom",
-            color="white",
-        )
-        ax.text(
-            rect3.get_x() + rect2.get_width() / 2.0,
-            1.01 * (height3 + height1 + height2),
-            "%2.1f" % (yerr3[i] * 100.0),
-            ha="center",
-            va="bottom",
-            color="black",
-        )
-
-
-def getRndWeighted(listPts, weight, yerr):
-    w = [yerr[i] * numpy.random.random() + weight[i] for i in range(len(weight))]
-    t = numpy.cumsum(w)
-    s = numpy.sum(w)
-    i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]
-    return listPts[i]
-
-
-class AnalyseAP:
+class Analysis:
     def __init__(
         self,
         env=None,
@@ -153,7 +53,8 @@ class AnalyseAP:
         self.largest = 0.0
         if env:
             self.env = env
-            self.smallest, self.largest = self.getMinMaxProteinSize()
+            self.smallest = env.smallestProteinSize
+            self.largest = env.largestProteinSize
         self.afviewer = viewer
         self.helper = None
         if viewer:
@@ -229,24 +130,6 @@ class AnalyseAP:
             delimiter=",",
         )
         f_handle.close()
-
-    def getMinMaxProteinSize(self):
-        smallest = 999999.0
-        largest = 0.0
-        for organelle in self.env.compartments:
-            mini, maxi = organelle.getMinMaxProteinSize()
-            if mini < smallest:
-                smallest = mini
-            if maxi > largest:
-                largest = maxi
-
-        if self.env.exteriorRecipe:
-            mini, maxi = self.env.exteriorRecipe.getMinMaxProteinSize()
-            if mini < smallest:
-                smallest = mini
-            if maxi > largest:
-                largest = maxi
-        return smallest, largest
 
     def getPositionsFromResFile(self):
         # could actually restore file using histoVol.
@@ -524,13 +407,6 @@ class AnalyseAP:
                 self.histo(e3[0], ingrname + "_euler_X.png")
                 self.histo(e3[1], ingrname + "_euler_Y.png")
                 self.histo(e3[2], ingrname + "_euler_Z.png")
-        #                ingredient_positions,distA,angles3=self.getDistanceAngle(ingrpos3, ingrrot3)
-        #                numpy.savetxt(ingrname+"_angle_X.csv", numpy.array(angles3[1]), delimiter=",")
-        #                numpy.savetxt(ingrname+"_angle_Y.csv", numpy.array(angles3[2]), delimiter=",")
-        #                numpy.savetxt(ingrname+"_angle_Z.csv", numpy.array(angles3[3]), delimiter=",")
-        #                self.histo(angles3[1],ingrname+"_angle_X.png",bins=12,size=max(angles3[1]))
-        #                self.histo(angles3[2],ingrname+"_angle_Y.png",bins=12,size=max(angles3[2]))
-        #                self.histo(angles3[3],ingrname+"_angle_Z.png",bins=12,size=max(angles3[3]))
         return ingrpos, ingrrot
 
     # should take any type of list...
@@ -584,97 +460,6 @@ class AnalyseAP:
         py = pp[1]
         pz = pp[2]
         return px, py, pz
-
-    def get_positions_for_ingredient(self, ingredient_name):
-        return numpy.array(
-            [
-                self.env.molecules[i][0]
-                for i in range(len(self.env.molecules))
-                if self.env.molecules[i][2].name == ingredient_name
-            ]
-        )
-
-    def get_rotations_for_ingredient(self, ingredient_name):
-        return numpy.array(
-            [
-                self.env.molecules[i][1]
-                for i in range(len(self.env.molecules))
-                if self.env.molecules[i][2].name == ingredient_name
-            ]
-        )
-
-    def get_distances_and_angles(self, ingrname, center, get_angles=False):
-        """
-        Returns distances and angles for a given ingredient
-        """
-        ingredient_positions = self.get_positions_for_ingredient(
-            ingredient_name=ingrname
-        )
-
-        if len(ingredient_positions):
-            distances_from_center = numpy.linalg.norm(
-                ingredient_positions - numpy.array(center), axis=1
-            )
-
-            distances_between_ingredients = distance.pdist(ingredient_positions)
-
-            if get_angles:
-                ingredient_rotation = self.get_rotations_for_ingredient(
-                    ingredient_name=ingrname,
-                )
-                ingredient_position_vector = numpy.array(
-                    ingredient_positions
-                ) - numpy.array(center)
-
-                anglesX = numpy.array(
-                    signed_angle_between_vectors(
-                        [[0, 0, 1]] * len(ingredient_positions),
-                        ingredient_rotation[:, 0, :3],
-                        -ingredient_position_vector,
-                        directed=False,
-                        axis=1,
-                    )
-                )
-                anglesY = numpy.array(
-                    signed_angle_between_vectors(
-                        [[0, 1, 0]] * len(ingredient_positions),
-                        ingredient_rotation[:, 1, :3],
-                        -ingredient_position_vector,
-                        directed=False,
-                        axis=1,
-                    )
-                )
-                anglesZ = numpy.array(
-                    signed_angle_between_vectors(
-                        [[1, 0, 0]] * len(ingredient_positions),
-                        ingredient_rotation[:, 2, :3],
-                        -ingredient_position_vector,
-                        directed=False,
-                        axis=1,
-                    )
-                )
-                angles = numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
-            else:
-                angles = numpy.array([])
-        else:
-            distances_from_center = numpy.array([])
-            distances_between_ingredients = numpy.array([])
-            angles = numpy.array([])
-
-        return (
-            ingredient_positions,
-            distances_from_center,
-            distances_between_ingredients,
-            angles,
-        )
-
-    def calc_pairwise_distances(self, ingr1name, ingr2name):
-        """
-        Returns pairwise distances between ingredients of different types
-        """
-        ingr_pos_1 = self.get_positions_for_ingredient(ingredient_name=ingr1name)
-        ingr_pos_2 = self.get_positions_for_ingredient(ingredient_name=ingr2name)
-        return numpy.ravel(distance.cdist(ingr_pos_1, ingr_pos_2))
 
     def getVolumeShell(self, bbox, radii, center):
         # rectangle_circle_area
@@ -2180,7 +1965,7 @@ class AnalyseAP:
             seed_distances_from_center,
             seed_distances_between_ingredients,
             seed_angles,
-        ) = self.get_distances_and_angles(ingr.name, center, get_angles=get_angles)
+        ) = self.env.get_distances_and_angles(ingr.name, center, get_angles=get_angles)
 
         center_distance_dict[seed_index][
             ingr.name
@@ -2618,3 +2403,4 @@ class AnalyseAP:
                     x_label="angles Z",
                     y_label="count",
                 )
+

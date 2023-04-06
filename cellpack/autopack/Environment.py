@@ -83,7 +83,7 @@ from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
-from .transformation import euler_from_matrix
+from .transformation import euler_from_matrix, signed_angle_between_vectors
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -390,6 +390,120 @@ class Environment(CompartmentList):
             # TODO: I don't think this code is needed,
             # but I haven't dug into it enough to delete it all yet
             ingr.prepare_alternates()
+
+    def get_positions_for_ingredient(self, ingredient_name):
+        return numpy.array(
+            [
+                self.molecules[i][0]
+                for i in range(len(self.molecules))
+                if self.molecules[i][2].name == ingredient_name
+            ]
+        )
+    
+    def get_rotations_for_ingredient(self, ingredient_name):
+        return numpy.array(
+            [
+                self.molecules[i][1]
+                for i in range(len(self.molecules))
+                if self.molecules[i][2].name == ingredient_name
+            ]
+        )
+
+    def get_all_positions(self):
+        return numpy.array([self.molecules[i][0] for i in range(len(self.molecules))])
+
+    def get_all_distances(self, position=None):
+        positions = self.get_all_positions()
+        if len(positions) == 0:
+            return numpy.array([])
+        elif position is not None:
+            return numpy.linalg.norm(positions - numpy.array(position), axis=1)
+        else:
+            return spatial.distance.pdist(positions)
+
+    def get_distances(self, ingredient_name, center):
+        ingredient_positions = self.get_all_positions_of_one_ingredient(ingredient_name)
+        distances_between_ingredients = spatial.distance.pdist(
+            ingredient_positions
+        )
+
+        if len(ingredient_positions):
+            distances_from_center = numpy.linalg.norm(
+                ingredient_positions - numpy.array(center), axis=1
+            )
+        else:
+            distances_from_center = numpy.array([])
+            distances_between_ingredients = numpy.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        )
+    
+    def get_ingredient_angles(self, ingredient_name, center, ingredient_positions):
+        ingredient_rotation = self.get_rotations_for_ingredient(
+                    ingredient_name=ingredient_name,
+                )
+        ingredient_position_vector = numpy.array(
+            ingredient_positions
+        ) - numpy.array(center)
+
+        anglesX = numpy.array(
+            signed_angle_between_vectors(
+                [[0, 0, 1]] * len(ingredient_positions),
+                ingredient_rotation[:, 0, :3],
+                -ingredient_position_vector,
+                directed=False,
+                axis=1,
+            )
+        )
+        anglesY = numpy.array(
+            signed_angle_between_vectors(
+                [[0, 1, 0]] * len(ingredient_positions),
+                ingredient_rotation[:, 1, :3],
+                -ingredient_position_vector,
+                directed=False,
+                axis=1,
+            )
+        )
+        anglesZ = numpy.array(
+            signed_angle_between_vectors(
+                [[1, 0, 0]] * len(ingredient_positions),
+                ingredient_rotation[:, 2, :3],
+                -ingredient_position_vector,
+                directed=False,
+                axis=1,
+            )
+        )
+        return numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
+
+    def get_distances_and_angles(self, ingredient_name, center, get_angles=False):
+        (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        ) = self.get_distances(ingredient_name, center)
+        if get_angles:
+            angles = self.get_ingredient_angles(ingredient_name, center, ingredient_positions)
+        else:
+            angles = numpy.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+            angles,
+        )
+    
+    def calc_pairwise_distances(self, ingr1name, ingr2name):
+        """
+        Returns pairwise distances between ingredients of different types
+        """
+        ingr_pos_1 = self.get_positions_for_ingredient(ingredient_name=ingr1name)
+        ingr_pos_2 = self.get_positions_for_ingredient(ingredient_name=ingr2name)
+        return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
+
 
     def save_result(
         self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
@@ -1024,34 +1138,13 @@ class Environment(CompartmentList):
         compartment_id = self.grid.compartment_ids[pid]
         return compartment_id
 
-    def longestIngrdientName(self):
-        """
-        Helper function for gui. Return the size of the longest ingredient name
-        """
-        M = 20
-        r = self.exteriorRecipe
-        if r:
-            for ingr in r.ingredients:
-                if len(ingr.name) > M:
-                    M = len(ingr.name)
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if rs:
-                for ingr in rs.ingredients:
-                    if len(ingr.name) > M:
-                        M = len(ingr.name)
-            ri = o.innerRecipe
-            if ri:
-                for ingr in ri.ingredients:
-                    if len(ingr.name) > M:
-                        M = len(ingr.name)
-        return M
-
-    def loopThroughIngr(self, cb_function, kwargs={}):
+    def loopThroughIngr(self, cb_function, kwargs=None):
         """
         Helper function that loops through all ingredients of all recipes and applies the given
         callback function on each ingredients.
         """
+        if kwargs is None:
+            kwargs = {}
         recipe = self.exteriorRecipe
         if recipe:
             for ingr in recipe.ingredients:
@@ -1820,6 +1913,26 @@ class Environment(CompartmentList):
         self.ingr_result = ingredients
         return all_ingr_as_array
 
+    def check_new_placement(self, new_position):
+        distances = self.get_all_distances(new_position)
+        if len(distances) == 0:
+            # nothing has been packed yet
+            return False
+        min_distance = min(distances)
+        expected_min_distance = self.smallestProteinSize * 2
+        if min_distance < expected_min_distance:
+            print(expected_min_distance - min_distance)
+        return min_distance < expected_min_distance
+
+    def distance_check_failed(self):
+        distances = self.get_all_distances()
+        if len(distances) == 0:
+            # nothing has been packed yet
+            return False
+        min_distance = min(distances)
+        expected_min_distance = self.smallestProteinSize * 2
+        return min_distance < expected_min_distance + 0.001
+
     def pack_grid(
         self,
         seedNum=14,
@@ -2083,7 +2196,13 @@ class Environment(CompartmentList):
                 # problem when the encapsulating_radius is actually wrong
                 if ingr.encapsulating_radius > self.largestProteinSize:
                     self.largestProteinSize = ingr.encapsulating_radius
+
                 PlacedMols += 1
+                # if self.stop_on_collision:
+                # ingredient_too_close = self.distance_check_failed()
+                # if ingredient_too_close:
+                #     print("GOT A FAIL", self.grid.masterGridPositions[ptInd])
+                #     nbFreePoints = 0
             else:
                 self.log.info("rejected %r", ingr.rejectionCounter)
 
@@ -2177,11 +2296,6 @@ class Environment(CompartmentList):
                 seedNum=seedNum,
                 all_ingr_as_array=all_ingr_as_array,
             )
-
-    def displayCancelDialog(self):
-        print(
-            "Popup CancelBox: if Cancel Box is up for more than 10 sec, close box and continue loop from here"
-        )
 
     def restore_molecules_array(self, ingr):
         if len(ingr.results):
