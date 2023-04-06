@@ -399,7 +399,7 @@ class Environment(CompartmentList):
                 if self.molecules[i][2].name == ingredient_name
             ]
         )
-    
+
     def get_rotations_for_ingredient(self, ingredient_name):
         return numpy.array(
             [
@@ -423,9 +423,7 @@ class Environment(CompartmentList):
 
     def get_distances(self, ingredient_name, center):
         ingredient_positions = self.get_positions_for_ingredient(ingredient_name)
-        distances_between_ingredients = spatial.distance.pdist(
-            ingredient_positions
-        )
+        distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
 
         if len(ingredient_positions):
             distances_from_center = numpy.linalg.norm(
@@ -440,14 +438,14 @@ class Environment(CompartmentList):
             distances_from_center,
             distances_between_ingredients,
         )
-    
+
     def get_ingredient_angles(self, ingredient_name, center, ingredient_positions):
         ingredient_rotation = self.get_rotations_for_ingredient(
-                    ingredient_name=ingredient_name,
-                )
-        ingredient_position_vector = numpy.array(
-            ingredient_positions
-        ) - numpy.array(center)
+            ingredient_name=ingredient_name,
+        )
+        ingredient_position_vector = numpy.array(ingredient_positions) - numpy.array(
+            center
+        )
 
         anglesX = numpy.array(
             signed_angle_between_vectors(
@@ -485,7 +483,9 @@ class Environment(CompartmentList):
             distances_between_ingredients,
         ) = self.get_distances(ingredient_name, center)
         if get_angles:
-            angles = self.get_ingredient_angles(ingredient_name, center, ingredient_positions)
+            angles = self.get_ingredient_angles(
+                ingredient_name, center, ingredient_positions
+            )
         else:
             angles = numpy.array([])
 
@@ -495,7 +495,7 @@ class Environment(CompartmentList):
             distances_between_ingredients,
             angles,
         )
-    
+
     def calc_pairwise_distances(self, ingr1name, ingr2name):
         """
         Returns pairwise distances between ingredients of different types
@@ -503,7 +503,6 @@ class Environment(CompartmentList):
         ingr_pos_1 = self.get_positions_for_ingredient(ingredient_name=ingr1name)
         ingr_pos_2 = self.get_positions_for_ingredient(ingredient_name=ingr2name)
         return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
-
 
     def save_result(
         self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array

@@ -33,7 +33,6 @@ from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.plotly_result import PlotlyAnalysis
-from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
@@ -2403,4 +2402,3 @@ class Analysis:
                     x_label="angles Z",
                     y_label="count",
                 )
-
