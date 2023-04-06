@@ -7,6 +7,6 @@
     "output_path": "cellpack/tests/outputs/test_spheres",
     "create_report": {
         "run_distance_analysis": true,
-        "results_output_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/{branch_name}/spheresSST/figures"
+        "output_image_location": "https://cellpack-results.s3.us-west-2.amazonaws.com/{branch_name}/spheresSST/figures"
     }
 }
