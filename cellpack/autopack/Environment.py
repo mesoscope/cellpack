@@ -422,7 +422,7 @@ class Environment(CompartmentList):
             return spatial.distance.pdist(positions)
 
     def get_distances(self, ingredient_name, center):
-        ingredient_positions = self.get_all_positions_of_one_ingredient(ingredient_name)
+        ingredient_positions = self.get_positions_for_ingredient(ingredient_name)
         distances_between_ingredients = spatial.distance.pdist(
             ingredient_positions
         )

@@ -2005,7 +2005,7 @@ class Analysis:
             ):
                 pairwise_distance_dict[seed_index][
                     f"{ingr.name}_{ingr2.name}"
-                ] = self.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
+                ] = self.env.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
 
         return pairwise_distance_dict
 
