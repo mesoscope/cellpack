@@ -12,19 +12,17 @@ from pathlib import Path
 from time import time
 
 import matplotlib
-from matplotlib.patches import Patch
 import numpy
-from numpy import arange, average, histogram, pi, sqrt, where, zeros
 import pandas as pd
-from scipy import stats
-from scipy.spatial import distance
-from scipy.cluster import hierarchy
 import seaborn as sns
 import trimesh
 from matplotlib import pyplot as plt
-from matplotlib.patches import Circle
+from matplotlib.patches import Circle, Patch
 from mdutils.mdutils import MdUtils
 from PIL import Image
+from scipy import stats
+from scipy.cluster import hierarchy
+from scipy.spatial import distance
 from sklearn.metrics import matthews_corrcoef
 from tqdm import tqdm
 
@@ -104,10 +102,19 @@ class Analysis:
         return all_objs
 
     @staticmethod
-    def cartesian_to_sph(xyz):
+    def cartesian_to_sph(xyz, center=None):
         """
         Converts cartesian to spherical coordinates
         """
+        if center is None:
+            center = numpy.zeros(
+                [
+                    0,
+                    0,
+                    0,
+                ]
+            )
+        xyz = xyz[:, None] - center
         sph_pts = numpy.zeros(xyz.shape)
         xy = xyz[:, 0] ** 2 + xyz[:, 1] ** 2
         sph_pts[:, 0] = numpy.sqrt(xy + xyz[:, 2] ** 2)
@@ -684,7 +691,7 @@ class Analysis:
             self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
             title_str=ingr.name,
             x_label="seed",
-            y_label="occurences"
+            y_label="occurences",
         )
 
     def plot_distance_distribution(self, all_ingredient_distances):
@@ -692,7 +699,7 @@ class Analysis:
         Plots the distribution of distances for ingredient and pairs of ingredients
         """
         for ingr_key, distances in all_ingredient_distances.items():
-            if len(distances) <= 1: 
+            if len(distances) <= 1:
                 continue
             self.histo(
                 distances=numpy.array(distances),
@@ -746,7 +753,9 @@ class Analysis:
         bools5 = z > rMax
         bools6 = z < (S - rMax)
 
-        (interior_indices,) = where(bools1 * bools2 * bools3 * bools4 * bools5 * bools6)
+        (interior_indices,) = numpy.where(
+            bools1 * bools2 * bools3 * bools4 * bools5 * bools6
+        )
         num_interior_particles = len(interior_indices)
 
         if num_interior_particles < 1:
@@ -756,29 +765,31 @@ class Analysis:
     or increase the size of the cube."
             )
 
-        edges = arange(0.0, rMax + 1.1 * dr, dr)
+        edges = numpy.arange(0.0, rMax + 1.1 * dr, dr)
         num_increments = len(edges) - 1
-        g = zeros([num_interior_particles, num_increments])
-        radii = zeros(num_increments)
+        g = numpy.zeros([num_interior_particles, num_increments])
+        radii = numpy.zeros(num_increments)
         numberDensity = len(x) / S**3
 
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
             index = interior_indices[p]
-            d = sqrt((x[index] - x) ** 2 + (y[index] - y) ** 2 + (z[index] - z) ** 2)
+            d = numpy.sqrt(
+                (x[index] - x) ** 2 + (y[index] - y) ** 2 + (z[index] - z) ** 2
+            )
             d[index] = 2 * rMax
 
-            (result, bins) = histogram(d, bins=edges, normed=False)
+            (result, bins) = numpy.histogram(d, bins=edges, normed=False)
             g[p, :] = result / numberDensity
 
         # Average g(r) for all interior particles and compute radii
-        g_average = zeros(num_increments)
+        g_average = numpy.zeros(num_increments)
         for i in range(num_increments):
             radii[i] = (edges[i] + edges[i + 1]) / 2.0
             rOuter = edges[i + 1]
             rInner = edges[i]
-            g_average[i] = average(g[:, i]) / (
-                4.0 / 3.0 * pi * (rOuter**3 - rInner**3)
+            g_average[i] = numpy.average(g[:, i]) / (
+                4.0 / 3.0 * numpy.pi * (rOuter**3 - rInner**3)
             )
 
         return (
@@ -822,7 +833,7 @@ class Analysis:
         bools2 = x < (S - 1.1 * rMax)
         bools3 = y > rMax * 1.1
         bools4 = y < (S - rMax * 1.1)
-        (interior_indices,) = where(bools1 * bools2 * bools3 * bools4)
+        (interior_indices,) = numpy.where(bools1 * bools2 * bools3 * bools4)
         num_interior_particles = len(interior_indices)
 
         if num_interior_particles < 1:
@@ -832,29 +843,31 @@ class Analysis:
                     or increase the size of the square."
             )
 
-        edges = arange(0.0, rMax + 1.1 * dr, dr)
+        edges = numpy.arange(0.0, rMax + 1.1 * dr, dr)
         num_increments = len(edges) - 1
-        g = zeros([num_interior_particles, num_increments])
-        radii = zeros(num_increments)
+        g = numpy.zeros([num_interior_particles, num_increments])
+        radii = numpy.zeros(num_increments)
         numberDensity = len(x) / S**2
 
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
             index = interior_indices[p]
-            d = sqrt((x[index] - x) ** 2 + (y[index] - y) ** 2)
+            d = numpy.sqrt((x[index] - x) ** 2 + (y[index] - y) ** 2)
             d[index] = 2 * rMax
 
-            (result, bins) = histogram(d, bins=edges, normed=False)
+            (result, bins) = numpy.histogram(d, bins=edges, normed=False)
             g[p, :] = result / numberDensity
 
         # Average g(r) for all interior particles and compute radii
-        g_average = zeros(num_increments)
+        g_average = numpy.zeros(num_increments)
         for i in range(num_increments):
             radii[i] = (edges[i] + edges[i + 1]) / 2.0
             rOuter = edges[i + 1]
             rInner = edges[i]
             # divide by the area of sphere cut by sqyare
-            g_average[i] = average(g[:, i]) / (pi * (rOuter**2 - rInner**2))
+            g_average[i] = numpy.average(g[:, i]) / (
+                numpy.pi * (rOuter**2 - rInner**2)
+            )
 
         return (g_average, radii, interior_indices)
 
