@@ -107,14 +107,8 @@ class Analysis:
         Converts cartesian to spherical coordinates
         """
         if center is None:
-            center = numpy.zeros(
-                [
-                    0,
-                    0,
-                    0,
-                ]
-            )
-        xyz = xyz[:, None] - center
+            center = numpy.zeros(3)
+        xyz = xyz - center
         sph_pts = numpy.zeros(xyz.shape)
         xy = xyz[:, 0] ** 2 + xyz[:, 1] ** 2
         sph_pts[:, 0] = numpy.sqrt(xy + xyz[:, 2] ** 2)
