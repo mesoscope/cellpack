@@ -645,6 +645,8 @@ class Analysis:
 
     def plot_position_distribution_total(self, all_positions):
         pos_xyz = numpy.array(all_positions)
+        if pos_xyz.shape[0] <= 1:
+            return
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
@@ -659,6 +661,8 @@ class Analysis:
 
     def plot_position_distribution(self, ingr):
         pos_xyz = numpy.array(self.env.ingredient_positions[ingr.name])
+        if pos_xyz.shape[0] <= 1:
+            return
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
@@ -672,21 +676,24 @@ class Analysis:
 
     def plot_occurence_distribution(self, ingr):
         occ = self.env.occurences[ingr.name]
-        if len(occ) > 1:
-            self.simpleplot(
-                range(len(occ)),
-                occ,
-                self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
-                # title_str=ingr.name,
-                # x_label="seed",
-                # y_label="occurences"
-            )
+        if len(occ) <= 1:
+            return
+        self.simpleplot(
+            range(len(occ)),
+            occ,
+            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
+            title_str=ingr.name,
+            x_label="seed",
+            y_label="occurences"
+        )
 
     def plot_distance_distribution(self, all_ingredient_distances):
         """
         Plots the distribution of distances for ingredient and pairs of ingredients
         """
         for ingr_key, distances in all_ingredient_distances.items():
+            if len(distances) <= 1: 
+                continue
             self.histo(
                 distances=numpy.array(distances),
                 filename=self.figures_path
@@ -1631,12 +1638,9 @@ class Analysis:
         # set bin width
         dbin = 0.9 * (bincenters[1] - bincenters[0])
         plt.bar(bincenters, y, width=dbin, color="r", xerr=x_err_vals, yerr=y_err_vals)
-        if len(title_str):
-            plt.title(title_str)
-        if len(x_label):
-            plt.xlabel(x_label)
-        if len(y_label):
-            plt.ylabel(y_label)
+        plt.title(title_str)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
         plt.savefig(filename)
         plt.close()
 
@@ -1650,10 +1654,13 @@ class Analysis:
         plt.ylabel(r"radial distribution function $g(r)$")
         plt.savefig(file_name)
 
-    def simpleplot(self, X, Y, filename, w=3):
+    def simpleplot(self, X, Y, filename, w=3, title_str="", x_label="", y_label=""):
         plt.clf()
         plt.plot(X, Y, linewidth=w)
         plt.savefig(filename)
+        plt.title(title_str)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
 
     def build_grid(
         self,
@@ -2361,26 +2368,28 @@ class Analysis:
             self.plot_position_distribution_total(all_ingredient_position_array)
 
             # plot histograms for all combined distances
-            self.histo(
-                all_center_distance_array,
-                self.figures_path
-                / f"all_ingredient_center_distances_{self.env.basename}.png",
-                title_str="all_ingredients",
-                x_label="center distance",
-                y_label="count",
-            )
+            if len(all_center_distance_array) > 1:
+                self.histo(
+                    all_center_distance_array,
+                    self.figures_path
+                    / f"all_ingredient_center_distances_{self.env.basename}.png",
+                    title_str="all_ingredients",
+                    x_label="center distance",
+                    y_label="count",
+                )
 
-            self.histo(
-                all_pairwise_distance_array,
-                self.figures_path
-                / f"all_ingredient_pairwise_distances_{self.env.basename}.png",
-                title_str="all_ingredients",
-                x_label="pairwise distances",
-                y_label="count",
-            )
+            if len(all_center_distance_array) > 1:
+                self.histo(
+                    all_pairwise_distance_array,
+                    self.figures_path
+                    / f"all_ingredient_pairwise_distances_{self.env.basename}.png",
+                    title_str="all_ingredients",
+                    x_label="pairwise distances",
+                    y_label="count",
+                )
 
             # plot the angle
-            if len(all_ingredient_angle_array):
+            if len(all_ingredient_angle_array) > 1:
                 self.histo(
                     all_ingredient_angle_array[0],
                     self.figures_path / f"all_angles_X_{self.env.basename}.png",
