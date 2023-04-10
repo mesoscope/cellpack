@@ -357,7 +357,7 @@
 <span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">IOutils</span>
 <span class="kn">from</span> <span class="nn">.octree</span> <span class="kn">import</span> <span class="n">Octree</span>
 <span class="kn">from</span> <span class="nn">.Gradient</span> <span class="kn">import</span> <span class="n">Gradient</span>
-<span class="kn">from</span> <span class="nn">.transformation</span> <span class="kn">import</span> <span class="n">euler_from_matrix</span>
+<span class="kn">from</span> <span class="nn">.transformation</span> <span class="kn">import</span> <span class="n">euler_from_matrix</span><span class="p">,</span> <span class="n">signed_angle_between_vectors</span>
 
 <span class="c1"># backward compatibility with kevin method</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">BaseGrid</span>
@@ -595,6 +595,7 @@
         <span class="n">ingredient_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ingredient_name</span> <span class="k">if</span> <span class="n">ingredient_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">object_key</span>
         <span class="p">)</span>
+        <span class="n">ingredient_info</span><span class="p">[</span><span class="s2">&quot;object_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_key</span>
         <span class="k">return</span> <span class="n">ingredient_info</span>
 
     <span class="k">def</span> <span class="nf">_step_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_key</span><span class="p">,</span> <span class="n">prev_compartment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -663,6 +664,119 @@
             <span class="c1"># TODO: I don&#39;t think this code is needed,</span>
             <span class="c1"># but I haven&#39;t dug into it enough to delete it all yet</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">prepare_alternates</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Environment.get_positions_for_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_positions_for_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">get_positions_for_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">ingredient_name</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.get_rotations_for_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_rotations_for_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">get_rotations_for_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">ingredient_name</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.get_all_positions"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_all_positions">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">))])</span></div>
+
+<div class="viewcode-block" id="Environment.get_all_distances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_all_distances">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_positions</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="k">elif</span> <span class="n">position</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">positions</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">position</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.get_distances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_distances">[docs]</a>    <span class="k">def</span> <span class="nf">get_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="n">ingredient_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_positions_for_ingredient</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">)</span>
+        <span class="n">distances_between_ingredients</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">):</span>
+            <span class="n">distances_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+                <span class="n">ingredient_positions</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">distances_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="n">distances_between_ingredients</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">ingredient_positions</span><span class="p">,</span>
+            <span class="n">distances_from_center</span><span class="p">,</span>
+            <span class="n">distances_between_ingredients</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.get_ingredient_angles"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_ingredient_angles">[docs]</a>    <span class="k">def</span> <span class="nf">get_ingredient_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">ingredient_positions</span><span class="p">):</span>
+        <span class="n">ingredient_rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rotations_for_ingredient</span><span class="p">(</span>
+            <span class="n">ingredient_name</span><span class="o">=</span><span class="n">ingredient_name</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ingredient_position_vector</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">center</span>
+        <span class="p">)</span>
+
+        <span class="n">anglesX</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
+                <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">),</span>
+                <span class="n">ingredient_rotation</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                <span class="o">-</span><span class="n">ingredient_position_vector</span><span class="p">,</span>
+                <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">anglesY</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
+                <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">),</span>
+                <span class="n">ingredient_rotation</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                <span class="o">-</span><span class="n">ingredient_position_vector</span><span class="p">,</span>
+                <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">anglesZ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
+                <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingredient_positions</span><span class="p">),</span>
+                <span class="n">ingredient_rotation</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                <span class="o">-</span><span class="n">ingredient_position_vector</span><span class="p">,</span>
+                <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">anglesX</span><span class="p">,</span> <span class="n">anglesY</span><span class="p">,</span> <span class="n">anglesZ</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="Environment.get_distances_and_angles"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_distances_and_angles">[docs]</a>    <span class="k">def</span> <span class="nf">get_distances_and_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">get_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="p">(</span>
+            <span class="n">ingredient_positions</span><span class="p">,</span>
+            <span class="n">distances_from_center</span><span class="p">,</span>
+            <span class="n">distances_between_ingredients</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_distances</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">get_angles</span><span class="p">:</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ingredient_angles</span><span class="p">(</span>
+                <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">ingredient_positions</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">ingredient_positions</span><span class="p">,</span>
+            <span class="n">distances_from_center</span><span class="p">,</span>
+            <span class="n">distances_between_ingredients</span><span class="p">,</span>
+            <span class="n">angles</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.calc_pairwise_distances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.calc_pairwise_distances">[docs]</a>    <span class="k">def</span> <span class="nf">calc_pairwise_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr1name</span><span class="p">,</span> <span class="n">ingr2name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns pairwise distances between ingredients of different types</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ingr_pos_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_positions_for_ingredient</span><span class="p">(</span><span class="n">ingredient_name</span><span class="o">=</span><span class="n">ingr1name</span><span class="p">)</span>
+        <span class="n">ingr_pos_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_positions_for_ingredient</span><span class="p">(</span><span class="n">ingredient_name</span><span class="o">=</span><span class="n">ingr2name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">ingr_pos_1</span><span class="p">,</span> <span class="n">ingr_pos_2</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Environment.save_result"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result">[docs]</a>    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">,</span> <span class="n">all_ingr_as_array</span>
@@ -1297,47 +1411,26 @@
         <span class="n">compartment_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">pid</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">compartment_id</span></div>
 
-<div class="viewcode-block" id="Environment.longestIngrdientName"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.longestIngrdientName">[docs]</a>    <span class="k">def</span> <span class="nf">longestIngrdientName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Helper function for gui. Return the size of the longest ingredient name</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">M</span> <span class="o">=</span> <span class="mi">20</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
-        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">M</span><span class="p">:</span>
-                    <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-            <span class="n">rs</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span>
-            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">M</span><span class="p">:</span>
-                        <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="n">ri</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">innerRecipe</span>
-            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">M</span><span class="p">:</span>
-                        <span class="n">M</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">M</span></div>
-
-<div class="viewcode-block" id="Environment.loopThroughIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loopThroughIngr">[docs]</a>    <span class="k">def</span> <span class="nf">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cb_function</span><span class="p">):</span>
+<div class="viewcode-block" id="Environment.loopThroughIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loopThroughIngr">[docs]</a>    <span class="k">def</span> <span class="nf">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cb_function</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function that loops through all ingredients of all recipes and applies the given</span>
 <span class="sd">        callback function on each ingredients.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">recipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">recipe</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="n">cb_function</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+                <span class="n">cb_function</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="n">surface_recipe</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">surfaceRecipe</span>
             <span class="k">if</span> <span class="n">surface_recipe</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">surface_recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                    <span class="n">cb_function</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+                    <span class="n">cb_function</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">inner_recipe</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">innerRecipe</span>
             <span class="k">if</span> <span class="n">inner_recipe</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">inner_recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                    <span class="n">cb_function</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span></div>
+                    <span class="n">cb_function</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.getIngrFromNameInRecipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getIngrFromNameInRecipe">[docs]</a>    <span class="k">def</span> <span class="nf">getIngrFromNameInRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1352,17 +1445,17 @@
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">ingr</span>
-                <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">ingr</span>
-                <span class="c1">#                elif name.find(ingr.o_name) != -1 :</span>
+                <span class="c1">#                elif name.find(ingr.composition_name) != -1 :</span>
                 <span class="c1">#                    #check for</span>
                 <span class="c1">#                    return ingr</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">exclude</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">ingr</span>
-                <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">ingr</span>
-                <span class="c1">#                elif name.find(ingr.o_name) != -1 :</span>
+                <span class="c1">#                elif name.find(ingr.composition_name) != -1 :</span>
                 <span class="c1">#                    return ingr</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -2093,6 +2186,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ingr_result</span> <span class="o">=</span> <span class="n">ingredients</span>
         <span class="k">return</span> <span class="n">all_ingr_as_array</span></div>
 
+<div class="viewcode-block" id="Environment.check_new_placement"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.check_new_placement">[docs]</a>    <span class="k">def</span> <span class="nf">check_new_placement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_distances</span><span class="p">(</span><span class="n">new_position</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># nothing has been packed yet</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="n">expected_min_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">min_distance</span> <span class="o">&lt;</span> <span class="n">expected_min_distance</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">expected_min_distance</span> <span class="o">-</span> <span class="n">min_distance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">min_distance</span> <span class="o">&lt;</span> <span class="n">expected_min_distance</span></div>
+
+<div class="viewcode-block" id="Environment.distance_check_failed"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.distance_check_failed">[docs]</a>    <span class="k">def</span> <span class="nf">distance_check_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_distances</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># nothing has been packed yet</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="n">expected_min_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">min_distance</span> <span class="o">&lt;</span> <span class="n">expected_min_distance</span> <span class="o">+</span> <span class="mf">0.001</span></div>
+
 <div class="viewcode-block" id="Environment.pack_grid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.pack_grid">[docs]</a>    <span class="k">def</span> <span class="nf">pack_grid</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">seedNum</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
@@ -2356,7 +2469,13 @@
                 <span class="c1"># problem when the encapsulating_radius is actually wrong</span>
                 <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span>
+
                 <span class="n">PlacedMols</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># if self.stop_on_collision:</span>
+                <span class="c1"># ingredient_too_close = self.distance_check_failed()</span>
+                <span class="c1"># if ingredient_too_close:</span>
+                <span class="c1">#     print(&quot;GOT A FAIL&quot;, self.grid.masterGridPositions[ptInd])</span>
+                <span class="c1">#     nbFreePoints = 0</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;rejected </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">rejectionCounter</span><span class="p">)</span>
 
@@ -2450,11 +2569,6 @@
                 <span class="n">seedNum</span><span class="o">=</span><span class="n">seedNum</span><span class="p">,</span>
                 <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="n">all_ingr_as_array</span><span class="p">,</span>
             <span class="p">)</span></div>
-
-<div class="viewcode-block" id="Environment.displayCancelDialog"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.displayCancelDialog">[docs]</a>    <span class="k">def</span> <span class="nf">displayCancelDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;Popup CancelBox: if Cancel Box is up for more than 10 sec, close box and continue loop from here&quot;</span>
-        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.restore_molecules_array"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore_molecules_array">[docs]</a>    <span class="k">def</span> <span class="nf">restore_molecules_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
@@ -2586,7 +2700,7 @@
 <div class="viewcode-block" id="Environment.getOneIngrJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getOneIngrJson">[docs]</a>    <span class="k">def</span> <span class="nf">getOneIngrJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ingrdic</span><span class="p">):</span>
         <span class="c1">#        name_ingr = ingr.name</span>
         <span class="c1">#        if name_ingr not in ingrdic:</span>
-        <span class="c1">#            name_ingr = ingr.o_name</span>
+        <span class="c1">#            name_ingr = ingr.composition_name</span>
         <span class="c1">#        for r in ingr.results:</span>
         <span class="c1">#            ingrdic[name_ingr][&quot;results&quot;].append([r[0]],r[1],)</span>
         <span class="c1">#        print (&quot;growingr?&quot;,ingr,ingr.name,isinstance(ingr, GrowIngredient))</span>
@@ -2598,7 +2712,7 @@
             <span class="c1">#            print (&quot;nbCurve?&quot;,ingr.nbCurve,ingrdic[&quot;nbCurve&quot;])</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">ingrdic</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">],</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span><span class="p">,</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span><span class="p">,</span>
             <span class="mi">1</span><span class="p">,</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">,</span>
@@ -2689,10 +2803,13 @@
                     <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                     <span class="k">if</span> <span class="n">name_ingr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">]:</span>
                         <span class="c1"># backward compatiblity</span>
-                        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
+                            <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">]</span>
+                        <span class="p">):</span>
                             <span class="k">continue</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                     <span class="n">iresults</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">ingrcompNum</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOneIngrJson</span><span class="p">(</span>
                         <span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">][</span><span class="n">name_ingr</span><span class="p">]</span>
                     <span class="p">)</span>
@@ -2716,22 +2833,22 @@
                         <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                         <span class="c1"># replace number by name ?</span>
                         <span class="k">if</span> <span class="p">(</span>
-                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span>
                         <span class="p">):</span>
-                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="n">name_ingr</span>
                             <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span>
                         <span class="p">):</span>
                             <span class="c1"># backward compatiblity</span>
                             <span class="k">if</span> <span class="p">(</span>
-                                <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                                <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                                 <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span>
                             <span class="p">):</span>
                                 <span class="k">continue</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                                <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                         <span class="p">(</span>
                             <span class="n">iresults</span><span class="p">,</span>
                             <span class="n">ingrname</span><span class="p">,</span>
@@ -2758,22 +2875,22 @@
                     <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                         <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                         <span class="k">if</span> <span class="p">(</span>
-                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span>
                         <span class="p">):</span>
-                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="n">name_ingr</span>
                             <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span>
                         <span class="p">):</span>
                             <span class="c1"># backward compatiblity</span>
                             <span class="k">if</span> <span class="p">(</span>
-                                <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                                <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                                 <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span>
                             <span class="p">):</span>
                                 <span class="k">continue</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                                <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                         <span class="p">(</span>
                             <span class="n">iresults</span><span class="p">,</span>
                             <span class="n">ingrname</span><span class="p">,</span>
@@ -2839,9 +2956,9 @@
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngrJson</span><span class="p">(</span>
-                    <span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">]</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">][</span>
+                    <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngrJson</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">])</span>
 
         <span class="c1"># compartment ingr</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
@@ -2851,7 +2968,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                        <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                     <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngrJson</span><span class="p">(</span>
                         <span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span>
                     <span class="p">)</span>
@@ -2861,7 +2978,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                        <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
                     <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngrJson</span><span class="p">(</span>
                         <span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span>
                     <span class="p">)</span>

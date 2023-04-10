@@ -278,7 +278,7 @@
 
 <span class="kn">from</span> <span class="nn">cellpack</span> <span class="kn">import</span> <span class="n">autopack</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">upy</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Analysis</span> <span class="kn">import</span> <span class="n">AnalyseAP</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.Analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.Environment</span> <span class="kn">import</span> <span class="n">Environment</span>
 
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.config_loader</span> <span class="kn">import</span> <span class="n">ConfigLoader</span>
@@ -311,7 +311,7 @@
 
     <span class="n">afviewer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;save_analyze_result&quot;</span><span class="p">]:</span>
-        <span class="n">analyze</span> <span class="o">=</span> <span class="n">AnalyseAP</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="n">afviewer</span><span class="p">,</span> <span class="n">result_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">analyze</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="n">afviewer</span><span class="p">,</span> <span class="n">result_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;saving to </span><span class="si">{</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">analyze</span><span class="o">.</span><span class="n">doloop</span><span class="p">(</span>
             <span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;number_of_packings&quot;</span><span class="p">],</span>

@@ -285,10 +285,11 @@
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 
 <span class="c1"># Relative</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Analysis</span> <span class="kn">import</span> <span class="n">AnalyseAP</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.Analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.analysis_config_loader</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AnalysisConfigLoader</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
 
 <span class="c1">###############################################################################</span>
 <span class="n">log_file_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../logging.conf&quot;</span><span class="p">))</span>
@@ -299,6 +300,7 @@
 
 <div class="viewcode-block" id="analyze"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.analyze.analyze">[docs]</a><span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
     <span class="n">analysis_config_path</span><span class="p">,</span>
+    <span class="n">recipe_path</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Runs specified analyses based on the config</span>
@@ -309,16 +311,19 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="n">analysis_config</span> <span class="o">=</span> <span class="n">AnalysisConfigLoader</span><span class="p">(</span><span class="n">analysis_config_path</span><span class="p">)</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe_path</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">recipe_data</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">analysis_config</span><span class="p">[</span><span class="s2">&quot;output_path&quot;</span><span class="p">],</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input path: </span><span class="si">{</span><span class="n">analysis_config</span><span class="p">[</span><span class="s1">&#39;input_path&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="n">analysis</span> <span class="o">=</span> <span class="n">AnalyseAP</span><span class="p">(</span>
-        <span class="n">input_path</span><span class="o">=</span><span class="n">analysis_config</span><span class="p">[</span><span class="s2">&quot;input_path&quot;</span><span class="p">],</span>
-        <span class="n">output_path</span><span class="o">=</span><span class="n">analysis_config</span><span class="p">[</span><span class="s2">&quot;output_path&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="n">analysis</span><span class="o">.</span><span class="n">run_analysis_workflow</span><span class="p">(</span>
-        <span class="n">analysis_config</span><span class="o">=</span><span class="n">analysis_config</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">packing_result_path</span> <span class="ow">in</span> <span class="n">analysis_config</span><span class="p">[</span><span class="s2">&quot;packing_result_path_list&quot;</span><span class="p">]:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input path: </span><span class="si">{</span><span class="n">packing_result_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">analysis</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span>
+            <span class="n">packing_results_path</span><span class="o">=</span><span class="n">packing_result_path</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">analysis_config</span><span class="p">[</span><span class="s2">&quot;output_path&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">analysis</span><span class="o">.</span><span class="n">run_analysis_workflow</span><span class="p">(</span>
+            <span class="n">analysis_config</span><span class="o">=</span><span class="n">analysis_config</span><span class="p">,</span>
+            <span class="n">recipe_data</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time to run analysis: </span><span class="si">{</span><span class="n">t2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
