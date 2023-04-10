@@ -15,7 +15,9 @@ class FirebaseHandler(object):
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
-
+    
+    def db_name(self):
+        return self.name
 
     @staticmethod
     def doc_id(doc):
@@ -24,6 +26,10 @@ class FirebaseHandler(object):
     @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
+    
+    @staticmethod
+    def get_path_from_ref(doc):
+        return doc.path
 
     @staticmethod
     def get_collection_id_from_path(path):
