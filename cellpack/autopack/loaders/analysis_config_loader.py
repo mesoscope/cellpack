@@ -5,15 +5,14 @@ import json
 
 class AnalysisConfigLoader(object):
     default_values = {
-        "input_folder": "out/analyze/test_analyze/jitter/",
-        "output_folder": "out/analyze/test_analyze/jitter/",
-        "ingredient_key": "membrane_interior_peroxisome",
-        "mesh_paths": {"inner": "data/mean-nuc.obj", "outer": "data/mean-membrane.obj"},
-        "version": "1.0",
-        "run_similarity_analysis": False,
-        "get_parametrized_representation": False,
-        "save_plots": False,
-        "get_correlations": False,
+        "version": "1.0.0",
+        "format_version": "1.1",
+        "packing_result_path": "cellpack/tests/outputs/test_partner_packing/spheresSST",
+        "create_report": {
+            "run_distance_analysis": True,
+            "report_output_path": "cellpack/tests/outputs/test_partner_packing",
+            "output_image_location": "./spheresSST/figures",
+        },
     }
 
     def __init__(self, input_file_path):
