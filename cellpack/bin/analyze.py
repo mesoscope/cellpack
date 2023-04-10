@@ -45,7 +45,6 @@ def analyze(
     t1 = time()
     analysis_config = AnalysisConfigLoader(analysis_config_path).config
     recipe_data = RecipeLoader(recipe_path, False).recipe_data
-    os.makedirs(analysis_config["output_path"], exist_ok=True)
 
     log.info(f"Packing results path: {packing_results_path}\n")
     analysis = Analysis(
