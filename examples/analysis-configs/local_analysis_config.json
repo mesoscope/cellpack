@@ -1,0 +1,12 @@
+{
+    "version": "1.0.0",
+    "format_version": "1.1",
+    "packing_result_path_list": [
+        "cellpack/tests/outputs/test_partner_packing/spheresSST"
+    ],
+    "output_path": "cellpack/tests/outputs/test_partner_packing",
+    "create_report": {
+        "run_distance_analysis": true,
+        "output_image_location": "./spheresSST/figures"
+    }
+}

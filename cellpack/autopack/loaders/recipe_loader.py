@@ -179,8 +179,8 @@ class RecipeLoader(object):
                 )
                 partner_settings = obj["partners"] if "partners" in obj else []
                 obj["partners"] = Partners(partner_settings)
-            if not INGREDIENT_TYPE.is_member(obj["type"]):
-                raise TypeError(f"{obj['type']} is not an allowed type")
+                if "type" in obj and not INGREDIENT_TYPE.is_member(obj["type"]):
+                    raise TypeError(f"{obj['type']} is not an allowed type")
 
         # handle gradients
         if "gradients" in recipe_data:
