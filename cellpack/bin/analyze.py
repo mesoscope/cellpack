@@ -3,7 +3,6 @@ Run analysis code
 """
 
 # Standard library
-import os
 from os import path
 import logging
 import logging.config

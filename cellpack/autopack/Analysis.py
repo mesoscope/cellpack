@@ -1277,7 +1277,7 @@ class Analysis:
             [len(packing_dict) for packing_dict in all_pos_list]
         )
 
-        print(f"Starting analysis workflow...")
+        print("Starting analysis workflow...")
 
         if analysis_config.get("similarity_analysis"):
             self.run_similarity_analysis(
