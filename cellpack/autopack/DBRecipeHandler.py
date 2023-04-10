@@ -182,7 +182,7 @@ class CompositionDoc(DataDoc):
             return
         else:
             _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
-            update_ref_path = f"{db.name}:{new_item_ref.path}"
+            update_ref_path = f"{db.db_name()}:{db.get_path_from_ref(new_item_ref)}"
             if update_in_array:
                 db.update_elements_in_array(
                     doc_ref, index, update_ref_path, remove_comp_name
@@ -339,7 +339,7 @@ class DBRecipeHandler(object):
                 modified_data[key] = value
         return modified_data
 
-    # 
+
     def upload_data(self, collection, data, id=None):
         """
         If should_write is true, upload the data to the database
@@ -350,7 +350,7 @@ class DBRecipeHandler(object):
             name = modified_data["name"]
             doc = self.db.upload_doc(collection, modified_data)
             # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
-            doc_path = doc[1].path
+            doc_path = self.db.get_path_from_ref(doc[1])
             doc_id = self.db.doc_id(doc[1])
             print(f"successfully uploaded {name} to path: {doc_path}")
             return doc_id, self.db.create_path(collection, doc_id)
@@ -365,7 +365,7 @@ class DBRecipeHandler(object):
             object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])            
             _, doc_id = object_doc.should_write(self.db)
             if doc_id:
-                print(f"objects/{object_doc.name} is already exists in firestore")
+                print(f"objects/{object_doc.name} is already in firestore")
             else:
                 _, obj_path = self.upload_data("objects", object_doc.as_dict())
                 self.objects_to_path_map[obj_name] = obj_path
@@ -392,7 +392,7 @@ class DBRecipeHandler(object):
                 path = self.db.create_path("composition", doc_id)
                 self.comp_to_path_map[comp_name]["path"] = path
                 self.comp_to_path_map[comp_name]["id"] = doc_id
-                print(f"composition/{comp_name} is already exists in firestore")
+                print(f"composition/{comp_name} is already in firestore")
             else:
                 # replace with paths for outer objs in comp, then upload
                 comp_doc.check_and_replace_references(
