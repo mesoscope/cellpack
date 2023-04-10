@@ -1,13 +1,20 @@
+from unittest.mock import Mock
+
+
 class MockDB(object):
     def __init__(self, data) -> None:
         for index, name in enumerate(data):
             obj = data[name]
             obj["id"] = index
         self.data = data
+        self.name = "test_db"
 
     @staticmethod
     def is_firebase_obj(obj):
         return True
+    
+    def db_name(self):
+        return "test_db"
     
     @staticmethod
     def doc_to_dict(doc):
@@ -39,4 +46,21 @@ class MockDB(object):
             return {"test": "downloaded_data"}, key
         else:
             return {}, None
+        
+    def upload_doc(self, collection, doc):
+        return ("test_datetime", doc)
+    
+    def set_doc(self, collection, id, data):
+        doc_ref = Mock()
+        return doc_ref
+    
+    def get_path_from_ref(self, doc):
+        return "firebase:test_collection/test_id"
+    
+    def create_path(self, collection, doc_id):
+        return f"firebase:{collection}/{doc_id}"
+    
+    def get_doc_by_id(self, collection, id):
+        doc_ref = Mock()
+        return self.data, doc_ref
     
