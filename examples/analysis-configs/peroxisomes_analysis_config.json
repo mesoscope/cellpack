@@ -1,16 +1,28 @@
 {
     "version": "1.0.0",
     "format_version": "1.0",
-    "input_path": "out/analyze/peroxisomes_gradient/spheresSST/",
-    "output_path": "out/analyze/peroxisomes_gradient/",
-    "ingredient_key" : "membrane_interior_peroxisome",
-    "mesh_paths" : {
-        "inner": "data/mean-nuc.obj",
-        "outer": "data/mean-membrane.obj"
+    "packing_result_path_list": [
+        "out/analyze/peroxisomes_surface_gradient/spheresSST/"
+    ],
+    "output_path": "out/analyze/peroxisomes_surface_gradient/",
+    "similarity_analysis": {
+        "ingredient_key" : "membrane_interior_peroxisome",
+        "load_from_file": true,
+        "save_heatmaps": true,
+        "mesh_paths" : {
+            "inner": "data/mean-nuc.obj",
+            "outer": "data/mean-membrane.obj"
+        }
     },
-    "run_similarity_analysis": true,
-    "get_parametrized_representation": true,
-    "save_plots": true,
-    "get_correlations": false,
-    "max_plots_to_save": 5
+    "parametrized_representation": {
+        "ingredient_key" : "membrane_interior_peroxisome",
+        "num_angular_points": 8,
+        "save_plots": true,
+        "max_plots_to_save": 2,
+        "get_correlations": false,
+        "mesh_paths" : {
+            "inner": "data/mean-nuc.obj",
+            "outer": "data/mean-membrane.obj"
+        }
+    }
 }

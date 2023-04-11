@@ -78,7 +78,9 @@ class Writer(object):
         vdic[attrname] = value
         return vdic
 
-    def save_as_simularium(self, env, setupfile, all_ingr_as_array, compartments):
+    def save_as_simularium(
+        self, env, result_file_path, all_ingr_as_array, compartments
+    ):
         autopack.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
@@ -100,7 +102,9 @@ class Writer(object):
                     f"{gradient.name}-distances", grid_positions, values
                 )
 
-        autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
+        autopack.helper.writeToFile(
+            f"{result_file_path}_results", env.boundingBox, env.name, env.version
+        )
 
     def save_Mixed_asJson(
         self,
@@ -185,29 +189,29 @@ class Writer(object):
                     # write the json file for this ingredient
                     io_ingr.write(
                         ingr,
-                        pathout + os.sep + ingr.o_name,
+                        pathout + os.sep + ingr.composition_name,
                         ingr_format="json",
                         kwds=kwds,
                         result=result,
                         transpose=transpose,
                     )
-                    # use reference file : str(pathout+os.sep+ingr.o_name+".json")
+                    # use reference file : str(pathout+os.sep+ingr.composition_name+".json")
                     ing_filename = (
-                        ingr.o_name + ".json"
-                    )  # autopack.revertOnePath(pathout+os.sep+ingr.o_name+".json")
-                    env.jsondic["cytoplasme"]["ingredients"][ingr.o_name] = {
-                        "name": ingr.o_name,
+                        ingr.composition_name + ".json"
+                    )  # autopack.revertOnePath(pathout+os.sep+ingr.composition_name+".json")
+                    env.jsondic["cytoplasme"]["ingredients"][ingr.composition_name] = {
+                        "name": ingr.composition_name,
                         "include": ing_filename,
                     }
                 else:
                     env.jsondic["cytoplasme"]["ingredients"][
-                        ingr.o_name
+                        ingr.composition_name
                     ] = io_ingr.ingrJsonNode(
                         ingr, result=result, kwds=kwds, transpose=transpose
-                    )  # {"name":ingr.o_name}
-                    env.jsondic["cytoplasme"]["ingredients"][ingr.o_name][
+                    )  # {"name":ingr.composition_name}
+                    env.jsondic["cytoplasme"]["ingredients"][ingr.composition_name][
                         "name"
-                    ] = ingr.o_name
+                    ] = ingr.composition_name
         if len(env.compartments):
             env.jsondic["compartments"] = OrderedDict()
         for o in env.compartments:
@@ -232,7 +236,7 @@ class Writer(object):
                         # write the json file for this ingredient
                         io_ingr.write(
                             ingr,
-                            pathout + os.sep + ingr.o_name,
+                            pathout + os.sep + ingr.composition_name,
                             ingr_format="json",
                             result=result,
                             kwds=kwds,
@@ -241,19 +245,19 @@ class Writer(object):
                         # use reference file
                         env.jsondic["compartments"][str(o.name)]["surface"][
                             "ingredients"
-                        ][ingr.o_name] = {
-                            "name": ingr.o_name,
-                            "include": str(ingr.o_name + ".json"),
+                        ][ingr.composition_name] = {
+                            "name": ingr.composition_name,
+                            "include": str(ingr.composition_name + ".json"),
                         }
                     else:
                         env.jsondic["compartments"][str(o.name)]["surface"][
                             "ingredients"
-                        ][ingr.o_name] = io_ingr.ingrJsonNode(
+                        ][ingr.composition_name] = io_ingr.ingrJsonNode(
                             ingr, result=result, kwds=kwds, transpose=transpose
-                        )  # {"name":ingr.o_name}
+                        )  # {"name":ingr.composition_name}
                         env.jsondic["compartments"][str(o.name)]["surface"][
                             "ingredients"
-                        ][ingr.o_name]["name"] = ingr.o_name
+                        ][ingr.composition_name]["name"] = ingr.composition_name
             ri = o.innerRecipe
             if ri:
                 env.jsondic["compartments"][str(o.name)]["interior"] = {}
@@ -263,7 +267,7 @@ class Writer(object):
                         # write the json file for this ingredient
                         io_ingr.write(
                             ingr,
-                            pathout + os.sep + ingr.o_name,
+                            pathout + os.sep + ingr.composition_name,
                             ingr_format="json",
                             result=result,
                             kwds=kwds,
@@ -272,19 +276,19 @@ class Writer(object):
                         # use reference file
                         env.jsondic["compartments"][str(o.name)]["interior"][
                             "ingredients"
-                        ][ingr.o_name] = {
-                            "name": ingr.o_name,
-                            "include": str(ingr.o_name + ".json"),
+                        ][ingr.composition_name] = {
+                            "name": ingr.composition_name,
+                            "include": str(ingr.composition_name + ".json"),
                         }
                     else:
                         env.jsondic["compartments"][str(o.name)]["interior"][
                             "ingredients"
-                        ][ingr.o_name] = io_ingr.ingrJsonNode(
+                        ][ingr.composition_name] = io_ingr.ingrJsonNode(
                             ingr, result=result, kwds=kwds, transpose=transpose
-                        )  # {"name":ingr.o_name}
+                        )  # {"name":ingr.composition_name}
                         env.jsondic["compartments"][str(o.name)]["interior"][
                             "ingredients"
-                        ][ingr.o_name]["name"] = ingr.o_name
+                        ][ingr.composition_name]["name"] = ingr.composition_name
         with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
 
             if indent:
