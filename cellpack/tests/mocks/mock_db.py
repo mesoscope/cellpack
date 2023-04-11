@@ -64,3 +64,8 @@ class MockDB(object):
         doc_ref = Mock()
         return self.data, doc_ref
     
+    def update_reference_on_doc(self, doc_ref, index, new_item_ref):
+        return True
+    
+    def update_elements_in_array(self, doc_ref, index, new_item_ref, remove_item):
+        return True

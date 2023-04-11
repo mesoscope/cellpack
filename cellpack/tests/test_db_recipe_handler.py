@@ -84,42 +84,86 @@ def test_upload_compositions():
     }
 
     composition_doc = DBRecipeHandler(mock_db)
-    references_to_update = composition_doc.upload_compositions(composition, recipe_to_save, recipe_data)
+    references_to_update = composition_doc.upload_compositions(
+        composition, recipe_to_save, recipe_data
+    )
     assert composition_doc.comp_to_path_map == {
         "space": {"id": "test_id", "path": "firebase:composition/test_id"},
     }
-    assert references_to_update == {"space": {"comp_id": "test_id", "index": "regions.interior", "name": "A"}}
+    assert references_to_update == {
+        "space": {"comp_id": "test_id", "index": "regions.interior", "name": "A"}
+    }
+
 
 def test_get_recipe_id():
     recipe_data = {
-    "name": "test",
-    "version": "1.0.0",
-    "objects": None,
-    "composition": {},
-}   
+        "name": "test",
+        "version": "1.0.0",
+        "objects": None,
+        "composition": {},
+    }
     recipe_doc = DBRecipeHandler(mock_db)
     assert recipe_doc.get_recipe_id(recipe_data) == "test_v1.0.0"
 
-# def test_upload_collections():
-#     recipe_meta_data = {
-#         "name": "one_sphere",
-#         "version": "1.0.0",
-#         "composition": {},
-#     }
-#     recipe_data = {
-#         "name": "one_sphere",
-#         "objects": {
-#             "sphere_25": {
-#                 "type": "single_sphere",
-#                 "max_jitter": [1, 1, 0],
-#             },
-#         },
-#         "composition": {
-#             "space": {"regions": {"interior": ["A"]}},
-#             "A": {"object": "sphere_25", "count": 1},
-#         },
-#     }
 
-#     collection_doc = DBRecipeHandler(mock_db)
-#     collection_doc.upload_collections(recipe_meta_data, recipe_data)
-#     assert collection_doc.recipe_to_save == {"test_v1.0.0": "firebase:recipe/test_v1.0.0"}
+def test_upload_collections():
+    recipe_meta_data = {
+        "name": "one_sphere",
+        "version": "1.0.0",
+        "composition": {},
+    }
+    recipe_data = {
+        "name": "one_sphere",
+        "objects": {
+            "sphere_25": {
+                "type": "single_sphere",
+                "max_jitter": [1, 1, 0],
+            },
+        },
+        "composition": {
+            "space": {"regions": {"interior": ["A"]}},
+            "A": {"object": "sphere_25", "count": 1},
+        },
+    }
+
+    recipe_doc = DBRecipeHandler(mock_db)
+    expected_result = {
+        "name": "one_sphere",
+        "version": "1.0.0",
+        "composition": {
+            "space": {"inherit": "firebase:composition/test_id"},
+            "A": {"inherit": "firebase:composition/test_id"},
+        },
+    }
+    recipe_to_save = recipe_doc.upload_collections(recipe_meta_data, recipe_data)
+    assert recipe_to_save == expected_result
+
+
+def test_upload_recipe():
+    recipe_meta_data = {
+        "name": "one_sphere",
+        "version": "1.0.0",
+        "composition": {},
+    }
+    recipe_data = {
+        "name": "one_sphere",
+        "version": "1.0.0",
+        "objects": {
+            "sphere_25": {
+                "type": "single_sphere",
+                "max_jitter": [1, 1, 0],
+            },
+        },
+        "composition": {
+            "space": {"regions": {"interior": ["A"]}},
+            "A": {"object": "sphere_25", "count": 1},
+        },
+    }
+
+    recipe_doc = DBRecipeHandler(mock_db)
+    recipe_doc.upload_recipe(recipe_meta_data, recipe_data)
+    assert recipe_doc.comp_to_path_map == {
+        "space": {"path": "firebase:composition/test_id", "id": "test_id"},
+        "A": {"path": "firebase:composition/test_id", "id": "test_id"},
+    }
+    assert recipe_doc.objects_to_path_map == {"sphere_25": "firebase:objects/test_id"}
