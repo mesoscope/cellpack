@@ -171,6 +171,7 @@ def test_resolve_local_regions():
     local_data.resolve_local_regions(local_data.as_dict(), full_recipe_data, mock_db)
     assert local_data.as_dict() == resolved_data
 
+
 def test_check_and_replace_references():
     objects_to_path_map = {"test_obj": "firebase:objects/test_id"}
     references_to_update = {}
@@ -185,7 +186,9 @@ def test_check_and_replace_references():
         objects_to_path_map, references_to_update, mock_db
     )
     assert composition_doc.as_dict()["object"] == "firebase:objects/test_id"
-    assert composition_doc.as_dict()["regions"] == {"interior": [{"object": "firebase:objects/test_id", "count": 1}]}
+    assert composition_doc.as_dict()["regions"] == {
+        "interior": [{"object": "firebase:objects/test_id", "count": 1}]
+    }
 
 
 def test_composition_oc_should_write_with_no_existing_doc():

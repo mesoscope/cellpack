@@ -6,6 +6,7 @@ class FirebaseHandler(object):
     """
     Retrieve data and perform common tasks when working with firebase.
     """
+
     def __init__(self, cred_path):
         login = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(login)
@@ -15,18 +16,18 @@ class FirebaseHandler(object):
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
-    
+
     def db_name(self):
         return self.name
 
     @staticmethod
     def doc_id(doc):
         return doc.id
-    
+
     @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
-    
+
     @staticmethod
     def get_path_from_ref(doc):
         return doc.path
