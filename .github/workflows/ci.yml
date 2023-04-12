@@ -40,7 +40,7 @@ jobs:
         pip install .[all]
     - name: Test with pytest
       run: |
-        pytest cellpack/tests/
+        pytest --cov cellpack/tests/
     - name: Upload codecov
       uses: codecov/codecov-action@v3
 
