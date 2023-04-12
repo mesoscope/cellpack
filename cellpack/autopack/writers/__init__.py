@@ -9,6 +9,49 @@ import numpy
 from collections import OrderedDict
 
 from cellpack import autopack
+from mdutils.mdutils import MdUtils
+import pandas as pd
+from pathlib import Path
+
+
+class MarkdownWriter(object):
+
+    def __init__(self, title:str, output_path:Path, report_name:str):
+        self.title = title
+        self.output_path = output_path
+        self.report_md = MdUtils(
+            file_name=str(self.output_path / report_name ),
+            title=title,
+        )
+
+    # level is the header style, can only be 1 or 2
+    def add_header(self, header:str, level:int=2):
+        self.report_md.new_header(
+            level = level,
+            title = header,
+            add_table_of_contents="n"
+        )
+
+    def add_table(self, header:str, table:pd.DataFrame, text_align="center"):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+        
+        text_list = []
+        for row in table.values.tolist():
+            for item in row:
+                text_list.append(item)
+
+        self.report_md.new_table(
+            columns=table.shape[1],
+            rows=table.shape[0],
+            text=self.text_list,
+            text_align=text_align
+        )
+
+
 
 
 class IOingredientTool(object):

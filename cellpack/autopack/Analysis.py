@@ -34,6 +34,7 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
+from cellpack.autopack.writers import MarkdownWriter
 
 
 class Analysis:
@@ -1172,9 +1173,38 @@ class Analysis:
         run_*_analysis: bool
             whether to run specific analysis
         """
-        if report_output_path is None:
-            report_output_path = self.output_path
-        report_output_path = Path(report_output_path)
+        self.ingredient_key_dict = self.get_dict_from_glob("ingredient_keys_*")
+        if ingredient_keys is None:
+            ingredient_keys = list(self.ingredient_key_dict.keys())
+
+        avg_num_packed = self.get_number_of_ingredients_packed(
+            ingredient_keys=ingredient_keys
+        )
+        ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
+        pairwise_distance_dict = self.get_dict_from_glob("pairwise_distances_*.json")
+        combined_pairwise_distance_dict = self.combine_results_from_seeds(
+            pairwise_distance_dict
+        )
+
+        val_list = []
+        for (key, radius, num_packed) in zip(
+            ingredient_keys, ingredient_radii.values(), avg_num_packed.values()
+        ):
+            val_list.extend([key, radius, num_packed])
+        text_list = [
+            "Ingredient name",
+            "Encapsulating radius",
+            "Average number packed",
+            *val_list,
+        ]
+
+        # md_object = MarkdownWriter(
+        #     header = None,
+        #     output_path = self.output_path,
+        #     results_path = self.packing_results_path,
+        #     ingredient_keys = ingredient_keys,
+
+        # )
 
         report_md = MdUtils(
             file_name=f"{report_output_path}/analysis_report",
