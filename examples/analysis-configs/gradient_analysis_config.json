@@ -1,7 +1,6 @@
 {
     "version": "1.0.0",
     "format_version": "1.0",
-    "packing_result_path_list": "out/gradients_X/jitter/",
     "output_path": "out/gradients_X/",
     "ingredient_key" : "ext_A",
     "run_similarity_analysis": true,

@@ -1,14 +1,11 @@
 {
     "version": "1.0.0",
     "format_version": "1.0",
-    "packing_result_path_list": [
-        "out/analyze/peroxisomes_surface_gradient/spheresSST/"
-    ],
-    "output_path": "out/analyze/peroxisomes_surface_gradient/",
     "similarity_analysis": {
         "ingredient_key" : "membrane_interior_peroxisome",
         "load_from_file": true,
         "save_heatmaps": true,
+        "save_path": "out/analyze/peroxisomes_surface_gradient/",
         "mesh_paths" : {
             "inner": "data/mean-nuc.obj",
             "outer": "data/mean-membrane.obj"

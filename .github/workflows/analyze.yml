@@ -27,7 +27,7 @@ jobs:
                   jq --arg branch_name "${{  github.ref_name  }}" '.create_report.output_image_location |= "https://cellpack-results.s3.us-west-2.amazonaws.com/\($branch_name)/spheresSST/figures"' cellpack/tests/analysis-configs/PR_analysis_config.json > cellpack/tests/analysis-configs/PR_analysis_config_temp.json
                   mv cellpack/tests/analysis-configs/PR_analysis_config_temp.json cellpack/tests/analysis-configs/PR_analysis_config.json
             - name: Run analysis code
-              run: analyze -r cellpack/tests/recipes/v2/test_spheres.json -a cellpack/tests/analysis-configs/PR_analysis_config.json
+              run: analyze -r cellpack/tests/recipes/v2/test_spheres.json -a cellpack/tests/analysis-configs/PR_analysis_config.json -p cellpack/tests/outputs/test_spheres/spheresSST
             - name: Upload results
               uses: actions/upload-artifact@v3
               with:

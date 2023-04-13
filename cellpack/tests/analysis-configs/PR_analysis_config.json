@@ -1,12 +1,9 @@
 {
     "version": "1.0.1",
     "format_version": "1.1",
-    "packing_result_path_list": [
-        "cellpack/tests/outputs/test_spheres/spheresSST"
-    ],
-    "output_path": "cellpack/tests/outputs/test_spheres",
     "create_report": {
         "run_distance_analysis": true,
+        "report_output_path": "cellpack/tests/outputs/test_spheres",
         "output_image_location": "will be changed to PR branch name on AWS"
     }
 }
