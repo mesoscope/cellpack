@@ -279,15 +279,14 @@
 
 <div class="viewcode-block" id="AnalysisConfigLoader"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.analysis_config_loader.AnalysisConfigLoader">[docs]</a><span class="k">class</span> <span class="nc">AnalysisConfigLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">default_values</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;input_folder&quot;</span><span class="p">:</span> <span class="s2">&quot;out/analyze/test_analyze/jitter/&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;output_folder&quot;</span><span class="p">:</span> <span class="s2">&quot;out/analyze/test_analyze/jitter/&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ingredient_key&quot;</span><span class="p">:</span> <span class="s2">&quot;membrane_interior_peroxisome&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;mesh_paths&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;inner&quot;</span><span class="p">:</span> <span class="s2">&quot;data/mean-nuc.obj&quot;</span><span class="p">,</span> <span class="s2">&quot;outer&quot;</span><span class="p">:</span> <span class="s2">&quot;data/mean-membrane.obj&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;run_similarity_analysis&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;get_parametrized_representation&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;save_plots&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;get_correlations&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;format_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;packing_result_path&quot;</span><span class="p">:</span> <span class="s2">&quot;cellpack/tests/outputs/test_partner_packing/spheresSST&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;create_report&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;run_distance_analysis&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;report_output_path&quot;</span><span class="p">:</span> <span class="s2">&quot;cellpack/tests/outputs/test_partner_packing&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;output_image_location&quot;</span><span class="p">:</span> <span class="s2">&quot;./spheresSST/figures&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">):</span>

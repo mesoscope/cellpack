@@ -295,10 +295,14 @@
 <p>Run analysis code</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.bin.analyze.analyze">
-<span class="sig-prename descclassname"><span class="pre">cellpack.bin.analyze.</span></span><span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analysis_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/analyze.html#analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.analyze.analyze" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.bin.analyze.</span></span><span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analysis_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing_results_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/analyze.html#analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.analyze.analyze" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs specified analyses based on the config
 :param analysis_config_path: string argument,
-path to analysis config file</p>
+path to analysis config file
+:param recipe_path: string argument,
+path to recipe file
+:param packing_results_path: string argument
+path to packing results</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>void</p>
@@ -324,10 +328,11 @@ path to analysis config file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.bin.pack.pack">
-<span class="sig-prename descclassname"><span class="pre">cellpack.bin.pack.</span></span><span class="sig-name descname"><span class="pre">pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/pack.html#pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.pack.pack" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.bin.pack.</span></span><span class="sig-name descname"><span class="pre">pack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analysis_config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/pack.html#pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.pack.pack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes an autopack packing from the command line
 :param recipe: string argument, path to recipe
-:param config: string argument, path to config file</p>
+:param config_path: string argument, path to packing config file
+:param analysis_config_path: string argument, path to analysis config file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>void</p>

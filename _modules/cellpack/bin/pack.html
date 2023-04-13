@@ -283,6 +283,7 @@
 
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.config_loader</span> <span class="kn">import</span> <span class="n">ConfigLoader</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.analysis_config_loader</span> <span class="kn">import</span> <span class="n">AnalysisConfigLoader</span>
 
 <span class="c1">###############################################################################</span>
 <span class="n">log_file_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../logging.conf&quot;</span><span class="p">))</span>
@@ -291,37 +292,52 @@
 <span class="c1">###############################################################################</span>
 
 
-<div class="viewcode-block" id="pack"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.pack.pack">[docs]</a><span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="pack"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.pack.pack">[docs]</a><span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">analysis_config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initializes an autopack packing from the command line</span>
 <span class="sd">    :param recipe: string argument, path to recipe</span>
-<span class="sd">    :param config: string argument, path to config file</span>
+<span class="sd">    :param config_path: string argument, path to packing config file</span>
+<span class="sd">    :param analysis_config_path: string argument, path to analysis config file</span>
 
 <span class="sd">    :return: void</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">config_data</span> <span class="o">=</span> <span class="n">ConfigLoader</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">config</span>
-    <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;save_converted_recipe&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">recipe_data</span>
+    <span class="n">packing_config_data</span> <span class="o">=</span> <span class="n">ConfigLoader</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span>
+        <span class="n">recipe</span><span class="p">,</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;save_converted_recipe&quot;</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">recipe_data</span>
+    <span class="n">analysis_config_data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">analysis_config_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">analysis_config_data</span> <span class="o">=</span> <span class="n">AnalysisConfigLoader</span><span class="p">(</span><span class="n">analysis_config_path</span><span class="p">)</span><span class="o">.</span><span class="n">config</span>
 
     <span class="n">helper_class</span> <span class="o">=</span> <span class="n">upy</span><span class="o">.</span><span class="n">getHelperClass</span><span class="p">()</span>
     <span class="n">helper</span> <span class="o">=</span> <span class="n">helper_class</span><span class="p">(</span><span class="n">vi</span><span class="o">=</span><span class="s2">&quot;nogui&quot;</span><span class="p">)</span>
     <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">helper</span>
 
-    <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config_data</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">packing_config_data</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">helper</span>
 
     <span class="n">afviewer</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;save_analyze_result&quot;</span><span class="p">]:</span>
-        <span class="n">analyze</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="n">afviewer</span><span class="p">,</span> <span class="n">result_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;save_analyze_result&quot;</span><span class="p">]:</span>
+        <span class="n">analyze</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span>
+            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+            <span class="n">viewer</span><span class="o">=</span><span class="n">afviewer</span><span class="p">,</span>
+            <span class="n">result_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;saving to </span><span class="si">{</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">analyze</span><span class="o">.</span><span class="n">doloop</span><span class="p">(</span>
-            <span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;number_of_packings&quot;</span><span class="p">],</span>
+            <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;number_of_packings&quot;</span><span class="p">],</span>
             <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span>
-            <span class="n">plot_figures</span><span class="o">=</span><span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;save_plot_figures&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-            <span class="n">show_grid</span><span class="o">=</span><span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;show_grid_plot&quot;</span><span class="p">],</span>
-            <span class="n">seed_list</span><span class="o">=</span><span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;randomness_seed&quot;</span><span class="p">],</span>
-            <span class="n">config_name</span><span class="o">=</span><span class="n">config_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+            <span class="n">plot_figures</span><span class="o">=</span><span class="n">packing_config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;save_plot_figures&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+            <span class="n">show_grid</span><span class="o">=</span><span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;show_grid_plot&quot;</span><span class="p">],</span>
+            <span class="n">seed_list</span><span class="o">=</span><span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;randomness_seed&quot;</span><span class="p">],</span>
+            <span class="n">config_name</span><span class="o">=</span><span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="n">recipe_version</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="n">analysis_config_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">analyze</span><span class="o">.</span><span class="n">run_analysis_workflow</span><span class="p">(</span>
+                <span class="n">analysis_config</span><span class="o">=</span><span class="n">analysis_config_data</span><span class="p">,</span>
+                <span class="n">recipe_data</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">,</span>
+            <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">env</span><span class="o">.</span><span class="n">buildGrid</span><span class="p">(</span><span class="n">rebuild</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">env</span><span class="o">.</span><span class="n">pack_grid</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usePP</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
