@@ -1209,8 +1209,8 @@ class Analysis:
 
         md_object.add_images(
             header="Packing image",
-            image_text="Packing image",
-            filepaths=figure_path.glob("packing_image_*.png")
+            image_text=["Packing image"],
+            filepaths=[figure_path.glob("packing_image_*.png")]
         )
 
         if run_distance_analysis:
