@@ -7,6 +7,7 @@ import json
 import os
 import numpy
 from collections import OrderedDict
+import typing
 
 from cellpack import autopack
 from mdutils.mdutils import MdUtils
@@ -14,7 +15,7 @@ import pandas as pd
 from pathlib import Path
 
 
-class MarkdownWriter(object):
+class MarkdownWriter(object): 
 
     def __init__(self, title:str, output_path:Path, report_name:str):
         self.title = title
@@ -51,8 +52,53 @@ class MarkdownWriter(object):
             text_align=text_align
         )
 
+    def add_table_from_csv(self, header:str, filepath:Path, text_align="center"):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+        
+        table = pd.read_csv(filepath)
 
+        text_list = []
+        for row in table.values.tolist():
+            for item in row:
+                text_list.append(item)
 
+        self.report_md.new_table(
+            columns=table.shape[1],
+            rows=table.shape[0],
+            text=self.text_list,
+            text_align=text_align
+        )
+    def write_file(self):
+        self.report_md.create_md_file()
+
+    # Image text must be a list, if list is not same length as list of filepaths, only 1st item in image_text is used
+    def add_images(self, header:str, image_text:typing.List[str], filepaths:typing.List):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+        if len(image_text) == len(filepaths):
+            for i in range(len(filepaths)):
+                self.report_md.new_line(
+                    self.report_md.new_inline_image(
+                        text=image_text[i],
+                        path=self.output_path / filepaths[i]
+                    )
+                )
+        else:
+            for i in range(len(filepaths)):
+                self.report_md.new_line(
+                    self.report_md.new_inline_image(
+                        text=image_text[0],
+                        path=self.output_path / filepaths[i]
+                    )
+                )
+        self.report_md.new_line()
 
 class IOingredientTool(object):
     # parser that can return an ingredient
