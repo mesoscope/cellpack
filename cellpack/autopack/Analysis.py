@@ -34,6 +34,7 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
+from cellpack.autopack.writers.ImageWriter import ImageWriter
 
 
 class Analysis:
@@ -2151,6 +2152,7 @@ class Analysis:
         seed_list=None,
         config_name="default",
         recipe_version="1.0.0",
+        export_image_options=None,
     ):
         """
         Runs multiple packings of the same recipe in a loop. This workflow
@@ -2374,6 +2376,15 @@ class Analysis:
                         self.figures_path / f"packing_image_{seed_basename}.png"
                     )
                     plt.close()  # closes the current figure
+
+            if export_image_options is not None:
+                image_writer = ImageWriter(
+                    env=self.env,
+                    name=seed_basename,
+                    output_path=self.figures_path,
+                    voxel_size=export_image_options.get("voxel_size"),
+                )
+                image_writer.export_image()
 
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict

@@ -60,6 +60,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
             seed_list=packing_config_data["randomness_seed"],
             config_name=packing_config_data["name"],
             recipe_version=recipe_data["version"],
+            export_image_options=packing_config_data.get("export_image_options"),
         )
         if analysis_config_path is not None:
             analyze.run_analysis_workflow(
