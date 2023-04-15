@@ -1,7 +1,6 @@
 from aicsimageio.writers.ome_tiff_writer import OmeTiffWriter
 from pathlib import Path
 import numpy
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 """
 ImageWriter provides a class to export cellpack packings as tiff images
