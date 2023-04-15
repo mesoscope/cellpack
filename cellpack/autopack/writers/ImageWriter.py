@@ -1,6 +1,7 @@
 from aicsimageio.writers.ome_tiff_writer import OmeTiffWriter
 from pathlib import Path
 import numpy
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 """
 ImageWriter provides a class to export cellpack packings as tiff images
@@ -23,46 +24,27 @@ class ImageWriter:
         if voxel_size is not None:
             self.voxel_size = numpy.array(voxel_size)
 
-    @staticmethod
-    def create_circular_mask(x_width, y_width, z_width, center=None, radius=None):
-        """
-        Creates a circular mask of the given shape with the specified center
-        and radius
-        """
-        if center is None:  # use the middle of the image
-            center = (int(x_width / 2), int(y_width / 2), int(z_width / 2))
-        if (
-            radius is None
-        ):  # use the smallest distance between the center and image walls
-            radius = min(
-                center[0],
-                center[1],
-                center[2],
-                x_width - center[0],
-                y_width - center[1],
-                z_width - center[2],
-            )
-
-        X, Y, Z = numpy.ogrid[:x_width, :y_width, :z_width]
-        dist_from_center = numpy.sqrt(
-            (X - center[0]) ** 2 + (Y - center[1]) ** 2 + (Z - center[2]) ** 2
+        bounding_box = self.env.boundingBox
+        self.num_voxels = tuple(
+            ((bounding_box[1] - bounding_box[0]) / self.voxel_size).astype(int)
         )
-
-        mask = dist_from_center <= radius
-        return mask
+        self.img = numpy.zeros(self.num_voxels)
 
     def create_voxelization(self):
         """
-        Creates a voxelized representation of the current grid
+        Creates a voxelized representation of the current scene
         """
-        bounding_box = self.env.boundingBox
-        num_voxels = tuple(
-            ((bounding_box[1] - bounding_box[0]) / self.voxel_size).astype(int)
-        )
+        for pos, rot, ingr, ptInd in self.env.molecules:
+            self.img = ingr.create_voxelization_mask(
+                img=self.img,
+                bounding_box=self.env.boundingBox,
+                voxel_size=self.voxel_size,
+                num_voxels=self.num_voxels,
+                position=pos,
+                rotation=rot,
+            )
 
-        img = numpy.zeros(num_voxels)
-
-        return img
+        return self.img.T
 
     def export_image(self):
         """
@@ -71,4 +53,4 @@ class ImageWriter:
         print(f"Exporting image to {self.output_path}")
         img = self.create_voxelization()
         filepath = self.output_path / f"voxelized_image_{self.name}.ome.tiff"
-        OmeTiffWriter.save(img.T, filepath, dim_order="ZYX")
+        OmeTiffWriter.save(img, filepath, dim_order="ZYX")
