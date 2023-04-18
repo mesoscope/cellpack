@@ -36,7 +36,9 @@ class ImageWriter:
         channel_colors = []
         for pos, rot, ingr, _ in self.env.molecules:
             if ingr.name not in self.image_data:
-                self.image_data[ingr.name] = numpy.zeros(self.image_size)
+                self.image_data[ingr.name] = numpy.zeros(
+                    self.image_size, dtype=numpy.uint8
+                )
                 if ingr.color is not None:
                     color = ingr.color
                     if all([x <= 1 for x in ingr.color]):
@@ -52,7 +54,9 @@ class ImageWriter:
                 rotation=rot,
             )
 
-        concatenated_image = numpy.zeros((len(self.image_data), *self.image_size))
+        concatenated_image = numpy.zeros(
+            (len(self.image_data), *self.image_size), dtype=numpy.uint8
+        )
         channel_names = []
         for ct, (channel_name, channel_image) in enumerate(self.image_data.items()):
             concatenated_image[ct] = channel_image
