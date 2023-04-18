@@ -24,32 +24,55 @@ class ImageWriter:
             self.voxel_size = numpy.array(voxel_size)
 
         bounding_box = self.env.boundingBox
-        self.num_voxels = tuple(
+        self.image_size = tuple(
             ((bounding_box[1] - bounding_box[0]) / self.voxel_size).astype(int)
         )
-        self.img = numpy.zeros(self.num_voxels)
+        self.image_data = {}
 
     def create_voxelization(self):
         """
         Creates a voxelized representation of the current scene
         """
-        for pos, rot, ingr, ptInd in self.env.molecules:
-            self.img = ingr.create_voxelization_mask(
-                img=self.img,
+        channel_colors = []
+        for pos, rot, ingr, _ in self.env.molecules:
+            if ingr.name not in self.image_data:
+                self.image_data[ingr.name] = numpy.zeros(self.image_size)
+                if ingr.color is not None:
+                    color = ingr.color
+                    if all([x <= 1 for x in ingr.color]):
+                        color = [int(col * 255) for col in ingr.color]
+                    channel_colors.append(color)
+
+            self.image_data[ingr.name] = ingr.create_voxelization_mask(
+                image_data=self.image_data[ingr.name],
                 bounding_box=self.env.boundingBox,
                 voxel_size=self.voxel_size,
-                num_voxels=self.num_voxels,
+                image_size=self.image_size,
                 position=pos,
                 rotation=rot,
             )
 
-        return self.img.T
+        concatenated_image = numpy.zeros((len(self.image_data), *self.image_size))
+        channel_names = []
+        for ct, (channel_name, channel_image) in enumerate(self.image_data.items()):
+            concatenated_image[ct] = channel_image
+            channel_names.append(channel_name)
+
+        concatenated_image = numpy.transpose(concatenated_image, axes=(3, 0, 1, 2))
+
+        return concatenated_image, channel_names, channel_colors
 
     def export_image(self):
         """
         Saves the results as a tiff file
         """
         print(f"Exporting image to {self.output_path}")
-        img = self.create_voxelization()
+        concatenated_image, channel_names, channel_colors = self.create_voxelization()
         filepath = self.output_path / f"voxelized_image_{self.name}.ome.tiff"
-        OmeTiffWriter.save(img, filepath, dim_order="ZYX")
+        OmeTiffWriter.save(
+            concatenated_image,
+            filepath,
+            dim_order="ZCYX",
+            channel_names=channel_names,
+            channel_colors=channel_colors,
+        )

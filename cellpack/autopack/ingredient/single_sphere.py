@@ -289,7 +289,7 @@ class SingleSphereIngr(Ingredient):
         return mask
 
     def create_voxelization_mask(
-        self, img, bounding_box, voxel_size, num_voxels, position, rotation
+        self, image_data, bounding_box, voxel_size, image_size, position, rotation
     ):
         """
         Creates a voxelization mask at the position of the sphere
@@ -297,11 +297,11 @@ class SingleSphereIngr(Ingredient):
         relative_position = position - bounding_box[0]
         voxelized_position = (relative_position / voxel_size).astype(int)
         mask = self.create_circular_mask(
-            *num_voxels,
+            *image_size,
             center=voxelized_position,
             radius=self.radius,
             voxel_size=voxel_size
         )
-        img[mask] = 1
+        image_data[mask] = 1
 
-        return img
+        return image_data

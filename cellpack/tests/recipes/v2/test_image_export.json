@@ -64,19 +64,39 @@
                 1,
                 0
             ]
+        },
+        "sphere_5": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0,
+                1,
+                1
+            ],
+            "radius": 5,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
         }
     },
     "composition": {
         "space": {
             "regions": {
                 "interior": [
-                    "A"
+                    "A",
+                    "B"
                 ]
             }
         },
         "A": {
             "object": "sphere_20",
             "count": 5
+        },
+        "B": {
+            "object": "sphere_5",
+            "count": 20
         }
     }
 }
