@@ -25,7 +25,7 @@ class ImageWriter:
 
         bounding_box = self.env.boundingBox
         self.image_size = tuple(
-            ((bounding_box[1] - bounding_box[0]) / self.voxel_size).astype(int)
+            max(((bounding_box[1] - bounding_box[0]) / self.voxel_size), 1).astype(int)
         )
         self.image_data = {}
 
