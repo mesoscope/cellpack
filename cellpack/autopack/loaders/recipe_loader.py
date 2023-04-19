@@ -130,7 +130,7 @@ class RecipeLoader(object):
         else:
             format_version = recipe_data["format_version"]
         return format_version
-    
+
     def get_only_recipe_metadata(self):
         recipe_meta_data = {
             "format_version": self.recipe_data["format_version"],

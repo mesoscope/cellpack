@@ -5,9 +5,9 @@ mock_db = MockDB({})
 
 
 def test_is_nested_list():
-    assert DBRecipeHandler.is_nested_list([]) == False
-    assert DBRecipeHandler.is_nested_list([[], []]) == True
-    assert DBRecipeHandler.is_nested_list([[1, 2], [3, 4]]) == True
+    assert DBRecipeHandler.is_nested_list([]) is False
+    assert DBRecipeHandler.is_nested_list([[], []]) is True
+    assert DBRecipeHandler.is_nested_list([[1, 2], [3, 4]]) is True
 
 
 def test_prep_data_for_db():

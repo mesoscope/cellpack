@@ -49,7 +49,7 @@ def test_get_reference_data_with_key():
         composition_db_doc.as_dict()["object"], mock_db
     )
     assert downloaded_data == {"test": "downloaded_data"}
-    assert key == None
+    assert key is None
 
 
 def test_get_reference_data_with_none():
@@ -64,7 +64,7 @@ def test_get_reference_data_with_none():
         composition_db_doc.as_dict()["object"], mock_db
     )
     assert downloaded_data == {}
-    assert key == None
+    assert key is None
 
 
 def test_resolve_db_regions():
@@ -125,17 +125,8 @@ def test_resolve_local_regions():
             },
         },
         "composition": {
-            "space": {
-                "regions": {
-                    "interior": [
-                        "A"
-                    ]
-                }
-            },
-            "A": {
-                "object": "sphere_25", 
-                "count": 500
-            },
+            "space": {"regions": {"interior": ["A"]}},
+            "A": {"object": "sphere_25", "count": 500},
         },
     }
 
