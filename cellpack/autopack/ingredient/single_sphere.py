@@ -36,6 +36,7 @@ class SingleSphereIngr(Ingredient):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
+        object_name=None,
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
@@ -69,6 +70,7 @@ class SingleSphereIngr(Ingredient):
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
+            object_name=object_name,
             overwrite_distance_function=overwrite_distance_function,
             packing_mode=packing_mode,
             priority=priority,

@@ -4,11 +4,11 @@ Created on Sun Jan 27 09:04:10 2013
 
 @author: Ludovic Autin
 """
+import json
 import os
 import pickle
 
 import numpy
-import json
 from json import encoder
 from collections import OrderedDict
 
@@ -220,7 +220,7 @@ class IOingredientTool(object):
                     ingdic["curve" + str(i)] = ingr.listePtLinear[i]
                 #            res=numpy.array(ingdic["results"]).transpose()
                 #            ingdic["results"]=res.tolist()
-        ingdic["name"] = ingr.o_name
+        ingdic["name"] = ingr.composition_name
         return ingdic
 
     def ingrPythonNode(self, ingr, recipe="recipe"):
@@ -568,7 +568,7 @@ def gatherResult(ingr_result, transpose, use_quaternion, type=0.0, lefthand=Fals
             if use_quaternion:
                 R = tr.quaternion_from_matrix(R).tolist()
             all_rot.append(R)
-        # print ingr.o_name, type, all_pos[-1], all_rot[-1]
+        # print ingr.composition_name, type, all_pos[-1], all_rot[-1]
     return all_pos, all_rot
 
 
@@ -602,12 +602,12 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
             if ingr.type == "Grow":
                 if fibers is None:
                     fibers = sIngredientGroup("fibers", 1)
-                igr = sIngredient(ingr.o_name, 1, **kwds)
+                igr = sIngredient(ingr.composition_name, 1, **kwds)
                 fibers.addIngredient(igr)
             else:
                 if proteins is None:
                     proteins = sIngredientGroup("proteins", 0)
-                igr = sIngredient(ingr.o_name, 0, **kwds)
+                igr = sIngredient(ingr.composition_name, 0, **kwds)
                 proteins.addIngredient(igr)
             if result:
                 ap, ar = gatherResult(
@@ -647,12 +647,12 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
                 if ingr.type == "Grow":
                     if fibers is None:
                         fibers = sIngredientGroup("fibers", 1)
-                    igr = sIngredient(ingr.o_name, 1, **kwds)
+                    igr = sIngredient(ingr.composition_name, 1, **kwds)
                     fibers.addIngredient(igr)
                 else:
                     if proteins is None:
                         proteins = sIngredientGroup("proteins", 0)
-                    igr = sIngredient(ingr.o_name, 0, **kwds)
+                    igr = sIngredient(ingr.composition_name, 0, **kwds)
                     proteins.addIngredient(igr)
                 if result:
                     ap, ar = gatherResult(
@@ -690,12 +690,12 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
                 if ingr.type == "Grow":
                     if fibers is None:
                         fibers = sIngredientGroup("fibers", 1)
-                    igr = sIngredient(ingr.o_name, 1, **kwds)
+                    igr = sIngredient(ingr.composition_name, 1, **kwds)
                     fibers.addIngredient(igr)
                 else:
                     if proteins is None:
                         proteins = sIngredientGroup("proteins", 0)
-                    igr = sIngredient(ingr.o_name, 0, **kwds)
+                    igr = sIngredient(ingr.composition_name, 0, **kwds)
                     proteins.addIngredient(igr)
                 if result:
                     ap, ar = gatherResult(
@@ -734,7 +734,7 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
             #            if ingr.type == "Grow":
             #                if fibers is None:
             #                    fibers = sIngredientGroup("fibers", 1)
-            #                igr = sIngredient(ingr.o_name, 1, **kwds)
+            #                igr = sIngredient(ingr.composition_name, 1, **kwds)
             #                fibers.addIngredient(igr)
             #            else:
             if proteins is None:
@@ -757,9 +757,9 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
     #        if fibers is not None:
     #            exterior.addIngredientGroup(fibers)
     if "compartments" in env:
-        for o_name in env["compartments"]:
-            o = env["compartments"][o_name]
-            co = sCompartment(o_name)
+        for composition_name in env["compartments"]:
+            o = env["compartments"][composition_name]
+            co = sCompartment(composition_name)
             rs = None
             if "surface" in o:
                 rs = o["surface"]
@@ -772,7 +772,7 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
                     #                if ingr.type == "Grow":
                     #                    if fibers is None:
                     #                        fibers = sIngredientGroup("fibers", 1)
-                    #                    igr = sIngredient(ingr.o_name, 1, **kwds)
+                    #                    igr = sIngredient(ingr.composition_name, 1, **kwds)
                     #                    fibers.addIngredient(igr)
                     #                else:
                     if proteins is None:
@@ -844,7 +844,7 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
             ingr = r["ingredients"][ingr_name]
             kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
             # if ingr.type == "Grow":
-            #    igr = sIngredientFiber(ingr.o_name, **kwds)
+            #    igr = sIngredientFiber(ingr.composition_name, **kwds)
             #    group.addIngredientFiber(igr)
             # else:
             igr = sIngredient(ingr["name"], **kwds)
@@ -872,7 +872,7 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
                 ingr = ri["ingredients"][ingr_name]
                 kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
                 #                if ingr.type == "Grow":
-                #                    igr = sIngredientFiber(ingr.o_name, **kwds)
+                #                    igr = sIngredientFiber(ingr.composition_name, **kwds)
                 #                    group.addIngredientFiber(igr)
                 #                else:
                 igr = sIngredient(ingr["name"], **kwds)
@@ -894,10 +894,10 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
         for ingr in r.ingredients:
             kwds = {"count": len(ingr.results), "source": ingr.source}
             if ingr.type == "Grow":
-                igr = sIngredientFiber(ingr.o_name, **kwds)
+                igr = sIngredientFiber(ingr.composition_name, **kwds)
                 group.addIngredientFiber(igr)
             else:
-                igr = sIngredient(ingr.o_name, **kwds)
+                igr = sIngredient(ingr.composition_name, **kwds)
                 group.addIngredient(igr)
             ap, ar = gatherResult(
                 ingr.results,
@@ -917,10 +917,10 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
             for ingr in rs.ingredients:
                 kwds = {"count": len(ingr.results), "source": ingr.source}
                 if ingr.type == "Grow":
-                    igr = sIngredientFiber(ingr.o_name, **kwds)
+                    igr = sIngredientFiber(ingr.composition_name, **kwds)
                     group.addIngredientFiber(igr)
                 else:
-                    igr = sIngredient(ingr.o_name, **kwds)
+                    igr = sIngredient(ingr.composition_name, **kwds)
                     group.addIngredient(igr)
                 ap, ar = gatherResult(
                     ingr.results,
@@ -938,10 +938,10 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
             for ingr in ri.ingredients:
                 kwds = {"count": len(ingr.results), "source": ingr.source}
                 if ingr.type == "Grow":
-                    igr = sIngredientFiber(ingr.o_name, **kwds)
+                    igr = sIngredientFiber(ingr.composition_name, **kwds)
                     group.addIngredientFiber(igr)
                 else:
-                    igr = sIngredient(ingr.o_name, **kwds)
+                    igr = sIngredient(ingr.composition_name, **kwds)
                     group.addIngredient(igr)
                 ap, ar = gatherResult(
                     ingr.results,
@@ -1280,12 +1280,12 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                     if name_ingr not in env.result_json["cytoplasme"]["ingredients"]:
                         # backward compatiblity
                         if (
-                            ingr.o_name
+                            ingr.composition_name
                             not in env.result_json["cytoplasme"]["ingredients"]
                         ):
                             continue
                         else:
-                            name_ingr = ingr.o_name
+                            name_ingr = ingr.composition_name
                     iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
                         ingr, env.result_json["cytoplasme"]["ingredients"][name_ingr]
                     )
@@ -1319,12 +1319,12 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                     name_ingr = ingr.name
                     # replace number by name ?
                     if (
-                        orga.name + "_surf_" + ingr.o_name
+                        orga.name + "_surf_" + ingr.composition_name
                         in env.result_json["compartments"][orga.name]["surface"][
                             "ingredients"
                         ]
                     ):
-                        name_ingr = orga.name + "_surf_" + ingr.o_name
+                        name_ingr = orga.name + "_surf_" + ingr.composition_name
                     if (
                         name_ingr
                         not in env.result_json["compartments"][orga.name]["surface"][
@@ -1333,14 +1333,14 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                     ):
                         # backward compatiblity
                         if (
-                            ingr.o_name
+                            ingr.composition_name
                             not in env.result_json["compartments"][orga.name][
                                 "surface"
                             ]["ingredients"]
                         ):
                             continue
                         else:
-                            name_ingr = ingr.o_name
+                            name_ingr = ingr.composition_name
                     iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
                         ingr,
                         env.result_json["compartments"][orga.name]["surface"][
@@ -1372,12 +1372,12 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                 for ingr in ri.ingredients:
                     name_ingr = ingr.name
                     if (
-                        orga.name + "_int_" + ingr.o_name
+                        orga.name + "_int_" + ingr.composition_name
                         in env.result_json["compartments"][orga.name]["interior"][
                             "ingredients"
                         ]
                     ):
-                        name_ingr = orga.name + "_int_" + ingr.o_name
+                        name_ingr = orga.name + "_int_" + ingr.composition_name
                     if (
                         name_ingr
                         not in env.result_json["compartments"][orga.name]["interior"][
@@ -1386,14 +1386,14 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                     ):
                         # backward compatiblity
                         if (
-                            ingr.o_name
+                            ingr.composition_name
                             not in env.result_json["compartments"][orga.name][
                                 "interior"
                             ]["ingredients"]
                         ):
                             continue
                         else:
-                            name_ingr = ingr.o_name
+                            name_ingr = ingr.composition_name
                     iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
                         ingr,
                         env.result_json["compartments"][orga.name]["interior"][

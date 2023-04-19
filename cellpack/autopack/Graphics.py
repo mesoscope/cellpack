@@ -722,7 +722,9 @@ class AutopackViewer:
             )
             self.vi.AddObject(sph, parent=ingr.mesh)
         else:
-            oparent = self.vi.getObject(ingr.mesh)  # or ingr.mesh or o_name or gname ?
+            oparent = self.vi.getObject(
+                ingr.mesh
+            )  # or ingr.mesh or composition_name or gname ?
             pname = ingr.name.replace(" ", "_") + "_SPH"
             print("found ", oparent, pname, ingr.mesh)
             parent = self.vi.getObject(pname)  # or ingr.mesh
@@ -730,7 +732,7 @@ class AutopackViewer:
                 parent = self.vi.newEmpty(pname, parent=oparent)
             if not hasattr(ingr, "isph") or ingr.isph is None:
                 ingr.isph = []
-                names = ingr.o_name + "_sph"
+                names = ingr.composition_name + "_sph"
                 for level in range(len(ingr.radii)):
                     name = pname + str(level)
                     lparent = self.vi.getObject(name)
@@ -1247,9 +1249,11 @@ class AutopackViewer:
             if not hasattr(ingredient, "ipoly") or ingredient.ipoly is None or dejavui:
                 color = [ingredient.color] if ingredient.color is not None else None
                 axis = numpy.array(ingredient.principal_vector[:])
-                print("build ipoly ", ingredient.o_name)
+                print("build ipoly ", ingredient.composition_name)
                 ingredient.ipoly = self.vi.instancePolygon(
-                    o.name + self.histo.FillName[self.histo.cFill] + ingredient.o_name,
+                    o.name
+                    + self.histo.FillName[self.histo.cFill]
+                    + ingredient.composition_name,
                     matrices=matrices,
                     mesh=polygon,
                     parent=parent,
@@ -1366,7 +1370,9 @@ class AutopackViewer:
                     continue
                 axis = numpy.array(ingr.principal_vector[:])
                 ingr.ipoly = self.vi.instancePolygon(
-                    "cyto_" + self.histo.FillName[self.histo.cFill] + ingr.o_name,
+                    "cyto_"
+                    + self.histo.FillName[self.histo.cFill]
+                    + ingr.composition_name,
                     matrices=meshGeoms[ingr],
                     mesh=polygon,
                     parent=parent,
@@ -1996,12 +2002,12 @@ class AutopackViewer:
                 ingr.compNum = recipe.number
                 # g = self.vi.getObject("O" + o.name)
                 ingr.env = self.histo
-            rep = self.vi.getObject(ingr.o_name + "_mesh")
-            print(ingr.o_name + "_mesh is", rep)
+            rep = self.vi.getObject(ingr.composition_name + "_mesh")
+            print(ingr.composition_name + "_mesh is", rep)
             if rep is not None:
                 ingr.mesh = rep
-            ingr.meshFile = autopack.cache_geoms + os.sep + ingr.o_name
-            ingr.meshName = ingr.o_name + "_mesh"
+            ingr.meshFile = autopack.cache_geoms + os.sep + ingr.composition_name
+            ingr.meshName = ingr.composition_name + "_mesh"
             ingr.saveDejaVuMesh(ingr.meshFile)
             self.addMasterIngr(ingr, parent=self.orgaToMasterGeom[ingr.compNum])
         return ingr
