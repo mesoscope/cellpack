@@ -21,11 +21,13 @@ class DataDoc(object):
     def is_key(string_or_dict):
         return not isinstance(string_or_dict, dict)
 
+
 class CompositionDoc(DataDoc):
     """
     Declares required attributes for comps in the constructor, set default values.
     Handles the logic for comparing the local and db data to determine the uploading process.
     """
+
     SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
 
@@ -205,12 +207,7 @@ class CompositionDoc(DataDoc):
 
 
 class ObjectDoc(DataDoc):
-    def __init__(
-            self,
-            name,
-            settings
-
-        ):
+    def __init__(self, name, settings):
         super().__init__()
         self.name = name
         self.settings = settings
@@ -222,9 +219,7 @@ class ObjectDoc(DataDoc):
             if isinstance(value, list):
                 convert_data[key] = tuple(value)
             elif isinstance(value, dict):
-                convert_data[key] = ObjectDoc.convert_positions_in_representation(
-                    value
-                )
+                convert_data[key] = ObjectDoc.convert_positions_in_representation(value)
             else:
                 data[key] = value
         return convert_data
@@ -264,9 +259,7 @@ class ObjectDoc(DataDoc):
         if docs and len(docs) >= 1:
             for doc in docs:
                 # if there is repr in the obj doc from db
-                full_doc_data = ObjectDoc.convert_representation(
-                    doc, db
-                )  
+                full_doc_data = ObjectDoc.convert_representation(doc, db)
                 # unpack objects to dicts in local data for comparison
                 local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
                 difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
@@ -315,7 +308,7 @@ class DBRecipeHandler(object):
                 modified_data[key] = value
         return modified_data
 
-    # 
+    #
     def upload_data(self, collection, data, id=None):
         """
         If should_write is true, upload the data to the database
@@ -338,7 +331,7 @@ class DBRecipeHandler(object):
     def upload_objects(self, objects):
         for obj_name in objects:
             objects[obj_name]["name"] = obj_name
-            object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])            
+            object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])
             _, doc_id = object_doc.should_write(self.db)
             if doc_id:
                 print(f"objects/{object_doc.name} is already exists in firestore")
@@ -454,7 +447,7 @@ class DBRecipeHandler(object):
 
     def upload_recipe(self, recipe_meta_data, recipe_data):
         """
-        After all other collections are checked or uploaded, upload the recipe with references into db  
+        After all other collections are checked or uploaded, upload the recipe with references into db
         """
         recipe_id = self.get_recipe_id(recipe_data)
         # if the recipe is already exists in db, just return
