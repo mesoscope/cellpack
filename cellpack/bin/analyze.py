@@ -3,7 +3,6 @@ Run analysis code
 """
 
 # Standard library
-import os
 from os import path
 import logging
 import logging.config
@@ -13,10 +12,11 @@ import fire
 from time import time
 
 # Relative
-from cellpack.autopack.Analysis import AnalyseAP
+from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.loaders.analysis_config_loader import (
     AnalysisConfigLoader,
 )
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -27,25 +27,31 @@ log = logging.getLogger()
 
 def analyze(
     analysis_config_path,
+    recipe_path,
+    packing_results_path,
 ):
     """
     Runs specified analyses based on the config
     :param analysis_config_path: string argument,
     path to analysis config file
+    :param recipe_path: string argument,
+    path to recipe file
+    :param packing_results_path: string argument
+    path to packing results
 
     :return: void
     """
     t1 = time()
     analysis_config = AnalysisConfigLoader(analysis_config_path).config
-    os.makedirs(analysis_config["output_path"], exist_ok=True)
-    log.info(f"Input path: {analysis_config['input_path']}\n")
+    recipe_data = RecipeLoader(recipe_path, False).recipe_data
 
-    analysis = AnalyseAP(
-        input_path=analysis_config["input_path"],
-        output_path=analysis_config["output_path"],
+    log.info(f"Packing results path: {packing_results_path}\n")
+    analysis = Analysis(
+        packing_results_path=packing_results_path,
     )
     analysis.run_analysis_workflow(
         analysis_config=analysis_config,
+        recipe_data=recipe_data,
     )
     t2 = time()
     print(f"time to run analysis: {t2 - t1}")

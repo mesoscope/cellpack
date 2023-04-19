@@ -174,6 +174,7 @@ class Ingredient(Agent):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
+        object_name=None,
         offset=[0, 0, 0],
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
@@ -221,7 +222,8 @@ class Ingredient(Agent):
             name = "%f" % molarity
         self.log.info("CREATE INGREDIENT %s %r", str(name), rejection_threshold)
         self.name = str(name)
-        self.o_name = str(name)
+        self.composition_name = str(name)
+        self.object_name = str(object_name)
         self.type = type
         self.mesh = None
         self.representations = representations

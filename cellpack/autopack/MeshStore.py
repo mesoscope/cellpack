@@ -325,17 +325,12 @@ class MeshStore:
             self.add_mesh_to_scene(geometry, mesh_name)
         return geometry
 
-    def get_scaled_distances_between_surfaces(
-        self, position_list, inner_mesh_name, outer_mesh_name
-    ):
-        """
-        Calculate scaled distances from inner mesh for position_list
-        Inner mesh surface is 0
-        Outer mesh surface is 1
-        """
-
-        inner_mesh = self.get_mesh(inner_mesh_name)
-        outer_mesh = self.get_mesh(outer_mesh_name)
+    @staticmethod
+    def calc_scaled_distances_for_positions(position_list, inner_mesh, outer_mesh):
+        # first, calculates intersection points and distances
+        # between given position_list and inner_mesh
+        # then, calculates the distances between inner_mesh and outer_mesh
+        # via rays joining inner_mesh intersection points and position_list
 
         query = trimesh.proximity.ProximityQuery(inner_mesh)
 
@@ -349,8 +344,9 @@ class MeshStore:
                 ray_origins=[inner_loc[ind]], ray_directions=[position - inner_loc[ind]]
             )
 
-        scaled_distance_between_surfaces = inner_surface_distances / (
-            numpy.linalg.norm(outer_loc - inner_loc, axis=1)
+        distance_between_surfaces = numpy.linalg.norm(outer_loc - inner_loc, axis=1)
+        scaled_distance_between_surfaces = (
+            inner_surface_distances / distance_between_surfaces
         )
 
         if any(scaled_distance_between_surfaces > 1) or any(
@@ -358,7 +354,27 @@ class MeshStore:
         ):
             raise ValueError("Check distances between surfaces")
 
-        return scaled_distance_between_surfaces
+        return (
+            scaled_distance_between_surfaces,
+            distance_between_surfaces,
+            inner_surface_distances,
+        )
+
+    def get_scaled_distances_between_surfaces(
+        self, position_list, inner_mesh_name, outer_mesh_name
+    ):
+        """
+        Calculate scaled distances from inner mesh for position_list
+        Inner mesh surface is 0
+        Outer mesh surface is 1
+        """
+
+        inner_mesh = self.get_mesh(inner_mesh_name)
+        outer_mesh = self.get_mesh(outer_mesh_name)
+
+        return self.calc_scaled_distances_for_positions(
+            position_list, inner_mesh, outer_mesh
+        )
 
     def decompose_mesh(self, poly, edit=True, copy=True, tri=True, transform=True):
         if not isinstance(poly, trimesh.Trimesh):

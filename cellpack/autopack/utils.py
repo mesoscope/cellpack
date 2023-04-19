@@ -150,3 +150,22 @@ def expand_object_using_key(current_object, expand_on, lookup_dict):
     new_object = deep_merge(copy.deepcopy(base_object), current_object)
     del new_object[expand_on]
     return new_object
+
+
+def check_paired_key(val_dict, key1=None, key2=None):
+    """
+    Checks if the key pair exists in dict
+    """
+    for key in val_dict:
+        if (key1 in key) and (key2 in key):
+            return True
+    return False
+
+
+def get_paired_key(val_dict, key1=None, key2=None):
+    """
+    Get the combined key from dict
+    """
+    for key in val_dict:
+        if (key1 in key) and (key2 in key):
+            return key
