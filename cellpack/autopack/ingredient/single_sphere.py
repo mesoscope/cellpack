@@ -288,11 +288,11 @@ class SingleSphereIngr(Ingredient):
         mask = dist_from_center <= radius
         return mask
 
-    def create_voxelization_mask(
+    def create_voxelization(
         self, image_data, bounding_box, voxel_size, image_size, position, rotation
     ):
         """
-        Creates a voxelization mask at the position of the sphere
+        Creates a voxelization for the sphere
         """
         relative_position = position - bounding_box[0]
         voxelized_position = (relative_position / voxel_size).astype(int)

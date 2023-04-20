@@ -25,7 +25,9 @@ class ImageWriter:
 
         bounding_box = self.env.boundingBox
         self.image_size = tuple(
-            max(((bounding_box[1] - bounding_box[0]) / self.voxel_size), 1).astype(int)
+            numpy.maximum(
+                ((bounding_box[1] - bounding_box[0]) / self.voxel_size), 1
+            ).astype(int)
         )
         self.image_data = {}
 
@@ -34,6 +36,7 @@ class ImageWriter:
         Creates a voxelized representation of the current scene
         """
         channel_colors = []
+
         for pos, rot, ingr, _ in self.env.molecules:
             if ingr.name not in self.image_data:
                 self.image_data[ingr.name] = numpy.zeros(
@@ -45,13 +48,35 @@ class ImageWriter:
                         color = [int(col * 255) for col in ingr.color]
                     channel_colors.append(color)
 
-            self.image_data[ingr.name] = ingr.create_voxelization_mask(
+            self.image_data[ingr.name] = ingr.create_voxelization(
                 image_data=self.image_data[ingr.name],
                 bounding_box=self.env.boundingBox,
                 voxel_size=self.voxel_size,
                 image_size=self.image_size,
                 position=pos,
                 rotation=rot,
+            )
+
+        for compartment in self.env.compartments:
+            if compartment.name not in self.image_data:
+                self.image_data[compartment.name] = numpy.zeros(
+                    self.image_size, dtype=numpy.uint8
+                )
+                if hasattr(compartment, "color") and compartment.color is not None:
+                    color = compartment.color
+                    if all([x <= 1 for x in compartment.color]):
+                        color = [int(col * 255) for col in compartment.color]
+                    channel_colors.append(color)
+                else:
+                    channel_colors.append([0, 255, 0])
+
+            self.image_data[compartment.name] = compartment.create_voxelization(
+                image_data=self.image_data[compartment.name],
+                bounding_box=self.env.boundingBox,
+                voxel_size=self.voxel_size,
+                image_size=self.image_size,
+                position=compartment.position,
+                mesh_store=self.env.mesh_store,
             )
 
         concatenated_image = numpy.zeros(
@@ -72,11 +97,12 @@ class ImageWriter:
         """
         print(f"Exporting image to {self.output_path}")
         concatenated_image, channel_names, channel_colors = self.create_voxelization()
-        filepath = self.output_path / f"voxelized_image_{self.name}.ome.tiff"
-        OmeTiffWriter.save(
-            concatenated_image,
-            filepath,
-            dim_order="ZCYX",
-            channel_names=channel_names,
-            channel_colors=channel_colors,
-        )
+        if len(channel_names) != 0:
+            filepath = self.output_path / f"voxelized_image_{self.name}.ome.tiff"
+            OmeTiffWriter.save(
+                concatenated_image,
+                filepath,
+                dim_order="ZCYX",
+                channel_names=channel_names,
+                channel_colors=channel_colors,
+            )

@@ -1278,7 +1278,7 @@ class Environment(CompartmentList):
 
     def extend_bounding_box_for_compartments(self):
         for _, compartment in enumerate(self.compartments):
-            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+            fits, bb = compartment.inBox(self.boundingBox, self.spacing)
             if not fits:
                 self.boundingBox = bb
 

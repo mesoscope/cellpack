@@ -144,7 +144,7 @@ class Compartment(CompartmentList):
             self.filename = self.representations.get_mesh_path()
             self.path = autopack.fixOnePath(self.filename)
         self.stype = "mesh"
-        self.radius = object_info["radius"] if "radius" in object_info else 200.0
+        self.radius = object_info.get("radius", 200.0)
         self.height = 0.0
         self.axis = [0, 1, 0]
         self.area = 0.0
@@ -154,9 +154,8 @@ class Compartment(CompartmentList):
         self.bb = None
         self.diag = 9999.9
         self.ghost = None
-        self.encapsulating_radius = (
-            object_info["radius"] if "radius" in object_info else 200.0
-        )
+        self.encapsulating_radius = object_info.get("radius", 200.0)
+        self.color = object_info.get("color")
         self.checkinside = True
         self.innerRecipe = None
         self.surfaceRecipe = None
@@ -3121,6 +3120,63 @@ class Compartment(CompartmentList):
         print("total time", time() - t1)
         self.grid_distances = distances
         return insidePoints, surfacePoints
+
+    def create_voxelized_mask(
+        self, x_width, y_width, z_width, center, voxel_size, mesh_store
+    ):
+        """
+        Creates a mask of the compartment voxelization
+        """
+        if voxel_size is None:
+            voxel_size = numpy.array([1, 1, 1], dtype=int)
+
+        if center is None:  # use the middle of the grid
+            center = (self.bounding_box[0] + self.bounding_box[1]) / 2.0
+
+        X, Y, Z = numpy.meshgrid(
+            numpy.arange(x_width),
+            numpy.arange(y_width),
+            numpy.arange(z_width),
+        )
+        coords = (
+            numpy.vstack(  # coords are in grid space
+                (
+                    X * voxel_size[0] - center[0],
+                    Y * voxel_size[1] - center[1],
+                    Z * voxel_size[2] - center[2],
+                )
+            )
+            .reshape(3, -1)
+            .T
+        )
+
+        mesh = mesh_store.get_mesh(self.gname)
+        # TODO: add option to create hollow voxelization
+        trimesh_grid_surface = creation.voxelize(
+            mesh, pitch=numpy.min(voxel_size)
+        ).hollow()
+
+        mask_ravel = trimesh_grid_surface.is_filled(coords)
+        mask = mask_ravel.reshape(x_width, y_width, z_width)
+
+        return mask
+
+    def create_voxelization(
+        self, image_data, bounding_box, voxel_size, image_size, position, mesh_store
+    ):
+        """
+        Creates a voxelization mask at the position of the compartment
+        """
+        relative_position = position - bounding_box[0]
+        mask = self.create_voxelized_mask(
+            *image_size,
+            center=relative_position,
+            voxel_size=voxel_size,
+            mesh_store=mesh_store,
+        )
+        image_data[mask] = 1
+
+        return image_data
 
     def getSurfaceInnerPointsPandaRay(
         self, boundingBox, spacing, display=True, useFix=False
