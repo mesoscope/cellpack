@@ -163,10 +163,7 @@ class MultiCylindersIngr(Ingredient):
         return bb
 
     def collides_with_compartment(
-        self,
-        env,
-        jtrans,
-        rotation_matrix,
+        self, env, jtrans, rotation_matrix,
     ):
         """
         Check cylinders for collision
@@ -213,14 +210,7 @@ class MultiCylindersIngr(Ingredient):
         return False
 
     def collision_jitter(
-        self,
-        jtrans,
-        rotMat,
-        level,
-        gridPointsCoords,
-        distance,
-        histoVol,
-        dpad,
+        self, jtrans, rotMat, level, gridPointsCoords, distance, histoVol, dpad,
     ):
         """
         Check cylinders for collision
@@ -317,7 +307,7 @@ class MultiCylindersIngr(Ingredient):
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            radt = sqrt(lengthsq + radc**2)
+            radt = sqrt(lengthsq + radc ** 2)
 
             bb = self.correctBB(p1, p2, radc)
             #            bb = self.correctBB(posc,posc,radt)

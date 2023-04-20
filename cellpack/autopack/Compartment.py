@@ -243,7 +243,7 @@ class Compartment(CompartmentList):
 
     def _get_volume(self, mesh_store):
         if self.is_sphere:
-            return 4 * math.pi * self.radius**3 / 3
+            return 4 * math.pi * self.radius ** 3 / 3
 
     def initialize_shape(self, mesh_store):
         if self.is_sphere:
@@ -373,15 +373,7 @@ class Compartment(CompartmentList):
         rotMat = mat = numpy.identity(4)
         mat = mat.transpose().reshape((16,))
         mat3x3 = Mat3(
-            mat[0],
-            mat[1],
-            mat[2],
-            mat[4],
-            mat[5],
-            mat[6],
-            mat[8],
-            mat[9],
-            mat[10],
+            mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10],
         )
         pmat = Mat4(
             mat[0],
@@ -1044,7 +1036,7 @@ class Compartment(CompartmentList):
         )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
         env.grid.compartment_ids[grid_pts_in_sphere_indexes] = -self.number
         self.surfacePointsCoords = None
-        vSurfaceArea = 4 * math.pi * self.radius**2
+        vSurfaceArea = 4 * math.pi * self.radius ** 2
         self.log.info("vSurfaceArea = %r", vSurfaceArea)
         self.insidePoints = grid_pts_in_sphere_indexes
         self.surfacePoints = []
@@ -1108,9 +1100,7 @@ class Compartment(CompartmentList):
                 _,
                 _,
             ) = env.mesh_store.get_scaled_distances_between_surfaces(
-                grid_pt_to_calc,
-                self.gname,
-                self.parent.gname,
+                grid_pt_to_calc, self.gname, self.parent.gname,
             )
             self.scaled_distance_to_next_surface = scaled_distance_to_next_surface
 
@@ -1142,13 +1132,7 @@ class Compartment(CompartmentList):
         )
 
     def BuildGrid_ray(
-        self,
-        env,
-        grdPos,
-        vSurfaceArea,
-        vertex_points,
-        idarray,
-        mesh_store,
+        self, env, grdPos, vSurfaceArea, vertex_points, idarray, mesh_store,
     ):
         """Build the compartment grid using pyembree raycast to find inside points,
         and then a cKDTree to find "missing" surface points, ie surface points that are
@@ -1420,16 +1404,7 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_pyray(
-        self,
-        env,
-        ctree,
-        distances,
-        grdPos,
-        diag,
-        vSurfaceArea,
-        srfPts,
-        idarray,
-        ray=1,
+        self, env, ctree, distances, grdPos, diag, vSurfaceArea, srfPts, idarray, ray=1,
     ):
 
         if self.is_box:
@@ -1877,11 +1852,7 @@ class Compartment(CompartmentList):
                         uniquePointsCoords2 = vertices[uniquePoints2]
                         endPoint2 = findPointsCenter(uniquePointsCoords2)
                         numHits2, thisBackFace2 = f_ray_intersect_polyhedron(
-                            g.globalCoord,
-                            endPoint2,
-                            g.closeFaces,
-                            vertices,
-                            False,
+                            g.globalCoord, endPoint2, g.closeFaces, vertices, False,
                         )
                     if len(g.closeFaces) == 1 or thisBackFace != thisBackFace2:
                         mismatchCounter += 1
@@ -2358,7 +2329,7 @@ class Compartment(CompartmentList):
         Compute volume of surface and interior
         set 'count' in each ingredient of both recipes
         """
-        unitVol = env.grid.gridSpacing**3
+        unitVol = env.grid.gridSpacing ** 3
         if surfacePoints:
             self.log.info("%d surface points %.2f unitVol", len(surfacePoints), unitVol)
             # FIXME .. should be surface per surface point instead of unitVol
@@ -2372,9 +2343,7 @@ class Compartment(CompartmentList):
                 self.surfaceVolume,
                 self.interiorVolume,
             )
-        self.log.info(
-            f"{self.name}: {self.interiorVolume} interior volume",
-        )
+        self.log.info(f"{self.name}: {self.interiorVolume} interior volume",)
         self.setCount()
 
     def setCount(self):
@@ -2791,11 +2760,7 @@ class Compartment(CompartmentList):
                         uniquePointsCoords2 = vertices[uniquePoints2]
                         endPoint2 = findPointsCenter(uniquePointsCoords2)
                         numHits2, thisBackFace2 = f_ray_intersect_polyhedron(
-                            g.globalCoord,
-                            endPoint2,
-                            g.closeFaces,
-                            vertices,
-                            False,
+                            g.globalCoord, endPoint2, g.closeFaces, vertices, False,
                         )
                     if len(g.closeFaces) == 1 or thisBackFace != thisBackFace2:
                         mismatchCounter += 1
@@ -3038,8 +3003,7 @@ class Compartment(CompartmentList):
             #            vnpos = numpy.array(npost[sptInd])
             facesN = self.getVNfromF(sptInd)
             d1 = helper.measure_distance(
-                numpy.array(grdPos[ptInd]),
-                numpy.array(srfPts[sptInd]) + (n * 0.00001),
+                numpy.array(grdPos[ptInd]), numpy.array(srfPts[sptInd]) + (n * 0.00001),
             )
             d2 = helper.measure_distance(
                 numpy.array(grdPos[ptInd]), numpy.array(srfPts[sptInd])
@@ -3210,9 +3174,7 @@ class Compartment(CompartmentList):
             # raycats and see what it it on the mesh
             # or result = world.sweepTestClosest(shape, tsFrom, tsTo, penetration)
             res = pud.rayCast(
-                grdPos[ptInd],
-                (numpy.array(grdPos[ptInd]) + v) * 99999,
-                closest=True,
+                grdPos[ptInd], (numpy.array(grdPos[ptInd]) + v) * 99999, closest=True,
             )  # world.rayTestAll(start, end)
             # can we get the number of hit?
             if res.hasHit():
@@ -3227,13 +3189,7 @@ class Compartment(CompartmentList):
                 dot2 = numpy.dot(an, v)
                 a2 = helper.angle_between_vectors(-v, an)
                 print(
-                    "hit with ",
-                    a,
-                    math.degrees(a),
-                    a2,
-                    math.degrees(a2),
-                    dot,
-                    dot2,
+                    "hit with ", a, math.degrees(a), a2, math.degrees(a2), dot, dot2,
                 )
                 if display:
                     helper.setTranslation(sph3, numpy.array(h.getHitPos()))
@@ -3321,8 +3277,7 @@ class Compartment(CompartmentList):
             node = pud.addSingleSphereRB(r, name=str(i))
             node.setPos(pos[0], pos[1], pos[2])
             helper.progressBar(
-                progress=int((i / float(NPT)) * 100.0),
-                label=str(i) + "/" + str(NPT),
+                progress=int((i / float(NPT)) * 100.0), label=str(i) + "/" + str(NPT),
             )
             return node
 

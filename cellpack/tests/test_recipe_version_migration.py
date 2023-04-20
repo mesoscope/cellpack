@@ -38,11 +38,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import (
         (
             {"sphereFile": "fibrinogen.sph"},
             {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "",
-                },
+                "packing": {"name": "fibrinogen.sph", "format": ".sph", "path": "",},
                 "atomic": None,
                 "mesh": None,
             },
@@ -50,11 +46,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import (
         (
             {"sphereFile": "/fibrinogen.sph"},
             {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "/",
-                },
+                "packing": {"name": "fibrinogen.sph", "format": ".sph", "path": "/",},
                 "atomic": None,
                 "mesh": None,
             },
@@ -84,10 +76,7 @@ def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result
             },
         ),
         (
-            {
-                "meshFile": "test.obj",
-                "coordsystem": "left",
-            },
+            {"meshFile": "test.obj", "coordsystem": "left",},
             {
                 "mesh": {
                     "name": "test.obj",
@@ -102,8 +91,7 @@ def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result
     ],
 )
 def test_create_packing_mesh_representation(
-    mesh_data,
-    mesh_result,
+    mesh_data, mesh_result,
 ):
     assert mesh_result == get_representations(mesh_data)
 
@@ -130,10 +118,7 @@ def test_create_packing_mesh_representation(
         (
             {"pdb": "test"},
             {
-                "atomic": {
-                    "id": "test",
-                    "format": ".pdb",
-                },
+                "atomic": {"id": "test", "format": ".pdb",},
                 "packing": None,
                 "mesh": None,
             },
@@ -141,8 +126,7 @@ def test_create_packing_mesh_representation(
     ],
 )
 def test_create_packing_atomic_representation(
-    atomic_test_data,
-    expected_atomic_result,
+    atomic_test_data, expected_atomic_result,
 ):
     assert expected_atomic_result == get_representations(atomic_test_data)
 
@@ -202,22 +186,15 @@ def test_create_packing_atomic_representation(
     ],
 )
 def test_migrate_ingredient(
-    old_ingredient,
-    expected_result,
+    old_ingredient, expected_result,
 ):
     assert expected_result == migrate_ingredient(old_ingredient)
     assert "encapsulatingRadius" not in expected_result
 
 
 old_recipe_test_data = {
-    "recipe": {
-        "version": "1.0",
-        "name": "test_recipe",
-    },
-    "options": {
-        "windowsSize": 10,
-        "boundingBox": [[0, 0, 0], [1000, 1000, 1000]],
-    },
+    "recipe": {"version": "1.0", "name": "test_recipe",},
+    "options": {"windowsSize": 10, "boundingBox": [[0, 0, 0], [1000, 1000, 1000]],},
     "cytoplasme": {
         "ingredients": {
             "A": {

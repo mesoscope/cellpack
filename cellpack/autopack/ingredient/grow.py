@@ -239,10 +239,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.safetycutoff = 10
 
     def get_signed_distance(
-        self,
-        packing_location,
-        grid_point_location,
-        rotation_matrix,
+        self, packing_location, grid_point_location, rotation_matrix,
     ):
         cent1T = self.transformPoints(
             packing_location, rotation_matrix, self.positions[-1]
@@ -1125,12 +1122,7 @@ class GrowIngredient(MultiCylindersIngr):
                     )
                     rbnode = self.get_rb_model()
                     self.env.callFunction(
-                        self.env.moveRBnode,
-                        (
-                            rbnode,
-                            jtrans,
-                            rotMatj,
-                        ),
+                        self.env.moveRBnode, (rbnode, jtrans, rotMatj,),
                     )
                     if len(self.env.rTrans) == 0:
                         r = [False]
@@ -1573,14 +1565,7 @@ class GrowIngredient(MultiCylindersIngr):
         return success, nbFreePoints, free_points
 
     def updateGrid(
-        self,
-        rg,
-        histoVol,
-        dpad,
-        free_points,
-        nbFreePoints,
-        distance,
-        gridPointsCoords,
+        self, rg, histoVol, dpad, free_points, nbFreePoints, distance, gridPointsCoords,
     ):
         insidePoints = {}
         newDistPoints = {}
@@ -1696,14 +1681,7 @@ class GrowIngredient(MultiCylindersIngr):
         return inodenp
 
     def grow_place(
-        self,
-        env,
-        ptInd,
-        free_points,
-        nbFreePoints,
-        distance,
-        dpad,
-        usePP=False,
+        self, env, ptInd, free_points, nbFreePoints, distance, dpad, usePP=False,
     ):
         if type(self.compMask) is str:
             self.compMask = eval(self.compMask)
@@ -1792,13 +1770,7 @@ class GrowIngredient(MultiCylindersIngr):
             usePP=usePP,
         )
         insidePoints, newDistPoints, nbFreePoints, free_points = self.updateGrid(
-            2,
-            env,
-            dpad,
-            free_points,
-            nbFreePoints,
-            distance,
-            gridPointsCoords,
+            2, env, dpad, free_points, nbFreePoints, distance, gridPointsCoords,
         )
         if self.seedOnMinus:
             success, nbFreePoints, free_points = self.grow(
@@ -1817,13 +1789,7 @@ class GrowIngredient(MultiCylindersIngr):
                 r=True,
             )
             insidePoints, newDistPoints, nbFreePoints, free_points = self.updateGrid(
-                2,
-                env,
-                dpad,
-                free_points,
-                nbFreePoints,
-                distance,
-                gridPointsCoords,
+                2, env, dpad, free_points, nbFreePoints, distance, gridPointsCoords,
             )
         # store result in molecule
         self.log.info("res %d", len(self.results))
@@ -1843,9 +1809,7 @@ class GrowIngredient(MultiCylindersIngr):
         )
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
-    def prepare_alternates(
-        self,
-    ):
+    def prepare_alternates(self,):
         if len(self.partners.all_partners):
             self.alternates_names = (
                 self.partners.keys()
@@ -1858,9 +1822,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.partners[name].ingr.proba_binding for name in self.partners
             ]
 
-    def prepare_alternates_proba(
-        self,
-    ):
+    def prepare_alternates_proba(self,):
         thw = []
         tw = 0.0
         weights = self.alternates_proba  # python3?#dict.copy().keys()
@@ -1869,9 +1831,7 @@ class GrowIngredient(MultiCylindersIngr):
             thw.append(tw)
         self.alternates_proba = thw
 
-    def pick_random_alternate(
-        self,
-    ):
+    def pick_random_alternate(self,):
         if not len(self.alternates_names):
             return None, 0
         r = uniform(0, 1.0)
@@ -1883,9 +1843,7 @@ class GrowIngredient(MultiCylindersIngr):
             return self.alternates_names[alti], alti
         return None, 0
 
-    def pick_alternate(
-        self,
-    ):
+    def pick_alternate(self,):
         # whats he current length ie number of point so far
         # whats are he number of alternate and theyre proba
         # pick an alternate according length and proba

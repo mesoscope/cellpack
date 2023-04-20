@@ -163,10 +163,7 @@ class SingleSphereIngr(Ingredient):
         return False, insidePoints, newDistPoints
 
     def collides_with_compartment(
-        self,
-        env,
-        jtrans,
-        rotation_matrix=None,
+        self, env, jtrans, rotation_matrix=None,
     ):
         """
         Check spheres for collision
@@ -181,10 +178,7 @@ class SingleSphereIngr(Ingredient):
         return False
 
     def get_signed_distance(
-        self,
-        packing_location,
-        grid_point_location,
-        rotation_matrix=None,
+        self, packing_location, grid_point_location, rotation_matrix=None,
     ):
         radius = self.radius
         distance_to_packing_location = numpy.linalg.norm(

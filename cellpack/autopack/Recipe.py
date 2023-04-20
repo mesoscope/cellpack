@@ -207,9 +207,7 @@ class Recipe:
             else:
                 self.activeIngredients.append(i)
 
-    def resetIngrs(
-        self,
-    ):
+    def resetIngrs(self,):
         """reset the states of all recipe ingredients"""
         for ingr in self.ingredients:
             ingr.reset()

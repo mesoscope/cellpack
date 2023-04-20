@@ -532,7 +532,7 @@ class Environment(CompartmentList):
         if vAnalysis == 1:
             # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
-            unitVol = self.grid.gridSpacing**3
+            unitVol = self.grid.gridSpacing ** 3
             wrkDirRes = self.result_file + "_analyze_"
             for o in self.compartments:  # only for compartment ?
                 # totalVolume -= o.surfaceVolume
@@ -616,11 +616,7 @@ class Environment(CompartmentList):
                         # END: newer code from Theis version added July 5, 2012
                     result.append([pos, rot])
                     pt3d = result[matCount][0]
-                    (
-                        x,
-                        y,
-                        z,
-                    ) = pt3d
+                    (x, y, z,) = pt3d
 
                     vTranslationString += (
                         str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
@@ -665,7 +661,7 @@ class Environment(CompartmentList):
 
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
-            unitVol = self.grid.gridSpacing**3
+            unitVol = self.grid.gridSpacing ** 3
             innerPointNum = len(free_points)
             self.log.info("  .  .  .  . ")
             self.log.info("inner Point Count = %d", innerPointNum)
@@ -1111,10 +1107,7 @@ class Environment(CompartmentList):
             # use bounding box
             object_info = {"bounding_box": self.boundingBox}
 
-        compartment = Compartment(
-            name=compartment_key,
-            object_info=object_info,
-        )
+        compartment = Compartment(name=compartment_key, object_info=object_info,)
         compartment.initialize_shape(self.mesh_store)
         self._add_compartment(compartment, parent)
         return compartment
@@ -1933,12 +1926,7 @@ class Environment(CompartmentList):
         return min_distance < expected_min_distance + 0.001
 
     def pack_grid(
-        self,
-        seedNum=14,
-        name=None,
-        vTestid=3,
-        vAnalysis=0,
-        **kw,
+        self, seedNum=14, name=None, vTestid=3, vAnalysis=0, **kw,
     ):
         """
         ## Fill the grid by picking an ingredient first and then
@@ -2108,8 +2096,7 @@ class Environment(CompartmentList):
                 ) * 100.0  # This code shows 100% of ingredients all the time
                 if self.afviewer is not None and hasattr(self.afviewer, "vi"):
                     self.afviewer.vi.progressBar(
-                        progress=int(p),
-                        label=ingr.name + " " + str(ingr.completion),
+                        progress=int(p), label=ingr.name + " " + str(ingr.completion),
                     )
                     if self.afviewer.renderDistance:
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
@@ -2262,9 +2249,7 @@ class Environment(CompartmentList):
             if dump and ((time() - stime) > dump_freq):
                 print("SAVING", self.result_file)
                 all_ingr_as_array = self.prep_molecules_for_save(
-                    distances,
-                    free_points,
-                    nbFreePoints,
+                    distances, free_points, nbFreePoints,
                 )
                 stime = time()
                 print(f"placed {len(self.molecules)}")
@@ -2814,9 +2799,7 @@ class Environment(CompartmentList):
     # panda ode
     # ==============================================================================
 
-    def setupOctree(
-        self,
-    ):
+    def setupOctree(self,):
         if self.octree is None:
             self.octree = Octree(
                 self.grid.getRadius(), helper=helper
@@ -3198,9 +3181,7 @@ class Environment(CompartmentList):
                     self.tem.addAutoPackIngredient(ingr)
         self.tem.write()
 
-    def exportToTEM(
-        self,
-    ):
+    def exportToTEM(self,):
         # limited to 20 ingredients, call the TEM exporter plugin ?
         # ingredient -> PDB file or mrc volume file
         # ingredient -> coordinate.txt file

@@ -18,9 +18,7 @@ from simulariumio import (
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
-from cellpack.autopack.upy import (
-    hostHelper,
-)
+from cellpack.autopack.upy import hostHelper
 import collada
 
 
@@ -311,12 +309,7 @@ class simulariumHelper(hostHelper.Helper):
             viz_type = VIZ_TYPE.DEFAULT
 
         new_instance = Instance(
-            name,
-            instance_id,
-            self.agent_id_counter,
-            radius,
-            viz_type,
-            mesh,
+            name, instance_id, self.agent_id_counter, radius, viz_type, mesh,
         )
         self.scene[instance_id] = new_instance
         if position is None and sub_points is None:
@@ -409,8 +402,7 @@ class simulariumHelper(hostHelper.Helper):
         )
 
     def update_instance_positions_and_rotations(
-        self,
-        objects,
+        self, objects,
     ):
         for position, rotation, ingredient, ptInd in objects:
             instance_id = f"{ingredient.name}-{ptInd}"
@@ -629,9 +621,7 @@ class simulariumHelper(hostHelper.Helper):
                 bool(obj[906]),
             )
 
-    def getCurrentSelection(
-        self,
-    ):
+    def getCurrentSelection(self,):
         """
         Return the current/active selected object in the document or scene
         Simularium support only one object at a time.
@@ -653,9 +643,7 @@ class simulariumHelper(hostHelper.Helper):
             object.Set(texture=mat)
         else:
             object.Set(
-                materials=[
-                    mat,
-                ]
+                materials=[mat,]
             )
 
     def changeObjColorMat(self, obj, color):
@@ -691,12 +679,7 @@ class simulariumHelper(hostHelper.Helper):
     #        [sc.SetSelection(x,dic[typeSel]) for x in listeObjects]
 
     def oneCylinder(
-        self,
-        name,
-        head,
-        tail,
-        instance=None,
-        parent=None,
+        self, name, head, tail, instance=None, parent=None,
     ):
         # if instance is None:
         #     stick = self.getObject(name)
@@ -750,17 +733,10 @@ class simulariumHelper(hostHelper.Helper):
         control_points = np.array([pos, pos + principal_vector])
 
         baseCyl = self.Cylinders(
-            name,
-            radii=[radius],
-            inheritMaterial=False,
-            quality=res,
-            visible=1,
+            name, radii=[radius], inheritMaterial=False, quality=res, visible=1,
         )
         self.add_object_to_scene(
-            None,
-            baseCyl,
-            parent=parent,
-            control_points=control_points,
+            None, baseCyl, parent=parent, control_points=control_points,
         )
         if pos is not None:
             self.setTranslation(baseCyl, pos)
@@ -782,9 +758,7 @@ class simulariumHelper(hostHelper.Helper):
     ):
         baseSphere = self.Spheres(
             name,
-            radii=[
-                radius,
-            ],
+            radii=[radius,],
             centers=[[0.0, 0.0, 0.0]],
             quality=res,
             inheritMaterial=False,
@@ -797,9 +771,7 @@ class simulariumHelper(hostHelper.Helper):
             if color is not None:
                 # color = [1.,1.,0.]
                 baseSphere.Set(
-                    materials=[
-                        color,
-                    ]
+                    materials=[color,]
                 )
         self.add_object_to_scene(None, baseSphere, parent=parent)
         if pos is not None:
@@ -906,11 +878,7 @@ class simulariumHelper(hostHelper.Helper):
         return box, box
 
     def updateBox(
-        self,
-        box,
-        center=[0.0, 0.0, 0.0],
-        size=[1.0, 1.0, 1.0],
-        cornerPoints=None,
+        self, box, center=[0.0, 0.0, 0.0], size=[1.0, 1.0, 1.0], cornerPoints=None,
     ):
         # import np
         box = self.getObject(box)

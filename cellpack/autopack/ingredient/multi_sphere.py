@@ -221,10 +221,7 @@ class MultiSphereIngr(Ingredient):
         return inodenp
 
     def get_signed_distance(
-        self,
-        packing_location,
-        grid_point_location,
-        rotation_matrix=None,
+        self, packing_location, grid_point_location, rotation_matrix=None,
     ):
         level = self.deepest_level
         centers = self.positions[level]
@@ -303,10 +300,7 @@ class MultiSphereIngr(Ingredient):
         return inside_points, new_dist_points
 
     def collides_with_compartment(
-        self,
-        env,
-        jtrans,
-        rotation_matrix,
+        self, env, jtrans, rotation_matrix,
     ):
         """
         Check spheres for collision

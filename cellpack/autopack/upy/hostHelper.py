@@ -100,9 +100,7 @@ class Helper:
 
     dupliVert = False
 
-    def __init__(
-        self,
-    ):
+    def __init__(self,):
 
         self.noise_type = {
             "boxNoise": None,
@@ -159,9 +157,7 @@ class Helper:
     # ==============================================================================
     # some helper for treading and asynchrone stuff
     # ==============================================================================
-    def testForEscape(
-        self,
-    ):
+    def testForEscape(self,):
         """
         return True if ESC is press
         """
@@ -247,12 +243,7 @@ class Helper:
         if vector is not None:
             absolute_vector = numpy.array([0, 0, radius])
             matrice = self.rotVectToVect(absolute_vector, vector)
-            pos = self.ApplyMatrix(
-                [
-                    pos,
-                ],
-                matrice,
-            )[0]
+            pos = self.ApplyMatrix([pos,], matrice,)[0]
         return pos
 
     def randpoint_onsphere(self, radius, biased=None):
@@ -308,8 +299,8 @@ class Helper:
         else:
             theta = random.uniform(0.0, 1.0) * (2 * math.pi)
             u = random.uniform(0.0, 1.0) * 2 - 1
-        x = radius * math.sqrt(1 - u**2) * math.cos(theta)
-        y = radius * math.sqrt(1 - u**2) * math.sin(theta)
+        x = radius * math.sqrt(1 - u ** 2) * math.cos(theta)
+        y = radius * math.sqrt(1 - u ** 2) * math.sin(theta)
         z = radius * u
         return [x, y, z]
 
@@ -490,9 +481,7 @@ class Helper:
         else:
             return False
 
-    def update(
-        self,
-    ):
+    def update(self,):
         """
         Update the host viewport, ui or gl draw
         This function can't be call in a thread.
@@ -581,9 +570,7 @@ class Helper:
         pass
 
     @classmethod
-    def getCurrentScene(
-        self,
-    ):
+    def getCurrentScene(self,):
         """
         Return the current/active working document or scene.
 
@@ -620,9 +607,7 @@ class Helper:
         """
         pass
 
-    def getCurrentSelection(
-        self,
-    ):
+    def getCurrentSelection(self,):
         """
         Return the current/active selected object in the document or scene.
 
@@ -2575,9 +2560,7 @@ class Helper:
         smooth=False,
         material=None,
         proxyCol=False,
-        color=[
-            [1, 0, 0],
-        ],
+        color=[[1, 0, 0],],
         **kw
     ):
         """
@@ -4812,10 +4795,7 @@ class Helper:
         if instance_node:
             master_geomnode = scene.GeometryNode(geom, [matnode])
             master_node = scene.Node(
-                "node_" + iname,
-                children=[
-                    master_geomnode,
-                ],
+                "node_" + iname, children=[master_geomnode,],
             )  # ,transforms=[tr,rz,ry,rx,s])
         g = []
         for c in ch:
@@ -4838,11 +4818,7 @@ class Helper:
             # n = scene.NodeNode(master_node,transforms=[tr,rz,ry,rx,s])
             #            gnode = scene.Node(self.getName(c)+"_inst", children=[geomnode,])
             n = scene.Node(
-                self.getName(c),
-                children=[
-                    geomnode,
-                ],
-                transforms=[tr, rz, ry, rx, s],
+                self.getName(c), children=[geomnode,], transforms=[tr, rz, ry, rx, s],
             )  # scene.MatrixTransform(matrix)[scene.MatrixTransform(numpy.array(matrix).reshape(16,))]
             #            n = scene.Node(self.getName(c), children=[geomnode,],
             #                           transforms=[scene.MatrixTransform(numpy.array(matrix).reshape(16,))]) #scene.MatrixTransform(matrix)[scene.MatrixTransform(numpy.array(matrix).reshape(16,))]

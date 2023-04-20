@@ -112,10 +112,7 @@ class ConvertToSimularium(argparse.Namespace):
         )
 
         p.add_argument(
-            "--debug",
-            action="store_true",
-            dest="debug",
-            help=argparse.SUPPRESS,
+            "--debug", action="store_true", dest="debug", help=argparse.SUPPRESS,
         )
         p.parse_args(namespace=self)
 
@@ -300,9 +297,7 @@ class ConvertToSimularium(argparse.Namespace):
             return self.get_euler_from_quat(data_in)
 
     def process_one_ingredient(
-        self,
-        ingredient_data,
-        time_step_index,
+        self, ingredient_data, time_step_index,
     ):
         recipe_data = ingredient_data["recipe_data"]
         results = ingredient_data["results"]
@@ -330,11 +325,7 @@ class ConvertToSimularium(argparse.Namespace):
         elif "nbCurve" in results and results["nbCurve"] > 0:
             for i in range(results["nbCurve"]):
                 self.unpack_curve(
-                    results,
-                    time_step_index,
-                    ingredient_key,
-                    i,
-                    self.agent_id_counter,
+                    results, time_step_index, ingredient_key, i, self.agent_id_counter,
                 )
                 self.agent_id_counter = self.agent_id_counter + 1
 

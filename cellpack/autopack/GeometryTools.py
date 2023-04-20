@@ -154,10 +154,10 @@ class GeometryTools:
     # Require Scipy
     # square regions
     def region_1(self, rho, d):
-        return 0.5 * (d**2 * np.sqrt(rho**2 - 2 * d**2))
+        return 0.5 * (d ** 2 * np.sqrt(rho ** 2 - 2 * d ** 2))
 
     def region_1_2_theta(self, rho, d):
-        return np.arccos(d / np.sqrt(rho**2 - d**2))
+        return np.arccos(d / np.sqrt(rho ** 2 - d ** 2))
 
     # curved square regions
     def region_2_integrand(self, theta, rho, d):
@@ -166,13 +166,13 @@ class GeometryTools:
     def region_2(self, rho, d):
         # require scipy
         i4 = (
-            d**3
+            d ** 3
             / 6.0
-            * (rho**2 / d**2 - 1)
+            * (rho ** 2 / d ** 2 - 1)
             * (pi / 4 - self.region_1_2_theta(rho, d))
         )
         i3 = (
-            d**2
+            d ** 2
             * rho
             / 3.0
             * quad(
@@ -191,7 +191,7 @@ class GeometryTools:
     def region_3(self, rho, d):
         # require scipy
         return (
-            rho**3
+            rho ** 3
             / 3.0
             * (
                 d / rho * (pi / 4 - self.region_1_2_theta(rho, d))
@@ -211,10 +211,10 @@ class GeometryTools:
         if alpha <= np.sqrt(2):
             return (
                 4.0 / 3 * pi * (rho) ** 3
-                - 6.0 * pi * (2 * (rho) ** 3 - 3 * d * (rho) ** 2 + d**3) / 3.0
+                - 6.0 * pi * (2 * (rho) ** 3 - 3 * d * (rho) ** 2 + d ** 3) / 3.0
             )
         if alpha < np.sqrt(3):
             return 16.0 * (
                 self.region_1(rho, d) + self.region_2(rho, d) + self.region_3(rho, d)
             )
-        return 8.0 * d**3
+        return 8.0 * d ** 3

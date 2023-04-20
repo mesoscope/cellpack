@@ -166,9 +166,7 @@ class SingleCubeIngr(Ingredient):
         grid_point_distances = []
         for grid_point in grid_point_vectors:
             grid_point_distance = self.get_signed_distance(
-                center_trans,
-                grid_point,
-                rotMat,
+                center_trans, grid_point, rotMat,
             )
             grid_point_distances.append(grid_point_distance)
 
@@ -209,10 +207,7 @@ class SingleCubeIngr(Ingredient):
         return False, insidePoints, newDistPoints
 
     def collides_with_compartment(
-        self,
-        env,
-        jtrans,
-        rotation_matrix,
+        self, env, jtrans, rotation_matrix,
     ):
         """
         Check cube for collision
@@ -264,11 +259,7 @@ class SingleCubeIngr(Ingredient):
         newDistPoints = {}
         cent1T = self.transformPoints(jtrans, rotMat, self.lower_bound)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, self.upper_bound)[0]  # bb2
-        center = self.transformPoints(
-            jtrans,
-            rotMat,
-            [self.center],
-        )[0]
+        center = self.transformPoints(jtrans, rotMat, [self.center],)[0]
         #        cylNum = 0
         #        for radc, p1, p2 in zip(edges, cent1T, cent2T):
         x1, y1, z1 = cent1T
@@ -343,8 +334,7 @@ class SingleCubeIngr(Ingredient):
         return inodenp
 
     def cube_surface_distance(
-        self,
-        point,
+        self, point,
     ):
         # returns the distance to the closest cube surface from point
         side_lengths = numpy.abs(self.edges) / 2.0
@@ -365,7 +355,7 @@ class SingleCubeIngr(Ingredient):
                     current_distance = dist_y
                 else:
                     # yz edge is the closest
-                    current_distance = numpy.sqrt(dist_y**2 + dist_z**2)
+                    current_distance = numpy.sqrt(dist_y ** 2 + dist_z ** 2)
         else:
             if dist_y <= 0:
                 if dist_z <= 0:
@@ -373,23 +363,20 @@ class SingleCubeIngr(Ingredient):
                     current_distance = dist_x
                 else:
                     # xz edge is the closest
-                    current_distance = numpy.sqrt(dist_x**2 + dist_z**2)
+                    current_distance = numpy.sqrt(dist_x ** 2 + dist_z ** 2)
             else:
                 if dist_z <= 0:
                     # xy edge is the closest
-                    current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
+                    current_distance = numpy.sqrt(dist_x ** 2 + dist_y ** 2)
                 else:
                     # vertex is the closest
                     current_distance = numpy.sqrt(
-                        dist_x**2 + dist_y**2 + dist_z**2
+                        dist_x ** 2 + dist_y ** 2 + dist_z ** 2
                     )
         return current_distance
 
     def get_signed_distance(
-        self,
-        packing_location,
-        grid_point_location,
-        rotation_matrix,
+        self, packing_location, grid_point_location, rotation_matrix,
     ):
         # returns the distance to 'grid_point_location' from the nearest cube surface
         # the cube center is located at packing_location

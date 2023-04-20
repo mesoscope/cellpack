@@ -6,9 +6,7 @@ from cellpack.autopack.utils import deep_merge
 
 
 class DataDoc(object):
-    def __init__(
-        self,
-    ):
+    def __init__(self,):
         pass
 
     def as_dict():

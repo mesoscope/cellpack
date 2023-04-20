@@ -214,9 +214,7 @@ class Ingredient(Agent):
         self.count = count
         self.priority = priority
         self.log.info(
-            "priority %d,  self.priority %r",
-            priority,
-            self.priority,
+            "priority %d,  self.priority %r", priority, self.priority,
         )
         if name is None:
             name = "%f" % molarity
@@ -751,13 +749,7 @@ class Ingredient(Agent):
             return True
 
     def get_list_of_free_indices(
-        self,
-        distances,
-        free_points,
-        nbFreePoints,
-        spacing,
-        comp_ids,
-        threshold,
+        self, distances, free_points, nbFreePoints, spacing, comp_ids, threshold,
     ):
         allIngrPts = []
         allIngrDist = []
@@ -1012,9 +1004,7 @@ class Ingredient(Agent):
         if signed_distance_to_surface is None:
             grid_point_location = env.grid.masterGridPositions[grid_point_index]
             signed_distance_to_surface = self.get_signed_distance(
-                packing_location,
-                grid_point_location,
-                rotation_matrix,
+                packing_location, grid_point_location, rotation_matrix,
             )
 
         if signed_distance_to_surface <= 0:  # point is inside dropped ingredient
@@ -1037,8 +1027,8 @@ class Ingredient(Agent):
 
     def is_point_in_correct_region(self, point):
         # crude location check (using nearest grid point)
-        nearest_grid_point_compartment_id = (
-            self.env.compartment_id_for_nearest_grid_point(point)
+        nearest_grid_point_compartment_id = self.env.compartment_id_for_nearest_grid_point(
+            point
         )  # offset ?
         compartment_ingr_belongs_in = self.compNum
         if compartment_ingr_belongs_in == 0:
@@ -1584,9 +1574,7 @@ class Ingredient(Agent):
         pass
         # env.afvi.vi.deleteObject(moving)
 
-    def reject(
-        self,
-    ):
+    def reject(self,):
         # got rejected
         self.haveBeenRejected = True
         self.rejectionCounter += 1
@@ -2179,8 +2167,7 @@ class Ingredient(Agent):
                 if is_realtime:
                     box = self.vi.getObject("collBox")
                     self.vi.changeObjColorMat(
-                        box,
-                        [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
+                        box, [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
                     )
                     self.update_display_rt(moving, pt, packing_rotation)
                 if collision:
@@ -2188,12 +2175,10 @@ class Ingredient(Agent):
                     break
                 else:
                     insidePoints = self.merge_place_results(
-                        new_inside_points,
-                        insidePoints,
+                        new_inside_points, insidePoints,
                     )
                     newDistPoints = self.merge_place_results(
-                        new_dist_points,
-                        newDistPoints,
+                        new_dist_points, newDistPoints,
                     )
             if self.collides_with_compartment(env, packing_location, packing_rotation):
                 continue
@@ -2298,10 +2283,7 @@ class Ingredient(Agent):
     def close_partner_check(self, translation, rotation, compartment, afvi, moving):
 
         target_point, rot_matrix, found = self.lookForNeighbours(
-            translation,
-            rotation,
-            compartment,
-            afvi,
+            translation, rotation, compartment, afvi,
         )
         if not found and self.counter != 0:
             self.reject()
@@ -2373,9 +2355,7 @@ class Ingredient(Agent):
                 packing_location,
                 packing_rotation,
             ) = self.get_new_jitter_location_and_rotation(
-                env,
-                target_point,
-                rot_matrix,
+                env, target_point, rot_matrix,
             )
 
             if is_realtime:
@@ -2394,12 +2374,7 @@ class Ingredient(Agent):
             )  # includes periodic points, if appropriate
             for pt in points_to_check:
                 env.callFunction(
-                    env.moveRBnode,
-                    (
-                        rbnode,
-                        pt,
-                        packing_rotation,
-                    ),
+                    env.moveRBnode, (rbnode, pt, packing_rotation,),
                 )
                 collision = self.pandaBullet_collision(pt, packing_rotation, rbnode)
                 collision_results.extend([collision])
@@ -2544,9 +2519,7 @@ class Ingredient(Agent):
                 packing_location,
                 packing_rotation,
             ) = self.get_new_jitter_location_and_rotation(
-                env,
-                targetPoint,
-                rotation_matrix,
+                env, targetPoint, rotation_matrix,
             )
             if is_realtime:
                 self.update_display_rt(moving, packing_location, packing_rotation)
@@ -2714,30 +2687,14 @@ class Ingredient(Agent):
                     #       should be panda util
                     #        add the rigid body
         self.env.moving = rbnode = self.env.callFunction(
-            self.env.addRB,
-            (
-                self,
-                jtrans,
-                rotation_matrix,
-            ),
-            {"rtype": self.type},
+            self.env.addRB, (self, jtrans, rotation_matrix,), {"rtype": self.type},
         )
         self.env.callFunction(
-            self.env.moveRBnode,
-            (
-                rbnode,
-                jtrans,
-                rotMatj,
-            ),
+            self.env.moveRBnode, (rbnode, jtrans, rotMatj,),
         )
         # run he simulation for simulationTimes
         histoVol.callFunction(
-            self.env.runBullet,
-            (
-                self,
-                simulationTimes,
-                runTimeDisplay,
-            ),
+            self.env.runBullet, (self, simulationTimes, runTimeDisplay,),
         )
         # cb=self.getTransfo)
         rTrans, rRot = self.env.getRotTransRB(rbnode)

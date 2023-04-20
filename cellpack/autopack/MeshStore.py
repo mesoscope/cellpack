@@ -132,11 +132,7 @@ class MeshStore:
             return data.geometry[key]
 
     def create_mesh(
-        self,
-        name,
-        vertices,
-        vnormals,
-        faces,
+        self, name, vertices, vnormals, faces,
     ):
         """
         This is the main function that create a polygonal mesh.

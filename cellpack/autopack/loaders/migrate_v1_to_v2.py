@@ -152,10 +152,7 @@ def convert(old_recipe):
         for ingredient_key in old_recipe["cytoplasme"]["ingredients"]:
             ingredient_data = old_recipe["cytoplasme"]["ingredients"][ingredient_key]
             get_and_store_v2_object(
-                ingredient_key,
-                ingredient_data,
-                outer_most_region_array,
-                objects_dict,
+                ingredient_key, ingredient_data, outer_most_region_array, objects_dict,
             )
     if "compartments" in old_recipe:
         for compartment_name in old_recipe["compartments"]:
