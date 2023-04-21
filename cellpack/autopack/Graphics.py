@@ -994,7 +994,8 @@ class AutopackViewer:
                 if self.vi.host.find("blender") != -1:
                     # is that not correctly scaled ?
                     circle = self.vi.build_2dshape(
-                        name + "_shape", opts=[ingr.encapsulating_radius],
+                        name + "_shape",
+                        opts=[ingr.encapsulating_radius],
                     )[0]
                     extruder, shape = self.vi.extrudeSpline(
                         snake, shape=circle, parent=parent
@@ -1637,7 +1638,6 @@ class AutopackViewer:
                 self.vi.AddObject(sph1)
 
         if len(verts):
-
             verts0 = []
             vertsIn = []
             vertsOut = []
@@ -1670,7 +1670,8 @@ class AutopackViewer:
                     self.name + "ParentHiders", parent=self.master
                 )
                 self.psph = self.vi.newEmpty(
-                    self.name + "base_shape", parent=vParentHiders,
+                    self.name + "base_shape",
+                    parent=vParentHiders,
                 )
 
             self.vi.Points(
@@ -1875,7 +1876,6 @@ class AutopackViewer:
             elif (
                 ingtype == self.helper.SPHERE
             ):  # should be able to detect this using distance vertex->center
-
                 positions = []
                 radius = []
                 for io in child:
@@ -1903,7 +1903,6 @@ class AutopackViewer:
                     meshObject=obj,
                 )
             elif ingtype == self.helper.CYLINDER:
-
                 positions = []
                 positions2 = []
                 radius = []
@@ -1929,7 +1928,6 @@ class AutopackViewer:
                     principal_vector=axis,
                 )
             elif ingtype == self.helper.CUBE:
-
                 # need to create a SphereIngredient
                 s = self.helper.getPropertyObject(child0, key=["scale"])[0]
                 if self.helper.getType(child0) == self.helper.INSTANCE:
@@ -1945,7 +1943,6 @@ class AutopackViewer:
             else:
                 pass
         if self.helper.getType(obj) == self.helper.SPHERE:
-
             # need to create a SphereIngredient
             ingr = SingleSphereIngr(
                 1.0,
@@ -1956,7 +1953,6 @@ class AutopackViewer:
             )
             # compartiment ?
         elif self.helper.getType(obj) == self.helper.CYLINDER:
-
             # need to create a SphereIngredient
             r, h, axis = self.helper.getPropertyObject(
                 obj, key=["radius", "length", "axis"]
@@ -1976,7 +1972,6 @@ class AutopackViewer:
                 principal_vector=axis,  # should come from the object
             )
         elif self.helper.getType(obj) == self.helper.CUBE:
-
             # need to create a SphereIngredient
             size = self.helper.getPropertyObject(obj, key=["length"])[0]
             ingr = SingleCubeIngr(
@@ -2111,7 +2106,6 @@ class AutopackViewer:
         colors=[upyColors.red, upyColors.black],
         **options
     ):
-
         mini = None
         maxi = None
         useMaterial = False
@@ -2337,7 +2331,9 @@ class AutopackViewer:
         if recipe:
             [self.exportIngredient(ingr) for ingr in recipe.ingredients]
 
-    def exportAsIndexedMeshs(self,):
+    def exportAsIndexedMeshs(
+        self,
+    ):
         # compartment mesh and ingredient
         for o in self.histo.compartments:
             if o.mesh is None:
@@ -2441,7 +2437,9 @@ class AutopackViewer:
                     "node" + str(self.counter), node, ind + i, onode
                 )
 
-    def displayOctree(self,):
+    def displayOctree(
+        self,
+    ):
         # display the octree if any
         self.counter = 0
         if self.histo.octree is None:
@@ -2458,7 +2456,9 @@ class AutopackViewer:
             self.counter += 1
             self.displayOneNodeOctree("node" + str(i), node, i, oroot)
 
-    def displayOctreeLeaf(self,):
+    def displayOctreeLeaf(
+        self,
+    ):
         # display the octree if any
         self.counter = 0
         if self.histo.octree is None:
@@ -2547,7 +2547,9 @@ class AutopackViewer:
 
     def displayRoot(self, root):
         self.helper.box(
-            "octreeroot", center=root.position, size=[root.size] * 3,
+            "octreeroot",
+            center=root.position,
+            size=[root.size] * 3,
         )
         print("root", len(root.objects))
 
@@ -2558,7 +2560,9 @@ class AutopackViewer:
             if subnode is None:
                 continue
             self.helper.box(
-                "node" + str(i), center=subnode.position, size=[subnode.size] * 3,
+                "node" + str(i),
+                center=subnode.position,
+                size=[subnode.size] * 3,
             )
             self.displaysubnode(subnode, i)
             i += 1

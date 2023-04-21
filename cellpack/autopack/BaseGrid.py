@@ -102,7 +102,11 @@ class BaseGrid:
 
     @staticmethod
     def updateDistances(
-        insidePoints, newDistPoints, free_points, nbFreePoints, distance,
+        insidePoints,
+        newDistPoints,
+        free_points,
+        nbFreePoints,
+        distance,
     ):
         # self.log.info(
         #     "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
@@ -124,7 +128,6 @@ class BaseGrid:
         # t2 = time()
         for pt, dist in list(newDistPoints.items()):
             if pt not in insidePoints:
-
                 distance[pt] = dist
         # self.log.debug("update distance loop %d", time() - t2)
         return nbFreePoints
@@ -213,7 +216,9 @@ class BaseGrid:
         self.setupBoundaryPeriodicity()
         return self.gridSpacing
 
-    def reset(self,):
+    def reset(
+        self,
+    ):
         # reset the  distToClosestSurf and the free_points
         # boundingBox should be the same otherwise why keeping the grid
         self.log.info("reset Grid distance to closest surface and free_points")
@@ -259,7 +264,6 @@ class BaseGrid:
         for zi in range(nz):
             for yi in range(ny):
                 for xi in range(nx):
-
                     x = xl + xi * space + padding
                     y = yl + yi * space + padding
                     z = zl + zi * space + padding
@@ -748,7 +752,6 @@ class BaseGrid:
         self.nbSurfacePoints = len(verts)
 
     def set_surfPtscht(self, verts):
-
         self.surfPtsBht = None
         if verts is not None and len(verts):
             self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)
@@ -756,7 +759,7 @@ class BaseGrid:
 
     def computeExteriorVolume(self, compartments=None, space=None, fbox_bb=None):
         # compute exterior volume, totalVolume without compartments volume
-        unitVol = self.gridSpacing ** 3
+        unitVol = self.gridSpacing**3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)
@@ -769,7 +772,7 @@ class BaseGrid:
 
     def computeVolume(self, space=None, fbox_bb=None):
         # compute exterior volume, totalVolume without compartments volume
-        unitVol = self.gridSpacing ** 3
+        unitVol = self.gridSpacing**3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)
@@ -813,7 +816,9 @@ class HaltonGrid(BaseGrid):
         scale_xyz = numpy.array(boundingBox[1]) - t_xyz
         return scale_xyz, t_xyz
 
-    def getNBgridPoints(self,):
+    def getNBgridPoints(
+        self,
+    ):
         a = numpy.array(self.boundingBox[0])
         b = numpy.array(self.boundingBox[1])
         lx = abs(int((a[0] - b[0]) / self.gridSpacing))

@@ -16,8 +16,8 @@ test_objects = {
         "max_jitter": [1, 1, 0],
     },
     "base": {"jitter_attempts": 10},
-    "sphere_75": {"inherit": "sphere_50", "color": [0.3, 0.5, 0.8], "radius": 75,},
-    "sphere_50": {"inherit": "sphere_25", "color": [0.3, 0.5, 0.8], "radius": 50,},
+    "sphere_75": {"inherit": "sphere_50", "color": [0.3, 0.5, 0.8], "radius": 75},
+    "sphere_50": {"inherit": "sphere_25", "color": [0.3, 0.5, 0.8], "radius": 50},
 }
 
 
@@ -61,13 +61,34 @@ def test_resolve_objects():
 @pytest.mark.parametrize(
     "input_recipe_data, expected_result",
     [
-        ({}, "1.0",),
-        ({"format_version": "2.0.33"}, "2.0",),
-        ({"format_version": "2.33.0"}, "2.33",),
-        ({"format_version": "2.0"}, "2.0",),
-        ({"format_version": "2.105"}, "2.105",),
-        ({"format_version": "2"}, "2.0",),
-        ({"format_version": "1"}, "1.0",),
+        (
+            {},
+            "1.0",
+        ),
+        (
+            {"format_version": "2.0.33"},
+            "2.0",
+        ),
+        (
+            {"format_version": "2.33.0"},
+            "2.33",
+        ),
+        (
+            {"format_version": "2.0"},
+            "2.0",
+        ),
+        (
+            {"format_version": "2.105"},
+            "2.105",
+        ),
+        (
+            {"format_version": "2"},
+            "2.0",
+        ),
+        (
+            {"format_version": "1"},
+            "1.0",
+        ),
     ],
 )
 def test_sanitize_format_version(expected_result, input_recipe_data):

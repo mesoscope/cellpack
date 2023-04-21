@@ -24,7 +24,6 @@ def get_pdbs(pdb_codes):
             pdb_list.extend(tmp_list)
 
         else:
-
             # Lower case, remove .pdb if appended
             pdb_id = pdb_code.lower()
             if pdb_id[-4:] == ".pdb":
@@ -36,7 +35,6 @@ def get_pdbs(pdb_codes):
     download.pdbDownload(pdb_list)
 
     for pdb_file in pdb_list:
-
         # Load in pdb file
         f = open(f"{SAVE_FOLDER}{pdb_file}.pdb", "r")
         pdb = f.readlines()

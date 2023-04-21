@@ -12,7 +12,9 @@ class DATABASE_IDS(Enum):
 
 
 def upload(
-    recipe_path, cred_path, db_id=DATABASE_IDS.FIREBASE,
+    recipe_path,
+    cred_path,
+    db_id=DATABASE_IDS.FIREBASE,
 ):
     """
     Uploads a recipe to the database

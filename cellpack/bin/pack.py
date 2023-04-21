@@ -46,7 +46,11 @@ def pack(recipe, config_path=None, analysis_config_path=None):
 
     afviewer = None
     if packing_config_data["save_analyze_result"]:
-        analyze = Analysis(env=env, viewer=afviewer, result_file=None,)
+        analyze = Analysis(
+            env=env,
+            viewer=afviewer,
+            result_file=None,
+        )
         log.info(f"saving to {env.out_folder}")
         analyze.doloop(
             packing_config_data["number_of_packings"],
@@ -59,7 +63,8 @@ def pack(recipe, config_path=None, analysis_config_path=None):
         )
         if analysis_config_path is not None:
             analyze.run_analysis_workflow(
-                analysis_config=analysis_config_data, recipe_data=recipe_data,
+                analysis_config=analysis_config_data,
+                recipe_data=recipe_data,
             )
     else:
         env.buildGrid(rebuild=True)

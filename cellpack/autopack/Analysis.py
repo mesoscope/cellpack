@@ -38,7 +38,11 @@ from cellpack.autopack.utils import check_paired_key, get_paired_key
 
 class Analysis:
     def __init__(
-        self, env=None, viewer=None, result_file=None, packing_results_path=None,
+        self,
+        env=None,
+        viewer=None,
+        result_file=None,
+        packing_results_path=None,
     ):
         self.env = None
         self.smallest = 99999.0
@@ -118,7 +122,9 @@ class Analysis:
     def save_array_to_file(array_to_save, file_path, seed_index):
         f_handle = open(file_path, "a" if seed_index else "w")
         numpy.savetxt(
-            f_handle, array_to_save, delimiter=",",
+            f_handle,
+            array_to_save,
+            delimiter=",",
         )
         f_handle.close()
 
@@ -241,7 +247,6 @@ class Analysis:
         ramp_color3=None,
         cutoff=60.0,
     ):
-
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
@@ -381,13 +386,19 @@ class Analysis:
                 eulers3 = [t.euler_from_matrix(m, "rxyz") for m in ingrrot[ingrname]]
                 e3 = numpy.degrees(numpy.array(eulers3)).transpose()
                 numpy.savetxt(
-                    ingrname + "_euler_X.csv", numpy.array(e3[0]), delimiter=",",
+                    ingrname + "_euler_X.csv",
+                    numpy.array(e3[0]),
+                    delimiter=",",
                 )
                 numpy.savetxt(
-                    ingrname + "_euler_Y.csv", numpy.array(e3[1]), delimiter=",",
+                    ingrname + "_euler_Y.csv",
+                    numpy.array(e3[1]),
+                    delimiter=",",
                 )
                 numpy.savetxt(
-                    ingrname + "_euler_Z.csv", numpy.array(e3[2]), delimiter=",",
+                    ingrname + "_euler_Z.csv",
+                    numpy.array(e3[2]),
+                    delimiter=",",
                 )
                 self.histo(e3[0], ingrname + "_euler_X.png")
                 self.histo(e3[1], ingrname + "_euler_Y.png")
@@ -416,7 +427,7 @@ class Analysis:
         )  # top,bottom, right, left
         m = [center[0], center[1]]
         r = radius
-        area = math.pi * r ** 2
+        area = math.pi * r**2
         chs = self.g.check_sphere_inside(rect, m, r)
         if chs:  # sph not completly inside
             ch = self.g.check_rectangle_oustide(rect, m, r)
@@ -494,7 +505,7 @@ class Analysis:
             self.env.grid.nbGridPoints[0]
             * self.env.grid.nbGridPoints[1]
             * self.env.grid.nbGridPoints[2]
-            * self.env.grid.gridSpacing ** 3
+            * self.env.grid.gridSpacing**3
         )
         Vshell = numpy.array(self.getVolumeShell(self.bbox, radii, self.center))
         gr = (dnr * V) / (N * Vshell)
@@ -526,29 +537,33 @@ class Analysis:
         # which will approximately follow the horizontal zero-axis with constant
         # dispersion if the data follow a homogeneous Poisson process.
         N = len(positions)
-        V = 1000 ** 2
-        diag = numpy.sqrt(1000 ** 2 + 1000 ** 2)
+        V = 1000**2
+        diag = numpy.sqrt(1000**2 + 1000**2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
         edges = numpy.arange(dr, rMax + 1.1 * dr, dr)
         k = numpy.zeros((N, len(edges)))
         for i, p in enumerate(positions):
-            di = distance.cdist(positions, [p], "euclidean",)
+            di = distance.cdist(
+                positions,
+                [p],
+                "euclidean",
+            )
             # dV = np.array(analyse.getAreaShell(analyse.bbox,edges,p))
             for j, e in enumerate(edges):
-                area0 = math.pi * e ** 2  # complete circle
+                area0 = math.pi * e**2  # complete circle
                 area1 = self.rectangle_circle_area(self.bbox, p, e)
                 w = area1 / area0
-                k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N ** 2
+                k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N**2
         Kt = V * numpy.sum(k, axis=0)
         Lt = (Kt / numpy.pi) ** 0.5
         return Kt, Lt
 
     def rdf(self, positions, dr=10, rMax=None):
         N = len(positions)
-        V = 1000 ** 2
-        diag = numpy.sqrt(1000 ** 2 + 1000 ** 2)
+        V = 1000**2
+        diag = numpy.sqrt(1000**2 + 1000**2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
@@ -557,7 +572,11 @@ class Analysis:
         dv = []
         density = float(N) / float(V)
         for i, p in enumerate(positions):
-            di = distance.cdist(positions, [p], "euclidean",)
+            di = distance.cdist(
+                positions,
+                [p],
+                "euclidean",
+            )
             dN, bins = numpy.histogram(di, bins=edges)
             dV = numpy.array(self.getAreaShell(self.bbox, edges, p))
             dv.append(dV)
@@ -598,7 +617,7 @@ class Analysis:
         V = (
             self.env.grid.nbGridPoints[0]
             * self.env.grid.nbGridPoints[1]
-            * self.env.grid.gridSpacing ** 2
+            * self.env.grid.gridSpacing**2
         )
         Vshell = numpy.array(self.getAreaShell(self.bbox, radii, self.center))
         #        print Vshell
@@ -611,10 +630,14 @@ class Analysis:
         # simpl approach Ni/Areai
         G = dnr / Vshell
         numpy.savetxt(
-            basename + ingr.name + "_rdf_simple.csv", numpy.array(G), delimiter=",",
+            basename + ingr.name + "_rdf_simple.csv",
+            numpy.array(G),
+            delimiter=",",
         )
         self.plot(
-            numpy.array(G), radii[:-1], basename + ingr.name + "_rdf_simple.png",
+            numpy.array(G),
+            radii[:-1],
+            basename + ingr.name + "_rdf_simple.png",
         )
 
     def plot_position_distribution_total(self, all_positions):
@@ -736,7 +759,7 @@ class Analysis:
         num_increments = len(edges) - 1
         g = numpy.zeros([num_interior_particles, num_increments])
         radii = numpy.zeros(num_increments)
-        numberDensity = len(x) / S ** 3
+        numberDensity = len(x) / S**3
 
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
@@ -756,7 +779,7 @@ class Analysis:
             rOuter = edges[i + 1]
             rInner = edges[i]
             g_average[i] = numpy.average(g[:, i]) / (
-                4.0 / 3.0 * numpy.pi * (rOuter ** 3 - rInner ** 3)
+                4.0 / 3.0 * numpy.pi * (rOuter**3 - rInner**3)
             )
 
         return (
@@ -814,7 +837,7 @@ class Analysis:
         num_increments = len(edges) - 1
         g = numpy.zeros([num_interior_particles, num_increments])
         radii = numpy.zeros(num_increments)
-        numberDensity = len(x) / S ** 2
+        numberDensity = len(x) / S**2
 
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
@@ -833,7 +856,7 @@ class Analysis:
             rInner = edges[i]
             # divide by the area of sphere cut by sqyare
             g_average[i] = numpy.average(g[:, i]) / (
-                numpy.pi * (rOuter ** 2 - rInner ** 2)
+                numpy.pi * (rOuter**2 - rInner**2)
             )
 
         return (g_average, radii, interior_indices)
@@ -890,7 +913,8 @@ class Analysis:
         )
 
     def get_number_of_ingredients_packed(
-        self, ingredient_keys=None,
+        self,
+        ingredient_keys=None,
     ):
         """
         Returns the number of ingredients packed
@@ -915,7 +939,8 @@ class Analysis:
         return avg_num_packed
 
     def get_ingredient_radii(
-        self, recipe_data,
+        self,
+        recipe_data,
     ):
         """
         Returns the radii of ingredients packed
@@ -932,7 +957,8 @@ class Analysis:
         return ingredient_radii
 
     def get_dict_from_glob(
-        self, glob_str,
+        self,
+        glob_str,
     ):
         glob_to_distance_file = self.packing_results_path.glob(glob_str)
         for path_to_distance_file in glob_to_distance_file:
@@ -1181,7 +1207,7 @@ class Analysis:
         )
 
         val_list = []
-        for (key, radius, num_packed) in zip(
+        for key, radius, num_packed in zip(
             ingredient_keys, ingredient_radii.values(), avg_num_packed.values()
         ):
             val_list.extend([key, radius, num_packed])
@@ -1239,7 +1265,9 @@ class Analysis:
         report_md.create_md_file()
 
     def run_analysis_workflow(
-        self, analysis_config: dict, recipe_data: dict,
+        self,
+        analysis_config: dict,
+        recipe_data: dict,
     ):
         all_objs, all_pos_list = self.get_obj_dict(self.packing_results_path)
 
@@ -1263,7 +1291,8 @@ class Analysis:
 
         if analysis_config.get("create_report"):
             self.create_report(
-                recipe_data=recipe_data, **analysis_config["create_report"],
+                recipe_data=recipe_data,
+                **analysis_config["create_report"],
             )
 
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
@@ -1351,7 +1380,6 @@ class Analysis:
         figdir.mkdir(parents=True, exist_ok=True)
 
         for dim in self.get_list_of_dims():
-
             avg_similarity_values = self.calc_avg_similarity_values_for_dim(
                 similarity_df[dim].values
             )
@@ -1387,7 +1415,11 @@ class Analysis:
             g.savefig(figdir / f"clustermap_{ingredient_key}_{dim}", dpi=300)
 
     def run_similarity_analysis(
-        self, all_objs, ingredient_key, save_heatmaps=False, save_path=None,
+        self,
+        all_objs,
+        ingredient_key,
+        save_heatmaps=False,
+        save_path=None,
     ):
         """
         TODO: add docs
@@ -1406,25 +1438,34 @@ class Analysis:
             similarity_df = pd.read_csv(dfpath, header=[0, 1])
         else:
             similarity_df = self.calc_similarity_df(
-                all_objs, ingredient_key=ingredient_key, save_path=save_path,
+                all_objs,
+                ingredient_key=ingredient_key,
+                save_path=save_path,
             )
 
         if save_heatmaps:
             self.plot_and_save_similarity_heatmaps(
-                similarity_df, ingredient_key=ingredient_key,
+                similarity_df,
+                ingredient_key=ingredient_key,
             )
 
         return similarity_df
 
     def calc_and_save_correlations(
-        self, all_spilr_scaled, ingredient_key,
+        self,
+        all_spilr_scaled,
+        ingredient_key,
     ):
         key_list = [
             f"{pc}_{sc}"
             for pc in range(self.num_packings)
             for sc in range(self.num_seeds_per_packing[pc])
         ]
-        corr_df = pd.DataFrame(index=key_list, columns=key_list, dtype=float,)
+        corr_df = pd.DataFrame(
+            index=key_list,
+            columns=key_list,
+            dtype=float,
+        )
         corr_df["packing_id"] = numpy.nan
         for pc1 in range(self.num_packings):
             for sc1 in tqdm(range(self.num_seeds_per_packing[pc1])):
@@ -1450,7 +1491,9 @@ class Analysis:
         row_colors = df_packing.map(lut)
         corr_df.fillna(0, inplace=True)
         g = sns.clustermap(
-            corr_df, row_colors=row_colors, cbar_kws={"label": "spilr correlation"},
+            corr_df,
+            row_colors=row_colors,
+            cbar_kws={"label": "spilr correlation"},
         )
         g.savefig(
             self.figures_path / f"spilr_correlation_{ingredient_key}.png", dpi=300
@@ -1459,14 +1502,19 @@ class Analysis:
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
         fig, ax = plt.subplots()
         g = sns.heatmap(
-            input_dict, cbar=False, xticklabels=False, yticklabels=False, ax=ax,
+            input_dict,
+            cbar=False,
+            xticklabels=False,
+            yticklabels=False,
+            ax=ax,
         )
         g.set_xlabel("Angular coordinates")
         g.set_ylabel(label_str)
         g.invert_yaxis()
 
         fig.savefig(
-            file_path, dpi=300,
+            file_path,
+            dpi=300,
         )
         plt.close()
 
@@ -1574,7 +1622,8 @@ class Analysis:
         if get_correlations:
             print("calculating correlations...")
             self.calc_and_save_correlations(
-                all_spilr["scaled"], ingredient_key=ingredient_key,
+                all_spilr["scaled"],
+                ingredient_key=ingredient_key,
             )
 
         if save_plots:
@@ -1637,7 +1686,8 @@ class Analysis:
         plt.ylabel(y_label)
 
     def build_grid(
-        self, forceBuild=True,
+        self,
+        forceBuild=True,
     ):
         t1 = time()
         self.env.buildGrid()
@@ -1646,14 +1696,22 @@ class Analysis:
         print("time to Build Grid", gridTime)
 
     def pack(
-        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True,
+        self,
+        seed=20,
+        vTestid=3,
+        vAnalysis=0,
+        fbox_bb=None,
+        show_plotly_plot=True,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.place_method)
 
         t1 = time()
         self.env.pack_grid(
-            seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb,
+            seedNum=seed,
+            vTestid=vTestid,
+            vAnalysis=vAnalysis,
+            fbox=fbox_bb,
         )
         t2 = time()
         print("time to run pack_grid", self.env.place_method, t2 - t1)
@@ -1712,7 +1770,10 @@ class Analysis:
             self.plot_one_result_2d(filename=f, bbox=bbox)
 
     def plot_one_result_2d(
-        self, data=None, filename=None, bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]],
+        self,
+        data=None,
+        filename=None,
+        bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]],
     ):
         if data is None and filename is None:
             return
@@ -1739,7 +1800,10 @@ class Analysis:
             for i, p in enumerate(ingrpos[ingr]):
                 ax.add_patch(
                     Circle(
-                        (p[0], p[1]), radius[ingr], edgecolor="black", facecolor="red",
+                        (p[0], p[1]),
+                        radius[ingr],
+                        edgecolor="black",
+                        facecolor="red",
                     )
                 )
             ax.set_aspect(1.0)
@@ -1812,19 +1876,35 @@ class Analysis:
             if autopack.testPeriodicity:
                 if pos[0] < radius:
                     ax.add_patch(
-                        Circle((pos[0] + width[0], pos[1]), radius, facecolor=color,)
+                        Circle(
+                            (pos[0] + width[0], pos[1]),
+                            radius,
+                            facecolor=color,
+                        )
                     )
                 elif pos[0] > (width[0] - radius):
                     ax.add_patch(
-                        Circle((pos[0] - width[0], pos[1]), radius, facecolor=color,)
+                        Circle(
+                            (pos[0] - width[0], pos[1]),
+                            radius,
+                            facecolor=color,
+                        )
                     )
                 if pos[1] < radius:
                     ax.add_patch(
-                        Circle((pos[0], pos[1] + width[1]), radius, facecolor=color,)
+                        Circle(
+                            (pos[0], pos[1] + width[1]),
+                            radius,
+                            facecolor=color,
+                        )
                     )
                 elif pos[1] > (width[1] - radius):
                     ax.add_patch(
-                        Circle((pos[0], pos[1] - width[1]), radius, facecolor=color,)
+                        Circle(
+                            (pos[0], pos[1] - width[1]),
+                            radius,
+                            facecolor=color,
+                        )
                     )
 
             if i == 0:  # len(ingrpos)-1:
@@ -1845,7 +1925,10 @@ class Analysis:
                 )
                 # plot the sphere
                 if ingr.use_rbsphere:
-                    (ext_recipe, pts,) = ingr.getInterpolatedSphere(
+                    (
+                        ext_recipe,
+                        pts,
+                    ) = ingr.getInterpolatedSphere(
                         seed_ingredient_positions[-i - 1],
                         seed_ingredient_positions[-i],
                     )
@@ -1950,7 +2033,9 @@ class Analysis:
             if ingr2.name == ingr.name:
                 continue
             if not check_paired_key(
-                pairwise_distance_dict[seed_index], ingr.name, ingr2.name,
+                pairwise_distance_dict[seed_index],
+                ingr.name,
+                ingr2.name,
             ):
                 pairwise_distance_dict[seed_index][
                     f"{ingr.name}_{ingr2.name}"
@@ -2013,7 +2098,12 @@ class Analysis:
 
             if plot_figures and two_d:
                 ax = self.add_ingredient_positions_to_plot(
-                    ax, ingr, color, seed_index, ingredient_position_dict, width,
+                    ax,
+                    ingr,
+                    color,
+                    seed_index,
+                    ingredient_position_dict,
+                    width,
                 )
 
         return (
@@ -2150,7 +2240,9 @@ class Analysis:
                 self.env.reset()
             self.env.saveResult = True
             seed = seed_list[seed_index]  # int(time())
-            self.build_grid(forceBuild=rebuild,)
+            self.build_grid(
+                forceBuild=rebuild,
+            )
             two_d = self.env.is_two_d()
             use_simularium = False
             self.pack(
@@ -2176,7 +2268,6 @@ class Analysis:
                 ax = fig.add_subplot(111)
 
             if get_distance_distribution:
-
                 center_distance_dict[seed_index] = {}
                 pairwise_distance_dict[seed_index] = {}
                 ingredient_position_dict[seed_index] = {}
@@ -2212,7 +2303,6 @@ class Analysis:
                     )
 
                 for comparment in self.env.compartments:
-
                     surface_recipe = comparment.surfaceRecipe
                     if surface_recipe:
                         (

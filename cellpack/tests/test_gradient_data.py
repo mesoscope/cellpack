@@ -12,7 +12,10 @@ from cellpack.autopack.interface_objects import GradientData
     "input, expected_options",
     [
         (
-            ({}, "gradient_name",),
+            (
+                {},
+                "gradient_name",
+            ),
             {
                 "mode": "X",
                 "weight_mode": "linear",
@@ -20,7 +23,9 @@ from cellpack.autopack.interface_objects import GradientData
                 "description": "Linear gradient in the X direction",
                 "reversed": False,
                 "name": "gradient_name",
-                "mode_settings": {"direction": [1, 0, 0],},
+                "mode_settings": {
+                    "direction": [1, 0, 0],
+                },
             },
         ),
         (
@@ -29,7 +34,10 @@ from cellpack.autopack.interface_objects import GradientData
                     "mode": "radial",
                     "weight_mode": "square",
                     "description": "Square gradient in the radial direction",
-                    "mode_settings": {"center": [0, 0, 0], "radius": 1,},
+                    "mode_settings": {
+                        "center": [0, 0, 0],
+                        "radius": 1,
+                    },
                 },
                 "gradient_name",
             ),
@@ -77,7 +85,10 @@ def test_gradient_data(input, expected_options):
     "input, error_string",
     [
         (
-            ({"mode": "wrong_mode"}, "gradient_name",),
+            (
+                {"mode": "wrong_mode"},
+                "gradient_name",
+            ),
             "Invalid gradient mode: wrong_mode",
         ),
         (

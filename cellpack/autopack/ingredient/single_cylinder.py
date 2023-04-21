@@ -54,7 +54,6 @@ class SingleCylinderIngr(Ingredient):
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
-
         super().__init__(
             type=type,
             color=color,
@@ -101,7 +100,7 @@ class SingleCylinderIngr(Ingredient):
             bottom_cent + (top_cent - bottom_cent) / 2
         )  # location of center based on top and bottom
 
-        self.encapsulating_radius = numpy.sqrt(radius ** 2 + (self.length / 2.0) ** 2)
+        self.encapsulating_radius = numpy.sqrt(radius**2 + (self.length / 2.0) ** 2)
 
         self.listePtLinear = [
             bottom_cent,
@@ -164,7 +163,10 @@ class SingleCylinderIngr(Ingredient):
         return bb
 
     def collides_with_compartment(
-        self, env, jtrans, rotation_matrix=None,
+        self,
+        env,
+        jtrans,
+        rotation_matrix=None,
     ):
         """
         Check cylinders for collision
@@ -211,7 +213,14 @@ class SingleCylinderIngr(Ingredient):
         return False
 
     def collision_jitter(
-        self, jtrans, rotMat, level, gridPointsCoords, distance, histoVol, dpad,
+        self,
+        jtrans,
+        rotMat,
+        level,
+        gridPointsCoords,
+        distance,
+        histoVol,
+        dpad,
     ):
         """
         Check cylinders for collision
@@ -308,7 +317,7 @@ class SingleCylinderIngr(Ingredient):
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            radt = sqrt(lengthsq + radc ** 2)
+            radt = sqrt(lengthsq + radc**2)
 
             bb = self.correctBB(p1, p2, radc)
             #            bb = self.correctBB(posc,posc,radt)
@@ -390,7 +399,10 @@ class SingleCylinderIngr(Ingredient):
         return False, insidePoints, newDistPoints
 
     def get_signed_distance(
-        self, packing_location, grid_point_location, rotation_matrix,
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix,
     ):
         # returns the distance to 'grid_point_location' from the nearest cylinder surface
         # the cylinder center is located at packing_location
@@ -423,7 +435,7 @@ class SingleCylinderIngr(Ingredient):
         bottom_cos = numpy.dot(bottom_vect, axis_vect) / length / dist_to_bottom
         top_cos = numpy.dot(top_vect, axis_vect) / length / dist_to_top
 
-        bottom_sin = numpy.sqrt(1 - bottom_cos ** 2)
+        bottom_sin = numpy.sqrt(1 - bottom_cos**2)
         perp_dist = (
             dist_to_bottom * bottom_sin
         )  # perpendicular distance to cylinder axis
@@ -444,7 +456,7 @@ class SingleCylinderIngr(Ingredient):
             else:
                 x_dist = dist_to_top * top_cos
                 y_dist = perp_dist - radius
-                return numpy.sqrt(x_dist ** 2 + y_dist ** 2)
+                return numpy.sqrt(x_dist**2 + y_dist**2)
         elif bottom_cos <= 0 and top_cos <= 0:
             # point lies beyond bottom face
             if perp_dist <= radius:
@@ -452,4 +464,4 @@ class SingleCylinderIngr(Ingredient):
             else:
                 x_dist = dist_to_bottom * bottom_cos
                 y_dist = perp_dist - radius
-                return numpy.sqrt(x_dist ** 2 + y_dist ** 2)
+                return numpy.sqrt(x_dist**2 + y_dist**2)

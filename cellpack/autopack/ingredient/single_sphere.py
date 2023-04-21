@@ -127,7 +127,6 @@ class SingleSphereIngr(Ingredient):
         )
 
         for pti, grid_point_index in enumerate(pointsToCheck):
-
             distance_to_packing_location = distance_to_grid_points[
                 pti
             ]  # is that point's distance from the center of the sphere (packing location)
@@ -150,7 +149,10 @@ class SingleSphereIngr(Ingredient):
                 distance_to_packing_location - radius_of_ing_being_packed
             )
 
-            (insidePoints, newDistPoints,) = self.get_new_distances_and_inside_points(
+            (
+                insidePoints,
+                newDistPoints,
+            ) = self.get_new_distances_and_inside_points(
                 env,
                 jtrans,
                 rotMat,
@@ -163,7 +165,10 @@ class SingleSphereIngr(Ingredient):
         return False, insidePoints, newDistPoints
 
     def collides_with_compartment(
-        self, env, jtrans, rotation_matrix=None,
+        self,
+        env,
+        jtrans,
+        rotation_matrix=None,
     ):
         """
         Check spheres for collision
@@ -178,7 +183,10 @@ class SingleSphereIngr(Ingredient):
         return False
 
     def get_signed_distance(
-        self, packing_location, grid_point_location, rotation_matrix=None,
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix=None,
     ):
         radius = self.radius
         distance_to_packing_location = numpy.linalg.norm(
@@ -190,7 +198,6 @@ class SingleSphereIngr(Ingredient):
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
     ):
-
         insidePoints = {}
         newDistPoints = {}
         padded_sphere = self.radius + dpad

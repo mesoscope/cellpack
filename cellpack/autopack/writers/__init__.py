@@ -290,7 +290,6 @@ class Writer(object):
                             "ingredients"
                         ][ingr.composition_name]["name"] = ingr.composition_name
         with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
-
             if indent:
                 json.dump(
                     env.jsondic,

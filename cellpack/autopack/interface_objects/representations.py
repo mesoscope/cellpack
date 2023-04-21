@@ -73,7 +73,10 @@ class Representations:
         if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
 
-            (positions, radii,) = Representations._read_sphere_file(sphere_file)
+            (
+                positions,
+                radii,
+            ) = Representations._read_sphere_file(sphere_file)
             self.packing["positions"] = positions
             self.packing["radii"] = radii
         # can be passed in directly, or they were just read from a file

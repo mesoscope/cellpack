@@ -24,7 +24,9 @@ log = logging.getLogger()
 
 
 def analyze(
-    analysis_config_path, recipe_path, packing_results_path,
+    analysis_config_path,
+    recipe_path,
+    packing_results_path,
 ):
     """
     Runs specified analyses based on the config
@@ -42,9 +44,12 @@ def analyze(
     recipe_data = RecipeLoader(recipe_path, False).recipe_data
 
     log.info(f"Packing results path: {packing_results_path}\n")
-    analysis = Analysis(packing_results_path=packing_results_path,)
+    analysis = Analysis(
+        packing_results_path=packing_results_path,
+    )
     analysis.run_analysis_workflow(
-        analysis_config=analysis_config, recipe_data=recipe_data,
+        analysis_config=analysis_config,
+        recipe_data=recipe_data,
     )
     t2 = time()
     print(f"time to run analysis: {t2 - t1}")
