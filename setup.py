@@ -59,6 +59,7 @@ requirements = [
     "pyembree>=0.1.8",
     "pymunk>=6.2.0",
     "trimesh>=3.9.34",
+    "deepdiff>=5.5.0",
 ]
 
 extra_requirements = {
