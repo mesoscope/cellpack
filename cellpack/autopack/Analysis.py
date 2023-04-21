@@ -1925,10 +1925,7 @@ class Analysis:
                 )
                 # plot the sphere
                 if ingr.use_rbsphere:
-                    (
-                        ext_recipe,
-                        pts,
-                    ) = ingr.getInterpolatedSphere(
+                    (ext_recipe, pts,) = ingr.getInterpolatedSphere(
                         seed_ingredient_positions[-i - 1],
                         seed_ingredient_positions[-i],
                     )
