@@ -1,7 +1,7 @@
 {
     "name": "test_image_config",
     "format": "simularium",
-    "inner_grid_method": "raytrace",
+    "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
     "out": "out/",
@@ -10,12 +10,12 @@
     "save_analyze_result": true,
     "show_grid_plot": true,
     "number_of_packings": 1,
-    "spacing": null,
+    "spacing": 2.5,
     "use_periodicity": false,
-    "show_sphere_trees": true,
-    "load_from_grid_file": false,
+    "show_sphere_trees": false,
+    "load_from_grid_file": true,
     "save_converted_recipe": true,
     "export_image_options": {
-        "voxel_size": [0.1, 0.1, 5]
+        "voxel_size": [1,1,1]
     }
 }

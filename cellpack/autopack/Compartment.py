@@ -3133,21 +3133,18 @@ class Compartment(CompartmentList):
         if center is None:  # use the middle of the grid
             center = (self.bounding_box[0] + self.bounding_box[1]) / 2.0
 
-        X, Y, Z = numpy.meshgrid(
-            numpy.arange(x_width),
-            numpy.arange(y_width),
+        Z, Y, X = numpy.meshgrid(
             numpy.arange(z_width),
+            numpy.arange(y_width),
+            numpy.arange(x_width),
+            indexing="ij",
         )
-        coords = (
-            numpy.vstack(  # coords are in grid space
-                (
-                    X * voxel_size[0] - center[0],
-                    Y * voxel_size[1] - center[1],
-                    Z * voxel_size[2] - center[2],
-                )
-            )
-            .reshape(3, -1)
-            .T
+        coords = numpy.column_stack(
+            [
+                (X * voxel_size[0] - center[0]).flatten(),
+                (Y * voxel_size[1] - center[1]).flatten(),
+                (Z * voxel_size[2] - center[2]).flatten(),
+            ]
         )
 
         mesh = mesh_store.get_mesh(self.gname)
@@ -3157,7 +3154,7 @@ class Compartment(CompartmentList):
         ).hollow()
 
         mask_ravel = trimesh_grid_surface.is_filled(coords)
-        mask = mask_ravel.reshape(x_width, y_width, z_width)
+        mask = mask_ravel.reshape((x_width, y_width, z_width), order="F")
 
         return mask
 

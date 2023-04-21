@@ -2382,7 +2382,7 @@ class Analysis:
                     env=self.env,
                     name=seed_basename,
                     output_path=self.figures_path,
-                    voxel_size=export_image_options.get("voxel_size"),
+                    **export_image_options,
                 )
                 image_writer.export_image()
 
