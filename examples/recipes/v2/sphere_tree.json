@@ -54,7 +54,7 @@
             "weight": 0.25,
             "representations": {
                 "packing":{
-                    "path": "../../tests/geometry",
+                    "path": "../../../cellpack/tests/geometry",
                     "name": "test.sph",
                     "format": "sph"
                 }

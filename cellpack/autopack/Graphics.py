@@ -1638,7 +1638,6 @@ class AutopackViewer:
                 self.vi.AddObject(sph1)
 
         if len(verts):
-
             verts0 = []
             vertsIn = []
             vertsOut = []
@@ -1877,7 +1876,6 @@ class AutopackViewer:
             elif (
                 ingtype == self.helper.SPHERE
             ):  # should be able to detect this using distance vertex->center
-
                 positions = []
                 radius = []
                 for io in child:
@@ -1905,7 +1903,6 @@ class AutopackViewer:
                     meshObject=obj,
                 )
             elif ingtype == self.helper.CYLINDER:
-
                 positions = []
                 positions2 = []
                 radius = []
@@ -1931,7 +1928,6 @@ class AutopackViewer:
                     principal_vector=axis,
                 )
             elif ingtype == self.helper.CUBE:
-
                 # need to create a SphereIngredient
                 s = self.helper.getPropertyObject(child0, key=["scale"])[0]
                 if self.helper.getType(child0) == self.helper.INSTANCE:
@@ -1947,7 +1943,6 @@ class AutopackViewer:
             else:
                 pass
         if self.helper.getType(obj) == self.helper.SPHERE:
-
             # need to create a SphereIngredient
             ingr = SingleSphereIngr(
                 1.0,
@@ -1958,7 +1953,6 @@ class AutopackViewer:
             )
             # compartiment ?
         elif self.helper.getType(obj) == self.helper.CYLINDER:
-
             # need to create a SphereIngredient
             r, h, axis = self.helper.getPropertyObject(
                 obj, key=["radius", "length", "axis"]
@@ -1978,7 +1972,6 @@ class AutopackViewer:
                 principal_vector=axis,  # should come from the object
             )
         elif self.helper.getType(obj) == self.helper.CUBE:
-
             # need to create a SphereIngredient
             size = self.helper.getPropertyObject(obj, key=["length"])[0]
             ingr = SingleCubeIngr(
@@ -2113,7 +2106,6 @@ class AutopackViewer:
         colors=[upyColors.red, upyColors.black],
         **options
     ):
-
         mini = None
         maxi = None
         useMaterial = False

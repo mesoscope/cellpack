@@ -290,7 +290,6 @@ class Writer(object):
                             "ingredients"
                         ][ingr.composition_name]["name"] = ingr.composition_name
         with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
-
             if indent:
                 json.dump(
                     env.jsondic,
@@ -303,6 +302,17 @@ class Writer(object):
                 json.dump(
                     env.jsondic, fp, separators=(",", ":"), cls=NumpyArrayEncoder
                 )  # ,indent=4, separators=(',', ': ')
+
+    @staticmethod
+    def return_object_value(data):
+        for key, value in data.items():
+            if isinstance(value, object):
+                data[key] = vars(value)
+            elif isinstance(value, dict):
+                Writer.return_object_value(value)
+            else:
+                data[key] = value
+        return data
 
     def save(
         self,
@@ -332,7 +342,6 @@ class Writer(object):
                 quaternion=quaternion,
                 transpose=transpose,
             )
-
         elif output_format == "simularium":
             self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
         else:

@@ -5,6 +5,7 @@ import os
 import json
 from json import encoder
 
+
 import cellpack.autopack as autopack
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.interface_objects.partners import Partners
@@ -130,6 +131,16 @@ class RecipeLoader(object):
             format_version = recipe_data["format_version"]
         return format_version
 
+    def get_only_recipe_metadata(self):
+        recipe_meta_data = {
+            "format_version": self.recipe_data["format_version"],
+            "version": self.recipe_data["version"],
+            "name": self.recipe_data["name"],
+            "bounding_box": self.recipe_data["bounding_box"],
+            "composition": {},
+        }
+        return recipe_meta_data
+
     def _migrate_version(self, old_recipe):
         converted = False
         if old_recipe["format_version"] == "1.0":
@@ -161,7 +172,6 @@ class RecipeLoader(object):
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
             recipe_data
         )
-
         if recipe_data["format_version"] != self.current_version:
             recipe_data = self._migrate_version(recipe_data)
 
@@ -188,7 +198,6 @@ class RecipeLoader(object):
             for gradient_name, gradient_dict in recipe_data["gradients"].items():
                 gradients.append(GradientData(gradient_dict, gradient_name).data)
             recipe_data["gradients"] = gradients
-
         return recipe_data
 
     def _load_json(self):

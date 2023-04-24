@@ -1431,7 +1431,6 @@ class Compartment(CompartmentList):
         idarray,
         ray=1,
     ):
-
         if self.is_box:
             nbGridPoints = len(env.grid.masterGridPositions)
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
@@ -2321,7 +2320,6 @@ class Compartment(CompartmentList):
         # pdb.set_trace()
 
         for i, d in enumerate(distance):
-
             # identify surface and interior points
             # there is a problem with SDF putting large negative values
             # for inside points. For now we pick all negative != mind as

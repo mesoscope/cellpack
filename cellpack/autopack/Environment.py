@@ -1366,7 +1366,6 @@ class Environment(CompartmentList):
             self.grid.nbFreePoints = nbFreePoints
 
         if self.use_gradient and len(self.gradients) and rebuild:
-
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
