@@ -294,9 +294,7 @@
 <span class="kn">from</span> <span class="nn">simulariumio.cellpack</span> <span class="kn">import</span> <span class="n">CellpackConverter</span><span class="p">,</span> <span class="n">HAND_TYPE</span>
 <span class="kn">from</span> <span class="nn">simulariumio.constants</span> <span class="kn">import</span> <span class="n">DISPLAY_TYPE</span><span class="p">,</span> <span class="n">VIZ_TYPE</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.upy</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">hostHelper</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.upy</span> <span class="kn">import</span> <span class="n">hostHelper</span>
 <span class="kn">import</span> <span class="nn">collada</span>
 
 
@@ -783,7 +781,6 @@
                             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">grid_point_positions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
             <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grid_point_compartment_ids</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="n">index</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">compartment_id</span> <span class="o">=</span> <span class="n">grid_point_compartment_ids</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
@@ -845,7 +842,6 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="simulariumHelper.getTranslation"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">getTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">centroid</span>  <span class="c1"># or getCumulatedTranslation</span></div>
 
 <div class="viewcode-block" id="simulariumHelper.setTranslation"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">setTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]):</span>

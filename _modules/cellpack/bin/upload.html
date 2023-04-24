@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cellpack.bin.analyze &mdash; cellPack 1.0.3 documentation</title>
+  <title>cellpack.bin.upload &mdash; cellPack 1.0.3 documentation</title>
   
 
   
@@ -254,7 +254,7 @@
         
           <li><a href="../../cellpack.html">cellpack</a> &raquo;</li>
         
-      <li>cellpack.bin.analyze</li>
+      <li>cellpack.bin.upload</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -269,67 +269,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for cellpack.bin.analyze</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Run analysis code</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># Standard library</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">logging.config</span>
-
-<span class="c1"># Third party</span>
+  <h1>Source code for cellpack.bin.upload</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">fire</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.FirebaseHandler</span> <span class="kn">import</span> <span class="n">FirebaseHandler</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBRecipeHandler</span>
 
-<span class="c1"># Relative</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.analysis_config_loader</span> <span class="kn">import</span> <span class="n">AnalysisConfigLoader</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
 
-<span class="c1">###############################################################################</span>
-<span class="n">log_file_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;../../logging.conf&quot;</span><span class="p">))</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fileConfig</span><span class="p">(</span><span class="n">log_file_path</span><span class="p">,</span> <span class="n">disable_existing_loggers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
-<span class="c1">###############################################################################</span>
+
+<div class="viewcode-block" id="DATABASE_IDS"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.upload.DATABASE_IDS">[docs]</a><span class="k">class</span> <span class="nc">DATABASE_IDS</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">FIREBASE</span> <span class="o">=</span> <span class="s2">&quot;firebase&quot;</span>
+    <span class="n">GITHUB</span> <span class="o">=</span> <span class="s2">&quot;github&quot;</span></div>
 
 
-<div class="viewcode-block" id="analyze"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.analyze.analyze">[docs]</a><span class="k">def</span> <span class="nf">analyze</span><span class="p">(</span>
-    <span class="n">analysis_config_path</span><span class="p">,</span>
+<div class="viewcode-block" id="upload"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.upload.upload">[docs]</a><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span>
     <span class="n">recipe_path</span><span class="p">,</span>
-    <span class="n">packing_results_path</span><span class="p">,</span>
+    <span class="n">cred_path</span><span class="p">,</span>
+    <span class="n">db_id</span><span class="o">=</span><span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Runs specified analyses based on the config</span>
-<span class="sd">    :param analysis_config_path: string argument,</span>
-<span class="sd">    path to analysis config file</span>
-<span class="sd">    :param recipe_path: string argument,</span>
-<span class="sd">    path to recipe file</span>
-<span class="sd">    :param packing_results_path: string argument</span>
-<span class="sd">    path to packing results</span>
+<span class="sd">    Uploads a recipe to the database</span>
 
 <span class="sd">    :return: void</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">analysis_config</span> <span class="o">=</span> <span class="n">AnalysisConfigLoader</span><span class="p">(</span><span class="n">analysis_config_path</span><span class="p">)</span><span class="o">.</span><span class="n">config</span>
-    <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe_path</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">recipe_data</span>
-
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Packing results path: </span><span class="si">{</span><span class="n">packing_results_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">analysis</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span>
-        <span class="n">packing_results_path</span><span class="o">=</span><span class="n">packing_results_path</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">analysis</span><span class="o">.</span><span class="n">run_analysis_workflow</span><span class="p">(</span>
-        <span class="n">analysis_config</span><span class="o">=</span><span class="n">analysis_config</span><span class="p">,</span>
-        <span class="n">recipe_data</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time to run analysis: </span><span class="si">{</span><span class="n">t2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">db_id</span> <span class="o">==</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">:</span>
+        <span class="n">cred_path</span> <span class="o">=</span> <span class="n">cred_path</span>
+        <span class="c1"># fetch the service key json file</span>
+        <span class="n">db_handler</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="p">(</span><span class="n">cred_path</span><span class="p">)</span>
+        <span class="n">recipe_loader</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe_path</span><span class="p">)</span>
+        <span class="n">recipe_full_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">recipe_data</span>
+        <span class="n">recipe_meta_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">get_only_recipe_metadata</span><span class="p">()</span>
+        <span class="n">recipe_db_handler</span> <span class="o">=</span> <span class="n">DBRecipeHandler</span><span class="p">(</span><span class="n">db_handler</span><span class="p">)</span>
+        <span class="n">recipe_db_handler</span><span class="o">.</span><span class="n">upload_recipe</span><span class="p">(</span><span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_full_data</span><span class="p">)</span></div>
 
 
-<span class="c1"># Run directly from command line</span>
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.analyze.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">fire</span><span class="o">.</span><span class="n">Fire</span><span class="p">(</span><span class="n">analyze</span><span class="p">)</span></div>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.upload.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">fire</span><span class="o">.</span><span class="n">Fire</span><span class="p">(</span><span class="n">upload</span><span class="p">)</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

@@ -329,7 +329,6 @@
         <span class="n">weight_initial</span> <span class="o">=</span> <span class="mf">0.2</span>
         <span class="n">weight</span> <span class="o">=</span> <span class="n">weight_initial</span>
         <span class="k">for</span> <span class="n">partner</span> <span class="ow">in</span> <span class="n">partners</span><span class="p">:</span>
-
             <span class="n">weight</span> <span class="o">+=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">weight_initial</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">total</span><span class="p">))</span> <span class="o">-</span> <span class="n">weight_initial</span>
             <span class="n">partner</span> <span class="o">=</span> <span class="n">Partner</span><span class="p">(</span>
                 <span class="n">partner</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>

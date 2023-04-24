@@ -40,10 +40,26 @@ cellpack.autopack.Compartment module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.DBRecipeHandler module
+----------------------------------------
+
+.. automodule:: cellpack.autopack.DBRecipeHandler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.Environment module
 ------------------------------------
 
 .. automodule:: cellpack.autopack.Environment
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.FirebaseHandler module
+----------------------------------------
+
+.. automodule:: cellpack.autopack.FirebaseHandler
    :members:
    :undoc-members:
    :show-inheritance:

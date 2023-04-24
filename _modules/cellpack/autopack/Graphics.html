@@ -1912,7 +1912,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">sph1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">):</span>
-
             <span class="n">verts0</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">vertsIn</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">vertsOut</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2151,7 +2150,6 @@
             <span class="k">elif</span> <span class="p">(</span>
                 <span class="n">ingtype</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">SPHERE</span>
             <span class="p">):</span>  <span class="c1"># should be able to detect this using distance vertex-&gt;center</span>
-
                 <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">radius</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">io</span> <span class="ow">in</span> <span class="n">child</span><span class="p">:</span>
@@ -2179,7 +2177,6 @@
                     <span class="n">meshObject</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="n">ingtype</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">CYLINDER</span><span class="p">:</span>
-
                 <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">positions2</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">radius</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2205,7 +2202,6 @@
                     <span class="n">principal_vector</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="n">ingtype</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">CUBE</span><span class="p">:</span>
-
                 <span class="c1"># need to create a SphereIngredient</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getPropertyObject</span><span class="p">(</span><span class="n">child0</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getType</span><span class="p">(</span><span class="n">child0</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">INSTANCE</span><span class="p">:</span>
@@ -2221,7 +2217,6 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">pass</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getType</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">SPHERE</span><span class="p">:</span>
-
             <span class="c1"># need to create a SphereIngredient</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span>
                 <span class="mf">1.0</span><span class="p">,</span>
@@ -2232,7 +2227,6 @@
             <span class="p">)</span>
             <span class="c1"># compartiment ?</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getType</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">CYLINDER</span><span class="p">:</span>
-
             <span class="c1"># need to create a SphereIngredient</span>
             <span class="n">r</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getPropertyObject</span><span class="p">(</span>
                 <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">,</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="s2">&quot;axis&quot;</span><span class="p">]</span>
@@ -2252,7 +2246,6 @@
                 <span class="n">principal_vector</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>  <span class="c1"># should come from the object</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getType</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">CUBE</span><span class="p">:</span>
-
             <span class="c1"># need to create a SphereIngredient</span>
             <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getPropertyObject</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;length&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCubeIngr</span><span class="p">(</span>
@@ -2387,7 +2380,6 @@
         <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="n">upyColors</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">upyColors</span><span class="o">.</span><span class="n">black</span><span class="p">],</span>
         <span class="o">**</span><span class="n">options</span>
     <span class="p">):</span>
-
         <span class="n">mini</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">maxi</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">useMaterial</span> <span class="o">=</span> <span class="kc">False</span>

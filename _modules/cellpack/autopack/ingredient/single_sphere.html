@@ -401,7 +401,6 @@
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">pti</span><span class="p">,</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pointsToCheck</span><span class="p">):</span>
-
             <span class="n">distance_to_packing_location</span> <span class="o">=</span> <span class="n">distance_to_grid_points</span><span class="p">[</span>
                 <span class="n">pti</span>
             <span class="p">]</span>  <span class="c1"># is that point&#39;s distance from the center of the sphere (packing location)</span>
@@ -470,7 +469,6 @@
 <div class="viewcode-block" id="SingleSphereIngr.get_new_distance_values"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_new_distance_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">):</span>
-
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">padded_sphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="n">dpad</span>

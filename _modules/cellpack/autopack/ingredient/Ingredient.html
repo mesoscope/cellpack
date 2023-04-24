@@ -822,7 +822,6 @@
             <span class="c1"># use the host helper if any to read</span>
             <span class="k">return</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
                 <span class="c1"># need to get the mesh directly. Only possible if dae or dejavu format</span>
                 <span class="c1"># get the dejavu heper but without the View, and in nogui mode</span>
                 <span class="n">h</span> <span class="o">=</span> <span class="n">simulariumHelper</span><span class="p">(</span><span class="n">vi</span><span class="o">=</span><span class="s2">&quot;nogui&quot;</span><span class="p">)</span>
@@ -855,9 +854,7 @@
                     <span class="k">return</span> <span class="n">geom</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
-
                         <span class="k">if</span> <span class="n">collada</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
                             <span class="c1"># need to get the mesh directly. Only possible if dae or dejavu format</span>
                             <span class="c1"># get the dejavu heper but without the View, and in nogui mode</span>
                             <span class="n">h</span> <span class="o">=</span> <span class="n">simulariumHelper</span><span class="p">(</span><span class="n">vi</span><span class="o">=</span><span class="s2">&quot;nogui&quot;</span><span class="p">)</span>
@@ -1292,7 +1289,6 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">signed_distance_to_surface</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># point is inside dropped ingredient</span>
-
             <span class="k">if</span> <span class="n">grid_point_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inside_points</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span>
                 <span class="n">signed_distance_to_surface</span>
             <span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">inside_points</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]):</span>
@@ -1757,7 +1753,6 @@
         <span class="k">return</span> <span class="n">R</span></div>
 
 <div class="viewcode-block" id="Ingredient.get_closest_ingredients"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_closest_ingredients">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
-
         <span class="n">to_return</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;indices&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;distances&quot;</span><span class="p">:</span> <span class="p">[]}</span>
         <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">totalNbIngr</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
@@ -1835,7 +1830,6 @@
         <span class="n">bounding_points_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_positions_to_check</span><span class="p">(</span><span class="n">packing_location</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">bounding_point_position</span> <span class="ow">in</span> <span class="n">bounding_points_to_check</span><span class="p">:</span>
-
             <span class="n">grid_points_to_update</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
                 <span class="n">bounding_point_position</span><span class="p">,</span> <span class="n">radius_of_area_to_check</span>
             <span class="p">)</span>
@@ -2491,7 +2485,6 @@
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">packing_rotation</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="Ingredient.lookForNeighbours"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.lookForNeighbours">[docs]</a>    <span class="k">def</span> <span class="nf">lookForNeighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span><span class="p">):</span>
-
         <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partners</span><span class="p">(</span>
             <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">,</span> <span class="n">afvi</span>
         <span class="p">)</span>
@@ -2570,7 +2563,6 @@
             <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Ingredient.close_partner_check"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.close_partner_check">[docs]</a>    <span class="k">def</span> <span class="nf">close_partner_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span><span class="p">,</span> <span class="n">moving</span><span class="p">):</span>
-
         <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookForNeighbours</span><span class="p">(</span>
             <span class="n">translation</span><span class="p">,</span>
             <span class="n">rotation</span><span class="p">,</span>
@@ -2620,7 +2612,6 @@
         <span class="n">is_realtime</span> <span class="o">=</span> <span class="n">moving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="c1"># we need to change here in case tilling, the pos,rot ade deduced fromte tilling.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;tile&quot;</span><span class="p">:</span>
-
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">setTilling</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -2689,7 +2680,6 @@
             <span class="c1"># need to check compartment too</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no additional collisions, checking compartment&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartment</span><span class="p">:</span>
-
                 <span class="n">collisionComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartmentPrimitive</span><span class="p">(</span>
                     <span class="n">level</span><span class="p">,</span>
                     <span class="n">packing_location</span><span class="p">,</span>
@@ -2800,7 +2790,6 @@
                     <span class="k">if</span> <span class="n">is_realtime</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">update_display_rt</span><span class="p">(</span><span class="n">moving</span><span class="p">,</span> <span class="n">targetPoint</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-
                     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span><span class="o">.</span><span class="n">init_seed</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span><span class="p">)</span>

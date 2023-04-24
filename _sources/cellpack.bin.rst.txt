@@ -36,6 +36,14 @@ cellpack.bin.simularium\_converter module
    :undoc-members:
    :show-inheritance:
 
+cellpack.bin.upload module
+--------------------------
+
+.. automodule:: cellpack.bin.upload
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

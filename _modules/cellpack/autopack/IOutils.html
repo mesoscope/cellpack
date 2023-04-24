@@ -1393,7 +1393,6 @@
 <div class="viewcode-block" id="setupFromJsonDic"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.setupFromJsonDic">[docs]</a><span class="k">def</span> <span class="nf">setupFromJsonDic</span><span class="p">(</span>
     <span class="n">env</span><span class="p">,</span>
 <span class="p">):</span>
-
     <span class="n">env</span><span class="o">.</span><span class="n">current_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
     <span class="n">io_ingr</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
