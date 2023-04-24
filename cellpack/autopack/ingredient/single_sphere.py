@@ -302,6 +302,6 @@ class SingleSphereIngr(Ingredient):
             radius=self.radius,
             voxel_size=voxel_size
         )
-        image_data[mask] = 1
+        image_data[mask] = 255
 
         return image_data
