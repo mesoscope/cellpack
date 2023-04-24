@@ -1,5 +1,5 @@
 {
-    "name": "test_image_config",
+    "name": "test_image_config_convolved",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
@@ -15,8 +15,15 @@
     "show_sphere_trees": false,
     "load_from_grid_file": true,
     "save_converted_recipe": true,
-    "export_image_options": {
+    "image_export_options": {
         "hollow": false,
-        "voxel_size": [1,1,1]
+        "voxel_size": [1,1,1],
+        "convolution_options": {
+            "psf": "gaussian",
+            "psf_parameters":{
+                "sigma": 2,
+                "size": [5,5,5]
+            }
+        }
     }
 }

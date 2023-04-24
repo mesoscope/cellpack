@@ -1,6 +1,7 @@
 from aicsimageio.writers.ome_tiff_writer import OmeTiffWriter
 from pathlib import Path
 import numpy
+from scipy.ndimage import convolve
 
 """
 ImageWriter provides a class to export cellpack packings as tiff images
@@ -16,6 +17,7 @@ class ImageWriter:
         voxel_size=None,
         num_voxels=None,
         hollow=False,
+        convolution_options=None,
     ):
         self.env = env
 
@@ -44,6 +46,116 @@ class ImageWriter:
             ).astype(int)
         )
         self.image_data = {}
+
+        self.convolution_options = convolution_options
+
+    def create_gaussian_psf(self, sigma=1.5, size=None):
+        """
+        Creates a gaussian psf
+
+        Parameters
+        ----------
+        sigma: float
+            sigma of the gaussian
+        size: np.ndarray
+            size of the psf
+
+        Returns
+        ----------
+        numpy.ndarray
+            psf
+        """
+        if size is None:
+            size = [3, 3, 3]
+
+        x, y, z = numpy.meshgrid(
+            numpy.linspace(-size[0] / 2, size[0] / 2, size[0]),
+            numpy.linspace(-size[1] / 2, size[1] / 2, size[1]),
+            numpy.linspace(-size[2] / 2, size[2] / 2, size[2]),
+        )
+        psf = numpy.exp(-(x**2 + y**2 + z**2) / (2 * sigma**2))
+        psf /= psf.sum()
+
+        return psf
+
+    def create_box_psf(self, size=None):
+        """
+        Creates a box psf
+
+        Parameters
+        ----------
+        size: np.ndarray
+            size of the psf
+
+        Returns
+        ----------
+        numpy.ndarray
+            psf
+        """
+        if size is None:
+            size = [3, 3, 3]
+
+        psf = numpy.ones(size)
+        psf /= psf.sum()
+
+        return psf
+
+    def convolve_channel(self, channel, psf):
+        """
+        Convolves a channel with a psf
+
+        Parameters
+        ----------
+        channel: numpy.ndarray
+            channel to be convolved
+        psf: numpy.ndarray
+            psf
+
+        Returns
+        ----------
+        numpy.ndarray
+            convolved channel
+        """
+        scaled_channel = channel.astype(numpy.float32) / 255.0
+        conv_channel = convolve(scaled_channel, psf, mode="constant", cval=0.0)
+        conv_channel = (conv_channel * 255).astype(numpy.uint8)
+        return conv_channel
+
+    def convolve_image(self, image, psf="gaussian", psf_parameters=None):
+        """
+        Convolves the image with a psf
+
+        Parameters
+        ----------
+        image: numpy.ndarray
+            image to be convolved
+        psf: str or numpy.ndarray
+            psf type
+        psf_parameters: dict
+            psf parameters
+
+        Returns
+        ----------
+        numpy.ndarray
+            convolved image
+        """
+        # TODO: add checking for psf_parameters
+        if psf_parameters is None:
+            psf_parameters["sigma"] = 1.5
+            psf_parameters["size"] = [3, 3, 3]
+
+        if isinstance(psf, str):
+            if psf == "gaussian":
+                psf = self.create_gaussian_psf(**psf_parameters)
+            elif psf == "box":
+                psf = self.create_box_psf(psf_parameters.get("size", None))
+            else:
+                raise NotImplementedError(f"PSF type {psf} not implemented")
+
+        conv_img = numpy.zeros(image.shape, dtype=image.dtype)
+        for channel in range(image.shape[0]):
+            conv_img[channel] = self.convolve_channel(image[channel], psf)
+        return conv_img
 
     def create_voxelization(self):
         """
@@ -101,6 +213,11 @@ class ImageWriter:
         for ct, (channel_name, channel_image) in enumerate(self.image_data.items()):
             concatenated_image[ct] = channel_image
             channel_names.append(channel_name)
+
+        if self.convolution_options is not None:
+            concatenated_image = self.convolve_image(
+                concatenated_image, **self.convolution_options
+            )
 
         concatenated_image = numpy.transpose(concatenated_image, axes=(2, 0, 3, 1))
 

@@ -2152,7 +2152,7 @@ class Analysis:
         seed_list=None,
         config_name="default",
         recipe_version="1.0.0",
-        export_image_options=None,
+        image_export_options=None,
     ):
         """
         Runs multiple packings of the same recipe in a loop. This workflow
@@ -2377,12 +2377,12 @@ class Analysis:
                     )
                     plt.close()  # closes the current figure
 
-            if export_image_options is not None:
+            if image_export_options is not None:
                 image_writer = ImageWriter(
                     env=self.env,
                     name=seed_basename,
                     output_path=self.figures_path,
-                    **export_image_options,
+                    **image_export_options,
                 )
                 image_writer.export_image()
 
