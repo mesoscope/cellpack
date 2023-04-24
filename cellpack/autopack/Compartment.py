@@ -3122,7 +3122,14 @@ class Compartment(CompartmentList):
         return insidePoints, surfacePoints
 
     def create_voxelized_mask(
-        self, x_width, y_width, z_width, center, voxel_size, mesh_store
+        self,
+        x_width,
+        y_width,
+        z_width,
+        center,
+        voxel_size,
+        mesh_store,
+        hollow=False,
     ):
         """
         Creates a mask of the compartment voxelization
@@ -3149,17 +3156,25 @@ class Compartment(CompartmentList):
 
         mesh = mesh_store.get_mesh(self.gname)
         # TODO: add option to create hollow voxelization
-        trimesh_grid_surface = creation.voxelize(
-            mesh, pitch=numpy.min(voxel_size)
-        ).hollow()
+        if hollow:
+            trimesh_grid = creation.voxelize(mesh, pitch=numpy.min(voxel_size)).hollow()
+        else:
+            trimesh_grid = creation.voxelize(mesh, pitch=numpy.min(voxel_size)).fill()
 
-        mask_ravel = trimesh_grid_surface.is_filled(coords)
+        mask_ravel = trimesh_grid.is_filled(coords)
         mask = mask_ravel.reshape((x_width, y_width, z_width), order="F")
 
         return mask
 
     def create_voxelization(
-        self, image_data, bounding_box, voxel_size, image_size, position, mesh_store
+        self,
+        image_data,
+        bounding_box,
+        voxel_size,
+        image_size,
+        position,
+        mesh_store,
+        hollow=False,
     ):
         """
         Creates a voxelization mask at the position of the compartment
@@ -3170,6 +3185,7 @@ class Compartment(CompartmentList):
             center=relative_position,
             voxel_size=voxel_size,
             mesh_store=mesh_store,
+            hollow=hollow,
         )
         image_data[mask] = 1
 

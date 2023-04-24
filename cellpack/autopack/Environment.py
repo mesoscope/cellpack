@@ -1276,9 +1276,9 @@ class Environment(CompartmentList):
                 verts.tolist()
             )  # should do it only on inside grid point
 
-    def extend_bounding_box_for_compartments(self):
+    def extend_bounding_box_for_compartments(self, spacing):
         for _, compartment in enumerate(self.compartments):
-            fits, bb = compartment.inBox(self.boundingBox, self.spacing)
+            fits, bb = compartment.inBox(self.boundingBox, spacing)
             if not fits:
                 self.boundingBox = bb
 
@@ -1292,7 +1292,8 @@ class Environment(CompartmentList):
         compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
-        self.extend_bounding_box_for_compartments()
+        spacing = self.spacing or self.smallestProteinSize
+        self.extend_bounding_box_for_compartments(spacing)
 
         boundingBox = self.boundingBox
         if self.use_halton:
@@ -1306,7 +1307,6 @@ class Environment(CompartmentList):
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.spacing or self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)

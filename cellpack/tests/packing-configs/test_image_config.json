@@ -16,6 +16,7 @@
     "load_from_grid_file": true,
     "save_converted_recipe": true,
     "export_image_options": {
+        "hollow": false,
         "voxel_size": [1,1,1]
     }
 }

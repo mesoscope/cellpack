@@ -9,7 +9,13 @@ ImageWriter provides a class to export cellpack packings as tiff images
 
 class ImageWriter:
     def __init__(
-        self, env, name=None, output_path=None, voxel_size=None, num_voxels=None
+        self,
+        env,
+        name=None,
+        output_path=None,
+        voxel_size=None,
+        num_voxels=None,
+        hollow=False,
     ):
         self.env = env
 
@@ -28,6 +34,8 @@ class ImageWriter:
             self.voxel_size = (
                 self.env.boundingBox[1] - self.env.boundingBox[0]
             ) / numpy.array(num_voxels)
+
+        self.hollow = hollow
 
         bounding_box = self.env.boundingBox
         self.image_size = tuple(
@@ -83,6 +91,7 @@ class ImageWriter:
                 image_size=self.image_size,
                 position=compartment.position,
                 mesh_store=self.env.mesh_store,
+                hollow=self.hollow,
             )
 
         concatenated_image = numpy.zeros(
