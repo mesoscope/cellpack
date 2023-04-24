@@ -3155,7 +3155,7 @@ class Compartment(CompartmentList):
         )
 
         mesh = mesh_store.get_mesh(self.gname)
-        # TODO: add option to create hollow voxelization
+
         if hollow:
             trimesh_grid = creation.voxelize(mesh, pitch=numpy.min(voxel_size)).hollow()
         else:
