@@ -793,6 +793,19 @@ class Environment(CompartmentList):
             if o.surfaceRecipe:
                 o.surfaceRecipe.sort()
 
+    def resolve_gradient_data_objects(self, gradient_data):
+        """
+        Resolves gradient data objects for some modes
+        """
+        # TODO: check if other modes need to be resolved
+        if gradient_data["mode"] == "surface":
+            gradient_data["mode_settings"][
+                "object"
+            ] = self.get_compartment_object_by_name(
+                gradient_data["mode_settings"]["object"]
+            )
+        return gradient_data
+
     def set_gradient(self, gradient_data):
         """
         create a grdaient
@@ -800,10 +813,7 @@ class Environment(CompartmentList):
         listorganelle influenced
         listingredient influenced
         """
-        if "surface_name" in gradient_data:
-            gradient_data["object"] = self.get_compartment_object_by_name(
-                gradient_data["surface_name"]
-            )
+        gradient_data = self.resolve_gradient_data_objects(gradient_data)
         gradient = Gradient(gradient_data)
         # default gradient 1-linear Decoy X
         self.gradients[gradient_data["name"]] = gradient
@@ -1366,11 +1376,10 @@ class Environment(CompartmentList):
             self.grid.nbFreePoints = nbFreePoints
 
         if self.use_gradient and len(self.gradients) and rebuild:
-
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
-                    gradient.object.get_surface_distances(
+                    gradient.mode_settings["object"].get_surface_distances(
                         self, self.grid.masterGridPositions
                     )
                 self.gradients[g].build_weight_map(

@@ -127,7 +127,6 @@ class SingleSphereIngr(Ingredient):
         )
 
         for pti, grid_point_index in enumerate(pointsToCheck):
-
             distance_to_packing_location = distance_to_grid_points[
                 pti
             ]  # is that point's distance from the center of the sphere (packing location)
@@ -196,7 +195,6 @@ class SingleSphereIngr(Ingredient):
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
     ):
-
         insidePoints = {}
         newDistPoints = {}
         padded_sphere = self.radius + dpad

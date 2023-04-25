@@ -16,16 +16,8 @@ test_objects = {
         "max_jitter": [1, 1, 0],
     },
     "base": {"jitter_attempts": 10},
-    "sphere_75": {
-        "inherit": "sphere_50",
-        "color": [0.3, 0.5, 0.8],
-        "radius": 75,
-    },
-    "sphere_50": {
-        "inherit": "sphere_25",
-        "color": [0.3, 0.5, 0.8],
-        "radius": 50,
-    },
+    "sphere_75": {"inherit": "sphere_50", "color": [0.3, 0.5, 0.8], "radius": 75},
+    "sphere_50": {"inherit": "sphere_25", "color": [0.3, 0.5, 0.8], "radius": 50},
 }
 
 

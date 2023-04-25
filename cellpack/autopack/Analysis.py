@@ -248,7 +248,6 @@ class Analysis:
         ramp_color3=None,
         cutoff=60.0,
     ):
-
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
@@ -1209,7 +1208,7 @@ class Analysis:
         )
 
         val_list = []
-        for (key, radius, num_packed) in zip(
+        for key, radius, num_packed in zip(
             ingredient_keys, ingredient_radii.values(), avg_num_packed.values()
         ):
             val_list.extend([key, radius, num_packed])
@@ -1382,7 +1381,6 @@ class Analysis:
         figdir.mkdir(parents=True, exist_ok=True)
 
         for dim in self.get_list_of_dims():
-
             avg_similarity_values = self.calc_avg_similarity_values_for_dim(
                 similarity_df[dim].values
             )
@@ -2269,7 +2267,6 @@ class Analysis:
                 ax = fig.add_subplot(111)
 
             if get_distance_distribution:
-
                 center_distance_dict[seed_index] = {}
                 pairwise_distance_dict[seed_index] = {}
                 ingredient_position_dict[seed_index] = {}
@@ -2305,7 +2302,6 @@ class Analysis:
                     )
 
                 for comparment in self.env.compartments:
-
                     surface_recipe = comparment.surfaceRecipe
                     if surface_recipe:
                         (

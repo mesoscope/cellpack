@@ -1119,7 +1119,6 @@ def load_Json(env, setupfile):
 def setupFromJsonDic(
     env,
 ):
-
     env.current_path = os.path.dirname(os.path.abspath(env.setupfile))
     io_ingr = IOingredientTool(env=env)
     env.name = env.jsondic["recipe"]["name"]

@@ -72,7 +72,6 @@ DIRECTION_MAP = {
 
 
 class GradientData:
-
     default_values = DEFAULT_GRADIENT_MODE_SETTINGS.copy()
 
     def __init__(self, gradient_options, gradient_name="default"):
@@ -88,7 +87,6 @@ class GradientData:
         self.data = gradient_data
 
     def validate_gradient_data(self, gradient_data):
-
         if not GradientModes.is_member(gradient_data.get("mode")):
             raise ValueError(f"Invalid gradient mode: {gradient_data.get('mode')}")
         if not WeightModes.is_member(gradient_data.get("weight_mode")):
@@ -104,7 +102,6 @@ class GradientData:
         )
 
     def validate_mode_settings(self, mode_name, mode_settings_dict):
-
         required_options = REQUIRED_MODE_OPTIONS.get(mode_name)
 
         if required_options is None:
@@ -120,12 +117,10 @@ class GradientData:
                 )
 
     def set_mode_properties(self, gradient_data):
-
         if not gradient_data.get("mode_settings"):
             gradient_data["mode_settings"] = {}
 
         if gradient_data["mode"] in [GradientModes.X, GradientModes.Y, GradientModes.Z]:
-
             direction_vector = DIRECTION_MAP[gradient_data["mode"]]
 
             if gradient_data.get("reversed"):

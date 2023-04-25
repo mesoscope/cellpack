@@ -128,7 +128,6 @@ class BaseGrid:
         # t2 = time()
         for pt, dist in list(newDistPoints.items()):
             if pt not in insidePoints:
-
                 distance[pt] = dist
         # self.log.debug("update distance loop %d", time() - t2)
         return nbFreePoints
@@ -265,7 +264,6 @@ class BaseGrid:
         for zi in range(nz):
             for yi in range(ny):
                 for xi in range(nx):
-
                     x = xl + xi * space + padding
                     y = yl + yi * space + padding
                     z = zl + zi * space + padding
@@ -754,7 +752,6 @@ class BaseGrid:
         self.nbSurfacePoints = len(verts)
 
     def set_surfPtscht(self, verts):
-
         self.surfPtsBht = None
         if verts is not None and len(verts):
             self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)

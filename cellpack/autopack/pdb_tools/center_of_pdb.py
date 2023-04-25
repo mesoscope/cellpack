@@ -40,7 +40,6 @@ def pdbCentermass(pdb, write_coord=False, include_hetatm=False, include_mass=Tru
     coord = []
     masses = []
     for atom in pdb:
-
         # Skip non ATOM/HETATM lines
         if atom[0:6] not in grab_lines:
             continue
@@ -57,7 +56,6 @@ def pdbCentermass(pdb, write_coord=False, include_hetatm=False, include_mass=Tru
         # If it's missing, guess from the atom name column.
         atom_type = atom[73:].strip()
         if atom_type == "":
-
             warn = True
             if atom[12] == " ":
                 atom_type = atom[13]
