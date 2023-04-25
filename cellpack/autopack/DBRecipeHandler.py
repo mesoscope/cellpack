@@ -266,6 +266,29 @@ class ObjectDoc(DataDoc):
                 if not difference:
                     return doc, db.doc_id(doc)
         return None, None
+    
+# class GradientDoc(DataDoc):
+#     def __init__(self, name, settings):
+#         super().__init__()
+#         self.name = name
+#         self.settings = settings
+
+#     def as_dict(self):
+#         data = dict()
+#         data["name"] = self.name
+#         for key in self.settings:
+#             data[key] = self.settings[key]
+#         return data
+    
+#     def should_write(self, db):
+#         docs = db.get_doc_by_name("gradients", self.name)
+#         if docs and len(docs) >= 1:
+#             for doc in docs:
+#                 local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
+#                 difference = DeepDiff(doc, local_data, ignore_order=True)
+#                 if not difference:
+#                     return doc, db.doc_id(doc)
+#         return None, None
 
 
 class DBRecipeHandler(object):
@@ -382,6 +405,17 @@ class DBRecipeHandler(object):
             if comp_name in references_to_update:
                 references_to_update[comp_name].update({"comp_id": doc_id})
         return references_to_update
+    
+    # def upload_gradients(self, gradients):
+    #     for grad_name in gradients:
+    #         gradients[grad_name]["name"] = grad_name
+    #         gradient_doc = GradientDoc(name=grad_name, settings=gradients[grad_name])
+    #         _, doc_id = gradient_doc.should_write(self.db)
+    #         if doc_id:
+    #             print(f"gradients/{gradient_doc.name} is already exists in firestore")
+    #         else:
+    #             _, grad_path = self.upload_data("gradients", gradient_doc.as_dict())
+    #             self.objects_to_path_map[grad_name] = grad_path
 
     def get_recipe_id(self, recipe_data):
         """
@@ -423,7 +457,6 @@ class DBRecipeHandler(object):
         recipe_to_save = copy.deepcopy(recipe_meta_data)
         objects = recipe_data["objects"]
         compositions = recipe_data["composition"]
-        # TODO: test gradients recipes
         # gradients = recipe_data.get("gradients")
         # save objects to db
         self.upload_objects(objects)
@@ -431,6 +464,9 @@ class DBRecipeHandler(object):
         references_to_update = self.upload_compositions(
             compositions, recipe_to_save, recipe_data
         )
+        # save gradients to db
+        # if gradients:
+        #     self.upload_gradients(gradients)
         # update nested comp in composition
         if references_to_update:
             for comp_name in references_to_update:
