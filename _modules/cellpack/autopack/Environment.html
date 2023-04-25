@@ -1067,6 +1067,19 @@
             <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span><span class="p">:</span>
                 <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Environment.resolve_gradient_data_objects"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.resolve_gradient_data_objects">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_gradient_data_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolves gradient data objects for some modes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: check if other modes need to be resolved</span>
+        <span class="k">if</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span><span class="p">:</span>
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span>
+                <span class="s2">&quot;object&quot;</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment_object_by_name</span><span class="p">(</span>
+                <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">gradient_data</span></div>
+
 <div class="viewcode-block" id="Environment.set_gradient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">set_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a grdaient</span>
@@ -1074,10 +1087,7 @@
 <span class="sd">        listorganelle influenced</span>
 <span class="sd">        listingredient influenced</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;surface_name&quot;</span> <span class="ow">in</span> <span class="n">gradient_data</span><span class="p">:</span>
-            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment_object_by_name</span><span class="p">(</span>
-                <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;surface_name&quot;</span><span class="p">]</span>
-            <span class="p">)</span>
+        <span class="n">gradient_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_gradient_data_objects</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">)</span>
         <span class="n">gradient</span> <span class="o">=</span> <span class="n">Gradient</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">)</span>
         <span class="c1"># default gradient 1-linear Decoy X</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">gradient</span></div>
@@ -1643,7 +1653,7 @@
             <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">:</span>
                 <span class="n">gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">g</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">gradient</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span><span class="p">:</span>
-                    <span class="n">gradient</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">get_surface_distances</span><span class="p">(</span>
+                    <span class="n">gradient</span><span class="o">.</span><span class="n">mode_settings</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_surface_distances</span><span class="p">(</span>
                         <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
                     <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">build_weight_map</span><span class="p">(</span>
