@@ -18,6 +18,7 @@ class ImageWriter:
         num_voxels=None,
         hollow=False,
         convolution_options=None,
+        projection_axis="z",
     ):
         self.env = env
 
@@ -48,6 +49,8 @@ class ImageWriter:
         self.image_data = {}
 
         self.convolution_options = convolution_options
+
+        self.projection_axis = projection_axis
 
     def create_gaussian_psf(self, sigma=1.5, size=None):
         """
@@ -156,6 +159,16 @@ class ImageWriter:
         for channel in range(image.shape[0]):
             conv_img[channel] = self.convolve_channel(image[channel], psf)
         return conv_img
+    
+    @staticmethod
+    def transpose_image_for_projection(image, projection_axis):
+        if projection_axis == "x":
+            image = numpy.transpose(image, axes=(1, 0, 3, 2))
+        elif projection_axis == "y":
+            image = numpy.transpose(image, axes=(2, 0, 3, 1))
+        elif projection_axis == "z":
+            image = numpy.transpose(image, axes=(3, 0, 2, 1))
+        return image
 
     def create_voxelization(self):
         """
@@ -219,7 +232,7 @@ class ImageWriter:
                 concatenated_image, **self.convolution_options
             )
 
-        concatenated_image = numpy.transpose(concatenated_image, axes=(2, 0, 3, 1))
+        concatenated_image = self.transpose_image_for_projection(concatenated_image, self.projection_axis)
 
         return concatenated_image, channel_names, channel_colors
 
