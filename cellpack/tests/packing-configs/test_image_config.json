@@ -18,6 +18,7 @@
     "image_export_options": {
         "hollow": false,
         "voxel_size": [1,1,1],
+        "projection_axis": "y",
         "convolution_options": {
             "psf": "gaussian",
             "psf_parameters":{
