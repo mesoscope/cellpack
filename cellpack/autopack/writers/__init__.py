@@ -76,7 +76,7 @@ class MarkdownWriter(object):
         self.report_md.create_md_file()
 
     # Image text must be a list, if list is not same length as list of filepaths, only 1st item in image_text is used
-    def add_images(self, header:str, image_text:typing.List[str], filepaths:typing.List):
+    def add_images(self, header:str, image_text:typing.List[str], filepaths:typing.List[str]):
         self.report_md.new_header(
             level=1,
             title=header,
