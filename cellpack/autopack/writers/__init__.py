@@ -87,7 +87,7 @@ class MarkdownWriter(object):
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
-                        path=self.output_path / filepaths[i]
+                        path=str(self.output_path / filepaths[i])
                     )
                 )
         else:
@@ -95,7 +95,7 @@ class MarkdownWriter(object):
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
-                        path=self.output_path / filepaths[i]
+                        path=str(self.output_path / filepaths[i])
                     )
                 )
         self.report_md.new_line()
