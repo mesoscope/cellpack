@@ -144,6 +144,7 @@ class ImageWriter:
         """
         # TODO: add checking for psf_parameters
         if psf_parameters is None:
+            psf_parameters = {}
             psf_parameters["sigma"] = 1.5
             psf_parameters["size"] = [3, 3, 3]
 
