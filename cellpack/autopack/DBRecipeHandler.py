@@ -283,7 +283,8 @@ class GradientDoc(DataDoc):
         if docs and len(docs) >= 1:
             for doc in docs:
                 local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
-                difference = DeepDiff(doc, local_data, ignore_order=True)
+                db_data = db.doc_to_dict(doc)
+                difference = DeepDiff(db_data, local_data, ignore_order=True)
                 if not difference:
                     return doc, db.doc_id(doc)
         return None, None
