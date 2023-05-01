@@ -160,7 +160,7 @@ class ImageWriter:
         for channel in range(image.shape[0]):
             conv_img[channel] = self.convolve_channel(image[channel], psf)
         return conv_img
-    
+
     @staticmethod
     def transpose_image_for_projection(image, projection_axis):
         if projection_axis == "x":
@@ -233,7 +233,9 @@ class ImageWriter:
                 concatenated_image, **self.convolution_options
             )
 
-        concatenated_image = self.transpose_image_for_projection(concatenated_image, self.projection_axis)
+        concatenated_image = self.transpose_image_for_projection(
+            concatenated_image, self.projection_axis
+        )
 
         return concatenated_image, channel_names, channel_colors
 
