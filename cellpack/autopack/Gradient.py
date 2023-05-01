@@ -157,12 +157,17 @@ class Gradient:
         build a map of weights based on the distance from a surface
         assumes self.distances include surface distances
         """
-        if getattr(self.object, "surface_distances", None) is None:
+        if getattr(self.mode_settings["object"], "surface_distances", None) is None:
             raise ValueError("Surface distances are not set")
-        elif self.scale_to_next_surface:
-            self.distances = self.object.scaled_distance_to_next_surface
+        elif self.mode_settings["scale_to_next_surface"]:
+            self.distances = self.mode_settings[
+                "object"
+            ].scaled_distance_to_next_surface
         else:
-            self.distances = self.object.surface_distances / self.object.max_distance
+            self.distances = (
+                self.mode_settings["object"].surface_distances
+                / self.mode_settings["object"].max_distance
+            )
         self.set_weights_by_mode()
 
     def build_directional_weight_map(self, bb, master_grid_positions):
