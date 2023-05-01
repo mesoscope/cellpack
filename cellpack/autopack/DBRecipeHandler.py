@@ -267,28 +267,26 @@ class ObjectDoc(DataDoc):
                     return doc, db.doc_id(doc)
         return None, None
     
-# class GradientDoc(DataDoc):
-#     def __init__(self, name, settings):
-#         super().__init__()
-#         self.name = name
-#         self.settings = settings
+class GradientDoc(DataDoc):
+    def __init__(self, settings):
+        super().__init__()
+        self.settings = settings
 
-#     def as_dict(self):
-#         data = dict()
-#         data["name"] = self.name
-#         for key in self.settings:
-#             data[key] = self.settings[key]
-#         return data
+    def as_dict(self):
+        data = dict()
+        for key in self.settings:
+            data[key] = self.settings[key]
+        return data
     
-#     def should_write(self, db):
-#         docs = db.get_doc_by_name("gradients", self.name)
-#         if docs and len(docs) >= 1:
-#             for doc in docs:
-#                 local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
-#                 difference = DeepDiff(doc, local_data, ignore_order=True)
-#                 if not difference:
-#                     return doc, db.doc_id(doc)
-#         return None, None
+    def should_write(self, db, grad_name):
+        docs = db.get_doc_by_name("gradients", grad_name)
+        if docs and len(docs) >= 1:
+            for doc in docs:
+                local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
+                difference = DeepDiff(doc, local_data, ignore_order=True)
+                if not difference:
+                    return doc, db.doc_id(doc)
+        return None, None
 
 
 class DBRecipeHandler(object):
@@ -406,16 +404,16 @@ class DBRecipeHandler(object):
                 references_to_update[comp_name].update({"comp_id": doc_id})
         return references_to_update
     
-    # def upload_gradients(self, gradients):
-    #     for grad_name in gradients:
-    #         gradients[grad_name]["name"] = grad_name
-    #         gradient_doc = GradientDoc(name=grad_name, settings=gradients[grad_name])
-    #         _, doc_id = gradient_doc.should_write(self.db)
-    #         if doc_id:
-    #             print(f"gradients/{gradient_doc.name} is already exists in firestore")
-    #         else:
-    #             _, grad_path = self.upload_data("gradients", gradient_doc.as_dict())
-    #             self.objects_to_path_map[grad_name] = grad_path
+    def upload_gradients(self, gradients):
+        for gradient in gradients:
+            gradient_name = gradient["name"]
+            gradient_doc = GradientDoc(settings=gradient)
+            _, doc_id = gradient_doc.should_write(self.db, gradient_name)
+            if doc_id:
+                print(f"gradients/{gradient_name} is already exists in firestore")
+            else:
+                _, grad_path = self.upload_data("gradients", gradient_doc.as_dict())
+                self.objects_to_path_map[gradient_name] = grad_path
 
     def get_recipe_id(self, recipe_data):
         """
@@ -423,7 +421,7 @@ class DBRecipeHandler(object):
         """
         recipe_name = recipe_data["name"]
         recipe_version = recipe_data["version"]
-        key = f"{recipe_name}_v{recipe_version}"
+        key = f"{recipe_name}_v-{recipe_version}"
         return key
 
     def update_reference(
@@ -457,7 +455,7 @@ class DBRecipeHandler(object):
         recipe_to_save = copy.deepcopy(recipe_meta_data)
         objects = recipe_data["objects"]
         compositions = recipe_data["composition"]
-        # gradients = recipe_data.get("gradients")
+        gradients = recipe_data.get("gradients")
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
@@ -465,8 +463,8 @@ class DBRecipeHandler(object):
             compositions, recipe_to_save, recipe_data
         )
         # save gradients to db
-        # if gradients:
-        #     self.upload_gradients(gradients)
+        if gradients:
+            self.upload_gradients(gradients)
         # update nested comp in composition
         if references_to_update:
             for comp_name in references_to_update:
