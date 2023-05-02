@@ -22,13 +22,11 @@ class DataDoc(object):
         return not isinstance(string_or_dict, dict)
 
 
-
 class CompositionDoc(DataDoc):
     """
     Declares required attributes for comps in the constructor, set default values.
     Handles the logic for comparing the local and db data to determine the uploading process.
     """
-
 
     SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
