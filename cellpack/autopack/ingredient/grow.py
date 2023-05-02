@@ -252,7 +252,6 @@ class GrowIngredient(MultiCylindersIngr):
         )
 
         for radc, p1, p2 in zip(self.radii[-1], cent1T, cent2T):
-
             x1, y1, z1 = p1
             x2, y2, z2 = p2
             vx, vy, vz = vector_along_ingredient = (x2 - x1, y2 - y1, z2 - z1)
@@ -283,7 +282,6 @@ class GrowIngredient(MultiCylindersIngr):
         cent2T = self.transformPoints(jtrans, rotMatj, self.positions2[-1])
 
         for radc, p1, p2 in zip(self.radii[-1], cent1T, cent2T):
-
             x1, y1, z1 = p1
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
@@ -2110,7 +2108,6 @@ class ActinIngredient(GrowIngredient):
         count=0,
         **kw
     ):
-
         GrowIngredient.__init__(
             self,
             molarity,

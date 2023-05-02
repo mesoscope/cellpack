@@ -97,7 +97,6 @@ def ray_intersect_polygon(
     #   vLoopLimit = 1  # Set k loop to only cycle one time.
 
     for k in range(vLoopLimit):
-
         # Always get the first point of a quad/tri
         vTriPt0 = vTriPoints[vTriPolys[j]]
         # Get point 1 for a tri and a quad's first pass,

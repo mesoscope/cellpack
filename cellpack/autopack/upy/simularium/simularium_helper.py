@@ -18,9 +18,7 @@ from simulariumio import (
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
-from cellpack.autopack.upy import (
-    hostHelper,
-)
+from cellpack.autopack.upy import hostHelper
 import collada
 
 
@@ -507,7 +505,6 @@ class simulariumHelper(hostHelper.Helper):
                             )
 
         if grid_point_positions is not None:
-
             for index in range(len(grid_point_compartment_ids)):
                 if index % 1 == 0:
                     compartment_id = grid_point_compartment_ids[index]
@@ -569,7 +566,6 @@ class simulariumHelper(hostHelper.Helper):
         return None
 
     def getTranslation(self, name):
-
         return self.getObject(name).mesh.centroid  # or getCumulatedTranslation
 
     def setTranslation(self, name, pos=[0.0, 0.0, 0.0]):

@@ -38,11 +38,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import (
         (
             {"sphereFile": "fibrinogen.sph"},
             {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "",
-                },
+                "packing": {"name": "fibrinogen.sph", "format": ".sph", "path": ""},
                 "atomic": None,
                 "mesh": None,
             },
@@ -50,11 +46,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import (
         (
             {"sphereFile": "/fibrinogen.sph"},
             {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "/",
-                },
+                "packing": {"name": "fibrinogen.sph", "format": ".sph", "path": "/"},
                 "atomic": None,
                 "mesh": None,
             },
@@ -84,10 +76,7 @@ def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result
             },
         ),
         (
-            {
-                "meshFile": "test.obj",
-                "coordsystem": "left",
-            },
+            {"meshFile": "test.obj", "coordsystem": "left"},
             {
                 "mesh": {
                     "name": "test.obj",
@@ -130,10 +119,7 @@ def test_create_packing_mesh_representation(
         (
             {"pdb": "test"},
             {
-                "atomic": {
-                    "id": "test",
-                    "format": ".pdb",
-                },
+                "atomic": {"id": "test", "format": ".pdb"},
                 "packing": None,
                 "mesh": None,
             },
@@ -214,10 +200,7 @@ old_recipe_test_data = {
         "version": "1.0",
         "name": "test_recipe",
     },
-    "options": {
-        "windowsSize": 10,
-        "boundingBox": [[0, 0, 0], [1000, 1000, 1000]],
-    },
+    "options": {"windowsSize": 10, "boundingBox": [[0, 0, 0], [1000, 1000, 1000]]},
     "cytoplasme": {
         "ingredients": {
             "A": {

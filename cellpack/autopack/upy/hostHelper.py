@@ -103,7 +103,6 @@ class Helper:
     def __init__(
         self,
     ):
-
         self.noise_type = {
             "boxNoise": None,
             "buya": None,

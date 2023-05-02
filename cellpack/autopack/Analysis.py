@@ -43,7 +43,6 @@ class Analysis:
         viewer=None,
         result_file=None,
         packing_results_path=None,
-        output_path=None,
     ):
         self.env = None
         self.smallest = 99999.0
@@ -72,9 +71,7 @@ class Analysis:
         else:
             self.packing_results_path = Path()
 
-        if output_path is not None:
-            self.output_path = Path(output_path)
-        elif self.env is not None:
+        if self.env is not None:
             self.output_path = Path(self.env.out_folder)
         else:
             self.output_path = Path("out/")
@@ -250,7 +247,6 @@ class Analysis:
         ramp_color3=None,
         cutoff=60.0,
     ):
-
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
@@ -1155,6 +1151,7 @@ class Analysis:
         self,
         recipe_data,
         ingredient_keys=None,
+        report_output_path=None,
         output_image_location=None,
         run_distance_analysis=True,
         run_partner_analysis=True,
@@ -1175,8 +1172,12 @@ class Analysis:
         run_*_analysis: bool
             whether to run specific analysis
         """
+        if report_output_path is None:
+            report_output_path = self.output_path
+        report_output_path = Path(report_output_path)
+
         report_md = MdUtils(
-            file_name=str(self.output_path / "analysis_report"),
+            file_name=f"{report_output_path}/analysis_report",
             title="Packing analysis report",
         )
         report_md.new_header(
@@ -1185,7 +1186,9 @@ class Analysis:
             add_table_of_contents="n",
         )
 
-        self.ingredient_key_dict = self.get_dict_from_glob("ingredient_keys_*")
+        if not hasattr(self, "ingredient_key_dict"):
+            self.ingredient_key_dict = self.get_dict_from_glob("ingredient_keys_*")
+
         if ingredient_keys is None:
             ingredient_keys = list(self.ingredient_key_dict.keys())
 
@@ -1193,13 +1196,18 @@ class Analysis:
             ingredient_keys=ingredient_keys
         )
         ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
-        pairwise_distance_dict = self.get_dict_from_glob("pairwise_distances_*.json")
+
+        if not hasattr(self, "pairwise_distance_dict"):
+            self.pairwise_distance_dict = self.get_dict_from_glob(
+                "pairwise_distances_*.json"
+            )
+
         combined_pairwise_distance_dict = self.combine_results_from_seeds(
-            pairwise_distance_dict
+            self.pairwise_distance_dict
         )
 
         val_list = []
-        for (key, radius, num_packed) in zip(
+        for key, radius, num_packed in zip(
             ingredient_keys, ingredient_radii.values(), avg_num_packed.values()
         ):
             val_list.extend([key, radius, num_packed])
@@ -1240,7 +1248,7 @@ class Analysis:
             self.run_distance_analysis(
                 report_md,
                 recipe_data,
-                pairwise_distance_dict,
+                self.pairwise_distance_dict,
                 figure_path,
                 output_image_location,
             )
@@ -1268,7 +1276,7 @@ class Analysis:
             [len(packing_dict) for packing_dict in all_pos_list]
         )
 
-        print(f"Saving analysis outputs to {self.output_path}")
+        print("Starting analysis workflow...")
 
         if analysis_config.get("similarity_analysis"):
             self.run_similarity_analysis(
@@ -1309,7 +1317,7 @@ class Analysis:
                 ]
         return avg_similarity_values
 
-    def calc_similarity_df(self, all_objs, ingredient_key):
+    def calc_similarity_df(self, all_objs, ingredient_key, save_path=None):
         """
         Calculates a dataframe of similarity values between packings
         """
@@ -1349,9 +1357,10 @@ class Analysis:
                         scaled_sig = (ad_stat.pvalue - 0.001) / (0.25 - 0.001)
                     similarity_df.loc[seed1, (dim, seed2)] = scaled_sig
 
-        dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
-        print(f"Saving similarity df to {dfpath}")
-        similarity_df.to_csv(dfpath)
+        if save_path is not None:
+            dfpath = save_path / f"similarity_df_{ingredient_key}.csv"
+            print(f"Saving similarity df to {dfpath}")
+            similarity_df.to_csv(dfpath)
 
         return similarity_df
 
@@ -1371,7 +1380,6 @@ class Analysis:
         figdir.mkdir(parents=True, exist_ok=True)
 
         for dim in self.get_list_of_dims():
-
             avg_similarity_values = self.calc_avg_similarity_values_for_dim(
                 similarity_df[dim].values
             )
@@ -1407,25 +1415,33 @@ class Analysis:
             g.savefig(figdir / f"clustermap_{ingredient_key}_{dim}", dpi=300)
 
     def run_similarity_analysis(
-        self, all_objs, ingredient_key, load_from_file=False, save_heatmaps=False
+        self,
+        all_objs,
+        ingredient_key,
+        save_heatmaps=False,
+        save_path=None,
     ):
         """
         TODO: add docs
         """
         print("Running similarity analysis...")
+        if save_path is None:
+            save_path = self.output_path
+        save_path = Path(save_path)
+
         if ingredient_key not in all_objs:
             raise ValueError(f"Missing ingredient: {ingredient_key}")
 
-        if load_from_file:
-            dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
-            if dfpath.is_file():
-                print(f"Loading similarity values from {dfpath}")
-                similarity_df = pd.read_csv(dfpath, header=[0, 1])
-            else:
-                similarity_df = self.calc_similarity_df(
-                    all_objs,
-                    ingredient_key=ingredient_key,
-                )
+        dfpath = save_path / f"similarity_df_{ingredient_key}.csv"
+        if dfpath.is_file():
+            print(f"Loading similarity values from {dfpath}")
+            similarity_df = pd.read_csv(dfpath, header=[0, 1])
+        else:
+            similarity_df = self.calc_similarity_df(
+                all_objs,
+                ingredient_key=ingredient_key,
+                save_path=save_path,
+            )
 
         if save_heatmaps:
             self.plot_and_save_similarity_heatmaps(
@@ -2123,29 +2139,58 @@ class Analysis:
 
     def doloop(
         self,
-        num_seeds,
+        number_of_packings,
         bounding_box,
         get_distance_distribution=True,
         render=False,
         plot_figures=True,
         show_grid=True,
         fbox_bb=None,
-        use_file=True,
         seed_list=None,
         config_name="default",
         recipe_version="1.0.0",
     ):
-        # doLoop automatically produces result files, images, and documents from the recipe while adjusting parameters
-        # To run doLoop, 1) in your host's python console type:
-        # execfile(pathothis recipe) # for example, on my computer:
-        # " execfile("/Users/grahamold/Dev/autoFillSVN/autofillSVNversions/trunk/AutoFillClean/autoFillRecipeScripts/2DsphereFill/2DSpheres_setup_recipe.py")
-        # 2) prepare your scene for the rendering->render output should be 640,480 but you can change the size in the script at then end.  Set up textures lights, and effects as you wish
-        #    Results will appear in the result folder of your recipe path
-        # where n is the number of loop, seed = i
-        # analyse.doloop(n)
+        """
+        Runs multiple packings of the same recipe in a loop. This workflow
+        also runs various analyses and saves the output figures and data at
+        the location set by the environment. The output data is also stored
+        as an attribute on the environment object and on the Analysis class
+        instance.
 
+        Parameters
+        ----------
+        number_of_packing : int
+            Number of repeats of a packing. Default: 1
+        bounding_box : np.ndarray
+            bounding box from the environment
+        get_distance_distribution: bool
+            specify whether to calculate distance distributions
+        render: bool
+            ???
+        plot_figures: bool
+            specify whether to save figures generated by the analyses
+        show_grid: bool
+            specify whether to display packing grid in browser
+        fbox_bb: ???
+            ???
+        seed_list: List
+            list of seeds to use for the packing (for reproducibility)
+        config_name: string
+            name of the configuration used for the packing
+        recipe_version: string
+            version of the recipe used for the packing
+
+        Outputs
+        -------
+        {}_distance_dict: dict
+            Dictionaries with various ingredient distances stored
+        images: png
+            packing image, histograms of distance, angle, and occurence
+            distributions as applicable for each seed, and a combined image
+            across seeds
+        """
         if seed_list is None:
-            seed_list = self.getHaltonUnique(num_seeds)
+            seed_list = self.getHaltonUnique(number_of_packings)
 
         packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
         numpy.savetxt(
@@ -2180,7 +2225,7 @@ class Analysis:
 
         rebuild = True
 
-        for seed_index in range(num_seeds):
+        for seed_index in range(number_of_packings):
             seed_basename = f"seed_{seed_index}_{packing_basename}"
             self.env.result_file = str(
                 self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
@@ -2220,7 +2265,6 @@ class Analysis:
                 ax = fig.add_subplot(111)
 
             if get_distance_distribution:
-
                 center_distance_dict[seed_index] = {}
                 pairwise_distance_dict[seed_index] = {}
                 ingredient_position_dict[seed_index] = {}
@@ -2256,7 +2300,6 @@ class Analysis:
                     )
 
                 for comparment in self.env.compartments:
-
                     surface_recipe = comparment.surfaceRecipe
                     if surface_recipe:
                         (
@@ -2365,6 +2408,13 @@ class Analysis:
         self.env.basename = packing_basename
         self.env.occurences = all_ingredient_occurences
         self.env.angles = all_ingredient_angles
+
+        self.center_distance_dict = center_distance_dict
+        self.pairwise_distance_dict = pairwise_distance_dict
+        self.ingredient_position_dict = ingredient_position_dict
+        self.ingredient_angle_dict = ingredient_angle_dict
+        self.ingredient_occurence_dict = ingredient_occurence_dict
+        self.ingredient_key_dict = ingredient_key_dict
 
         if plot_figures:
             self.env.loopThroughIngr(self.plot_position_distribution)

@@ -54,7 +54,6 @@ class MultiCylindersIngr(Ingredient):
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
-
         super().__init__(
             type=type,
             color=color,

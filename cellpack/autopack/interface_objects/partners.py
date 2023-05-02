@@ -55,7 +55,6 @@ class Partners:
         weight_initial = 0.2
         weight = weight_initial
         for partner in partners:
-
             weight += ((1 - weight_initial) / (total)) - weight_initial
             partner = Partner(
                 partner["name"],

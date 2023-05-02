@@ -548,7 +548,6 @@ class Ingredient(Agent):
             # use the host helper if any to read
             return None
             if helper is None:
-
                 # need to get the mesh directly. Only possible if dae or dejavu format
                 # get the dejavu heper but without the View, and in nogui mode
                 h = simulariumHelper(vi="nogui")
@@ -581,9 +580,7 @@ class Ingredient(Agent):
                     return geom
                 else:
                     if helper.host != "dejavu":
-
                         if collada is not None:
-
                             # need to get the mesh directly. Only possible if dae or dejavu format
                             # get the dejavu heper but without the View, and in nogui mode
                             h = simulariumHelper(vi="nogui")
@@ -1018,7 +1015,6 @@ class Ingredient(Agent):
             )
 
         if signed_distance_to_surface <= 0:  # point is inside dropped ingredient
-
             if grid_point_index not in inside_points or abs(
                 signed_distance_to_surface
             ) < abs(inside_points[grid_point_index]):
@@ -1483,7 +1479,6 @@ class Ingredient(Agent):
         return R
 
     def get_closest_ingredients(self, point, cutoff=10.0):
-
         to_return = {"indices": [], "distances": []}
         env = self.env
         numpy.zeros(env.totalNbIngr).astype("i")
@@ -1561,7 +1556,6 @@ class Ingredient(Agent):
         bounding_points_to_check = self.get_all_positions_to_check(packing_location)
 
         for bounding_point_position in bounding_points_to_check:
-
             grid_points_to_update = env.grid.getPointsInSphere(
                 bounding_point_position, radius_of_area_to_check
             )
@@ -2217,7 +2211,6 @@ class Ingredient(Agent):
         return False, packing_location, packing_rotation, {}, {}
 
     def lookForNeighbours(self, trans, rotMat, organelle, afvi):
-
         near_by_ingredients, placed_partners = self.get_partners(
             trans, rotMat, organelle, afvi
         )
@@ -2296,7 +2289,6 @@ class Ingredient(Agent):
             return env.compartments[abs(self.compNum) - 1]
 
     def close_partner_check(self, translation, rotation, compartment, afvi, moving):
-
         target_point, rot_matrix, found = self.lookForNeighbours(
             translation,
             rotation,
@@ -2346,7 +2338,6 @@ class Ingredient(Agent):
         is_realtime = moving is not None
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packing_mode[-4:] == "tile":
-
             if self.tilling is None:
                 self.setTilling(compartment)
             if self.counter != 0:
@@ -2415,7 +2406,6 @@ class Ingredient(Agent):
             # need to check compartment too
             self.log.info("no additional collisions, checking compartment")
             if self.compareCompartment:
-
                 collisionComp = self.compareCompartmentPrimitive(
                     level,
                     packing_location,
@@ -2526,7 +2516,6 @@ class Ingredient(Agent):
                     if is_realtime:
                         self.update_display_rt(moving, targetPoint, rotation_matrix)
                 else:
-
                     return False, None, None, {}, {}
             else:
                 self.tilling.init_seed(env.seed_used)

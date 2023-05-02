@@ -4,7 +4,6 @@ from ..interface_objects.gradient_data import GradientData, ModeOptions
 
 
 def convert_partners(object_data):
-
     partners_list = []
     if "names" not in "partners":
         return partners_list
