@@ -297,6 +297,7 @@ class GradientDoc(DataDoc):
         self.settings = settings
 
     def as_dict(self):
+        #is this function necessary?
         data = dict()
         for key in self.settings:
             data[key] = self.settings[key]
