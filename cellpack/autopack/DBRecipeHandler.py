@@ -437,8 +437,8 @@ class DBRecipeHandler(object):
             if doc_id:
                 print(f"gradients/{gradient_name} is already exists in firestore")
             else:
-                _, grad_path = self.upload_data("gradients", gradient_doc.as_dict())
-                self.objects_to_path_map[gradient_name] = grad_path
+                self.upload_data("gradients", gradient_doc.as_dict())
+
 
     def get_recipe_id(self, recipe_data):
         """
