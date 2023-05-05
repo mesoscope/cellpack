@@ -94,6 +94,7 @@ def test_upload_compositions():
         "space": {"comp_id": "test_id", "index": "regions.interior", "name": "A"}
     }
 
+
 def test_upload_gradients():
     data = {{"name": "test_grad_name", "test_key": "test_value"}}
     gradient_doc = DBRecipeHandler(mock_db)

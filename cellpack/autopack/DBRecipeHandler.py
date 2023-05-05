@@ -290,19 +290,20 @@ class ObjectDoc(DataDoc):
                 if not difference:
                     return doc, db.doc_id(doc)
         return None, None
-    
+
+
 class GradientDoc(DataDoc):
     def __init__(self, settings):
         super().__init__()
         self.settings = settings
 
     def as_dict(self):
-        #is this function necessary?
+        # is this function necessary?
         data = dict()
         for key in self.settings:
             data[key] = self.settings[key]
         return data
-    
+
     def should_write(self, db, grad_name):
         docs = db.get_doc_by_name("gradients", grad_name)
         if docs and len(docs) >= 1:
@@ -428,7 +429,7 @@ class DBRecipeHandler(object):
             if comp_name in references_to_update:
                 references_to_update[comp_name].update({"comp_id": doc_id})
         return references_to_update
-    
+
     def upload_gradients(self, gradients):
         for gradient in gradients:
             gradient_name = gradient["name"]
@@ -438,7 +439,6 @@ class DBRecipeHandler(object):
                 print(f"gradients/{gradient_name} is already exists in firestore")
             else:
                 self.upload_data("gradients", gradient_doc.as_dict())
-
 
     def get_recipe_id(self, recipe_data):
         """
