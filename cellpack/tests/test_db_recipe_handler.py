@@ -96,7 +96,7 @@ def test_upload_compositions():
 
 
 def test_upload_gradients():
-    data = {{"name": "test_grad_name", "test_key": "test_value"}}
+    data = [{"name": "test_grad_name", "test_key": "test_value"}]
     gradient_doc = DBRecipeHandler(mock_db)
     gradient_doc.upload_gradients(data)
 
