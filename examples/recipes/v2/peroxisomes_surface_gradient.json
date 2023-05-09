@@ -1,6 +1,6 @@
 {
-    "version": "cube",
-    "format_version": "2.0",
+    "version": "nucleus",
+    "format_version": "2.1",
     "name": "peroxisomes_surface_gradient",
     "bounding_box": [
         [
@@ -15,14 +15,14 @@
         ]
     ],
     "gradients": {
-        "nucleus_surface_gradient": {
+        "surface_gradient": {
             "description": "gradient based on distance from the surface of a mesh",
             "weight_mode": "cube",
             "pick_mode": "rnd",
             "mode": "surface",
             "mode_settings": {
                 "object": "nucleus",
-                "scale_to_next_surface": true
+                "scale_to_next_surface": false
             }
         }
     },
@@ -66,8 +66,8 @@
                 0.10
             ],
             "radius": 2.30,
-            "gradient" : "nucleus_surface_gradient",
-            "packing_mode": "gradient"
+            "gradient": "surface_gradient",
+            "packing_mode": "gradient"            
         }
     },
     "composition": {

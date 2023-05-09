@@ -1,10 +1,10 @@
 {
-    "name": "grid_spacing_2pt5",
+    "name": "analyze",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
-    "number_of_packings": 1,
+    "number_of_packings": 10,
     "out": "out/analyze",
     "overwrite_place_method": true,
     "place_method": "spheresSST",

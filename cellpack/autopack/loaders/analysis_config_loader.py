@@ -8,11 +8,6 @@ class AnalysisConfigLoader(object):
         "version": "1.0.0",
         "format_version": "1.1",
         "packing_result_path": "cellpack/tests/outputs/test_partner_packing/spheresSST",
-        "create_report": {
-            "run_distance_analysis": True,
-            "report_output_path": "cellpack/tests/outputs/test_partner_packing",
-            "output_image_location": "./spheresSST/figures",
-        },
     }
 
     def __init__(self, input_file_path):

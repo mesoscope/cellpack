@@ -188,7 +188,8 @@ class RecipeLoader(object):
                     packing=reps.get("packing", None),
                 )
                 partner_settings = obj["partners"] if "partners" in obj else []
-                obj["partners"] = Partners(partner_settings)
+                if len(partner_settings):
+                    obj["partners"] = Partners(partner_settings)
                 if "type" in obj and not INGREDIENT_TYPE.is_member(obj["type"]):
                     raise TypeError(f"{obj['type']} is not an allowed type")
 

@@ -44,6 +44,7 @@ class Analysis:
         viewer=None,
         result_file=None,
         packing_results_path=None,
+        output_path=None,
     ):
         self.env = None
         self.smallest = 99999.0
@@ -72,10 +73,13 @@ class Analysis:
         else:
             self.packing_results_path = Path()
 
-        if self.env is not None:
+        if output_path is not None:
+            self.output_path = Path(output_path)
+        elif self.env is not None:
             self.output_path = Path(self.env.out_folder)
         else:
             self.output_path = Path("out/")
+
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
 
@@ -1296,6 +1300,18 @@ class Analysis:
                 **analysis_config["create_report"],
             )
 
+    def normalize_similarity_df(self, similarity_df):
+        """
+        Normalizes the similarity dataframe
+        """
+        dims_to_normalize = self.get_list_of_dims() + ["pairwise_distance"]
+        for dim in dims_to_normalize:
+            values = similarity_df.loc[:, dim].values
+            similarity_df.loc[:, dim] = (values - numpy.min(values)) / (
+                numpy.max(values) - numpy.min(values)
+            )
+        return similarity_df
+
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
         packing_inds = numpy.cumsum(
             numpy.hstack([0, self.num_seeds_per_packing])
@@ -1329,17 +1345,37 @@ class Analysis:
             dtype=float,
         )
         similarity_df["packing_id"] = 0
+        dims_to_calc = self.get_list_of_dims() + ["pairwise_distance"]
         for seed1, pos_dict1 in tqdm(all_objs[ingredient_key].items()):
-            similarity_df.loc[seed1, "packing_id"] = self.packing_id_dict[
-                int(seed1.split("_")[-1])
-            ]
+            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
             for seed2, pos_dict2 in all_objs[ingredient_key].items():
-                for dim in self.get_list_of_dims():
-                    arr1 = pos_dict1[dim]
-                    arr2 = pos_dict2[dim]
+                for dim in dims_to_calc:
+                    if dim == "pairwise_distance":
+                        pos1 = numpy.array(
+                            [pos_dict1["x"], pos_dict1["y"], pos_dict1["z"]]
+                        )
+                        pos2 = numpy.array(
+                            [pos_dict2["x"], pos_dict2["y"], pos_dict2["z"]]
+                        )
+                        distances1 = distance.pdist(pos1.T)
+                        distances2 = distance.pdist(pos2.T)
+                        min_dist = numpy.min([distances1, distances2])
+                        max_dist = numpy.max([distances1, distances2])
+                        arr1 = (distances1 - min_dist) / max_dist
+                        arr2 = (distances2 - min_dist) / max_dist
+                    else:
+                        arr1 = pos_dict1[dim]
+                        arr2 = pos_dict2[dim]
+                        min_dim = numpy.min([arr1.ravel(), arr2.ravel()])
+                        max_dim = numpy.max([arr1.ravel(), arr2.ravel()])
+                        arr1 = (arr1 - min_dim) / max_dim
+                        arr2 = (arr2 - min_dim) / max_dim
+                        # if dim in ["r", "x", "y", "z"]:
+                        #     arr1 = arr1 / numpy.max(arr1)
+                        #     arr2 = arr2 / numpy.max(arr2)
                     if len(arr1) == 1 or len(arr2) == 1:
                         # cannot determine similarity when only one instance is packed
-                        scaled_sig = 0
+                        similarity_score = 0
                     elif len(numpy.unique(arr1)) == 1 or len(numpy.unique(arr2)) == 1:
                         # if there is only one unique value, compare the value
                         if (
@@ -1347,17 +1383,38 @@ class Analysis:
                             and len(numpy.unique(arr2)) == 1
                         ):
                             # both packings have only one unique value, compare the value
-                            scaled_sig = (
+                            similarity_score = (
                                 1 if numpy.unique(arr1) == numpy.unique(arr2) else 0
                             )
                         else:
                             # one of the packings has more than one unique value, cannot compare
-                            scaled_sig = 0
+                            similarity_score = 0
                     else:
-                        ad_stat = stats.anderson_ksamp([arr1, arr2])
-                        scaled_sig = (ad_stat.pvalue - 0.001) / (0.25 - 0.001)
-                    similarity_df.loc[seed1, (dim, seed2)] = scaled_sig
+                        # anderson-darling test
+                        # ad_stat = stats.anderson_ksamp([arr1, arr2])
+                        # similarity_score = (ad_stat.significance_level - 0.001) / (
+                        #     0.25 - 0.001
+                        # )
+                        # similarity_score = 1 - ad_stat.statistic
 
+                        # 2 sample ks
+                        ks_stat = stats.ks_2samp(arr1, arr2)
+                        similarity_score = 1 - ks_stat.statistic
+                        # similarity_score = ks_stat.pvalue
+
+                        # histograms for bhattacharyya and jensen-shannon distances
+                        # hist1, bin_edges1 = numpy.histogram(arr1, bins="auto", density=True)
+                        # hist2, bin_edges2 = numpy.histogram(arr2, bins=bin_edges1, density=True)
+
+                        # bhattacharyya distance
+                        # similarity_score = numpy.sqrt(numpy.sum(numpy.sqrt(hist1 * hist2)))
+
+                        # jensen-shannon distance
+                        # similarity_score = 1 - distance.jensenshannon(arr1, arr2)
+
+                    similarity_df.loc[seed1, (dim, seed2)] = similarity_score
+
+        similarity_df = self.normalize_similarity_df(similarity_df)
         if save_path is not None:
             dfpath = save_path / f"similarity_df_{ingredient_key}.csv"
             print(f"Saving similarity df to {dfpath}")
@@ -1380,7 +1437,8 @@ class Analysis:
         figdir = self.figures_path / "clustering"
         figdir.mkdir(parents=True, exist_ok=True)
 
-        for dim in self.get_list_of_dims():
+        dims_to_calc = self.get_list_of_dims() + ["pairwise_distance"]
+        for dim in dims_to_calc:
             avg_similarity_values = self.calc_avg_similarity_values_for_dim(
                 similarity_df[dim].values
             )
@@ -1412,6 +1470,7 @@ class Analysis:
                 loc="upper right",
             )
             g.ax_col_dendrogram.set_visible(False)
+            g.ax_row_dendrogram.set_visible(False)
             g.ax_heatmap.set_xlabel(f"{ingredient_key}_{dim}")
             g.savefig(figdir / f"clustermap_{ingredient_key}_{dim}", dpi=300)
 
@@ -1420,28 +1479,25 @@ class Analysis:
         all_objs,
         ingredient_key,
         save_heatmaps=False,
-        save_path=None,
+        recalculate=False,
     ):
         """
         TODO: add docs
         """
         print("Running similarity analysis...")
-        if save_path is None:
-            save_path = self.output_path
-        save_path = Path(save_path)
 
         if ingredient_key not in all_objs:
             raise ValueError(f"Missing ingredient: {ingredient_key}")
 
-        dfpath = save_path / f"similarity_df_{ingredient_key}.csv"
-        if dfpath.is_file():
+        dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
+        if dfpath.is_file() and not recalculate:
             print(f"Loading similarity values from {dfpath}")
             similarity_df = pd.read_csv(dfpath, header=[0, 1])
         else:
             similarity_df = self.calc_similarity_df(
                 all_objs,
                 ingredient_key=ingredient_key,
-                save_path=save_path,
+                save_path=self.output_path,
             )
 
         if save_heatmaps:
@@ -2125,7 +2181,11 @@ class Analysis:
                 if ingr_name not in output_dict:
                     output_dict[ingr_name] = value_list
                 else:
-                    output_dict[ingr_name].extend(value_list)
+                    if numpy.ndim(value_list) > 1:
+                        for ct, val in enumerate(value_list):
+                            output_dict[ingr_name][ct].extend(val)
+                    else:
+                        output_dict[ingr_name].extend(value_list)
 
         return output_dict
 
@@ -2382,6 +2442,13 @@ class Analysis:
                 )
                 image_writer.export_image()
 
+        self.writeJSON(center_distance_file, center_distance_dict)
+        self.writeJSON(pairwise_distance_file, pairwise_distance_dict)
+        self.writeJSON(ingredient_position_file, ingredient_position_dict)
+        self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
+        self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
+        self.writeJSON(ingredient_key_file, ingredient_key_dict)
+
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict
         )
@@ -2406,13 +2473,6 @@ class Analysis:
         all_ingredient_angle_array = numpy.array(
             self.combine_results_from_ingredients(all_ingredient_angles)
         )
-
-        self.writeJSON(center_distance_file, center_distance_dict)
-        self.writeJSON(pairwise_distance_file, pairwise_distance_dict)
-        self.writeJSON(ingredient_position_file, ingredient_position_dict)
-        self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
-        self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
-        self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
         self.env.ingredient_positions = all_ingredient_positions
         self.env.distances = all_ingredient_distances

@@ -2397,7 +2397,7 @@ class Environment(CompartmentList):
         pickle.dump(result, rfile)
         rfile.close()
         for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "organelle" + str(i), "wb")
+            orfile = open(resultfilename + "_organelle_" + str(i), "wb")
             result = []
             for pos, rot, ingr, ptInd in orga.molecules:
                 result.append([pos, rot, ingr.name, ingr.compNum, ptInd])
