@@ -1357,22 +1357,17 @@ class Analysis:
                         pos2 = numpy.array(
                             [pos_dict2["x"], pos_dict2["y"], pos_dict2["z"]]
                         )
-                        distances1 = distance.pdist(pos1.T)
-                        distances2 = distance.pdist(pos2.T)
-                        min_dist = numpy.min([distances1, distances2])
-                        max_dist = numpy.max([distances1, distances2])
-                        arr1 = (distances1 - min_dist) / max_dist
-                        arr2 = (distances2 - min_dist) / max_dist
+                        arr1 = distance.pdist(pos1.T)
+                        arr2 = distance.pdist(pos2.T)
                     else:
                         arr1 = pos_dict1[dim]
                         arr2 = pos_dict2[dim]
-                        min_dim = numpy.min([arr1.ravel(), arr2.ravel()])
-                        max_dim = numpy.max([arr1.ravel(), arr2.ravel()])
-                        arr1 = (arr1 - min_dim) / max_dim
-                        arr2 = (arr2 - min_dim) / max_dim
-                        # if dim in ["r", "x", "y", "z"]:
-                        #     arr1 = arr1 / numpy.max(arr1)
-                        #     arr2 = arr2 / numpy.max(arr2)
+ 
+                    min_dim = numpy.min([arr1.ravel(), arr2.ravel()])
+                    max_dim = numpy.max([arr1.ravel(), arr2.ravel()])
+                    arr1 = (arr1 - min_dim) / max_dim
+                    arr2 = (arr2 - min_dim) / max_dim
+                    
                     if len(arr1) == 1 or len(arr2) == 1:
                         # cannot determine similarity when only one instance is packed
                         similarity_score = 0
