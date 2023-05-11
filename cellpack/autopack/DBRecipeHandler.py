@@ -297,17 +297,11 @@ class GradientDoc(DataDoc):
         super().__init__()
         self.settings = settings
 
-    def as_dict(self):
-        data = dict()
-        for key in self.settings:
-            data[key] = self.settings[key]
-        return data
-
     def should_write(self, db, grad_name):
         docs = db.get_doc_by_name("gradients", grad_name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
+                local_data = DBRecipeHandler.prep_data_for_db(db.doc_to_dict(doc))
                 db_data = db.doc_to_dict(doc)
                 difference = DeepDiff(db_data, local_data, ignore_order=True)
                 if not difference:
@@ -437,7 +431,7 @@ class DBRecipeHandler(object):
             if doc_id:
                 print(f"gradients/{gradient_name} is already exists in firestore")
             else:
-                self.upload_data("gradients", gradient_doc.as_dict())
+                self.upload_data("gradients", gradient_doc.settings)
 
     def get_recipe_id(self, recipe_data):
         """
