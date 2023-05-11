@@ -48,6 +48,8 @@ import ssl
 import json
 
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+from cellpack.autopack.FirebaseHandler import FirebaseHandler
+from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
 
 
 packageContainsVFCommands = 1
@@ -281,7 +283,8 @@ def is_remote_path(file_path):
     @param file_path: str
     """
     for ele in DATABASE_NAME:
-        return ele in file_path
+        if ele in file_path:
+            return ele in file_path
 
 
 def convert_db_shortname_to_url(file_location):
@@ -381,12 +384,19 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
 
 
 def load_file(filename, destination="", cache="geometries", force=None):
+    # what is the param destination for? should we use it to store db names?
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
+        # command example: `pack -r firebase:recipes/gradients_v-default -c examples/packing-configs/run.json`
         if database_name == "firebase":
-            # TODO: read from firebase
-            # return data
-            pass
+            recipe_id = file_path.split("/")[-1]
+            db = FirebaseHandler(cred) #cred = personal firebase credentials
+            db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
+            db_handler = DBRecipeHandler(db)
+            converted_recipe_data = db_handler.fetch_and_merge_db_data(db_doc)
+            print("db_doc", db_doc)
+            print("converted_recipe_data", converted_recipe_data)
+            return db_doc
         else:
             local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force

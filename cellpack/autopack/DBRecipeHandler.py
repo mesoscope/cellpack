@@ -329,6 +329,14 @@ class DBRecipeHandler(object):
             and len(item) > 0
             and isinstance(item[0], (list, tuple))
         )
+    
+    @staticmethod
+    def is_db_dict(item):
+        if isinstance(item, dict) and len(item) > 0:
+            for key, value in item.items():
+                if key.isdigit() and isinstance(value, list):
+                    return True
+        return False
 
     @staticmethod
     def prep_data_for_db(data):
@@ -493,3 +501,19 @@ class DBRecipeHandler(object):
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
+
+    def prep_db_doc_for_download(self, db_doc):
+        """
+        Recursively convert data from db to a format that can be read by recipe loader.
+        """
+        prep_data = {}
+        for key, value in db_doc.items():
+            if self.is_db_dict(value):
+                return "yes"
+            
+
+    def fetch_and_merge_db_data(self, db_doc):
+        # convert db data to original recipe data
+        prep_db_data = self.prep_db_doc_for_download(db_doc)
+        return "recipe_data", prep_db_data
+    
