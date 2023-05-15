@@ -394,7 +394,6 @@ def load_file(filename, destination="", cache="geometries", force=None):
             db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
             db_handler = DBRecipeHandler(db)
             converted_recipe_data = db_handler.fetch_and_merge_db_data(db_doc)
-            print("db_doc", db_doc)
             print("converted_recipe_data", converted_recipe_data)
             return db_doc
         else:

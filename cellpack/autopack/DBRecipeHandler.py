@@ -504,16 +504,52 @@ class DBRecipeHandler(object):
 
     def prep_db_doc_for_download(self, db_doc):
         """
-        Recursively convert data from db to a format that can be read by recipe loader.
+        convert data from db and resolve references.
         """
         prep_data = {}
-        for key, value in db_doc.items():
-            if self.is_db_dict(value):
-                return "yes"
-            
+        if isinstance(db_doc, dict):
+            for key, value in db_doc.items():
+                if self.is_db_dict(value):
+                    unpack_dict = [value[str(i)] for i in range(len(value))]
+                    prep_data[key] = unpack_dict
+                elif key == "composition":
+                    compositions = db_doc["composition"]
+                    for comp_name, reference in compositions.items():
+                        comp_obj = compositions[comp_name]
+                        ref_link = comp_obj["inherit"]
+                        comp_data = deep_merge(
+                            copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp_obj
+                        )
+                        comp_doc = CompositionDoc(
+                                name=None,
+                                object_key=comp_data["object"],
+                                count=comp_data["count"],
+                                regions=comp_data["regions"],
+                                molarity=comp_data["molarity"],
+                            )
+                        composition_data, _ = comp_doc.get_reference_data(ref_link, self.db)
+                        resolved_regions_comp = comp_doc.resolve_db_regions(composition_data, self.db)
+                        compositions[comp_name] = composition_data
+                    prep_data[key] = compositions
+                else:
+                    prep_data[key] = value
+        return prep_data
 
     def fetch_and_merge_db_data(self, db_doc):
         # convert db data to original recipe data
-        prep_db_data = self.prep_db_doc_for_download(db_doc)
-        return "recipe_data", prep_db_data
-    
+        prep_data = self.prep_db_doc_for_download(db_doc)
+        print("prep_data", json.dumps(prep_data, sort_keys=True, indent=4))
+        converted_recipe_data = {}
+        obj_dict = {}
+        for item in prep_data:
+            if item == "composition":
+                for comp_name, comp_data in prep_data[item].items():
+                    converted_recipe_data["composition"][comp_name] = comp_data
+                    if "object" in comp_data:
+                        obj_name = comp_data["object"]["name"]
+                        obj_dict[obj_name] = comp_data["object"]
+                # converted_recipe_data[] = prep_data[item]
+            else: 
+                converted_recipe_data[item] = prep_data[item]
+        
+        return "recipe_data", prep_data
