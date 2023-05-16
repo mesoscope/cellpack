@@ -388,6 +388,7 @@ class DBRecipeHandler(object):
         for obj_name in objects:
             objects[obj_name]["name"] = obj_name
             object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])
+            # replace gradient name with path before uploading
             if "gradient" in objects[obj_name]:
                 grad_name = objects[obj_name]["gradient"]
                 objects[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
@@ -491,7 +492,7 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            # return
+            return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
