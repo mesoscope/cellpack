@@ -1,5 +1,7 @@
 import copy
 
+import json
+
 from deepdiff import DeepDiff
 
 from cellpack.autopack.utils import deep_merge
@@ -72,6 +74,9 @@ class CompositionDoc(DataDoc):
             if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
                 downloaded_data, _ = db.get_doc_by_ref(key)
+                if "gradient" in downloaded_data and db.is_reference(downloaded_data["gradient"]):
+                    gradient_key = downloaded_data["gradient"]
+                    downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
                 return downloaded_data, key
         return {}, None
 
@@ -500,7 +505,7 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            return
+            # return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)

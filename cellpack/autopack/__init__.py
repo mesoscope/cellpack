@@ -390,7 +390,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         # command example: `pack -r firebase:recipes/gradients_v-default -c examples/packing-configs/run.json`
         if database_name == "firebase":
             recipe_id = file_path.split("/")[-1]
-            db = FirebaseHandler(cred) #cred = personal firebase credentials
+            db = FirebaseHandler("/Users/Ruge/Desktop/Allen Internship/cellPACK/cellpack-data-582d6-firebase-adminsdk-3pkkz-27a3ec0777.json") #cred = personal firebase credentials
             db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
             db_handler = DBRecipeHandler(db)
             converted_recipe_data = db_handler.fetch_and_merge_db_data(db_doc)
