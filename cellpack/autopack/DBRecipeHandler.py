@@ -297,18 +297,11 @@ class GradientDoc(DataDoc):
         super().__init__()
         self.settings = settings
 
-    def as_dict(self):
-        # is this function necessary?
-        data = dict()
-        for key in self.settings:
-            data[key] = self.settings[key]
-        return data
-
     def should_write(self, db, grad_name):
         docs = db.get_doc_by_name("gradients", grad_name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
+                local_data = DBRecipeHandler.prep_data_for_db(db.doc_to_dict(doc))
                 db_data = db.doc_to_dict(doc)
                 difference = DeepDiff(db_data, local_data, ignore_order=True)
                 if not difference:
@@ -321,6 +314,7 @@ class DBRecipeHandler(object):
         self.db = db_handler
         self.objects_to_path_map = {}
         self.comp_to_path_map = {}
+        self.grad_to_path_map = {}
 
     @staticmethod
     def is_nested_list(item):
@@ -383,10 +377,29 @@ class DBRecipeHandler(object):
             doc = self.db.set_doc(collection, id, modified_data)
             return id, self.db.create_path(collection, id)
 
+    def upload_gradients(self, gradients):
+        for gradient in gradients:
+            gradient_name = gradient["name"]
+            gradient_doc = GradientDoc(settings=gradient)
+            _, doc_id = gradient_doc.should_write(self.db, gradient_name)
+            if doc_id:
+                print(f"gradients/{gradient_name} is already exists in firestore")
+                self.grad_to_path_map[gradient_name] = self.db.create_path(
+                    "gradients", doc_id
+                )
+            else:
+                _, grad_path = self.upload_data("gradients", gradient_doc.settings)
+                self.grad_to_path_map[gradient_name] = grad_path
+                print("grad_path", self.grad_to_path_map)
+
     def upload_objects(self, objects):
         for obj_name in objects:
             objects[obj_name]["name"] = obj_name
             object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])
+            # replace gradient name with path before uploading
+            if "gradient" in objects[obj_name]:
+                grad_name = objects[obj_name]["gradient"]
+                objects[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
             _, doc_id = object_doc.should_write(self.db)
             if doc_id:
                 print(f"objects/{object_doc.name} is already in firestore")
@@ -438,16 +451,6 @@ class DBRecipeHandler(object):
                 references_to_update[comp_name].update({"comp_id": doc_id})
         return references_to_update
 
-    def upload_gradients(self, gradients):
-        for gradient in gradients:
-            gradient_name = gradient["name"]
-            gradient_doc = GradientDoc(settings=gradient)
-            _, doc_id = gradient_doc.should_write(self.db, gradient_name)
-            if doc_id:
-                print(f"gradients/{gradient_name} is already exists in firestore")
-            else:
-                self.upload_data("gradients", gradient_doc.as_dict())
-
     def get_recipe_id(self, recipe_data):
         """
         We use customized recipe id to declare recipe's name and version
@@ -462,18 +465,18 @@ class DBRecipeHandler(object):
         Separate collections from recipe data and upload them to db
         """
         recipe_to_save = copy.deepcopy(recipe_meta_data)
+        gradients = recipe_data.get("gradients")
         objects = recipe_data["objects"]
         compositions = recipe_data["composition"]
-        gradients = recipe_data.get("gradients")
+        # save gradients to db
+        if gradients:
+            self.upload_gradients(gradients)
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
         references_to_update = self.upload_compositions(
             compositions, recipe_to_save, recipe_data
         )
-        # save gradients to db
-        if gradients:
-            self.upload_gradients(gradients)
         # update nested comp in composition
         if references_to_update:
             for comp_name in references_to_update:
