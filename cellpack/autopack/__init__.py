@@ -393,9 +393,8 @@ def load_file(filename, destination="", cache="geometries", force=None):
             db = FirebaseHandler("/Users/Ruge/Desktop/Allen Internship/cellPACK/cellpack-data-582d6-firebase-adminsdk-3pkkz-27a3ec0777.json") #cred = personal firebase credentials
             db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
             db_handler = DBRecipeHandler(db)
-            converted_recipe_data = db_handler.fetch_and_merge_db_data(db_doc)
-            print("converted_recipe_data", converted_recipe_data)
-            return db_doc
+            downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
+            return downloaded_recipe_data
         else:
             local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force

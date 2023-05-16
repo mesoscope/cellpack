@@ -523,41 +523,18 @@ class DBRecipeHandler(object):
                 elif key == "composition":
                     compositions = db_doc["composition"]
                     for comp_name, reference in compositions.items():
-                        comp_obj = compositions[comp_name]
-                        ref_link = comp_obj["inherit"]
-                        comp_data = deep_merge(
-                            copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp_obj
-                        )
+                        ref_link = reference["inherit"]
                         comp_doc = CompositionDoc(
-                                name=None,
-                                object_key=comp_data["object"],
-                                count=comp_data["count"],
-                                regions=comp_data["regions"],
-                                molarity=comp_data["molarity"],
+                                comp_name,
+                                object_key=None,
+                                count=None,
+                                regions={},
+                                molarity=None,
                             )
                         composition_data, _ = comp_doc.get_reference_data(ref_link, self.db)
-                        resolved_regions_comp = comp_doc.resolve_db_regions(composition_data, self.db)
+                        comp_doc.resolve_db_regions(composition_data, self.db)
                         compositions[comp_name] = composition_data
                     prep_data[key] = compositions
                 else:
                     prep_data[key] = value
         return prep_data
-
-    def fetch_and_merge_db_data(self, db_doc):
-        # convert db data to original recipe data
-        prep_data = self.prep_db_doc_for_download(db_doc)
-        print("prep_data", json.dumps(prep_data, sort_keys=True, indent=4))
-        converted_recipe_data = {}
-        obj_dict = {}
-        for item in prep_data:
-            if item == "composition":
-                for comp_name, comp_data in prep_data[item].items():
-                    converted_recipe_data["composition"][comp_name] = comp_data
-                    if "object" in comp_data:
-                        obj_name = comp_data["object"]["name"]
-                        obj_dict[obj_name] = comp_data["object"]
-                # converted_recipe_data[] = prep_data[item]
-            else: 
-                converted_recipe_data[item] = prep_data[item]
-        
-        return "recipe_data", prep_data
