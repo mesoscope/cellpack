@@ -17,9 +17,76 @@ from pathlib import Path
 
 class MarkdownWriter(object): 
 
-    def __init__(self, title:str, output_path:Path, report_name:str):
+    def __init__(self, title:str, output_path:Path, output_image_location:Path, report_name:str):
         self.title = title
         self.output_path = output_path
+        self.output_image_location = output_image_location
+        self.report_md = MdUtils(
+            file_name=str(self.output_path / report_name ),
+            title=title,
+        )
+
+    # level is the header style, can only be 1 or 2
+    def add_header(self, header:str, level:int=2):
+        self.report_md.new_header(
+            level = level,
+            title = header,
+            add_table_of_contents="n"
+        )
+
+    def add_table(self, header:str, table:pd.DataFrame, text_align="center"):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+        
+        text_list = []
+        for row in table.values.tolist():
+            for item in row:
+                text_list.append(item)
+
+        self.report_md.new_table(
+            columns=table.shape[1],
+            rows=table.shape[0],
+            text=self.text_list,
+            text_align=text_align
+        )
+
+    def add_table_from_csv(self, header:str, filepath:Path, text_align="center"):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+        
+        table = pd.read_csv(filepath)
+
+        text_list = []
+        for row in table.values.tolist():
+            for item in row:
+                text_list.append(item)
+
+        self.report_md.new_table(
+            columns=table.shape[1],
+            rows=table.shape[0],
+            text=self.text_list,
+            text_align=text_align
+        )
+    def write_file(self):
+        self.report_md.create_md_file()
+
+from mdutils.mdutils import MdUtils
+import pandas as pd
+from pathlib import Path
+
+
+class MarkdownWriter(object): 
+
+    def __init__(self, title:str, output_path:Path, output_image_location:Path, report_name:str):
+        self.title = title
+        self.output_path = output_path
+        self.output_image_location = output_image_location
         self.report_md = MdUtils(
             file_name=str(self.output_path / report_name ),
             title=title,
@@ -87,7 +154,7 @@ class MarkdownWriter(object):
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
-                        path=str(self.output_path / filepaths[i])
+                        path=str(self.output_image_location / filepaths[i])
                     )
                 )
         else:
@@ -95,7 +162,7 @@ class MarkdownWriter(object):
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
-                        path=str(self.output_path / filepaths[i])
+                        path=str(self.output_image_location / filepaths[i])
                     )
                 )
         self.report_md.new_line()
@@ -433,5 +500,8 @@ class Writer(object):
             )
         elif output_format == "simularium":
             self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
+            collection = "recipes"
+            id = env.name + "_" + env.recipe_data["format_version"]
+            save_to_firestore(collection,id,env.recipe_data)
         else:
             print("format output " + output_format + " not recognized (json,python)")

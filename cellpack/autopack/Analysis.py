@@ -996,7 +996,7 @@ class Analysis:
             md_object.report_md.new_line(
                 f"Expected minimum distance: {expected_minimum_distance:.2f}"
             )
-            md_object.report_md.new_line(
+            md_object.md_object.report_md.new_line(
                 f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
             )
 
@@ -1184,14 +1184,24 @@ class Analysis:
         df["Encapsulating radius"] = list(ingredient_radii.values())
         df["Average number packed"] = list(avg_num_packed.values())
 
+        # path to save report and other outputs
+        if output_image_location is None:
+            output_image_location = self.output_path
+
         md_object = MarkdownWriter(
             title="Packing analysis report",
             output_path=self.output_path,
+            output_image_location=output_image_location,
             report_name="analysis_report"
         )
 
         md_object.add_header(
             header=f"Analysis for packing results located at {self.packing_results_path}"
+        )
+        ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
+        pairwise_distance_dict = self.get_dict_from_glob("pairwise_distances_*.json")
+        combined_pairwise_distance_dict = self.combine_results_from_seeds(
+            self.pairwise_distance_dict
         )
 
         md_object.add_table(
@@ -1199,19 +1209,46 @@ class Analysis:
             table=df
         )
 
+        df = pd.DataFrame()
+        df['Ingredient name'] = list(ingredient_keys)
+        df["Encapsulating radius"] = list(ingredient_radii.values())
+        df["Average number packed"] = list(avg_num_packed.values())
+
         # path to save report and other outputs
         if output_image_location is None:
             output_image_location = self.output_path
+
+        md_object = MarkdownWriter(
+            title="Packing analysis report",
+            output_path=self.output_path,
+            output_image_location=output_image_location,
+            report_name="analysis_report"
+        )
+
+        md_object.add_header(
+            header=f"Analysis for packing results located at {self.packing_results_path}"
+        )
+        ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
+
+        if not hasattr(self, "pairwise_distance_dict"):
+            self.pairwise_distance_dict = self.get_dict_from_glob(
+                "pairwise_distances_*.json"
+            )
 
         # path where packing results are stored
         packing_results_path = self.packing_results_path
         figure_path = packing_results_path / "figures"
 
-        md_object.add_images(
-            header="Packing image",
-            image_text=["Packing image"],
-            filepaths=list(figure_path.glob("packing_image_*.png"))
-        )
+        report_md.new_header(level=1, title="Packing image")
+        glob_to_packing_image = figure_path.glob("packing_image_*.png")
+        for img_path in glob_to_packing_image:
+            report_md.new_line(
+                report_md.new_inline_image(
+                    text="Packing image",
+                    path=f"{output_image_location}/{img_path.name}",
+                )
+            )
+        report_md.new_line("")
 
         if run_distance_analysis:
             # TODO: take packing distance dict as direct input for live mode
@@ -1895,7 +1932,10 @@ class Analysis:
                 )
                 # plot the sphere
                 if ingr.use_rbsphere:
-                    (ext_recipe, pts,) = ingr.getInterpolatedSphere(
+                    (
+                        ext_recipe,
+                        pts,
+                    ) = ingr.getInterpolatedSphere(
                         seed_ingredient_positions[-i - 1],
                         seed_ingredient_positions[-i],
                     )
