@@ -996,7 +996,7 @@ class Analysis:
             md_object.report_md.new_line(
                 f"Expected minimum distance: {expected_minimum_distance:.2f}"
             )
-            md_object.md_object.report_md.new_line(
+            md_object.report_md.new_line(
                 f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
             )
 
