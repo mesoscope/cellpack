@@ -1203,20 +1203,20 @@ class Analysis:
             header=f"Analysis for packing results located at {self.packing_results_path}"
         )
 
+        # path to save report and other outputs
+        if output_image_location is None:
+            output_image_location = self.output_path
+
         # path where packing results are stored
         packing_results_path = self.packing_results_path
         figure_path = packing_results_path / "figures"
 
-        report_md.new_header(level=1, title="Packing image")
-        glob_to_packing_image = figure_path.glob("packing_image_*.png")
-        for img_path in glob_to_packing_image:
-            report_md.new_line(
-                report_md.new_inline_image(
-                    text="Packing image",
-                    path=f"{output_image_location}/{img_path.name}",
-                )
-            )
-        report_md.new_line("")
+        md_object.add_images(
+            header="Packing image",
+            image_text=["Packing image"],
+            filepaths=list(figure_path.glob("packing_image_*.png"))
+        )
+
 
         if run_distance_analysis:
             # TODO: take packing distance dict as direct input for live mode
