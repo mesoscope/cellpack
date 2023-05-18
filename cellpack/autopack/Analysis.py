@@ -1178,62 +1178,30 @@ class Analysis:
         combined_pairwise_distance_dict = self.combine_results_from_seeds(
             pairwise_distance_dict
         )
-
-        df = pd.DataFrame()
-        df['Ingredient name'] = list(ingredient_keys)
-        df["Encapsulating radius"] = list(ingredient_radii.values())
-        df["Average number packed"] = list(avg_num_packed.values())
-
-        # path to save report and other outputs
-        if output_image_location is None:
-            output_image_location = self.output_path
-
-        md_object = MarkdownWriter(
-            title="Packing analysis report",
-            output_path=self.output_path,
-            output_image_location=output_image_location,
-            report_name="analysis_report"
-        )
-
-        md_object.add_header(
-            header=f"Analysis for packing results located at {self.packing_results_path}"
-        )
-        ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
-        pairwise_distance_dict = self.get_dict_from_glob("pairwise_distances_*.json")
-        combined_pairwise_distance_dict = self.combine_results_from_seeds(
-            self.pairwise_distance_dict
-        )
-
-        md_object.add_table(
-            header="",
-            table=df
-        )
-
-        df = pd.DataFrame()
-        df['Ingredient name'] = list(ingredient_keys)
-        df["Encapsulating radius"] = list(ingredient_radii.values())
-        df["Average number packed"] = list(avg_num_packed.values())
-
-        # path to save report and other outputs
-        if output_image_location is None:
-            output_image_location = self.output_path
-
-        md_object = MarkdownWriter(
-            title="Packing analysis report",
-            output_path=self.output_path,
-            output_image_location=output_image_location,
-            report_name="analysis_report"
-        )
-
-        md_object.add_header(
-            header=f"Analysis for packing results located at {self.packing_results_path}"
-        )
-        ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
-
-        if not hasattr(self, "pairwise_distance_dict"):
-            self.pairwise_distance_dict = self.get_dict_from_glob(
-                "pairwise_distances_*.json"
+        if not hasattr(self, "pairwise_distance_dict"):	
+            self.pairwise_distance_dict = self.get_dict_from_glob(	
+                "pairwise_distances_*.json"	
             )
+
+        df = pd.DataFrame()
+        df['Ingredient name'] = list(ingredient_keys)
+        df["Encapsulating radius"] = list(ingredient_radii.values())
+        df["Average number packed"] = list(avg_num_packed.values())
+
+        # path to save report and other outputs
+        if output_image_location is None:
+            output_image_location = self.output_path
+
+        md_object = MarkdownWriter(
+            title="Packing analysis report",
+            output_path=self.output_path,
+            output_image_location=output_image_location,
+            report_name="analysis_report"
+        )
+
+        md_object.add_header(
+            header=f"Analysis for packing results located at {self.packing_results_path}"
+        )
 
         # path where packing results are stored
         packing_results_path = self.packing_results_path
