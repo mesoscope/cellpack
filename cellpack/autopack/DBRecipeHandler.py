@@ -109,6 +109,8 @@ class CompositionDoc(DataDoc):
         unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
         prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
         if "object" in local_data and local_data["object"] is not None:
+            if "gradient" in local_data["object"] and db.is_reference(local_data["object"]["gradient"]):
+                local_data["object"]["gradient"] = prep_recipe_data["gradients"][local_data["object"]["gradient"]]
             if DataDoc.is_key(local_data["object"]):
                 key_name = local_data["object"]
             else:
@@ -123,9 +125,13 @@ class CompositionDoc(DataDoc):
                             "object"
                         ] = prep_recipe_data["objects"][obj_item]
                     else:
-                        local_data["regions"][region_name][index][
-                            "object"
-                        ] = prep_recipe_data["objects"][obj_item["name"]]
+                        #replace gradient reference with gradient data
+                        if "gradient" in obj_item and db.is_reference(obj_item["gradient"]):
+                            local_data["regions"][region_name][index]["object"]["gradient"] = db.get_doc_by_ref(obj_item["gradient"])[0]
+                        else:
+                            local_data["regions"][region_name][index][
+                                "object"
+                            ] = prep_recipe_data["objects"][obj_item["name"]]
                 else:
                     comp_name = local_data["regions"][region_name][index]
                     prep_comp_data = prep_recipe_data["composition"][comp_name]
