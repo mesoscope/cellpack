@@ -36,6 +36,9 @@ from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
 from cellpack.autopack.writers.ImageWriter import ImageWriter
 
+import concurrent.futures
+import multiprocessing
+
 
 class Analysis:
     def __init__(
@@ -1362,12 +1365,12 @@ class Analysis:
                     else:
                         arr1 = pos_dict1[dim]
                         arr2 = pos_dict2[dim]
- 
+
                     min_dim = numpy.min([arr1.ravel(), arr2.ravel()])
                     max_dim = numpy.max([arr1.ravel(), arr2.ravel()])
                     arr1 = (arr1 - min_dim) / max_dim
                     arr2 = (arr2 - min_dim) / max_dim
-                    
+
                     if len(arr1) == 1 or len(arr2) == 1:
                         # cannot determine similarity when only one instance is packed
                         similarity_score = 0
@@ -1739,35 +1742,27 @@ class Analysis:
 
     def build_grid(
         self,
-        forceBuild=True,
     ):
         t1 = time()
         self.env.buildGrid()
         t2 = time()
         gridTime = t2 - t1
-        print("time to Build Grid", gridTime)
+        print(f"time to build grid: {gridTime:0.2f}")
 
     def pack(
         self,
         seed=20,
-        vTestid=3,
-        vAnalysis=0,
-        fbox_bb=None,
         show_plotly_plot=True,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.place_method)
 
         t1 = time()
-        self.env.pack_grid(
-            seedNum=seed,
-            vTestid=vTestid,
-            vAnalysis=vAnalysis,
-            fbox=fbox_bb,
-        )
+        self.env.pack_grid(seedNum=seed)
         t2 = time()
-        print("time to run pack_grid", self.env.place_method, t2 - t1)
-        print("num placed", len(self.env.molecules))
+        run_time = t2 - t1
+        print(f"time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
+        print(f"num placed: {len(self.env.molecules)}")
         if show_plotly_plot:
             min_bound, max_bound = self.env.get_bounding_box_limits()
             width = max_bound - min_bound
@@ -2176,11 +2171,7 @@ class Analysis:
                 if ingr_name not in output_dict:
                     output_dict[ingr_name] = value_list
                 else:
-                    if numpy.ndim(value_list) > 1:
-                        for ct, val in enumerate(value_list):
-                            output_dict[ingr_name][ct].extend(val)
-                    else:
-                        output_dict[ingr_name].extend(value_list)
+                    output_dict[ingr_name].extend(value_list)
 
         return output_dict
 
@@ -2193,19 +2184,190 @@ class Analysis:
             output_list.extend(value_list)
         return output_list
 
+    def pack_one_seed(
+        self,
+        seed_index,
+        seed_list,
+        bounding_box,
+        packing_basename,
+        center_distance_dict=None,
+        pairwise_distance_dict=None,
+        ingredient_position_dict=None,
+        ingredient_angle_dict=None,
+        ingredient_occurence_dict=None,
+        ingredient_key_dict=None,
+        get_distance_distribution=False,
+        image_export_options=None,
+        show_grid=False,
+        plot_figures=False,
+    ):
+        """
+        Packs one seed of a recipe and returns the recipe object
+        """
+        seed_basename = f"seed_{seed_index}_{packing_basename}"
+        self.env.result_file = str(
+            self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
+        )
+        # Clear
+        if self.afviewer:
+            self.afviewer.clearFill("Test_Spheres2D")
+        else:
+            self.env.reset()
+        self.env.saveResult = True
+        seed = seed_list[seed_index]  # int(time())
+        self.build_grid()
+        two_d = self.env.is_two_d()
+        use_simularium = False
+        self.pack(
+            seed=seed,
+            # TODO: fix this to disable plotly if using simularium
+            show_plotly_plot=(show_grid and two_d) and not use_simularium,
+        )
+
+        self.center = self.env.grid.getCenter()
+
+        ax = None
+        width = 0
+        if plot_figures and two_d:
+            width = self.env.get_size_of_bounding_box()
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+
+        if get_distance_distribution:
+            center_distance_dict[seed_index] = {}
+            pairwise_distance_dict[seed_index] = {}
+            ingredient_position_dict[seed_index] = {}
+            ingredient_angle_dict[seed_index] = {}
+            ingredient_occurence_dict[seed_index] = {}
+
+            center = self.env.grid.getCenter()  # center of the grid
+
+            ext_recipe = self.env.exteriorRecipe
+            if ext_recipe:
+                (
+                    center_distance_dict,
+                    pairwise_distance_dict,
+                    ingredient_position_dict,
+                    ingredient_angle_dict,
+                    ingredient_occurence_dict,
+                    ingredient_key_dict,
+                    ax,
+                ) = self.process_ingredients_in_recipe(
+                    recipe=ext_recipe,
+                    center_distance_dict=center_distance_dict,
+                    pairwise_distance_dict=pairwise_distance_dict,
+                    ingredient_position_dict=ingredient_position_dict,
+                    ingredient_angle_dict=ingredient_angle_dict,
+                    ingredient_occurence_dict=ingredient_occurence_dict,
+                    ingredient_key_dict=ingredient_key_dict,
+                    seed_index=seed_index,
+                    center=center,
+                    ax=ax,
+                    plot_figures=plot_figures,
+                    two_d=two_d,
+                    width=width,
+                )
+
+            for comparment in self.env.compartments:
+                surface_recipe = comparment.surfaceRecipe
+                if surface_recipe:
+                    (
+                        center_distance_dict,
+                        pairwise_distance_dict,
+                        ingredient_position_dict,
+                        ingredient_angle_dict,
+                        ingredient_occurence_dict,
+                        ingredient_key_dict,
+                        ax,
+                    ) = self.process_ingredients_in_recipe(
+                        recipe=surface_recipe,
+                        center_distance_dict=center_distance_dict,
+                        pairwise_distance_dict=pairwise_distance_dict,
+                        ingredient_position_dict=ingredient_position_dict,
+                        ingredient_angle_dict=ingredient_angle_dict,
+                        ingredient_occurence_dict=ingredient_occurence_dict,
+                        ingredient_key_dict=ingredient_key_dict,
+                        seed_index=seed_index,
+                        center=center,
+                        ax=ax,
+                        plot_figures=plot_figures,
+                        two_d=two_d,
+                        width=width,
+                    )
+
+                inner_recipe = comparment.innerRecipe
+                if inner_recipe:
+                    (
+                        center_distance_dict,
+                        pairwise_distance_dict,
+                        ingredient_position_dict,
+                        ingredient_angle_dict,
+                        ingredient_occurence_dict,
+                        ingredient_key_dict,
+                        ax,
+                    ) = self.process_ingredients_in_recipe(
+                        recipe=inner_recipe,
+                        center_distance_dict=center_distance_dict,
+                        pairwise_distance_dict=pairwise_distance_dict,
+                        ingredient_position_dict=ingredient_position_dict,
+                        ingredient_angle_dict=ingredient_angle_dict,
+                        ingredient_occurence_dict=ingredient_occurence_dict,
+                        ingredient_key_dict=ingredient_key_dict,
+                        seed_index=seed_index,
+                        center=center,
+                        ax=ax,
+                        plot_figures=plot_figures,
+                        two_d=two_d,
+                        width=width,
+                    )
+
+            if plot_figures and two_d:
+                ax.set_aspect(1.0)
+                plt.axhline(y=bounding_box[0][1], color="k")
+                plt.axhline(y=bounding_box[1][1], color="k")
+                plt.axvline(x=bounding_box[0][0], color="k")
+                plt.axvline(x=bounding_box[1][0], color="k")
+                plt.axis(
+                    [
+                        bounding_box[0][0],
+                        bounding_box[1][0],
+                        bounding_box[0][1],
+                        bounding_box[1][1],
+                    ]
+                )
+                plt.savefig(self.figures_path / f"packing_image_{seed_basename}.png")
+                plt.close()  # closes the current figure
+
+        if image_export_options is not None:
+            image_writer = ImageWriter(
+                env=self.env,
+                name=seed_basename,
+                output_path=self.figures_path,
+                **image_export_options,
+            )
+            image_writer.export_image()
+
+        return (
+            center_distance_dict,
+            pairwise_distance_dict,
+            ingredient_position_dict,
+            ingredient_angle_dict,
+            ingredient_occurence_dict,
+            ingredient_key_dict,
+        )
+
     def doloop(
         self,
         number_of_packings,
         bounding_box,
         get_distance_distribution=True,
-        render=False,
         plot_figures=True,
         show_grid=True,
-        fbox_bb=None,
         seed_list=None,
         config_name="default",
         recipe_version="1.0.0",
         image_export_options=None,
+        parallel=False,
     ):
         """
         Runs multiple packings of the same recipe in a loop. This workflow
@@ -2280,162 +2442,70 @@ class Analysis:
         ingredient_occurence_dict = {}
         ingredient_key_dict = {}
 
-        rebuild = True
-
-        for seed_index in range(number_of_packings):
-            seed_basename = f"seed_{seed_index}_{packing_basename}"
-            self.env.result_file = str(
-                self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
-            )
-            # Clear
-            if self.afviewer:
-                self.afviewer.clearFill("Test_Spheres2D")
-            else:
-                self.env.reset()
-            self.env.saveResult = True
-            seed = seed_list[seed_index]  # int(time())
-            self.build_grid(
-                forceBuild=rebuild,
-            )
-            two_d = self.env.is_two_d()
-            use_simularium = False
-            self.pack(
-                seed=seed,
-                vTestid=seed_index,
-                vAnalysis=0,
-                fbox_bb=fbox_bb,
-                # TODO: fix this to disable plotly if using simularium
-                show_plotly_plot=(show_grid and two_d) and not use_simularium,
-            )
-
-            self.center = self.env.grid.getCenter()
-            if render:
-                # render/save scene if hosted otherwise nothing
-                self.helper.render(seed_basename + ".jpg", 640, 480)
-                self.helper.write(seed_basename + ".c4d", [])
-
-            ax = None
-            width = 0
-            if plot_figures and two_d:
-                width = self.env.get_size_of_bounding_box()
-                fig = plt.figure()
-                ax = fig.add_subplot(111)
-
-            if get_distance_distribution:
-                center_distance_dict[seed_index] = {}
-                pairwise_distance_dict[seed_index] = {}
-                ingredient_position_dict[seed_index] = {}
-                ingredient_angle_dict[seed_index] = {}
-                ingredient_occurence_dict[seed_index] = {}
-
-                center = self.env.grid.getCenter()  # center of the grid
-
-                ext_recipe = self.env.exteriorRecipe
-                if ext_recipe:
+        if parallel:
+            num_processes = numpy.minimum(multiprocessing.cpu_count(), number_of_packings)
+            with concurrent.futures.ProcessPoolExecutor(max_workers=num_processes) as executor:
+                futures = []
+                for seed_index in range(number_of_packings):
+                    futures.append(
+                        executor.submit(
+                            self.pack_one_seed,
+                            seed_index=seed_index,
+                            seed_list=seed_list,
+                            bounding_box=bounding_box,
+                            packing_basename=packing_basename,
+                            center_distance_dict=center_distance_dict,
+                            pairwise_distance_dict=pairwise_distance_dict,
+                            ingredient_position_dict=ingredient_position_dict,
+                            ingredient_angle_dict=ingredient_angle_dict,
+                            ingredient_occurence_dict=ingredient_occurence_dict,
+                            ingredient_key_dict=ingredient_key_dict,
+                            get_distance_distribution=get_distance_distribution,
+                            image_export_options=image_export_options,
+                        )
+                    )
+                for future in concurrent.futures.as_completed(futures):                    
                     (
-                        center_distance_dict,
-                        pairwise_distance_dict,
-                        ingredient_position_dict,
-                        ingredient_angle_dict,
-                        ingredient_occurence_dict,
-                        ingredient_key_dict,
-                        ax,
-                    ) = self.process_ingredients_in_recipe(
-                        recipe=ext_recipe,
-                        center_distance_dict=center_distance_dict,
-                        pairwise_distance_dict=pairwise_distance_dict,
-                        ingredient_position_dict=ingredient_position_dict,
-                        ingredient_angle_dict=ingredient_angle_dict,
-                        ingredient_occurence_dict=ingredient_occurence_dict,
-                        ingredient_key_dict=ingredient_key_dict,
-                        seed_index=seed_index,
-                        center=center,
-                        ax=ax,
-                        plot_figures=plot_figures,
-                        two_d=two_d,
-                        width=width,
-                    )
-
-                for comparment in self.env.compartments:
-                    surface_recipe = comparment.surfaceRecipe
-                    if surface_recipe:
-                        (
-                            center_distance_dict,
-                            pairwise_distance_dict,
-                            ingredient_position_dict,
-                            ingredient_angle_dict,
-                            ingredient_occurence_dict,
-                            ingredient_key_dict,
-                            ax,
-                        ) = self.process_ingredients_in_recipe(
-                            recipe=surface_recipe,
-                            center_distance_dict=center_distance_dict,
-                            pairwise_distance_dict=pairwise_distance_dict,
-                            ingredient_position_dict=ingredient_position_dict,
-                            ingredient_angle_dict=ingredient_angle_dict,
-                            ingredient_occurence_dict=ingredient_occurence_dict,
-                            ingredient_key_dict=ingredient_key_dict,
-                            seed_index=seed_index,
-                            center=center,
-                            ax=ax,
-                            plot_figures=plot_figures,
-                            two_d=two_d,
-                            width=width,
-                        )
-
-                    inner_recipe = comparment.innerRecipe
-                    if inner_recipe:
-                        (
-                            center_distance_dict,
-                            pairwise_distance_dict,
-                            ingredient_position_dict,
-                            ingredient_angle_dict,
-                            ingredient_occurence_dict,
-                            ingredient_key_dict,
-                            ax,
-                        ) = self.process_ingredients_in_recipe(
-                            recipe=inner_recipe,
-                            center_distance_dict=center_distance_dict,
-                            pairwise_distance_dict=pairwise_distance_dict,
-                            ingredient_position_dict=ingredient_position_dict,
-                            ingredient_angle_dict=ingredient_angle_dict,
-                            ingredient_occurence_dict=ingredient_occurence_dict,
-                            ingredient_key_dict=ingredient_key_dict,
-                            seed_index=seed_index,
-                            center=center,
-                            ax=ax,
-                            plot_figures=plot_figures,
-                            two_d=two_d,
-                            width=width,
-                        )
-
-                if plot_figures and two_d:
-                    ax.set_aspect(1.0)
-                    plt.axhline(y=bounding_box[0][1], color="k")
-                    plt.axhline(y=bounding_box[1][1], color="k")
-                    plt.axvline(x=bounding_box[0][0], color="k")
-                    plt.axvline(x=bounding_box[1][0], color="k")
-                    plt.axis(
-                        [
-                            bounding_box[0][0],
-                            bounding_box[1][0],
-                            bounding_box[0][1],
-                            bounding_box[1][1],
-                        ]
-                    )
-                    plt.savefig(
-                        self.figures_path / f"packing_image_{seed_basename}.png"
-                    )
-                    plt.close()  # closes the current figure
-
-            if image_export_options is not None:
-                image_writer = ImageWriter(
-                    env=self.env,
-                    name=seed_basename,
-                    output_path=self.figures_path,
-                    **image_export_options,
+                        seed_center_distance_dict,
+                        seed_pairwise_distance_dict,
+                        seed_ingredient_position_dict,
+                        seed_ingredient_angle_dict,
+                        seed_ingredient_occurence_dict,
+                        seed_ingredient_key_dict,
+                    ) = future.result()
+                    center_distance_dict.update(seed_center_distance_dict)  
+                    pairwise_distance_dict.update(seed_pairwise_distance_dict)
+                    ingredient_position_dict.update(seed_ingredient_position_dict)
+                    ingredient_angle_dict.update(seed_ingredient_angle_dict)
+                    ingredient_occurence_dict.update(seed_ingredient_occurence_dict)
+                    ingredient_key_dict.update(seed_ingredient_key_dict)
+                    
+                    print(center_distance_dict.keys())
+        else:
+            for seed_index in range(number_of_packings):
+                (
+                    center_distance_dict,
+                    pairwise_distance_dict,
+                    ingredient_position_dict,
+                    ingredient_angle_dict,
+                    ingredient_occurence_dict,
+                    ingredient_key_dict,
+                ) = self.pack_one_seed(
+                    seed_index=seed_index,
+                    seed_list=seed_list,
+                    bounding_box=bounding_box,
+                    packing_basename=packing_basename,
+                    center_distance_dict=center_distance_dict,
+                    pairwise_distance_dict=pairwise_distance_dict,
+                    ingredient_position_dict=ingredient_position_dict,
+                    ingredient_angle_dict=ingredient_angle_dict,
+                    ingredient_occurence_dict=ingredient_occurence_dict,
+                    ingredient_key_dict=ingredient_key_dict,
+                    get_distance_distribution=get_distance_distribution,
+                    image_export_options=image_export_options,
+                    show_grid=show_grid,
+                    plot_figures=plot_figures,
                 )
-                image_writer.export_image()
 
         self.writeJSON(center_distance_file, center_distance_dict)
         self.writeJSON(pairwise_distance_file, pairwise_distance_dict)
