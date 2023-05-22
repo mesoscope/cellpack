@@ -2479,8 +2479,7 @@ class Analysis:
                     ingredient_angle_dict.update(seed_ingredient_angle_dict)
                     ingredient_occurence_dict.update(seed_ingredient_occurence_dict)
                     ingredient_key_dict.update(seed_ingredient_key_dict)
-                    
-                    print(center_distance_dict.keys())
+
         else:
             for seed_index in range(number_of_packings):
                 (
