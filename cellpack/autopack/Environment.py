@@ -517,7 +517,7 @@ class Environment(CompartmentList):
         self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
         self.store()
-        self.store_asTxt()
+        # self.store_asTxt()
         Writer(format=self.format_output).save(
             self,
             self.result_file,
@@ -1379,9 +1379,12 @@ class Environment(CompartmentList):
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
-                    gradient.mode_settings["object"].get_surface_distances(
-                        self, self.grid.masterGridPositions
-                    )
+                    if not hasattr(
+                        gradient.mode_settings["object"], "surface_distances"
+                    ):
+                        gradient.mode_settings["object"].set_surface_distances(
+                            self, self.grid.masterGridPositions
+                        )
                 self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
                 )
@@ -2293,7 +2296,7 @@ class Environment(CompartmentList):
         all_ingr_as_array = self.prep_molecules_for_save(
             distances, free_points, nbFreePoints
         )
-        print(f"placed {len(self.molecules)}")
+
         if self.saveResult:
             self.save_result(
                 free_points,
@@ -2901,6 +2904,8 @@ class Environment(CompartmentList):
             self.static = []
             self.moving = None
             self.rb_panda = []
+            base.destroy()
+
         for compartment in self.compartments:
             if compartment.rbnode is None:
                 compartment.rbnode = compartment.addShapeRB(

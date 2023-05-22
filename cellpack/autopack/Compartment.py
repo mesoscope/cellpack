@@ -1077,7 +1077,7 @@ class Compartment(CompartmentList):
             len(env.grid.masterGridPositions),
         )
 
-    def get_surface_distances(self, env, master_grid_positions):
+    def set_surface_distances(self, env, master_grid_positions):
         surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
         surface_ids = numpy.nonzero(surface_mask)
         surface_positions = master_grid_positions[surface_ids]
