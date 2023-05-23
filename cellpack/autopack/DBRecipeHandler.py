@@ -1,7 +1,5 @@
 import copy
 
-import json
-
 from deepdiff import DeepDiff
 
 from cellpack.autopack.utils import deep_merge
@@ -59,6 +57,12 @@ class CompositionDoc(DataDoc):
         return data
 
     @staticmethod
+    def get_gradient_reference(downloaded_data, db):
+        if db.is_reference(downloaded_data["gradient"]):
+            gradient_key = downloaded_data["gradient"]
+            downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
+
+    @staticmethod
     def get_reference_data(key_or_dict, db):
         """
         Returns the db data for a reference, and the key if it exists.
@@ -68,16 +72,17 @@ class CompositionDoc(DataDoc):
         if DataDoc.is_key(key_or_dict) and db.is_reference(key_or_dict):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
+            if "gradient" in downloaded_data:
+                CompositionDoc.get_gradient_reference(downloaded_data, db)
             return downloaded_data, None
         elif key_or_dict and isinstance(key_or_dict, dict):
             object_dict = key_or_dict
             if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
                 downloaded_data, _ = db.get_doc_by_ref(key)
-                if "gradient" in downloaded_data and db.is_reference(downloaded_data["gradient"]):
-                    gradient_key = downloaded_data["gradient"]
-                    downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
-                return downloaded_data, key
+                if "gradient" in downloaded_data:
+                    CompositionDoc.get_gradient_reference(downloaded_data, db)
+                    return downloaded_data, key
         return {}, None
 
     def resolve_db_regions(self, db_data, db):
@@ -106,12 +111,14 @@ class CompositionDoc(DataDoc):
         """
         Convert gradient list to dict for resolve_local_regions
         """
-        if "gradients" in prep_recipe_data and isinstance(prep_recipe_data["gradients"], list):
+        if "gradients" in prep_recipe_data and isinstance(
+            prep_recipe_data["gradients"], list
+        ):
             gradient_dict = {}
             for gradient in prep_recipe_data["gradients"]:
                 gradient_dict[gradient["name"]] = gradient
             prep_recipe_data["gradients"] = gradient_dict
-            
+
     def resolve_local_regions(self, local_data, recipe_data, db):
         """
         Recursively resolves the regions of a composition from local data.
@@ -127,9 +134,13 @@ class CompositionDoc(DataDoc):
             else:
                 key_name = local_data["object"]["name"]
             local_data["object"] = prep_recipe_data["objects"][key_name]
-            #TODO: check if there is a case where gradient is inside of a comp but not in regions
-            if "gradient" in local_data["object"] and isinstance(local_data["object"]["gradient"], str):
-                local_data["object"]["gradient"] = prep_recipe_data["gradients"][local_data["object"]["gradient"]]
+            # TODO: check if there is a case where gradient is inside of a comp but not in regions
+            if "gradient" in local_data["object"] and isinstance(
+                local_data["object"]["gradient"], str
+            ):
+                local_data["object"]["gradient"] = prep_recipe_data["gradients"][
+                    local_data["object"]["gradient"]
+                ]
         for region_name in local_data["regions"]:
             for index, key_or_dict in enumerate(local_data["regions"][region_name]):
                 if not DataDoc.is_key(key_or_dict):
@@ -139,9 +150,13 @@ class CompositionDoc(DataDoc):
                             "object"
                         ] = prep_recipe_data["objects"][obj_item]
                     else:
-                        #replace gradient reference with gradient data
-                        if "gradient" in obj_item and isinstance(obj_item["gradient"], str):
-                            local_data["regions"][region_name][index]["object"]["gradient"] = prep_recipe_data["gradients"][obj_item["gradient"]]
+                        # replace gradient reference with gradient data
+                        if "gradient" in obj_item and isinstance(
+                            obj_item["gradient"], str
+                        ):
+                            local_data["regions"][region_name][index]["object"][
+                                "gradient"
+                            ] = prep_recipe_data["gradients"][obj_item["gradient"]]
                         else:
                             local_data["regions"][region_name][index][
                                 "object"
@@ -348,7 +363,7 @@ class DBRecipeHandler(object):
             and len(item) > 0
             and isinstance(item[0], (list, tuple))
         )
-    
+
     @staticmethod
     def is_db_dict(item):
         if isinstance(item, dict) and len(item) > 0:
@@ -526,7 +541,7 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            #return
+            return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
@@ -546,13 +561,15 @@ class DBRecipeHandler(object):
                     for comp_name, reference in compositions.items():
                         ref_link = reference["inherit"]
                         comp_doc = CompositionDoc(
-                                comp_name,
-                                object_key=None,
-                                count=None,
-                                regions={},
-                                molarity=None,
-                            )
-                        composition_data, _ = comp_doc.get_reference_data(ref_link, self.db)
+                            comp_name,
+                            object_key=None,
+                            count=None,
+                            regions={},
+                            molarity=None,
+                        )
+                        composition_data, _ = comp_doc.get_reference_data(
+                            ref_link, self.db
+                        )
                         comp_doc.resolve_db_regions(composition_data, self.db)
                         compositions[comp_name] = composition_data
                     prep_data[key] = compositions

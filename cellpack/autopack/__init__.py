@@ -390,7 +390,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         # command example: `pack -r firebase:recipes/gradients_v-default -c examples/packing-configs/run.json`
         if database_name == "firebase":
             recipe_id = file_path.split("/")[-1]
-            db = FirebaseHandler("cred") #cred = personal firebase credentials
+            db = FirebaseHandler("cred")  # cred = personal firebase credentials
             db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
             db_handler = DBRecipeHandler(db)
             downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
