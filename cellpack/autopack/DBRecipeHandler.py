@@ -382,7 +382,6 @@ class DBRecipeHandler(object):
             else:
                 _, grad_path = self.upload_data("gradients", gradient_doc.settings)
                 self.grad_to_path_map[gradient_name] = grad_path
-                print("grad_path", self.grad_to_path_map)
 
     def upload_objects(self, objects):
         for obj_name in objects:

@@ -61,8 +61,15 @@ def test_upload_objects():
     data = {"test": {"test_key": "test_value"}}
     object_doc = DBRecipeHandler(mock_db)
     object_doc.upload_objects(data)
-
     assert object_doc.objects_to_path_map == {"test": "firebase:objects/test_id"}
+
+def test_upload_objects_with_gradient():
+    # the value of gradient in obj should be changed to the path instead of the name before uploading 
+    data = {"test": {"test_key": "test_value", "gradient": "test_grad_name"}}
+    object_doc = DBRecipeHandler(mock_db)
+    object_doc.grad_to_path_map = {"test_grad_name": "firebase:gradients/test_id"}
+    object_doc.upload_objects(data)
+    assert data["test"]["gradient"] == "firebase:gradients/test_id"
 
 
 def test_upload_compositions():
@@ -99,6 +106,7 @@ def test_upload_gradients():
     data = [{"name": "test_grad_name", "test_key": "test_value"}]
     gradient_doc = DBRecipeHandler(mock_db)
     gradient_doc.upload_gradients(data)
+    assert gradient_doc.grad_to_path_map == {"test_grad_name": "firebase:gradients/test_id"}
 
 
 def test_get_recipe_id():
