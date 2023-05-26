@@ -145,6 +145,7 @@ def convert(old_recipe):
     new_recipe["name"] = old_recipe["recipe"]["name"]
     new_recipe["bounding_box"] = old_recipe["options"]["boundingBox"]
     objects_dict = {}
+    #TODO: check if composition structure is correct
     composition = {"space": {"regions": {}}}
     if "cytoplasme" in old_recipe:
         outer_most_region_array = []
