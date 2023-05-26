@@ -134,7 +134,6 @@ class CompositionDoc(DataDoc):
             else:
                 key_name = local_data["object"]["name"]
             local_data["object"] = prep_recipe_data["objects"][key_name]
-            # TODO: check if there is a case where gradient is inside of a comp but not in regions
             if "gradient" in local_data["object"] and isinstance(
                 local_data["object"]["gradient"], str
             ):
