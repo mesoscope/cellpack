@@ -2240,7 +2240,10 @@ class Analysis:
             ingredient_angle_dict[seed_index] = {}
             ingredient_occurence_dict[seed_index] = {}
 
-            center = self.env.grid.getCenter()  # center of the grid
+            if hasattr(self, "center"):
+                center = self.center
+            else:
+                center = self.env.grid.getCenter()  # center of the grid
 
             ext_recipe = self.env.exteriorRecipe
             if ext_recipe:
@@ -2443,8 +2446,15 @@ class Analysis:
         ingredient_key_dict = {}
 
         if parallel:
-            num_processes = numpy.minimum(multiprocessing.cpu_count(), number_of_packings)
-            with concurrent.futures.ProcessPoolExecutor(max_workers=num_processes) as executor:
+            num_processes = numpy.min(
+                [
+                    int(numpy.floor(0.8 * multiprocessing.cpu_count())),
+                    number_of_packings,
+                ]
+            )
+            with concurrent.futures.ProcessPoolExecutor(
+                max_workers=num_processes
+            ) as executor:
                 futures = []
                 for seed_index in range(number_of_packings):
                     futures.append(
@@ -2464,7 +2474,7 @@ class Analysis:
                             image_export_options=image_export_options,
                         )
                     )
-                for future in concurrent.futures.as_completed(futures):                    
+                for future in concurrent.futures.as_completed(futures):
                     (
                         seed_center_distance_dict,
                         seed_pairwise_distance_dict,
@@ -2473,7 +2483,7 @@ class Analysis:
                         seed_ingredient_occurence_dict,
                         seed_ingredient_key_dict,
                     ) = future.result()
-                    center_distance_dict.update(seed_center_distance_dict)  
+                    center_distance_dict.update(seed_center_distance_dict)
                     pairwise_distance_dict.update(seed_pairwise_distance_dict)
                     ingredient_position_dict.update(seed_ingredient_position_dict)
                     ingredient_angle_dict.update(seed_ingredient_angle_dict)

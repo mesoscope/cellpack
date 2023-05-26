@@ -30,8 +30,8 @@
         "mean_membrane": {
             "type": "mesh",
             "color": [
-                0,
                 1,
+                0,
                 1
             ],
             "representations": {
@@ -45,8 +45,8 @@
         "mean_nucleus": {
             "type": "mesh",
             "color": [
-                1,
                 0,
+                1,
                 1
             ],
             "representations": {
@@ -67,7 +67,7 @@
             ],
             "radius": 2.30,
             "gradient": "surface_gradient",
-            "packing_mode": "gradient"            
+            "packing_mode": "gradient"
         }
     },
     "composition": {
