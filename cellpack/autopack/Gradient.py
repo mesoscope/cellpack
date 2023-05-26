@@ -211,9 +211,7 @@ class Gradient:
         elif self.weight_mode == "square":
             self.weight = (1.0 - scaled_distances) ** 2
         elif self.weight_mode == "cube":
-            self.weight = (
-                1.0 - scaled_distances
-            ) ** 3  # TODO: make general power mode
+            self.weight = (1.0 - scaled_distances) ** 3  # TODO: make general power mode
         self.weight[numpy.isnan(self.weight)] = 0
         # TODO: talk to Ludo about calculating gaussian weights
 
