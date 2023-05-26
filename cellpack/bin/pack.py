@@ -61,7 +61,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
             config_name=packing_config_data["name"],
             recipe_version=recipe_data["version"],
             image_export_options=packing_config_data.get("image_export_options"),
-            parallel=packing_config_data["parallel"],
+            parallel=packing_config_data.get("parallel", False),
         )
         if analysis_config_path is not None:
             analyze.run_analysis_workflow(
