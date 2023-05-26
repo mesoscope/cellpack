@@ -394,7 +394,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
             db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
             db_handler = DBRecipeHandler(db)
             downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
-            return downloaded_recipe_data
+            return downloaded_recipe_data, database_name
         else:
             local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force
@@ -403,7 +403,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
         )
-    return json.load(open(local_file_path, "r"))
+    return json.load(open(local_file_path, "r")), None
 
 
 def fixPath(adict):  # , k, v):
