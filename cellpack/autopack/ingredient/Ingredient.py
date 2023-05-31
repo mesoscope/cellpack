@@ -127,6 +127,7 @@ class Ingredient(Agent):
     ARGUMENTS = [
         "color",
         "count",
+        "count_options",
         "cutoff_boundary",
         "cutoff_surface",
         "distance_expression",
@@ -163,6 +164,7 @@ class Ingredient(Agent):
         type="single_sphere",
         color=None,
         count=0,
+        count_options=None,
         cutoff_boundary=None,
         cutoff_surface=0.0,
         distance_expression=None,
@@ -212,6 +214,7 @@ class Ingredient(Agent):
 
         self.molarity = molarity
         self.count = count
+        self.count_options = count_options
         self.priority = priority
         self.log.info(
             "priority %d,  self.priority %r",
