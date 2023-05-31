@@ -183,15 +183,14 @@ class CompositionDoc(DataDoc):
         doc, doc_ref = db.get_doc_by_id("composition", composition_id)
         if doc is None:
             return
+        _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
+        update_ref_path = f"{db.db_name()}:{db.get_path_from_ref(new_item_ref)}"
+        if update_in_array:
+            db.update_elements_in_array(
+                doc_ref, index, update_ref_path, remove_comp_name
+            )
         else:
-            _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
-            update_ref_path = f"{db.db_name()}:{db.get_path_from_ref(new_item_ref)}"
-            if update_in_array:
-                db.update_elements_in_array(
-                    doc_ref, index, update_ref_path, remove_comp_name
-                )
-            else:
-                db.update_reference_on_doc(doc_ref, index, update_ref_path)
+            db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
     def should_write(self, db, recipe_data):
         """
