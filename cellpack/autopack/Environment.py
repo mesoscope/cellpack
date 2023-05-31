@@ -1944,6 +1944,44 @@ class Environment(CompartmentList):
         expected_min_distance = self.smallestProteinSize * 2
         return min_distance < expected_min_distance + 0.001
 
+    @staticmethod
+    def get_count_from_options(count_options):
+        """
+        Returns a count from the options
+        """
+        count = None
+        if count_options.get("distribution") == "uniform":
+            count = int(
+                numpy.random.randint(
+                    count_options.get("min", 0), count_options.get("max", 1)
+                )
+            )
+        elif count_options.get("distribution") == "normal":
+            count = int(
+                numpy.rint(
+                    numpy.random.normal(
+                        count_options.get("mean", 0), count_options.get("std", 1)
+                    )
+                )
+            )
+        elif count_options.get("distribution") == "list":
+            count = int(
+                numpy.rint(numpy.random.choice(count_options.get("list", None)))
+            )
+
+        return count
+
+    def update_count(self, allIngredients):
+        """
+        updates the count for all ingredients based on input options
+        """
+        for ingr in allIngredients:
+            if hasattr(ingr, "count_options"):
+                count = self.get_count_from_options(count_options=ingr.count_options)
+                if count is not None:
+                    ingr.count = count
+                    ingr.left_to_place = count
+
     def pack_grid(
         self,
         seedNum=14,
@@ -1967,8 +2005,11 @@ class Environment(CompartmentList):
         # create a list of active ingredients indices in all recipes to allow
         # removing inactive ingredients when molarity is reached
         allIngredients = self.callFunction(self.getActiveIng)
-        # verify partner
 
+        # set the number of ingredients to pack
+        self.update_count(allIngredients)
+
+        # verify partner
         usePP = False
         if "usePP" in kw:
             usePP = kw["usePP"]
