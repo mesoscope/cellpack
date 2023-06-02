@@ -10,6 +10,7 @@
     "save_analyze_result": true,
     "show_grid_plot": false,
     "spacing": null,
+    "parallel": false,
     "use_periodicity": false,
     "show_sphere_trees": true
 }

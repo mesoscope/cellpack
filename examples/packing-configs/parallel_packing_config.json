@@ -4,7 +4,7 @@
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
-    "number_of_packings": 100,
+    "number_of_packings": 10,
     "out": "out/parallel",
     "overwrite_place_method": true,
     "place_method": "spheresSST",

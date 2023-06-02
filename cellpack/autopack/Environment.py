@@ -1976,7 +1976,7 @@ class Environment(CompartmentList):
         updates the count for all ingredients based on input options
         """
         for ingr in allIngredients:
-            if hasattr(ingr, "count_options"):
+            if hasattr(ingr, "count_options") and ingr.count_options is not None:
                 count = self.get_count_from_options(count_options=ingr.count_options)
                 if count is not None:
                     ingr.count = count
