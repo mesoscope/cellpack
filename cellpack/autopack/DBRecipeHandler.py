@@ -539,38 +539,8 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            return
+            # return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
 
-    def prep_db_doc_for_download(self, db_doc):
-        """
-        convert data from db and resolve references.
-        """
-        prep_data = {}
-        if isinstance(db_doc, dict):
-            for key, value in db_doc.items():
-                if self.is_db_dict(value):
-                    unpack_dict = [value[str(i)] for i in range(len(value))]
-                    prep_data[key] = unpack_dict
-                elif key == "composition":
-                    compositions = db_doc["composition"]
-                    for comp_name, reference in compositions.items():
-                        ref_link = reference["inherit"]
-                        comp_doc = CompositionDoc(
-                            comp_name,
-                            object_key=None,
-                            count=None,
-                            regions={},
-                            molarity=None,
-                        )
-                        composition_data, _ = comp_doc.get_reference_data(
-                            ref_link, self.db
-                        )
-                        comp_doc.resolve_db_regions(composition_data, self.db)
-                        compositions[comp_name] = composition_data
-                    prep_data[key] = compositions
-                else:
-                    prep_data[key] = value
-        return prep_data

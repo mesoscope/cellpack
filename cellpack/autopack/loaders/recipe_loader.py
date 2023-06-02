@@ -165,82 +165,8 @@ class RecipeLoader(object):
                 f"{old_recipe['format_version']} is not a format version we support"
             )
 
-    @staticmethod
-    def _get_gradient_data(obj_data, obj_dict, grad_dict):
-        grad_name = obj_data["gradient"]["name"]
-        grad_dict[grad_name] = obj_data["gradient"]
-        obj_dict[obj_data["name"]]["gradient"] = grad_name
-        RecipeLoader._remove_name_key(grad_dict[grad_name])
-        return obj_dict, grad_dict
-    
-    @staticmethod
-    # TODO: remove or handle other unoriginal keys
-    def _remove_name_key(doc_data):
-        if "name" in doc_data:
-            del doc_data["name"]
-
-    def _collect_objs_and_grads(self, comp_data):
-        """
-        Collect all object and gradient info from the downloaded firebase composition data
-        Return autopack object data dict and gradient data dict with name as key
-        """
-        objects = {}
-        gradients = {}
-        for _, comp_value in comp_data.items():
-            if "object" in comp_value and comp_value["object"] is not None:
-                object_copy = copy.deepcopy(comp_value["object"])
-                objects[object_copy["name"]] = object_copy
-                if "gradient" in object_copy and isinstance(
-                    object_copy["gradient"], dict
-                ):
-                    objects, gradients = RecipeLoader._get_gradient_data(
-                        object_copy, objects, gradients
-                    )
-                RecipeLoader._remove_name_key(object_copy)
-            if "regions" in comp_value and comp_value["regions"] is not None:
-                for region_name in comp_value["regions"]:
-                    for region_item in comp_value["regions"][region_name]:
-                        if (
-                            not region_item.get("name") and "object" in region_item
-                        ):  # if the outer layer of the dict has no name, it's an object
-                            object_copy = copy.deepcopy(region_item["object"])
-                            objects[object_copy["name"]] = object_copy
-                            if "gradient" in object_copy and isinstance(
-                                object_copy["gradient"], dict
-                            ):
-                                objects, gradients = RecipeLoader._get_gradient_data(
-                                    object_copy, objects, gradients
-                                )
-                        RecipeLoader._remove_name_key(object_copy)
-        print("objects", objects)
-        print("gradients", gradients)
-        return objects, gradients
-    
-    # def _prep_recipe_from_firebase(self, db_recipe_data, obj_dict, grad_dict):
-    #     """
-    #     Compile recipe data from firebase composition data
-    #     """
-    #     revert_recipe_data = {}
-    #     revert_recipe_data["format_version"] = db_recipe_data["format_version"]
-    #     revert_recipe_data["version"] = db_recipe_data["version"]
-    #     revert_recipe_data["name"] = db_recipe_data["name"]
-    #     revert_recipe_data["bounding_box"] = db_recipe_data["bounding_box"]
-    #     revert_recipe_data["objects"] = None
-    #     revert_recipe_data["gradients"] = None
-    #     revert_recipe_data["composition"] = {"regions":{}}
-    #     for comp_name, comp_value in db_recipe_data["composition"].items():
-    #         if "name" in comp_value and comp_value["regions"] is None:
-    #             for region_name in comp_value["regions"]:
-    #                 revert_recipe_data["composition"][comp_name] = {"regions":{}}
-
-    #     return recipe_data
-
-
     def _read(self):
-        new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
-        if database_name == "firebase":
-            objects, gradients = self._collect_objs_and_grads(new_values["composition"])
-            #TODO form a remote recipe that can be read 
+        new_values = autopack.load_file(self.file_path, cache="recipes")
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
