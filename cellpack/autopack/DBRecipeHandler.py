@@ -58,7 +58,7 @@ class CompositionDoc(DataDoc):
 
     @staticmethod
     def get_gradient_reference(downloaded_data, db):
-        if db.is_reference(downloaded_data["gradient"]):
+        if "gradient" in downloaded_data and db.is_reference(downloaded_data["gradient"]):
             gradient_key = downloaded_data["gradient"]
             downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
 
@@ -72,17 +72,15 @@ class CompositionDoc(DataDoc):
         if DataDoc.is_key(key_or_dict) and db.is_reference(key_or_dict):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
-            if "gradient" in downloaded_data:
-                CompositionDoc.get_gradient_reference(downloaded_data, db)
+            CompositionDoc.get_gradient_reference(downloaded_data, db)
             return downloaded_data, None
         elif key_or_dict and isinstance(key_or_dict, dict):
             object_dict = key_or_dict
             if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
                 downloaded_data, _ = db.get_doc_by_ref(key)
-                if "gradient" in downloaded_data:
-                    CompositionDoc.get_gradient_reference(downloaded_data, db)
-                    return downloaded_data, key
+                CompositionDoc.get_gradient_reference(downloaded_data, db)
+                return downloaded_data, key
         return {}, None
 
     def resolve_db_regions(self, db_data, db):
@@ -149,17 +147,19 @@ class CompositionDoc(DataDoc):
                             "object"
                         ] = prep_recipe_data["objects"][obj_item]
                     else:
-                        # replace gradient reference with gradient data
-                        if "gradient" in obj_item and isinstance(
-                            obj_item["gradient"], str
-                        ):
-                            local_data["regions"][region_name][index]["object"][
-                                "gradient"
-                            ] = prep_recipe_data["gradients"][obj_item["gradient"]]
-                        else:
-                            local_data["regions"][region_name][index][
-                                "object"
-                            ] = prep_recipe_data["objects"][obj_item["name"]]
+                        local_data["regions"][region_name][index][
+                            "object"
+                        ] = prep_recipe_data["objects"][obj_item["name"]]
+                    # replace gradient reference with gradient data
+                    obj_data = local_data["regions"][region_name][index][
+                            "object"
+                        ]
+                    if "gradient" in obj_data and isinstance(
+                        obj_data["gradient"], str
+                    ):
+                        local_data["regions"][region_name][index]["object"][
+                            "gradient"
+                        ] = prep_recipe_data["gradients"][obj_data["gradient"]]
                 else:
                     comp_name = local_data["regions"][region_name][index]
                     prep_comp_data = prep_recipe_data["composition"][comp_name]
@@ -429,7 +429,6 @@ class DBRecipeHandler(object):
             else:
                 _, grad_path = self.upload_data("gradients", gradient_doc.settings)
                 self.grad_to_path_map[gradient_name] = grad_path
-                print("grad_path", self.grad_to_path_map)
 
     def upload_objects(self, objects):
         for obj_name in objects:
