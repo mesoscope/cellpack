@@ -362,14 +362,6 @@ class DBRecipeHandler(object):
         )
 
     @staticmethod
-    def is_db_dict(item):
-        if isinstance(item, dict) and len(item) > 0:
-            for key, value in item.items():
-                if key.isdigit() and isinstance(value, list):
-                    return True
-        return False
-
-    @staticmethod
     def prep_data_for_db(data):
         """
         Recursively convert data to a format that can be written to the database.
@@ -537,7 +529,7 @@ class DBRecipeHandler(object):
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
-            # return
+            return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
