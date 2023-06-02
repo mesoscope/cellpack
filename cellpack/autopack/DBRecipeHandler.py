@@ -58,7 +58,9 @@ class CompositionDoc(DataDoc):
 
     @staticmethod
     def get_gradient_reference(downloaded_data, db):
-        if "gradient" in downloaded_data and db.is_reference(downloaded_data["gradient"]):
+        if "gradient" in downloaded_data and db.is_reference(
+            downloaded_data["gradient"]
+        ):
             gradient_key = downloaded_data["gradient"]
             downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
 
@@ -151,12 +153,8 @@ class CompositionDoc(DataDoc):
                             "object"
                         ] = prep_recipe_data["objects"][obj_item["name"]]
                     # replace gradient reference with gradient data
-                    obj_data = local_data["regions"][region_name][index][
-                            "object"
-                        ]
-                    if "gradient" in obj_data and isinstance(
-                        obj_data["gradient"], str
-                    ):
+                    obj_data = local_data["regions"][region_name][index]["object"]
+                    if "gradient" in obj_data and isinstance(obj_data["gradient"], str):
                         local_data["regions"][region_name][index]["object"][
                             "gradient"
                         ] = prep_recipe_data["gradients"][obj_data["gradient"]]
@@ -543,4 +541,3 @@ class DBRecipeHandler(object):
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
-
