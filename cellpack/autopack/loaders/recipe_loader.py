@@ -170,7 +170,14 @@ class RecipeLoader(object):
         grad_name = obj_data["gradient"]["name"]
         grad_dict[grad_name] = obj_data["gradient"]
         obj_dict[obj_data["name"]]["gradient"] = grad_name
+        RecipeLoader._remove_name_key(grad_dict[grad_name])
         return obj_dict, grad_dict
+    
+    @staticmethod
+    # TODO: remove or handle other unoriginal keys
+    def _remove_name_key(doc_data):
+        if "name" in doc_data:
+            del doc_data["name"]
 
     def _collect_objs_and_grads(self, comp_data):
         """
@@ -189,6 +196,7 @@ class RecipeLoader(object):
                     objects, gradients = RecipeLoader._get_gradient_data(
                         object_copy, objects, gradients
                     )
+                RecipeLoader._remove_name_key(object_copy)
             if "regions" in comp_value and comp_value["regions"] is not None:
                 for region_name in comp_value["regions"]:
                     for region_item in comp_value["regions"][region_name]:
@@ -203,28 +211,29 @@ class RecipeLoader(object):
                                 objects, gradients = RecipeLoader._get_gradient_data(
                                     object_copy, objects, gradients
                                 )
+                        RecipeLoader._remove_name_key(object_copy)
+        print("objects", objects)
+        print("gradients", gradients)
         return objects, gradients
     
-    def _prep_recipe_from_firebase(self, db_recipe_data, obj_dict, grad_dict):
-        """
-        Prepare recipe data from firebase composition data
-        """
-        revert_recipe_data = {}
-        revert_recipe_data["format_version"] = db_recipe_data["format_version"]
-        revert_recipe_data["version"] = db_recipe_data["version"]
-        revert_recipe_data["name"] = db_recipe_data["name"]
-        revert_recipe_data["bounding_box"] = db_recipe_data["bounding_box"]
-        revert_recipe_data["objects"] = None
-        revert_recipe_data["gradients"] = None
-        revert_recipe_data["composition"] = {"regions":{}}
-        for comp_name, comp_value in db_recipe_data["composition"].items():
-            if "name" in comp_value and comp_value["regions"] is None:
-                for region_name in comp_value["regions"]:
-                    revert_recipe_data["composition"][comp_name] = {"regions":{}}
+    # def _prep_recipe_from_firebase(self, db_recipe_data, obj_dict, grad_dict):
+    #     """
+    #     Compile recipe data from firebase composition data
+    #     """
+    #     revert_recipe_data = {}
+    #     revert_recipe_data["format_version"] = db_recipe_data["format_version"]
+    #     revert_recipe_data["version"] = db_recipe_data["version"]
+    #     revert_recipe_data["name"] = db_recipe_data["name"]
+    #     revert_recipe_data["bounding_box"] = db_recipe_data["bounding_box"]
+    #     revert_recipe_data["objects"] = None
+    #     revert_recipe_data["gradients"] = None
+    #     revert_recipe_data["composition"] = {"regions":{}}
+    #     for comp_name, comp_value in db_recipe_data["composition"].items():
+    #         if "name" in comp_value and comp_value["regions"] is None:
+    #             for region_name in comp_value["regions"]:
+    #                 revert_recipe_data["composition"][comp_name] = {"regions":{}}
 
-
-
-        return recipe_data
+    #     return recipe_data
 
 
     def _read(self):
