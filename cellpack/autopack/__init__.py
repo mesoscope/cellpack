@@ -265,7 +265,7 @@ def updateReplacePath(newPaths):
 def download_file(url, local_file_path, reporthook):
     if url_exists(url):
         try:
-            urllib.urlretrieve(url, local_file_path, reporthook=reporthook)
+            urllib.urlretrieve(url + "?dl=1", local_file_path, reporthook=reporthook)
         except Exception as e:
             log.error(f"error fetching file {e}, {url}")
     else:
