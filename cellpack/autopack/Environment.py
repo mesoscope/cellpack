@@ -530,7 +530,9 @@ class Environment(CompartmentList):
 
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
-            # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # START Analysis Tools: Graham added back this big chunk of code
+            # for analysis tools and graphic on 5/16/12 
+            # Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.result_file + "_analyze_"
@@ -698,7 +700,9 @@ class Environment(CompartmentList):
             self.log.info("self.gridVolume = %d", self.grid.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
-            #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            #    END Analysis Tools: Graham added back this big chunk of code
+            #  for analysis tools and graphic on 5/16/12
+            #  Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
 
     def loadResult(
@@ -1359,7 +1363,8 @@ class Environment(CompartmentList):
 
         if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
-            nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
+            # Graham turned this off on 5/16/12 to match August Repair for May Hybrid
+            nbFreePoints = nbPoints  # -1              
             for i, mingrs in enumerate(
                 self.molecules
             ):  # ( jtrans, rotMatj, self, ptInd )
@@ -1687,7 +1692,10 @@ class Environment(CompartmentList):
                 # Graham here: Walk through -priorities first
                 ingr = self.activeIngr[0]
             else:
-                # prob = uniform(vRangeStart,1.0)  #Graham 9/21/11 This is wrong...vRangeStart is the point index, need active list i.e. thresholdPriority to be limited
+                # prob = uniform(vRangeStart,1.0)  
+                # #Graham 9/21/11 This is wrong...
+                # vRangeStart is the point index, need active list 
+                # i.e. thresholdPriority to be limited
                 prob = uniform(0, 1.0)
                 ingrInd = 0
                 for threshProb in self.thresholdPriorities:
@@ -1845,7 +1853,9 @@ class Environment(CompartmentList):
                 self.activeIngr.pop(ind)
                 if verbose > 1:
                     print(
-                        "popping this gradient ingredient array must be redone using Sept 25, 2011 thesis version as above for nongraient ingredients, TODO: July 5, 2012"
+                        "popping this gradient ingredient array must be redone "
+                        "using Sept 25, 2011 thesis version as above for nongraient "
+                        "ingredients, TODO: July 5, 2012"
                     )
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
@@ -2848,7 +2858,9 @@ class Environment(CompartmentList):
             loadPrcFileData(
                 "",
                 """
-   load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
+   load-display p3tinydisplay 
+   to force CPU only rendering (to make it available as an option
+   if everything else fail, use aux-display p3tinydisplay)
    audio-library-name null # Prevent ALSA errors
    show-frame-rate-meter 0
    sync-video 0
@@ -2999,7 +3011,8 @@ class Environment(CompartmentList):
         # inodenp.node().setMass(1.0)
         inodenp.node().addShape(
             shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
+        )  # ,TransformState.makePos(Point3(0, 0, 0)))
+        # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
 
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())
@@ -3266,3 +3279,68 @@ class Environment(CompartmentList):
         # if self.traj.traj_type=="dcd" or self.traj.traj_type=="xyz":
         self.traj.applyState_primitive_name(self, step)
         # ho can we apply to parent instance the rotatiotn?
+
+    def create_voxelization(self, image_data, image_size, voxel_size, hollow=False):
+        """
+        Update the image data for all molecules in the recipe by creating voxelized
+        representations.
+
+        Parameters
+        ----------
+        image_data: numpy.ndarray
+            The image data to update.
+        image_size: list
+            The size of the image data.
+        voxel_size: float
+            The size of a voxel in the image data.
+        hollow: bool
+            If True, the voxelization will be hollow.
+
+        Returns
+        ----------
+        image_data: numpy.ndarray
+            The updated image data.
+        """
+        channel_colors = []
+        for pos, rot, ingr, _ in self.molecules:
+            if ingr.name not in image_data:
+                image_data[ingr.name] = numpy.zeros(image_size, dtype=numpy.uint8)
+                if ingr.color is not None:
+                    color = ingr.color
+                    if all([x <= 1 for x in ingr.color]):
+                        color = [int(col * 255) for col in ingr.color]
+                    channel_colors.append(color)
+
+            image_data[ingr.name] = ingr.create_voxelization(
+                image_data=image_data[ingr.name],
+                bounding_box=self.boundingBox,
+                voxel_size=voxel_size,
+                image_size=image_size,
+                position=pos,
+                rotation=rot,
+            )
+
+        for compartment in self.compartments:
+            if compartment.name not in image_data:
+                image_data[compartment.name] = numpy.zeros(
+                    image_size, dtype=numpy.uint8
+                )
+                if hasattr(compartment, "color") and compartment.color is not None:
+                    color = compartment.color
+                    if all([x <= 1 for x in compartment.color]):
+                        color = [int(col * 255) for col in compartment.color]
+                    channel_colors.append(color)
+                else:
+                    channel_colors.append([0, 255, 0])
+
+            image_data[compartment.name] = compartment.create_voxelization(
+                image_data=image_data[compartment.name],
+                bounding_box=self.boundingBox,
+                voxel_size=voxel_size,
+                image_size=image_size,
+                position=compartment.position,
+                mesh_store=self.mesh_store,
+                hollow=hollow,
+            )
+
+        return image_data, channel_colors

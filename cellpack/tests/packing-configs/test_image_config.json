@@ -10,7 +10,7 @@
     "save_analyze_result": true,
     "show_grid_plot": true,
     "number_of_packings": 1,
-    "spacing": 2.5,
+    "spacing": null,
     "use_periodicity": false,
     "show_sphere_trees": false,
     "load_from_grid_file": true,
@@ -18,7 +18,7 @@
     "image_export_options": {
         "hollow": false,
         "voxel_size": [1,1,1],
-        "projection_axis": "y",
+        "projection_axis": "z",
         "convolution_options": {
             "psf": "gaussian",
             "psf_parameters":{
