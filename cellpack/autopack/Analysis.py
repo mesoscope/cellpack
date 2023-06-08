@@ -686,10 +686,18 @@ class Analysis:
         self.simpleplot(
             range(len(occ)),
             occ,
-            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
+            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}_lineplot.png",
             title_str=ingr.name,
             x_label="seed",
-            y_label="occurences",
+            y_label="occurrences",
+        )
+        self.histo(
+            distances=numpy.array(occ),
+            filename=self.figures_path
+            / f"{ingr.name}_occurrence_{self.env.basename}_histo.png",
+            title_str=ingr.name,
+            x_label="occurrences",
+            y_label="count",
         )
 
     def plot_distance_distribution(self, all_ingredient_distances):
@@ -1735,10 +1743,10 @@ class Analysis:
     def simpleplot(self, X, Y, filename, w=3, title_str="", x_label="", y_label=""):
         plt.clf()
         plt.plot(X, Y, linewidth=w)
-        plt.savefig(filename)
         plt.title(title_str)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
+        plt.savefig(filename)
 
     def build_grid(
         self,
