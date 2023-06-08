@@ -312,7 +312,6 @@ def test_convert_v1_to_v2(
     assert new_recipe["composition"] == expected_composition_dict
 
 
-# to-do: fix duplicate /
 @pytest.mark.parametrize(
     "converted_data, expected_data",
     [
