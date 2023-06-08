@@ -3009,9 +3009,7 @@ class Environment(CompartmentList):
         # shape.add_geom(geom)
         # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         # inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))
+        inodenp.node().addShape(shape)  # ,TransformState.makePos(Point3(0, 0, 0)))
         # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
 
         if self.panda_solver == "bullet":
