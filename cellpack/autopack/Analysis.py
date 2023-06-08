@@ -2215,6 +2215,7 @@ class Analysis:
             self.env.reset()
         self.env.saveResult = True
         seed = seed_list[seed_index]  # int(time())
+        numpy.random.seed(seed)
         self.build_grid()
         two_d = self.env.is_two_d()
         use_simularium = False
