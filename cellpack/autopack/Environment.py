@@ -531,7 +531,7 @@ class Environment(CompartmentList):
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
             # START Analysis Tools: Graham added back this big chunk of code
-            # for analysis tools and graphic on 5/16/12 
+            # for analysis tools and graphic on 5/16/12
             # Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
@@ -1364,7 +1364,7 @@ class Environment(CompartmentList):
         if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
             # Graham turned this off on 5/16/12 to match August Repair for May Hybrid
-            nbFreePoints = nbPoints  # -1              
+            nbFreePoints = nbPoints  # -1
             for i, mingrs in enumerate(
                 self.molecules
             ):  # ( jtrans, rotMatj, self, ptInd )
@@ -1692,9 +1692,9 @@ class Environment(CompartmentList):
                 # Graham here: Walk through -priorities first
                 ingr = self.activeIngr[0]
             else:
-                # prob = uniform(vRangeStart,1.0)  
+                # prob = uniform(vRangeStart,1.0)
                 # #Graham 9/21/11 This is wrong...
-                # vRangeStart is the point index, need active list 
+                # vRangeStart is the point index, need active list
                 # i.e. thresholdPriority to be limited
                 prob = uniform(0, 1.0)
                 ingrInd = 0
@@ -2858,7 +2858,7 @@ class Environment(CompartmentList):
             loadPrcFileData(
                 "",
                 """
-   load-display p3tinydisplay 
+   load-display p3tinydisplay
    to force CPU only rendering (to make it available as an option
    if everything else fail, use aux-display p3tinydisplay)
    audio-library-name null # Prevent ALSA errors
