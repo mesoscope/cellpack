@@ -686,7 +686,8 @@ class Analysis:
         self.simpleplot(
             range(len(occ)),
             occ,
-            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}_lineplot.png",
+            self.figures_path
+            / f"{ingr.name}_occurrence_{self.env.basename}_lineplot.png",
             title_str=ingr.name,
             x_label="seed",
             y_label="occurrences",
