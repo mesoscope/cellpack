@@ -209,14 +209,9 @@ class CompositionDoc(DataDoc):
         if db_docs and len(db_docs) >= 1:
             for doc in db_docs:
                 db_data = db.doc_to_dict(doc)
-                shallow_match = True
                 for item in CompositionDoc.SHALLOW_MATCH:
                     if db_data[item] != local_data[item]:
-                        print(db_data[item], local_data[item])
-                        shallow_match = False
                         break
-                if not shallow_match:
-                    continue
                 if local_data["regions"] is None and db_data["regions"] is None:
                     # found a match, so shouldn't write
                     return False, db.doc_id(doc)
