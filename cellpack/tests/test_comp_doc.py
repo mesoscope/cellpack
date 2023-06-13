@@ -182,7 +182,7 @@ def test_check_and_replace_references():
     }
 
 
-def test_composition_oc_should_write_with_no_existing_doc():
+def test_composition_doc_should_write_with_no_existing_doc():
     recipe_data = {
         "bounding_box": [[0, 0, 0], [10, 10, 10]],
         "name": "test",

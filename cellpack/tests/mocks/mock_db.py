@@ -4,8 +4,8 @@ from unittest.mock import Mock
 class MockDB(object):
     def __init__(self, data) -> None:
         for index, name in enumerate(data):
-            obj = data[name]
-            obj["id"] = index
+            self.obj = data[name]
+            self.obj["id"] = index
         self.data = data
         self.name = "test_db"
 
