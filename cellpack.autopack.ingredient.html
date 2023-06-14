@@ -1,291 +1,50 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>cellpack.autopack.ingredient package &mdash; cellPack 1.0.3 documentation</title>
-  
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <title>cellpack.autopack.ingredient package &#8212; cellPack 1.0.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cellpack.autopack.interface_objects package" href="cellpack.autopack.interface_objects.html" />
     <link rel="prev" title="cellpack.autopack package" href="cellpack.autopack.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.interface_objects.html" title="cellpack.autopack.interface_objects package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.html" title="cellpack.autopack package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cellpack.autopack.html" accesskey="U">cellpack.autopack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.ingredient package</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home"> cellPack
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0.3
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="cellpack.html">cellpack package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#name">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#version">version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example">example:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#options-properties">Options properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#result-file">result_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#enviroonly">EnviroOnly</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#canceldialog">cancelDialog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickrandpt">pickRandPt</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#boundingbox">boundingBox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#computegridparams">computeGridParams</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#windowssize">windowsSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-method">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-gradient">use_gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradients">gradients</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#innergridmethod">innerGridMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-periodicity">use_periodicity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#timer">_timer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#priority">priority</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id162">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-position">partners_position</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-weight">partners_weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#properties">properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#score">score</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#organism">organism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#example-ingredient">example ingredient</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
-</ul>
-</li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">cellPack</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="modules.html">cellpack</a> &raquo;</li>
-        
-          <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
-        
-          <li><a href="cellpack.autopack.html">cellpack.autopack package</a> &raquo;</li>
-        
-      <li>cellpack.autopack.ingredient package</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/cellpack.autopack.ingredient.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="cellpack.autopack.interface_objects.html" class="btn btn-neutral float-right" title="cellpack.autopack.interface_objects package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-      
-      
-        <a href="cellpack.autopack.html" class="btn btn-neutral float-left" title="cellpack.autopack package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-      
-  </div>
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   <section id="cellpack-autopack-ingredient-package">
 <h1>cellpack.autopack.ingredient package<a class="headerlink" href="#cellpack-autopack-ingredient-package" title="Permalink to this heading">¶</a></h1>
@@ -1354,47 +1113,300 @@ is using the FORTRAN style)</p>
 </section>
 
 
-           </div>
-           
+            <div class="clearer"></div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
         </div>
       </div>
-
-    </section>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">cellpack.autopack.ingredient package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.Ingredient">cellpack.autopack.ingredient.Ingredient module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient"><code class="docutils literal notranslate"><span class="pre">Ingredient</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.ARGUMENTS"><code class="docutils literal notranslate"><span class="pre">Ingredient.ARGUMENTS</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.DecomposeMesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.DecomposeMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.addRBsegment"><code class="docutils literal notranslate"><span class="pre">Ingredient.addRBsegment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.add_rb_mesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.add_rb_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.alignRotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.alignRotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.apply_rotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.apply_rotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.attempt_to_pack_at_grid_location"><code class="docutils literal notranslate"><span class="pre">Ingredient.attempt_to_pack_at_grid_location()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.buildMesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.buildMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.checkCompartment"><code class="docutils literal notranslate"><span class="pre">Ingredient.checkCompartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.checkDistSurface"><code class="docutils literal notranslate"><span class="pre">Ingredient.checkDistSurface()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.checkDistance"><code class="docutils literal notranslate"><span class="pre">Ingredient.checkDistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.checkIfUpdate"><code class="docutils literal notranslate"><span class="pre">Ingredient.checkIfUpdate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.check_against_one_packed_ingr"><code class="docutils literal notranslate"><span class="pre">Ingredient.check_against_one_packed_ingr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.close_partner_check"><code class="docutils literal notranslate"><span class="pre">Ingredient.close_partner_check()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.correctBB"><code class="docutils literal notranslate"><span class="pre">Ingredient.correctBB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.deleteblist"><code class="docutils literal notranslate"><span class="pre">Ingredient.deleteblist()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.far_enough_from_surfaces"><code class="docutils literal notranslate"><span class="pre">Ingredient.far_enough_from_surfaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getAxisRotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.getAxisRotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getBiasedRotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.getBiasedRotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getClosePairIngredient"><code class="docutils literal notranslate"><span class="pre">Ingredient.getClosePairIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getData"><code class="docutils literal notranslate"><span class="pre">Ingredient.getData()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getEncapsulatingRadius"><code class="docutils literal notranslate"><span class="pre">Ingredient.getEncapsulatingRadius()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInBox"><code class="docutils literal notranslate"><span class="pre">Ingredient.getIngredientsInBox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInTree"><code class="docutils literal notranslate"><span class="pre">Ingredient.getIngredientsInTree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getInsidePoints"><code class="docutils literal notranslate"><span class="pre">Ingredient.getInsidePoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getListCompFromMask"><code class="docutils literal notranslate"><span class="pre">Ingredient.getListCompFromMask()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getMaxJitter"><code class="docutils literal notranslate"><span class="pre">Ingredient.getMaxJitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getMesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.getMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.getTransform"><code class="docutils literal notranslate"><span class="pre">Ingredient.getTransform()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_all_positions_to_check"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_all_positions_to_check()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_closest_ingredients"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_closest_ingredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_compartment"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_cuttoff_value"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_cuttoff_value()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_list_of_free_indices"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_list_of_free_indices()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_distances_and_inside_points"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_new_distances_and_inside_points()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_jitter_location_and_rotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_new_jitter_location_and_rotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_pos"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_new_pos()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_partners"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_partners()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rbNodes"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_rbNodes()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rb_model"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_rb_model()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.get_rotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.handle_real_time_visualization"><code class="docutils literal notranslate"><span class="pre">Ingredient.handle_real_time_visualization()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.has_mesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.has_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.has_pdb"><code class="docutils literal notranslate"><span class="pre">Ingredient.has_pdb()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.initialize_mesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.initialize_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.isInGoodComp"><code class="docutils literal notranslate"><span class="pre">Ingredient.isInGoodComp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.is_point_in_correct_region"><code class="docutils literal notranslate"><span class="pre">Ingredient.is_point_in_correct_region()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.jitterPosition"><code class="docutils literal notranslate"><span class="pre">Ingredient.jitterPosition()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.jitter_place"><code class="docutils literal notranslate"><span class="pre">Ingredient.jitter_place()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.lookForNeighbours"><code class="docutils literal notranslate"><span class="pre">Ingredient.lookForNeighbours()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.merge_place_results"><code class="docutils literal notranslate"><span class="pre">Ingredient.merge_place_results()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.np_check_collision"><code class="docutils literal notranslate"><span class="pre">Ingredient.np_check_collision()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.oneJitter"><code class="docutils literal notranslate"><span class="pre">Ingredient.oneJitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.pack_at_grid_pt_location"><code class="docutils literal notranslate"><span class="pre">Ingredient.pack_at_grid_pt_location()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_collision"><code class="docutils literal notranslate"><span class="pre">Ingredient.pandaBullet_collision()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_place"><code class="docutils literal notranslate"><span class="pre">Ingredient.pandaBullet_place()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_relax"><code class="docutils literal notranslate"><span class="pre">Ingredient.pandaBullet_relax()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.perturbAxis"><code class="docutils literal notranslate"><span class="pre">Ingredient.perturbAxis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.place"><code class="docutils literal notranslate"><span class="pre">Ingredient.place()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.point_is_available"><code class="docutils literal notranslate"><span class="pre">Ingredient.point_is_available()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.randomize_rotation"><code class="docutils literal notranslate"><span class="pre">Ingredient.randomize_rotation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.randomize_translation"><code class="docutils literal notranslate"><span class="pre">Ingredient.randomize_translation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.reject"><code class="docutils literal notranslate"><span class="pre">Ingredient.reject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.rejectOnce"><code class="docutils literal notranslate"><span class="pre">Ingredient.rejectOnce()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.remove_from_realtime_display"><code class="docutils literal notranslate"><span class="pre">Ingredient.remove_from_realtime_display()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.reset"><code class="docutils literal notranslate"><span class="pre">Ingredient.reset()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.rigid_place"><code class="docutils literal notranslate"><span class="pre">Ingredient.rigid_place()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.setTilling"><code class="docutils literal notranslate"><span class="pre">Ingredient.setTilling()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.spheres_SST_place"><code class="docutils literal notranslate"><span class="pre">Ingredient.spheres_SST_place()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.static_id"><code class="docutils literal notranslate"><span class="pre">Ingredient.static_id</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.swap"><code class="docutils literal notranslate"><span class="pre">Ingredient.swap()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints"><code class="docutils literal notranslate"><span class="pre">Ingredient.transformPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints_mult"><code class="docutils literal notranslate"><span class="pre">Ingredient.transformPoints_mult()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.update_data_tree"><code class="docutils literal notranslate"><span class="pre">Ingredient.update_data_tree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.update_display_rt"><code class="docutils literal notranslate"><span class="pre">Ingredient.update_display_rt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.use_mesh"><code class="docutils literal notranslate"><span class="pre">Ingredient.use_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.use_pdb"><code class="docutils literal notranslate"><span class="pre">Ingredient.use_pdb()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.IngredientInstanceDrop"><code class="docutils literal notranslate"><span class="pre">IngredientInstanceDrop</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.Ingredient.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.agent">cellpack.autopack.ingredient.agent module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.agent.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.agent.Agent.getSubWeighted"><code class="docutils literal notranslate"><span class="pre">Agent.getSubWeighted()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.agent.Agent.get_weights_by_distance"><code class="docutils literal notranslate"><span class="pre">Agent.get_weights_by_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.agent.Agent.pick_partner_grid_index"><code class="docutils literal notranslate"><span class="pre">Agent.pick_partner_grid_index()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.agent.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.grow">cellpack.autopack.ingredient.grow module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.ActinIngredient"><code class="docutils literal notranslate"><span class="pre">ActinIngredient</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.ActinIngredient.updateFromBB"><code class="docutils literal notranslate"><span class="pre">ActinIngredient.updateFromBB()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient"><code class="docutils literal notranslate"><span class="pre">GrowIngredient</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.ARGUMENTS"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.ARGUMENTS</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.addRBsegment"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.addRBsegment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.add_rb_multi_sphere"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.add_rb_multi_sphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getFirstPoint"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getFirstPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getInterpolatedSphere"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getInterpolatedSphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getJtransRot"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getJtransRot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getJtransRot_r"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getJtransRot_r()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPoint"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getNextPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPtIndCyl"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getNextPtIndCyl()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.getV3"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.getV3()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.get_alternate_position"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.get_alternate_position()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.get_alternate_position_p"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.get_alternate_position_p()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.get_new_distance_values"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.get_new_distance_values()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.get_signed_distance"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.get_signed_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.grow"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.grow()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.grow_place"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.grow_place()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.mask_sphere_points()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_angle"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.mask_sphere_points_angle()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_boundary"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.mask_sphere_points_boundary()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_dihedral"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.mask_sphere_points_dihedral()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_ingredients"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.mask_sphere_points_ingredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_vector"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.mask_sphere_points_vector()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.pickAlternateHalton"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.pickAlternateHalton()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.pickHalton"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.pickHalton()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.pickRandomSphere"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.pickRandomSphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.pick_alternate"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.pick_alternate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.pick_random_alternate"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.pick_random_alternate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.place_alternate"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.place_alternate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.place_alternate_p"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.place_alternate_p()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.prepare_alternates"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.prepare_alternates()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.prepare_alternates_proba"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.prepare_alternates_proba()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.reset"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.reset()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.resetLastPoint"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.resetLastPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.resetSphereDistribution"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.resetSphereDistribution()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.updateGrid"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.updateGrid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.walkLattice"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.walkLattice()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.walkLatticeSurface"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.walkLatticeSurface()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.walkSphere"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.walkSphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.GrowIngredient.walkSpherePanda"><code class="docutils literal notranslate"><span class="pre">GrowIngredient.walkSpherePanda()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.grow.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.multi_cylinder">cellpack.autopack.ingredient.multi_cylinder module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.add_rb_node"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.add_rb_node()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.checkCylCollisions"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.checkCylCollisions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.collides_with_compartment"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.collides_with_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.collision_jitter"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.collision_jitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.getBigBB"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.getBigBB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.get_cuttoff_value"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.get_cuttoff_value()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.initialize_mesh"><code class="docutils literal notranslate"><span class="pre">MultiCylindersIngr.initialize_mesh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.multi_sphere">cellpack.autopack.ingredient.multi_sphere module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr"><code class="docutils literal notranslate"><span class="pre">MultiSphereIngr</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.add_rb_node"><code class="docutils literal notranslate"><span class="pre">MultiSphereIngr.add_rb_node()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.collides_with_compartment"><code class="docutils literal notranslate"><span class="pre">MultiSphereIngr.collides_with_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.collision_jitter"><code class="docutils literal notranslate"><span class="pre">MultiSphereIngr.collision_jitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.get_signed_distance"><code class="docutils literal notranslate"><span class="pre">MultiSphereIngr.get_signed_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.pack_at_grid_pt_location"><code class="docutils literal notranslate"><span class="pre">MultiSphereIngr.pack_at_grid_pt_location()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.single_cube">cellpack.autopack.ingredient.single_cube module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.add_rb_node"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr.add_rb_node()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.collides_with_compartment"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr.collides_with_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.collision_jitter"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr.collision_jitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.cube_surface_distance"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr.cube_surface_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_new_distance_values"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr.get_new_distance_values()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_signed_distance"><code class="docutils literal notranslate"><span class="pre">SingleCubeIngr.get_signed_distance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.single_cylinder">cellpack.autopack.ingredient.single_cylinder module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.add_rb_node"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.add_rb_node()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.checkCylCollisions"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.checkCylCollisions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.collides_with_compartment"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.collides_with_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.collision_jitter"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.collision_jitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.getBigBB"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.getBigBB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.get_cuttoff_value"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.get_cuttoff_value()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.get_signed_distance"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.get_signed_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.initialize_mesh"><code class="docutils literal notranslate"><span class="pre">SingleCylinderIngr.initialize_mesh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.single_sphere">cellpack.autopack.ingredient.single_sphere module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.add_rb_node"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.add_rb_node()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.add_rb_node_ode"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.add_rb_node_ode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collides_with_compartment"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.collides_with_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collision_jitter"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.collision_jitter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.get_new_distance_values()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.get_signed_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.initialize_mesh"><code class="docutils literal notranslate"><span class="pre">SingleSphereIngr.initialize_mesh()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient.utils">cellpack.autopack.ingredient.utils module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.ApplyMatrix"><code class="docutils literal notranslate"><span class="pre">ApplyMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.bullet_checkCollision_mp"><code class="docutils literal notranslate"><span class="pre">bullet_checkCollision_mp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.getDihedral"><code class="docutils literal notranslate"><span class="pre">getDihedral()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.getNormedVector"><code class="docutils literal notranslate"><span class="pre">getNormedVector()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.getNormedVectorOnes"><code class="docutils literal notranslate"><span class="pre">getNormedVectorOnes()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.getNormedVectorU"><code class="docutils literal notranslate"><span class="pre">getNormedVectorU()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.get_reflected_point"><code class="docutils literal notranslate"><span class="pre">get_reflected_point()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.pandaMatrice"><code class="docutils literal notranslate"><span class="pre">pandaMatrice()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.rotVectToVect"><code class="docutils literal notranslate"><span class="pre">rotVectToVect()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ingredient.utils.rotax"><code class="docutils literal notranslate"><span class="pre">rotax()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ingredient">Module contents</a></li>
+</ul>
+</li>
+</ul>
 
   </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cellpack.autopack.html"
+                          title="previous chapter">cellpack.autopack package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cellpack.autopack.interface_objects.html"
+                          title="next chapter">cellpack.autopack.interface_objects package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cellpack.autopack.ingredient.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.interface_objects.html" title="cellpack.autopack.interface_objects package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.html" title="cellpack.autopack package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cellpack.autopack.html" >cellpack.autopack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.ingredient package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
 </html>

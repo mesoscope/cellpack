@@ -1,291 +1,50 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>cellpack.autopack.upy package &mdash; cellPack 1.0.3 documentation</title>
-  
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <title>cellpack.autopack.upy package &#8212; cellPack 1.0.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cellpack.autopack.upy.simularium package" href="cellpack.autopack.upy.simularium.html" />
     <link rel="prev" title="cellpack.autopack.loaders package" href="cellpack.autopack.loaders.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.upy.simularium.html" title="cellpack.autopack.upy.simularium package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.loaders.html" title="cellpack.autopack.loaders package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cellpack.autopack.html" accesskey="U">cellpack.autopack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.upy package</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home"> cellPack
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0.3
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="cellpack.html">cellpack package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#name">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#version">version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example">example:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#options-properties">Options properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#result-file">result_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#enviroonly">EnviroOnly</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#canceldialog">cancelDialog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickrandpt">pickRandPt</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#boundingbox">boundingBox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#computegridparams">computeGridParams</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#windowssize">windowsSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-method">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-gradient">use_gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradients">gradients</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#innergridmethod">innerGridMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-periodicity">use_periodicity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#timer">_timer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#priority">priority</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id162">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-position">partners_position</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-weight">partners_weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#properties">properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#score">score</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#organism">organism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#example-ingredient">example ingredient</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
-</ul>
-</li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">cellPack</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="modules.html">cellpack</a> &raquo;</li>
-        
-          <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
-        
-          <li><a href="cellpack.autopack.html">cellpack.autopack package</a> &raquo;</li>
-        
-      <li>cellpack.autopack.upy package</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/cellpack.autopack.upy.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="cellpack.autopack.upy.simularium.html" class="btn btn-neutral float-right" title="cellpack.autopack.upy.simularium package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-      
-      
-        <a href="cellpack.autopack.loaders.html" class="btn btn-neutral float-left" title="cellpack.autopack.loaders package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-      
-  </div>
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   <section id="cellpack-autopack-upy-package">
 <h1>cellpack.autopack.upy package<a class="headerlink" href="#cellpack-autopack-upy-package" title="Permalink to this heading">¶</a></h1>
@@ -3627,47 +3386,324 @@ If the host is not provide,retrieveHost() will be called to guess the host.</p>
 </section>
 
 
-           </div>
-           
+            <div class="clearer"></div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
         </div>
       </div>
-
-    </section>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">cellpack.autopack.upy package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.upy.colors">cellpack.autopack.upy.colors module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.RedWhiteBlueRamp"><code class="docutils literal notranslate"><span class="pre">RedWhiteBlueRamp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.ThreeColorRamp"><code class="docutils literal notranslate"><span class="pre">ThreeColorRamp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.TwoColorRamp"><code class="docutils literal notranslate"><span class="pre">TwoColorRamp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.create_divergent_color_map_with_scaled_values"><code class="docutils literal notranslate"><span class="pre">create_divergent_color_map_with_scaled_values()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.getRamp"><code class="docutils literal notranslate"><span class="pre">getRamp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.hexToRgb"><code class="docutils literal notranslate"><span class="pre">hexToRgb()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.colors.map_colors"><code class="docutils literal notranslate"><span class="pre">map_colors()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.upy.hostHelper">cellpack.autopack.upy.hostHelper module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper"><code class="docutils literal notranslate"><span class="pre">Helper</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.AddObject"><code class="docutils literal notranslate"><span class="pre">Helper.AddObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.ApplyMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.ApplyMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.BONES"><code class="docutils literal notranslate"><span class="pre">Helper.BONES</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.CAM_OPTIONS"><code class="docutils literal notranslate"><span class="pre">Helper.CAM_OPTIONS</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Circle"><code class="docutils literal notranslate"><span class="pre">Helper.Circle()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Cylinder"><code class="docutils literal notranslate"><span class="pre">Helper.Cylinder()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.CylinderHeadTails"><code class="docutils literal notranslate"><span class="pre">Helper.CylinderHeadTails()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Decompose4x4"><code class="docutils literal notranslate"><span class="pre">Helper.Decompose4x4()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Dodecahedron"><code class="docutils literal notranslate"><span class="pre">Helper.Dodecahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.FixNormals"><code class="docutils literal notranslate"><span class="pre">Helper.FixNormals()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Hexahedron"><code class="docutils literal notranslate"><span class="pre">Helper.Hexahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.IK"><code class="docutils literal notranslate"><span class="pre">Helper.IK</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Icosahedron"><code class="docutils literal notranslate"><span class="pre">Helper.Icosahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.IndexedPolgonsToTriPoints"><code class="docutils literal notranslate"><span class="pre">Helper.IndexedPolgonsToTriPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.JoinsObjects"><code class="docutils literal notranslate"><span class="pre">Helper.JoinsObjects()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.LIGHT_OPTIONS"><code class="docutils literal notranslate"><span class="pre">Helper.LIGHT_OPTIONS</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.MidPoint"><code class="docutils literal notranslate"><span class="pre">Helper.MidPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.ObjectsSelection"><code class="docutils literal notranslate"><span class="pre">Helper.ObjectsSelection()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Octahedron"><code class="docutils literal notranslate"><span class="pre">Helper.Octahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Platonic"><code class="docutils literal notranslate"><span class="pre">Helper.Platonic()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.PointCloudObject"><code class="docutils literal notranslate"><span class="pre">Helper.PointCloudObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Sphere"><code class="docutils literal notranslate"><span class="pre">Helper.Sphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Tetrahedron"><code class="docutils literal notranslate"><span class="pre">Helper.Tetrahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.Text"><code class="docutils literal notranslate"><span class="pre">Helper.Text()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.ToMat"><code class="docutils literal notranslate"><span class="pre">Helper.ToMat()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.ToVec"><code class="docutils literal notranslate"><span class="pre">Helper.ToVec()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addBone"><code class="docutils literal notranslate"><span class="pre">Helper.addBone()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addCameraToScene"><code class="docutils literal notranslate"><span class="pre">Helper.addCameraToScene()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addConstraint"><code class="docutils literal notranslate"><span class="pre">Helper.addConstraint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addLampToScene"><code class="docutils literal notranslate"><span class="pre">Helper.addLampToScene()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMaterial"><code class="docutils literal notranslate"><span class="pre">Helper.addMaterial()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMaterialFromDic"><code class="docutils literal notranslate"><span class="pre">Helper.addMaterialFromDic()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMeshEdge"><code class="docutils literal notranslate"><span class="pre">Helper.addMeshEdge()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMeshEdges"><code class="docutils literal notranslate"><span class="pre">Helper.addMeshEdges()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMeshFace"><code class="docutils literal notranslate"><span class="pre">Helper.addMeshFace()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMeshFaces"><code class="docutils literal notranslate"><span class="pre">Helper.addMeshFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMeshVertice"><code class="docutils literal notranslate"><span class="pre">Helper.addMeshVertice()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addMeshVertices"><code class="docutils literal notranslate"><span class="pre">Helper.addMeshVertices()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.addObjectToScene"><code class="docutils literal notranslate"><span class="pre">Helper.addObjectToScene()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.advance_randpoint_onsphere"><code class="docutils literal notranslate"><span class="pre">Helper.advance_randpoint_onsphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.angle_between_vectors"><code class="docutils literal notranslate"><span class="pre">Helper.angle_between_vectors()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.animationStart"><code class="docutils literal notranslate"><span class="pre">Helper.animationStart()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.animationStop"><code class="docutils literal notranslate"><span class="pre">Helper.animationStop()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.armature"><code class="docutils literal notranslate"><span class="pre">Helper.armature()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.assignMaterial"><code class="docutils literal notranslate"><span class="pre">Helper.assignMaterial()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.assignNewMaterial"><code class="docutils literal notranslate"><span class="pre">Helper.assignNewMaterial()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.box"><code class="docutils literal notranslate"><span class="pre">Helper.box()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.changeColor"><code class="docutils literal notranslate"><span class="pre">Helper.changeColor()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.changeMaterialProperty"><code class="docutils literal notranslate"><span class="pre">Helper.changeMaterialProperty()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.changeObjColorMat"><code class="docutils literal notranslate"><span class="pre">Helper.changeObjColorMat()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.checkIsMesh"><code class="docutils literal notranslate"><span class="pre">Helper.checkIsMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.checkName"><code class="docutils literal notranslate"><span class="pre">Helper.checkName()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.colorMaterial"><code class="docutils literal notranslate"><span class="pre">Helper.colorMaterial()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.colorObject"><code class="docutils literal notranslate"><span class="pre">Helper.colorObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.combineDaeMeshData"><code class="docutils literal notranslate"><span class="pre">Helper.combineDaeMeshData()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.concatObjectMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.concatObjectMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.constraintLookAt"><code class="docutils literal notranslate"><span class="pre">Helper.constraintLookAt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.convertColor"><code class="docutils literal notranslate"><span class="pre">Helper.convertColor()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.createColorsMat"><code class="docutils literal notranslate"><span class="pre">Helper.createColorsMat()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.createMaterial"><code class="docutils literal notranslate"><span class="pre">Helper.createMaterial()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.createSpring"><code class="docutils literal notranslate"><span class="pre">Helper.createSpring()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.createsNmesh"><code class="docutils literal notranslate"><span class="pre">Helper.createsNmesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.deleteChildrens"><code class="docutils literal notranslate"><span class="pre">Helper.deleteChildrens()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.deleteMeshEdges"><code class="docutils literal notranslate"><span class="pre">Helper.deleteMeshEdges()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.deleteMeshFaces"><code class="docutils literal notranslate"><span class="pre">Helper.deleteMeshFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.deleteMeshVertices"><code class="docutils literal notranslate"><span class="pre">Helper.deleteMeshVertices()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.dihedral"><code class="docutils literal notranslate"><span class="pre">Helper.dihedral()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.dodecahedron"><code class="docutils literal notranslate"><span class="pre">Helper.dodecahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.drawGradientLine"><code class="docutils literal notranslate"><span class="pre">Helper.drawGradientLine()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.drawPtCol"><code class="docutils literal notranslate"><span class="pre">Helper.drawPtCol()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.dupliVert"><code class="docutils literal notranslate"><span class="pre">Helper.dupliVert</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.eulerToMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.eulerToMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.fillTriangleColor"><code class="docutils literal notranslate"><span class="pre">Helper.fillTriangleColor()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.findClosestPoint"><code class="docutils literal notranslate"><span class="pre">Helper.findClosestPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.fit_view3D"><code class="docutils literal notranslate"><span class="pre">Helper.fit_view3D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.frameAdvanced"><code class="docutils literal notranslate"><span class="pre">Helper.frameAdvanced()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getA"><code class="docutils literal notranslate"><span class="pre">Helper.getA()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getAllMaterials"><code class="docutils literal notranslate"><span class="pre">Helper.getAllMaterials()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getAngleAxis"><code class="docutils literal notranslate"><span class="pre">Helper.getAngleAxis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getBoxSize"><code class="docutils literal notranslate"><span class="pre">Helper.getBoxSize()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getCenter"><code class="docutils literal notranslate"><span class="pre">Helper.getCenter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getCornerPointCube"><code class="docutils literal notranslate"><span class="pre">Helper.getCornerPointCube()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getCurrentScene"><code class="docutils literal notranslate"><span class="pre">Helper.getCurrentScene()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getCurrentSceneName"><code class="docutils literal notranslate"><span class="pre">Helper.getCurrentSceneName()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getCurrentSelection"><code class="docutils literal notranslate"><span class="pre">Helper.getCurrentSelection()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getFace"><code class="docutils literal notranslate"><span class="pre">Helper.getFace()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getFaceEdges"><code class="docutils literal notranslate"><span class="pre">Helper.getFaceEdges()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getFaceNormalsArea"><code class="docutils literal notranslate"><span class="pre">Helper.getFaceNormalsArea()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getFaces"><code class="docutils literal notranslate"><span class="pre">Helper.getFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getFacesfromV"><code class="docutils literal notranslate"><span class="pre">Helper.getFacesfromV()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getImage"><code class="docutils literal notranslate"><span class="pre">Helper.getImage()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getLayers"><code class="docutils literal notranslate"><span class="pre">Helper.getLayers()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMasterInstance"><code class="docutils literal notranslate"><span class="pre">Helper.getMasterInstance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMaterial"><code class="docutils literal notranslate"><span class="pre">Helper.getMaterial()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMaterialProperty"><code class="docutils literal notranslate"><span class="pre">Helper.getMaterialProperty()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMesh"><code class="docutils literal notranslate"><span class="pre">Helper.getMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMeshEdge"><code class="docutils literal notranslate"><span class="pre">Helper.getMeshEdge()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMeshEdges"><code class="docutils literal notranslate"><span class="pre">Helper.getMeshEdges()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMeshFaces"><code class="docutils literal notranslate"><span class="pre">Helper.getMeshFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMeshNormales"><code class="docutils literal notranslate"><span class="pre">Helper.getMeshNormales()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMeshVertice"><code class="docutils literal notranslate"><span class="pre">Helper.getMeshVertice()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getMeshVertices"><code class="docutils literal notranslate"><span class="pre">Helper.getMeshVertices()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getName"><code class="docutils literal notranslate"><span class="pre">Helper.getName()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getObject"><code class="docutils literal notranslate"><span class="pre">Helper.getObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getObjectName"><code class="docutils literal notranslate"><span class="pre">Helper.getObjectName()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getOrder"><code class="docutils literal notranslate"><span class="pre">Helper.getOrder()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getParticles"><code class="docutils literal notranslate"><span class="pre">Helper.getParticles()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getParticulesPosition"><code class="docutils literal notranslate"><span class="pre">Helper.getParticulesPosition()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getPosUntilRoot"><code class="docutils literal notranslate"><span class="pre">Helper.getPosUntilRoot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getProperty"><code class="docutils literal notranslate"><span class="pre">Helper.getProperty()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getPropertyObject"><code class="docutils literal notranslate"><span class="pre">Helper.getPropertyObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getScale"><code class="docutils literal notranslate"><span class="pre">Helper.getScale()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getSize"><code class="docutils literal notranslate"><span class="pre">Helper.getSize()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getTranslation"><code class="docutils literal notranslate"><span class="pre">Helper.getTranslation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getTubeProperties"><code class="docutils literal notranslate"><span class="pre">Helper.getTubeProperties()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getTubePropertiesMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.getTubePropertiesMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getUV"><code class="docutils literal notranslate"><span class="pre">Helper.getUV()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getUVs"><code class="docutils literal notranslate"><span class="pre">Helper.getUVs()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.getVisibility"><code class="docutils literal notranslate"><span class="pre">Helper.getVisibility()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.get_noise"><code class="docutils literal notranslate"><span class="pre">Helper.get_noise()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.hexahedron"><code class="docutils literal notranslate"><span class="pre">Helper.hexahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.icosahedron"><code class="docutils literal notranslate"><span class="pre">Helper.icosahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.instancesToCollada"><code class="docutils literal notranslate"><span class="pre">Helper.instancesToCollada()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.isSphere"><code class="docutils literal notranslate"><span class="pre">Helper.isSphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.makeTexture"><code class="docutils literal notranslate"><span class="pre">Helper.makeTexture()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.matrixToFacesMesh"><code class="docutils literal notranslate"><span class="pre">Helper.matrixToFacesMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.matrixToVNMesh"><code class="docutils literal notranslate"><span class="pre">Helper.matrixToVNMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.measure_distance"><code class="docutils literal notranslate"><span class="pre">Helper.measure_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.metaballs"><code class="docutils literal notranslate"><span class="pre">Helper.metaballs()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.newEmpty"><code class="docutils literal notranslate"><span class="pre">Helper.newEmpty()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.newInstance"><code class="docutils literal notranslate"><span class="pre">Helper.newInstance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.norm"><code class="docutils literal notranslate"><span class="pre">Helper.norm()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.normal_array"><code class="docutils literal notranslate"><span class="pre">Helper.normal_array()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.normalize"><code class="docutils literal notranslate"><span class="pre">Helper.normalize()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.normalize_v3"><code class="docutils literal notranslate"><span class="pre">Helper.normalize_v3()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.octahedron"><code class="docutils literal notranslate"><span class="pre">Helper.octahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.oneMetaBall"><code class="docutils literal notranslate"><span class="pre">Helper.oneMetaBall()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.particle"><code class="docutils literal notranslate"><span class="pre">Helper.particle()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.pathDeform"><code class="docutils literal notranslate"><span class="pre">Helper.pathDeform()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.plane"><code class="docutils literal notranslate"><span class="pre">Helper.plane()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.progressBar"><code class="docutils literal notranslate"><span class="pre">Helper.progressBar()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.randpoint_onsphere"><code class="docutils literal notranslate"><span class="pre">Helper.randpoint_onsphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.raycast"><code class="docutils literal notranslate"><span class="pre">Helper.raycast()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.reParent"><code class="docutils literal notranslate"><span class="pre">Helper.reParent()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.read"><code class="docutils literal notranslate"><span class="pre">Helper.read()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.readMeshFromFile"><code class="docutils literal notranslate"><span class="pre">Helper.readMeshFromFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.recalc_normals"><code class="docutils literal notranslate"><span class="pre">Helper.recalc_normals()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.reporthook"><code class="docutils literal notranslate"><span class="pre">Helper.reporthook()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.rerieveAxis"><code class="docutils literal notranslate"><span class="pre">Helper.rerieveAxis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.resetProgressBar"><code class="docutils literal notranslate"><span class="pre">Helper.resetProgressBar()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.resetTransformation"><code class="docutils literal notranslate"><span class="pre">Helper.resetTransformation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.restoreEditMode"><code class="docutils literal notranslate"><span class="pre">Helper.restoreEditMode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.retrieveColorMat"><code class="docutils literal notranslate"><span class="pre">Helper.retrieveColorMat()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.rotVectToVect"><code class="docutils literal notranslate"><span class="pre">Helper.rotVectToVect()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.rotateObj"><code class="docutils literal notranslate"><span class="pre">Helper.rotateObj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.rotatePoint"><code class="docutils literal notranslate"><span class="pre">Helper.rotatePoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.rotate_about_axis"><code class="docutils literal notranslate"><span class="pre">Helper.rotate_about_axis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.rotation_matrix"><code class="docutils literal notranslate"><span class="pre">Helper.rotation_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.saveDejaVuMesh"><code class="docutils literal notranslate"><span class="pre">Helper.saveDejaVuMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.saveObjMesh"><code class="docutils literal notranslate"><span class="pre">Helper.saveObjMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.scalar"><code class="docutils literal notranslate"><span class="pre">Helper.scalar()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.scaleObj"><code class="docutils literal notranslate"><span class="pre">Helper.scaleObj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.selectEdge"><code class="docutils literal notranslate"><span class="pre">Helper.selectEdge()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.selectEdges"><code class="docutils literal notranslate"><span class="pre">Helper.selectEdges()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.selectFace"><code class="docutils literal notranslate"><span class="pre">Helper.selectFace()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.selectFaces"><code class="docutils literal notranslate"><span class="pre">Helper.selectFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.selectVertice"><code class="docutils literal notranslate"><span class="pre">Helper.selectVertice()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.selectVertices"><code class="docutils literal notranslate"><span class="pre">Helper.selectVertices()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setCurrentSelection"><code class="docutils literal notranslate"><span class="pre">Helper.setCurrentSelection()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setFrame"><code class="docutils literal notranslate"><span class="pre">Helper.setFrame()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setKeyFrame"><code class="docutils literal notranslate"><span class="pre">Helper.setKeyFrame()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setLayers"><code class="docutils literal notranslate"><span class="pre">Helper.setLayers()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setMeshEdge"><code class="docutils literal notranslate"><span class="pre">Helper.setMeshEdge()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setMeshEdges"><code class="docutils literal notranslate"><span class="pre">Helper.setMeshEdges()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setMeshFace"><code class="docutils literal notranslate"><span class="pre">Helper.setMeshFace()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setMeshFaces"><code class="docutils literal notranslate"><span class="pre">Helper.setMeshFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setMeshVertice"><code class="docutils literal notranslate"><span class="pre">Helper.setMeshVertice()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setMeshVertices"><code class="docutils literal notranslate"><span class="pre">Helper.setMeshVertices()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setName"><code class="docutils literal notranslate"><span class="pre">Helper.setName()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setObjectMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.setObjectMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setParticulesPosition"><code class="docutils literal notranslate"><span class="pre">Helper.setParticulesPosition()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setProperty"><code class="docutils literal notranslate"><span class="pre">Helper.setProperty()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setPropertyObject"><code class="docutils literal notranslate"><span class="pre">Helper.setPropertyObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setRigidBody"><code class="docutils literal notranslate"><span class="pre">Helper.setRigidBody()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setSoftBody"><code class="docutils literal notranslate"><span class="pre">Helper.setSoftBody()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setTransformation"><code class="docutils literal notranslate"><span class="pre">Helper.setTransformation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setTranslation"><code class="docutils literal notranslate"><span class="pre">Helper.setTranslation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setUV"><code class="docutils literal notranslate"><span class="pre">Helper.setUV()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setUVs"><code class="docutils literal notranslate"><span class="pre">Helper.setUVs()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.setViewport"><code class="docutils literal notranslate"><span class="pre">Helper.setViewport()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.spline"><code class="docutils literal notranslate"><span class="pre">Helper.spline()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.testForEscape"><code class="docutils literal notranslate"><span class="pre">Helper.testForEscape()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.tetrahedron"><code class="docutils literal notranslate"><span class="pre">Helper.tetrahedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.toggle"><code class="docutils literal notranslate"><span class="pre">Helper.toggle()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.toggleDisplay"><code class="docutils literal notranslate"><span class="pre">Helper.toggleDisplay()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.toggleEditMode"><code class="docutils literal notranslate"><span class="pre">Helper.toggleEditMode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.toggleXray"><code class="docutils literal notranslate"><span class="pre">Helper.toggleXray()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.translateObj"><code class="docutils literal notranslate"><span class="pre">Helper.translateObj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.transposeMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.transposeMatrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.triangulate"><code class="docutils literal notranslate"><span class="pre">Helper.triangulate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.triangulateFace"><code class="docutils literal notranslate"><span class="pre">Helper.triangulateFace()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.triangulateFaceArray"><code class="docutils literal notranslate"><span class="pre">Helper.triangulateFaceArray()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.unit_vector"><code class="docutils literal notranslate"><span class="pre">Helper.unit_vector()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.update"><code class="docutils literal notranslate"><span class="pre">Helper.update()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updateArmature"><code class="docutils literal notranslate"><span class="pre">Helper.updateArmature()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updateBox"><code class="docutils literal notranslate"><span class="pre">Helper.updateBox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updateMasterInstance"><code class="docutils literal notranslate"><span class="pre">Helper.updateMasterInstance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updateParticles"><code class="docutils literal notranslate"><span class="pre">Helper.updateParticles()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updatePathDeform"><code class="docutils literal notranslate"><span class="pre">Helper.updatePathDeform()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updateSpring"><code class="docutils literal notranslate"><span class="pre">Helper.updateSpring()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.updateTubeObjs"><code class="docutils literal notranslate"><span class="pre">Helper.updateTubeObjs()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.update_spline"><code class="docutils literal notranslate"><span class="pre">Helper.update_spline()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.vector_norm"><code class="docutils literal notranslate"><span class="pre">Helper.vector_norm()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.write"><code class="docutils literal notranslate"><span class="pre">Helper.write()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.writeDX"><code class="docutils literal notranslate"><span class="pre">Helper.writeDX()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.writeMeshToFile"><code class="docutils literal notranslate"><span class="pre">Helper.writeMeshToFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.Helper.writeToFile"><code class="docutils literal notranslate"><span class="pre">Helper.writeToFile()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.dot"><code class="docutils literal notranslate"><span class="pre">dot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.vcross"><code class="docutils literal notranslate"><span class="pre">vcross()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.vdiff"><code class="docutils literal notranslate"><span class="pre">vdiff()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.vdistance"><code class="docutils literal notranslate"><span class="pre">vdistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.vlen"><code class="docutils literal notranslate"><span class="pre">vlen()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.hostHelper.vnorm"><code class="docutils literal notranslate"><span class="pre">vnorm()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.upy">Module contents</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.upy.getHClass"><code class="docutils literal notranslate"><span class="pre">getHClass()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.getHelperClass"><code class="docutils literal notranslate"><span class="pre">getHelperClass()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.upy.retrieveHost"><code class="docutils literal notranslate"><span class="pre">retrieveHost()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
   </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cellpack.autopack.loaders.html"
+                          title="previous chapter">cellpack.autopack.loaders package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cellpack.autopack.upy.simularium.html"
+                          title="next chapter">cellpack.autopack.upy.simularium package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cellpack.autopack.upy.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.upy.simularium.html" title="cellpack.autopack.upy.simularium package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.loaders.html" title="cellpack.autopack.loaders package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cellpack.autopack.html" >cellpack.autopack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.upy package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
 </html>

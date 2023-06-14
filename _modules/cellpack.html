@@ -1,271 +1,39 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>cellpack &mdash; cellPack 1.0.3 documentation</title>
-  
 
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cellpack &#8212; cellPack 1.0.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> cellPack
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0.3
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#stable-release">Stable release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#from-sources">From sources</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Package modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../cellpack.html">cellpack package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../cellpack.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cellpack.autopack.html">cellpack.autopack package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cellpack.bin.html">cellpack.bin package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cellpack.html#module-cellpack">Module contents</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#name">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#version">version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../recipe-schema.html#example">example:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../recipe-schema.html#options-properties">Options properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#result-file">result_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#enviroonly">EnviroOnly</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#canceldialog">cancelDialog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#pickrandpt">pickRandPt</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#boundingbox">boundingBox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#computegridparams">computeGridParams</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#windowssize">windowsSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#place-method">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#use-gradient">use_gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#gradients">gradients</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#use-periodicity">use_periodicity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#timer">_timer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#count">count</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#radii">radii</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#positions">positions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#positions2">positions2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#priority">priority</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#pdb">pdb</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#color">color</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#meshfile">meshFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#meshname">meshName</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#principal-vector">principal_vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#type">type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#max-jitter">max_jitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#rotation-axis">rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#rotation-range">rotation_range</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#id162">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#packing-mode">packing_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#gradient">gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#proba-binding">proba_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#is-attractor">is_attractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#weight">weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#partners-name">partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#partners-position">partners_position</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#partners-weight">partners_weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#properties">properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#score">score</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#organism">organism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../recipe-schema.html#example-ingredient">example ingredient</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../contributing.html#get-started">Get Started!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contributing.html#deploying">Deploying</a></li>
-</ul>
-</li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">cellPack</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="index.html">Module code</a> &raquo;</li>
-        
-      <li>cellpack</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   <h1>Source code for cellpack</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -285,47 +53,43 @@
     <span class="k">return</span> <span class="n">__version__</span></div>
 </pre></div>
 
-           </div>
-           
+            <div class="clearer"></div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
 </html>

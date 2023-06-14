@@ -1,291 +1,50 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>cellpack.autopack.interface_objects package &mdash; cellPack 1.0.3 documentation</title>
-  
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <title>cellpack.autopack.interface_objects package &#8212; cellPack 1.0.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cellpack.autopack.loaders package" href="cellpack.autopack.loaders.html" />
     <link rel="prev" title="cellpack.autopack.ingredient package" href="cellpack.autopack.ingredient.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.loaders.html" title="cellpack.autopack.loaders package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.ingredient.html" title="cellpack.autopack.ingredient package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cellpack.autopack.html" accesskey="U">cellpack.autopack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.interface_objects package</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home"> cellPack
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0.3
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="cellpack.html">cellpack package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#name">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#version">version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example">example:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#options-properties">Options properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#result-file">result_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#enviroonly">EnviroOnly</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#canceldialog">cancelDialog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickrandpt">pickRandPt</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#boundingbox">boundingBox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#computegridparams">computeGridParams</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#windowssize">windowsSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-method">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-gradient">use_gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradients">gradients</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#innergridmethod">innerGridMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-periodicity">use_periodicity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#timer">_timer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#priority">priority</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id162">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-position">partners_position</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-weight">partners_weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#properties">properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#score">score</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#organism">organism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#example-ingredient">example ingredient</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
-</ul>
-</li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">cellPack</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="modules.html">cellpack</a> &raquo;</li>
-        
-          <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
-        
-          <li><a href="cellpack.autopack.html">cellpack.autopack package</a> &raquo;</li>
-        
-      <li>cellpack.autopack.interface_objects package</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/cellpack.autopack.interface_objects.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="cellpack.autopack.loaders.html" class="btn btn-neutral float-right" title="cellpack.autopack.loaders package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-      
-      
-        <a href="cellpack.autopack.ingredient.html" class="btn btn-neutral float-left" title="cellpack.autopack.ingredient package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-      
-  </div>
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   <section id="cellpack-autopack-interface-objects-package">
 <h1>cellpack.autopack.interface_objects package<a class="headerlink" href="#cellpack-autopack-interface-objects-package" title="Permalink to this heading">¶</a></h1>
@@ -679,47 +438,182 @@ packing: Sphere tree file or sphere tree data</p>
 </section>
 
 
-           </div>
-           
+            <div class="clearer"></div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
         </div>
       </div>
-
-    </section>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">cellpack.autopack.interface_objects package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects.default_values">cellpack.autopack.interface_objects.default_values module</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects.gradient_data">cellpack.autopack.interface_objects.gradient_data module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData"><code class="docutils literal notranslate"><span class="pre">GradientData</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values"><code class="docutils literal notranslate"><span class="pre">GradientData.default_values</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties"><code class="docutils literal notranslate"><span class="pre">GradientData.set_mode_properties()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_gradient_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_mode_settings()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes"><code class="docutils literal notranslate"><span class="pre">GradientModes</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.RADIAL"><code class="docutils literal notranslate"><span class="pre">GradientModes.RADIAL</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.SURFACE"><code class="docutils literal notranslate"><span class="pre">GradientModes.SURFACE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.VECTOR"><code class="docutils literal notranslate"><span class="pre">GradientModes.VECTOR</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.X"><code class="docutils literal notranslate"><span class="pre">GradientModes.X</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Y"><code class="docutils literal notranslate"><span class="pre">GradientModes.Y</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Z"><code class="docutils literal notranslate"><span class="pre">GradientModes.Z</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions"><code class="docutils literal notranslate"><span class="pre">ModeOptions</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.center"><code class="docutils literal notranslate"><span class="pre">ModeOptions.center</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.direction"><code class="docutils literal notranslate"><span class="pre">ModeOptions.direction</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.gblob"><code class="docutils literal notranslate"><span class="pre">ModeOptions.gblob</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.object"><code class="docutils literal notranslate"><span class="pre">ModeOptions.object</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.radius"><code class="docutils literal notranslate"><span class="pre">ModeOptions.radius</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.scale_distance_between"><code class="docutils literal notranslate"><span class="pre">ModeOptions.scale_distance_between</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes"><code class="docutils literal notranslate"><span class="pre">PickModes</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.BINARY"><code class="docutils literal notranslate"><span class="pre">PickModes.BINARY</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.LINEAR"><code class="docutils literal notranslate"><span class="pre">PickModes.LINEAR</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MAX"><code class="docutils literal notranslate"><span class="pre">PickModes.MAX</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MIN"><code class="docutils literal notranslate"><span class="pre">PickModes.MIN</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.REG"><code class="docutils literal notranslate"><span class="pre">PickModes.REG</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.RND"><code class="docutils literal notranslate"><span class="pre">PickModes.RND</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.SUB"><code class="docutils literal notranslate"><span class="pre">PickModes.SUB</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes"><code class="docutils literal notranslate"><span class="pre">WeightModes</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE"><code class="docutils literal notranslate"><span class="pre">WeightModes.CUBE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR"><code class="docutils literal notranslate"><span class="pre">WeightModes.LINEAR</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE"><code class="docutils literal notranslate"><span class="pre">WeightModes.SQUARE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects.ingredient_types">cellpack.autopack.interface_objects.ingredient_types module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.GROW"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.GROW</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MESH"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.MESH</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_CYLINDER"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.MULTI_CYLINDER</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_SPHERE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.MULTI_SPHERE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CUBE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.SINGLE_CUBE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CYLINDER"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.SINGLE_CYLINDER</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_SPHERE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.SINGLE_SPHERE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects.meta_enum">cellpack.autopack.interface_objects.meta_enum module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="docutils literal notranslate"><span class="pre">MetaEnum</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum.is_member"><code class="docutils literal notranslate"><span class="pre">MetaEnum.is_member()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum.values"><code class="docutils literal notranslate"><span class="pre">MetaEnum.values()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects.partners">cellpack.autopack.interface_objects.partners module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partner"><code class="docutils literal notranslate"><span class="pre">Partner</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partner.distanceFunction"><code class="docutils literal notranslate"><span class="pre">Partner.distanceFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partner.get_point"><code class="docutils literal notranslate"><span class="pre">Partner.get_point()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partner.set_ingredient"><code class="docutils literal notranslate"><span class="pre">Partner.set_ingredient()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partners"><code class="docutils literal notranslate"><span class="pre">Partners</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partners.add_partner"><code class="docutils literal notranslate"><span class="pre">Partners.add_partner()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name"><code class="docutils literal notranslate"><span class="pre">Partners.get_partner_by_ingr_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.partners.Partners.is_partner"><code class="docutils literal notranslate"><span class="pre">Partners.is_partner()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects.representations">cellpack.autopack.interface_objects.representations module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations"><code class="docutils literal notranslate"><span class="pre">Representations</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.DATABASE"><code class="docutils literal notranslate"><span class="pre">Representations.DATABASE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_active"><code class="docutils literal notranslate"><span class="pre">Representations.get_active()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_active_data"><code class="docutils literal notranslate"><span class="pre">Representations.get_active_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position"><code class="docutils literal notranslate"><span class="pre">Representations.get_adjusted_position()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_deepest_level"><code class="docutils literal notranslate"><span class="pre">Representations.get_deepest_level()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_format"><code class="docutils literal notranslate"><span class="pre">Representations.get_mesh_format()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_name"><code class="docutils literal notranslate"><span class="pre">Representations.get_mesh_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_path"><code class="docutils literal notranslate"><span class="pre">Representations.get_mesh_path()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius"><code class="docutils literal notranslate"><span class="pre">Representations.get_min_max_radius()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_pdb_path"><code class="docutils literal notranslate"><span class="pre">Representations.get_pdb_path()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_positions"><code class="docutils literal notranslate"><span class="pre">Representations.get_positions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.get_radii"><code class="docutils literal notranslate"><span class="pre">Representations.get_radii()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.has_mesh"><code class="docutils literal notranslate"><span class="pre">Representations.has_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.has_pdb"><code class="docutils literal notranslate"><span class="pre">Representations.has_pdb()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.set_active"><code class="docutils literal notranslate"><span class="pre">Representations.set_active()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions"><code class="docutils literal notranslate"><span class="pre">Representations.set_sphere_positions()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.interface_objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
 
   </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cellpack.autopack.ingredient.html"
+                          title="previous chapter">cellpack.autopack.ingredient package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cellpack.autopack.loaders.html"
+                          title="next chapter">cellpack.autopack.loaders package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cellpack.autopack.interface_objects.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.loaders.html" title="cellpack.autopack.loaders package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.ingredient.html" title="cellpack.autopack.ingredient package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="cellpack.autopack.html" >cellpack.autopack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.interface_objects package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
 </html>

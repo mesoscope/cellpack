@@ -1,289 +1,49 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>cellpack.autopack package &mdash; cellPack 1.0.3 documentation</title>
-  
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <title>cellpack.autopack package &#8212; cellPack 1.0.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cellpack.autopack.ingredient package" href="cellpack.autopack.ingredient.html" />
     <link rel="prev" title="cellpack package" href="cellpack.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.ingredient.html" title="cellpack.autopack.ingredient package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.html" title="cellpack package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" accesskey="U">cellpack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack package</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="index.html" class="icon icon-home"> cellPack
-          
-
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0.3
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="cellpack.html">cellpack package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">cellpack.autopack package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#name">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#version">version</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example">example:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#options-properties">Options properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#result-file">result_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#enviroonly">EnviroOnly</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#canceldialog">cancelDialog</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickrandpt">pickRandPt</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#boundingbox">boundingBox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#computegridparams">computeGridParams</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#windowssize">windowsSize</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-method">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-gradient">use_gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradients">gradients</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#innergridmethod">innerGridMethod</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-periodicity">use_periodicity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#timer">_timer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#priority">priority</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id162">place_method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-position">partners_position</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-weight">partners_weight</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#properties">properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#score">score</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#organism">organism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#example-ingredient">example ingredient</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
-</ul>
-</li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">cellPack</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="modules.html">cellpack</a> &raquo;</li>
-        
-          <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
-        
-      <li>cellpack.autopack package</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="_sources/cellpack.autopack.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="cellpack.autopack.ingredient.html" class="btn btn-neutral float-right" title="cellpack.autopack.ingredient package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-      
-      
-        <a href="cellpack.html" class="btn btn-neutral float-left" title="cellpack package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-      
-  </div>
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
             
   <section id="cellpack-autopack-package">
 <h1>cellpack.autopack package<a class="headerlink" href="#cellpack-autopack-package" title="Permalink to this heading">¶</a></h1>
@@ -2212,7 +1972,7 @@ Checks if the object or comp is a reference in the nesting regions, and replaces
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data">
-<span class="sig-name descname"><span class="pre">get_reference_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_or_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.get_reference_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_reference_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_or_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.get_reference_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the db data for a reference, and the key if it exists.
 Key –&gt; the name of a composition
 Dict –&gt; the object data</p>
@@ -2238,6 +1998,12 @@ Restructure the local data to match the db data.</p>
 To determine whether the composition data already exists or if it needs to be written to the database.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.update_reference">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">referring_comp_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_comp_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_in_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.update_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.update_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update comp references in the recipe</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2259,12 +2025,6 @@ To determine whether the composition data already exists or if it needs to be wr
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBRecipeHandler.prep_data_for_db">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prep_data_for_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBRecipeHandler.prep_data_for_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.prep_data_for_db" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively convert data to a format that can be written to the database.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBRecipeHandler.update_reference">
-<span class="sig-name descname"><span class="pre">update_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composition_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">referring_comp_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_comp_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_in_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBRecipeHandler.update_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.update_reference" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update comp references in the recipe</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3012,6 +2772,11 @@ listingredient influenced</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.db_name">
+<span class="sig-name descname"><span class="pre">db_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.db_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.db_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">doc_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.doc_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -3039,6 +2804,11 @@ listingredient influenced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_ref">
 <span class="sig-name descname"><span class="pre">get_doc_by_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.get_doc_by_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_ref" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.get_path_from_ref">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_path_from_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.get_path_from_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_path_from_ref" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5632,47 +5402,870 @@ destination: str</p>
 </section>
 
 
-           </div>
-           
+            <div class="clearer"></div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
         </div>
       </div>
-
-    </section>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">cellpack.autopack package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Analysis">cellpack.autopack.Analysis module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis"><code class="docutils literal notranslate"><span class="pre">Analysis</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_2D"><code class="docutils literal notranslate"><span class="pre">Analysis.PairCorrelationFunction_2D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_3D"><code class="docutils literal notranslate"><span class="pre">Analysis.PairCorrelationFunction_3D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.add_ingredient_positions_to_plot"><code class="docutils literal notranslate"><span class="pre">Analysis.add_ingredient_positions_to_plot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.build_grid"><code class="docutils literal notranslate"><span class="pre">Analysis.build_grid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calcDistanceMatrixFastEuclidean2"><code class="docutils literal notranslate"><span class="pre">Analysis.calcDistanceMatrixFastEuclidean2()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calc_and_save_correlations"><code class="docutils literal notranslate"><span class="pre">Analysis.calc_and_save_correlations()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calc_avg_similarity_values_for_dim"><code class="docutils literal notranslate"><span class="pre">Analysis.calc_avg_similarity_values_for_dim()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calc_similarity_df"><code class="docutils literal notranslate"><span class="pre">Analysis.calc_similarity_df()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.cartesian_to_sph"><code class="docutils literal notranslate"><span class="pre">Analysis.cartesian_to_sph()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.combine_results_from_ingredients"><code class="docutils literal notranslate"><span class="pre">Analysis.combine_results_from_ingredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.combine_results_from_seeds"><code class="docutils literal notranslate"><span class="pre">Analysis.combine_results_from_seeds()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.correlation"><code class="docutils literal notranslate"><span class="pre">Analysis.correlation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.create_report"><code class="docutils literal notranslate"><span class="pre">Analysis.create_report()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.displayDistance"><code class="docutils literal notranslate"><span class="pre">Analysis.displayDistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.displayDistanceCube"><code class="docutils literal notranslate"><span class="pre">Analysis.displayDistanceCube()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.displayDistancePlane"><code class="docutils literal notranslate"><span class="pre">Analysis.displayDistancePlane()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.doloop"><code class="docutils literal notranslate"><span class="pre">Analysis.doloop()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.flush"><code class="docutils literal notranslate"><span class="pre">Analysis.flush()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getAreaShell"><code class="docutils literal notranslate"><span class="pre">Analysis.getAreaShell()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getAxeValue"><code class="docutils literal notranslate"><span class="pre">Analysis.getAxeValue()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getAxesValues"><code class="docutils literal notranslate"><span class="pre">Analysis.getAxesValues()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getClosestDistance"><code class="docutils literal notranslate"><span class="pre">Analysis.getClosestDistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getDistanceFrom"><code class="docutils literal notranslate"><span class="pre">Analysis.getDistanceFrom()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getHaltonUnique"><code class="docutils literal notranslate"><span class="pre">Analysis.getHaltonUnique()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getPositionsFromObject"><code class="docutils literal notranslate"><span class="pre">Analysis.getPositionsFromObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getPositionsFromResFile"><code class="docutils literal notranslate"><span class="pre">Analysis.getPositionsFromResFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getVolumeShell"><code class="docutils literal notranslate"><span class="pre">Analysis.getVolumeShell()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_dict_from_glob"><code class="docutils literal notranslate"><span class="pre">Analysis.get_dict_from_glob()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_ingredient_key_from_object_or_comp_name"><code class="docutils literal notranslate"><span class="pre">Analysis.get_ingredient_key_from_object_or_comp_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_ingredient_radii"><code class="docutils literal notranslate"><span class="pre">Analysis.get_ingredient_radii()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_list_of_dims"><code class="docutils literal notranslate"><span class="pre">Analysis.get_list_of_dims()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_minimum_expected_distance_from_recipe"><code class="docutils literal notranslate"><span class="pre">Analysis.get_minimum_expected_distance_from_recipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_number_of_ingredients_packed"><code class="docutils literal notranslate"><span class="pre">Analysis.get_number_of_ingredients_packed()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_obj_dict"><code class="docutils literal notranslate"><span class="pre">Analysis.get_obj_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_packed_minimum_distance"><code class="docutils literal notranslate"><span class="pre">Analysis.get_packed_minimum_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_parametrized_representation"><code class="docutils literal notranslate"><span class="pre">Analysis.get_parametrized_representation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_partner_pair_dict"><code class="docutils literal notranslate"><span class="pre">Analysis.get_partner_pair_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_xyz_dict_from_all_pos_dict"><code class="docutils literal notranslate"><span class="pre">Analysis.get_xyz_dict_from_all_pos_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.grabResultFromJSON"><code class="docutils literal notranslate"><span class="pre">Analysis.grabResultFromJSON()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.grabResultFromTXT"><code class="docutils literal notranslate"><span class="pre">Analysis.grabResultFromTXT()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.histo"><code class="docutils literal notranslate"><span class="pre">Analysis.histo()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.loadJSON"><code class="docutils literal notranslate"><span class="pre">Analysis.loadJSON()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.merge"><code class="docutils literal notranslate"><span class="pre">Analysis.merge()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.one_exp"><code class="docutils literal notranslate"><span class="pre">Analysis.one_exp()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.pack"><code class="docutils literal notranslate"><span class="pre">Analysis.pack()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot"><code class="docutils literal notranslate"><span class="pre">Analysis.plot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plotNResult2D"><code class="docutils literal notranslate"><span class="pre">Analysis.plotNResult2D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_and_save_similarity_heatmaps"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_and_save_similarity_heatmaps()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_distance_distribution"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_distance_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_occurence_distribution"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_occurence_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_one_result_2d"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_one_result_2d()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_one_result_3D"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_one_result_3D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_position_distribution"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_position_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_position_distribution_total"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_position_distribution_total()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.process_ingredients_in_recipe"><code class="docutils literal notranslate"><span class="pre">Analysis.process_ingredients_in_recipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rdf"><code class="docutils literal notranslate"><span class="pre">Analysis.rdf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rdf_2d"><code class="docutils literal notranslate"><span class="pre">Analysis.rdf_2d()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rdf_3d"><code class="docutils literal notranslate"><span class="pre">Analysis.rdf_3d()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rectangle_circle_area"><code class="docutils literal notranslate"><span class="pre">Analysis.rectangle_circle_area()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.ripley"><code class="docutils literal notranslate"><span class="pre">Analysis.ripley()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_analysis_workflow"><code class="docutils literal notranslate"><span class="pre">Analysis.run_analysis_workflow()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_distance_analysis"><code class="docutils literal notranslate"><span class="pre">Analysis.run_distance_analysis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_partner_analysis"><code class="docutils literal notranslate"><span class="pre">Analysis.run_partner_analysis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_similarity_analysis"><code class="docutils literal notranslate"><span class="pre">Analysis.run_similarity_analysis()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.save_array_to_file"><code class="docutils literal notranslate"><span class="pre">Analysis.save_array_to_file()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.save_csv"><code class="docutils literal notranslate"><span class="pre">Analysis.save_csv()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.save_spilr_heatmap"><code class="docutils literal notranslate"><span class="pre">Analysis.save_spilr_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.set_ingredient_color"><code class="docutils literal notranslate"><span class="pre">Analysis.set_ingredient_color()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.simpleplot"><code class="docutils literal notranslate"><span class="pre">Analysis.simpleplot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.update_crosswise_distances"><code class="docutils literal notranslate"><span class="pre">Analysis.update_crosswise_distances()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.update_distance_distribution_dictionaries"><code class="docutils literal notranslate"><span class="pre">Analysis.update_distance_distribution_dictionaries()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.writeJSON"><code class="docutils literal notranslate"><span class="pre">Analysis.writeJSON()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.BaseGrid">cellpack.autopack.BaseGrid module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid"><code class="docutils literal notranslate"><span class="pre">BaseGrid</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.cartesian"><code class="docutils literal notranslate"><span class="pre">BaseGrid.cartesian()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume"><code class="docutils literal notranslate"><span class="pre">BaseGrid.computeExteriorVolume()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.computeGridNumberOfPoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.computeGridNumberOfPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.computeVolume"><code class="docutils literal notranslate"><span class="pre">BaseGrid.computeVolume()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.create_grid_point_positions"><code class="docutils literal notranslate"><span class="pre">BaseGrid.create_grid_point_positions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getCenter"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getCenter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getClosestFreeGridPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getClosestGridPoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getClosestGridPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getDiagonal"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getDiagonal()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getIJK"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getIJK()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointFrom3D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCube"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointsInCube()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCubeFillBB"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointsInCubeFillBB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointsInSphere"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointsInSphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getPositionPeridocity"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPositionPeridocity()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.getRadius"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getRadius()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.is_point_inside_bb"><code class="docutils literal notranslate"><span class="pre">BaseGrid.is_point_inside_bb()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.removeFreePoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points"><code class="docutils literal notranslate"><span class="pre">BaseGrid.reorder_free_points()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.reset"><code class="docutils literal notranslate"><span class="pre">BaseGrid.reset()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.restore"><code class="docutils literal notranslate"><span class="pre">BaseGrid.restore()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.save"><code class="docutils literal notranslate"><span class="pre">BaseGrid.save()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtsBht"><code class="docutils literal notranslate"><span class="pre">BaseGrid.set_surfPtsBht()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht"><code class="docutils literal notranslate"><span class="pre">BaseGrid.set_surfPtscht()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.setup"><code class="docutils literal notranslate"><span class="pre">BaseGrid.setup()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity"><code class="docutils literal notranslate"><span class="pre">BaseGrid.setupBoundaryPeriodicity()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.slow_box_fill"><code class="docutils literal notranslate"><span class="pre">BaseGrid.slow_box_fill()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.test_points_in_bb"><code class="docutils literal notranslate"><span class="pre">BaseGrid.test_points_in_bb()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid.updateDistances"><code class="docutils literal notranslate"><span class="pre">BaseGrid.updateDistances()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.HaltonGrid"><code class="docutils literal notranslate"><span class="pre">HaltonGrid</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.create3DPointLookup()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.HaltonGrid.getNBgridPoints"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.getNBgridPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.HaltonGrid.getPointFrom3D"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.getPointFrom3D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.HaltonGrid.getScale"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.getScale()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.BaseGrid.gridPoint"><code class="docutils literal notranslate"><span class="pre">gridPoint</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Compartment">cellpack.autopack.Compartment module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment"><code class="docutils literal notranslate"><span class="pre">Compartment</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGridEnviroOnly"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGridEnviroOnly()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_bhtree"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_bhtree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_binvox"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_binvox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_box"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_box()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_kevin"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_kevin()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_multisdf"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_multisdf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_pyray"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_pyray()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_ray"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_ray()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_scanline"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_scanline()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_trimesh"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_trimesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_utsdf"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_utsdf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.addMeshRB"><code class="docutils literal notranslate"><span class="pre">Compartment.addMeshRB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.addShapeRB"><code class="docutils literal notranslate"><span class="pre">Compartment.addShapeRB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.buildMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.buildMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.buildSphere"><code class="docutils literal notranslate"><span class="pre">Compartment.buildSphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.build_grid_sphere"><code class="docutils literal notranslate"><span class="pre">Compartment.build_grid_sphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.checkPointInsideBB"><code class="docutils literal notranslate"><span class="pre">Compartment.checkPointInsideBB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.compute_volume_and_set_count"><code class="docutils literal notranslate"><span class="pre">Compartment.compute_volume_and_set_count()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">Compartment.create3DPointLookup()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.createSurfacePoints"><code class="docutils literal notranslate"><span class="pre">Compartment.createSurfacePoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.create_rbnode"><code class="docutils literal notranslate"><span class="pre">Compartment.create_rbnode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.extendGridArrays"><code class="docutils literal notranslate"><span class="pre">Compartment.extendGridArrays()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.filter_surface_pts_to_fill_box"><code class="docutils literal notranslate"><span class="pre">Compartment.filter_surface_pts_to_fill_box()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.find_nearest"><code class="docutils literal notranslate"><span class="pre">Compartment.find_nearest()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getBoundingBox"><code class="docutils literal notranslate"><span class="pre">Compartment.getBoundingBox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getCenter"><code class="docutils literal notranslate"><span class="pre">Compartment.getCenter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getFaceNormals"><code class="docutils literal notranslate"><span class="pre">Compartment.getFaceNormals()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getFacesNfromV"><code class="docutils literal notranslate"><span class="pre">Compartment.getFacesNfromV()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getInterpolatedNormal"><code class="docutils literal notranslate"><span class="pre">Compartment.getInterpolatedNormal()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.getMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getMinMaxProteinSize"><code class="docutils literal notranslate"><span class="pre">Compartment.getMinMaxProteinSize()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getRadius"><code class="docutils literal notranslate"><span class="pre">Compartment.getRadius()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSizeXYZ"><code class="docutils literal notranslate"><span class="pre">Compartment.getSizeXYZ()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPanda"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPointsPanda()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPandaRay"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPointsPandaRay()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_kevin"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints_kevin()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints_sdf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf_interpolate"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints_sdf_interpolate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getSurfacePoint"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfacePoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getVNfromF"><code class="docutils literal notranslate"><span class="pre">Compartment.getVNfromF()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.getVertexNormals"><code class="docutils literal notranslate"><span class="pre">Compartment.getVertexNormals()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.get_bbox"><code class="docutils literal notranslate"><span class="pre">Compartment.get_bbox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.get_normal_for_point"><code class="docutils literal notranslate"><span class="pre">Compartment.get_normal_for_point()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.get_rb_model"><code class="docutils literal notranslate"><span class="pre">Compartment.get_rb_model()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.get_surface_distances"><code class="docutils literal notranslate"><span class="pre">Compartment.get_surface_distances()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.inBox"><code class="docutils literal notranslate"><span class="pre">Compartment.inBox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.inGrid"><code class="docutils literal notranslate"><span class="pre">Compartment.inGrid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.initialize_shape"><code class="docutils literal notranslate"><span class="pre">Compartment.initialize_shape()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.is_point_inside_mesh"><code class="docutils literal notranslate"><span class="pre">Compartment.is_point_inside_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.prepare_buildgrid_box"><code class="docutils literal notranslate"><span class="pre">Compartment.prepare_buildgrid_box()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.printFillInfo"><code class="docutils literal notranslate"><span class="pre">Compartment.printFillInfo()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.readGridFromFile"><code class="docutils literal notranslate"><span class="pre">Compartment.readGridFromFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.reset"><code class="docutils literal notranslate"><span class="pre">Compartment.reset()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.saveGridToFile"><code class="docutils literal notranslate"><span class="pre">Compartment.saveGridToFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.setCount"><code class="docutils literal notranslate"><span class="pre">Compartment.setCount()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.setGeomFaces"><code class="docutils literal notranslate"><span class="pre">Compartment.setGeomFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.setInnerRecipe"><code class="docutils literal notranslate"><span class="pre">Compartment.setInnerRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.setMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.setMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.setNumber"><code class="docutils literal notranslate"><span class="pre">Compartment.setNumber()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.setSurfaceRecipe"><code class="docutils literal notranslate"><span class="pre">Compartment.setSurfaceRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.Compartment.transformMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.transformMesh()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList"><code class="docutils literal notranslate"><span class="pre">CompartmentList</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList.add_compartment"><code class="docutils literal notranslate"><span class="pre">CompartmentList.add_compartment()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.DBRecipeHandler">cellpack.autopack.DBRecipeHandler module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc"><code class="docutils literal notranslate"><span class="pre">CompositionDoc</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.DEFAULT_VALUES"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.DEFAULT_VALUES</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.SHALLOW_MATCH"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.SHALLOW_MATCH</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.as_dict"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.as_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.check_and_replace_references"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.check_and_replace_references()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.get_reference_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_db_regions"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_db_regions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_local_regions"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_local_regions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.should_write"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.should_write()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.update_reference"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.update_reference()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.get_recipe_id"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.get_recipe_id()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.is_nested_list"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.is_nested_list()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.prep_data_for_db"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.prep_data_for_db()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_collections"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_collections()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_compositions"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_compositions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_data"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_objects"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_objects()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_recipe"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_recipe()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc"><code class="docutils literal notranslate"><span class="pre">DataDoc</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc.as_dict"><code class="docutils literal notranslate"><span class="pre">DataDoc.as_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc.is_key"><code class="docutils literal notranslate"><span class="pre">DataDoc.is_key()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc.should_write"><code class="docutils literal notranslate"><span class="pre">DataDoc.should_write()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc"><code class="docutils literal notranslate"><span class="pre">ObjectDoc</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.as_dict"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.as_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_positions_in_representation"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.convert_positions_in_representation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_representation"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.convert_representation()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.should_write"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.should_write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Environment">cellpack.autopack.Environment module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.BuildCompartmentsGrids"><code class="docutils literal notranslate"><span class="pre">Environment.BuildCompartmentsGrids()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.SetRBOptions"><code class="docutils literal notranslate"><span class="pre">Environment.SetRBOptions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.SetSpringOptions"><code class="docutils literal notranslate"><span class="pre">Environment.SetSpringOptions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.addMeshRBOrganelle"><code class="docutils literal notranslate"><span class="pre">Environment.addMeshRBOrganelle()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.addRB"><code class="docutils literal notranslate"><span class="pre">Environment.addRB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.add_rb_node"><code class="docutils literal notranslate"><span class="pre">Environment.add_rb_node()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.applyStep"><code class="docutils literal notranslate"><span class="pre">Environment.applyStep()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.buildGrid"><code class="docutils literal notranslate"><span class="pre">Environment.buildGrid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.build_compartment_grids"><code class="docutils literal notranslate"><span class="pre">Environment.build_compartment_grids()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.calc_pairwise_distances"><code class="docutils literal notranslate"><span class="pre">Environment.calc_pairwise_distances()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.callFunction"><code class="docutils literal notranslate"><span class="pre">Environment.callFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.checkPtIndIngr"><code class="docutils literal notranslate"><span class="pre">Environment.checkPtIndIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.check_new_placement"><code class="docutils literal notranslate"><span class="pre">Environment.check_new_placement()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.clear"><code class="docutils literal notranslate"><span class="pre">Environment.clear()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.clearRBingredient"><code class="docutils literal notranslate"><span class="pre">Environment.clearRBingredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.collectResultPerIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.collectResultPerIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.compartment_id_for_nearest_grid_point"><code class="docutils literal notranslate"><span class="pre">Environment.compartment_id_for_nearest_grid_point()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.convertPickleToText"><code class="docutils literal notranslate"><span class="pre">Environment.convertPickleToText()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.create_compartment"><code class="docutils literal notranslate"><span class="pre">Environment.create_compartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.create_ingredient"><code class="docutils literal notranslate"><span class="pre">Environment.create_ingredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.create_objects"><code class="docutils literal notranslate"><span class="pre">Environment.create_objects()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.delRB"><code class="docutils literal notranslate"><span class="pre">Environment.delRB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.distance_check_failed"><code class="docutils literal notranslate"><span class="pre">Environment.distance_check_failed()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.dropOneIngr"><code class="docutils literal notranslate"><span class="pre">Environment.dropOneIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.dropOneIngrJson"><code class="docutils literal notranslate"><span class="pre">Environment.dropOneIngrJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.exportToBD_BOX"><code class="docutils literal notranslate"><span class="pre">Environment.exportToBD_BOX()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.exportToReaDDy"><code class="docutils literal notranslate"><span class="pre">Environment.exportToReaDDy()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.exportToTEM"><code class="docutils literal notranslate"><span class="pre">Environment.exportToTEM()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.exportToTEM_SIM"><code class="docutils literal notranslate"><span class="pre">Environment.exportToTEM_SIM()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.extend_bounding_box_for_compartments"><code class="docutils literal notranslate"><span class="pre">Environment.extend_bounding_box_for_compartments()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.extractMeshComponent"><code class="docutils literal notranslate"><span class="pre">Environment.extractMeshComponent()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.finishWithWater"><code class="docutils literal notranslate"><span class="pre">Environment.finishWithWater()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getActiveIng"><code class="docutils literal notranslate"><span class="pre">Environment.getActiveIng()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getIngrFromName"><code class="docutils literal notranslate"><span class="pre">Environment.getIngrFromName()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getIngrFromNameInRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.getIngrFromNameInRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getOneIngr"><code class="docutils literal notranslate"><span class="pre">Environment.getOneIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getOneIngrJson"><code class="docutils literal notranslate"><span class="pre">Environment.getOneIngrJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getPointToDrop"><code class="docutils literal notranslate"><span class="pre">Environment.getPointToDrop()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getRotTransRB"><code class="docutils literal notranslate"><span class="pre">Environment.getRotTransRB()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getSortedActiveIngredients"><code class="docutils literal notranslate"><span class="pre">Environment.getSortedActiveIngredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.getTotalNbObject"><code class="docutils literal notranslate"><span class="pre">Environment.getTotalNbObject()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_all_distances"><code class="docutils literal notranslate"><span class="pre">Environment.get_all_distances()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_all_positions"><code class="docutils literal notranslate"><span class="pre">Environment.get_all_positions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_bounding_box_limits"><code class="docutils literal notranslate"><span class="pre">Environment.get_bounding_box_limits()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_compartment_object_by_name"><code class="docutils literal notranslate"><span class="pre">Environment.get_compartment_object_by_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_distances"><code class="docutils literal notranslate"><span class="pre">Environment.get_distances()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_distances_and_angles"><code class="docutils literal notranslate"><span class="pre">Environment.get_distances_and_angles()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_dpad"><code class="docutils literal notranslate"><span class="pre">Environment.get_dpad()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_ingredient_angles"><code class="docutils literal notranslate"><span class="pre">Environment.get_ingredient_angles()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_positions_for_ingredient"><code class="docutils literal notranslate"><span class="pre">Environment.get_positions_for_ingredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_rotations_for_ingredient"><code class="docutils literal notranslate"><span class="pre">Environment.get_rotations_for_ingredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.get_size_of_bounding_box"><code class="docutils literal notranslate"><span class="pre">Environment.get_size_of_bounding_box()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.includeIngrRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.includeIngrRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.includeIngrRecipes"><code class="docutils literal notranslate"><span class="pre">Environment.includeIngrRecipes()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.includeIngredientRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.includeIngredientRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.is_two_d"><code class="docutils literal notranslate"><span class="pre">Environment.is_two_d()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.linkTraj"><code class="docutils literal notranslate"><span class="pre">Environment.linkTraj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.loadFreePoint"><code class="docutils literal notranslate"><span class="pre">Environment.loadFreePoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.loadResult"><code class="docutils literal notranslate"><span class="pre">Environment.loadResult()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.load_asJson"><code class="docutils literal notranslate"><span class="pre">Environment.load_asJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.load_asTxt"><code class="docutils literal notranslate"><span class="pre">Environment.load_asTxt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.loopThroughIngr"><code class="docutils literal notranslate"><span class="pre">Environment.loopThroughIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.moveRBnode"><code class="docutils literal notranslate"><span class="pre">Environment.moveRBnode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.onePrevIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.onePrevIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.pack_grid"><code class="docutils literal notranslate"><span class="pre">Environment.pack_grid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.pickIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.pickIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.prep_molecules_for_save"><code class="docutils literal notranslate"><span class="pre">Environment.prep_molecules_for_save()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.printFillInfo"><code class="docutils literal notranslate"><span class="pre">Environment.printFillInfo()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.readArraysFromFile"><code class="docutils literal notranslate"><span class="pre">Environment.readArraysFromFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.readTraj"><code class="docutils literal notranslate"><span class="pre">Environment.readTraj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.removeOnePoint"><code class="docutils literal notranslate"><span class="pre">Environment.removeOnePoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.reportprogress"><code class="docutils literal notranslate"><span class="pre">Environment.reportprogress()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.reset"><code class="docutils literal notranslate"><span class="pre">Environment.reset()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.resetIngrRecip"><code class="docutils literal notranslate"><span class="pre">Environment.resetIngrRecip()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.resolve_gradient_data_objects"><code class="docutils literal notranslate"><span class="pre">Environment.resolve_gradient_data_objects()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.restore"><code class="docutils literal notranslate"><span class="pre">Environment.restore()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.restoreFreePoints"><code class="docutils literal notranslate"><span class="pre">Environment.restoreFreePoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.restoreGridFromFile"><code class="docutils literal notranslate"><span class="pre">Environment.restoreGridFromFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.restore_molecules_array"><code class="docutils literal notranslate"><span class="pre">Environment.restore_molecules_array()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.runBullet"><code class="docutils literal notranslate"><span class="pre">Environment.runBullet()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.saveGridLogsAsJson"><code class="docutils literal notranslate"><span class="pre">Environment.saveGridLogsAsJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.saveGridToFile"><code class="docutils literal notranslate"><span class="pre">Environment.saveGridToFile()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.save_result"><code class="docutils literal notranslate"><span class="pre">Environment.save_result()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setCompartmentMesh"><code class="docutils literal notranslate"><span class="pre">Environment.setCompartmentMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setExteriorRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.setExteriorRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setGeomFaces"><code class="docutils literal notranslate"><span class="pre">Environment.setGeomFaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setSeed"><code class="docutils literal notranslate"><span class="pre">Environment.setSeed()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.set_gradient"><code class="docutils literal notranslate"><span class="pre">Environment.set_gradient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.set_partners_ingredient"><code class="docutils literal notranslate"><span class="pre">Environment.set_partners_ingredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setupOctree"><code class="docutils literal notranslate"><span class="pre">Environment.setupOctree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setupPanda"><code class="docutils literal notranslate"><span class="pre">Environment.setupPanda()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.setupRBOptions"><code class="docutils literal notranslate"><span class="pre">Environment.setupRBOptions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.sortIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.sortIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.store"><code class="docutils literal notranslate"><span class="pre">Environment.store()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.store_asJson"><code class="docutils literal notranslate"><span class="pre">Environment.store_asJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.store_asTxt"><code class="docutils literal notranslate"><span class="pre">Environment.store_asTxt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.timeFunction"><code class="docutils literal notranslate"><span class="pre">Environment.timeFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.unlinkTraj"><code class="docutils literal notranslate"><span class="pre">Environment.unlinkTraj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.update_largest_smallest_size"><code class="docutils literal notranslate"><span class="pre">Environment.update_largest_smallest_size()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.Environment.writeArraysToFile"><code class="docutils literal notranslate"><span class="pre">Environment.writeArraysToFile()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Environment.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.FirebaseHandler">cellpack.autopack.FirebaseHandler module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_path"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.create_path()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.db_name"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.db_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.doc_id()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.doc_to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_collection_id_from_path"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_collection_id_from_path()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_id"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_doc_by_id()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_name"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_doc_by_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_ref"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_doc_by_ref()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_path_from_ref"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_path_from_ref()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.is_firebase_obj"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.is_firebase_obj()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.is_reference"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.is_reference()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.set_doc"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.set_doc()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.update_elements_in_array"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.update_elements_in_array()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.update_reference_on_doc"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.update_reference_on_doc()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.upload_doc"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.upload_doc()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.GeometryTools">cellpack.autopack.GeometryTools module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools"><code class="docutils literal notranslate"><span class="pre">GeometryTools</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.GetDistance"><code class="docutils literal notranslate"><span class="pre">GeometryTools.GetDistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.LowerCircleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.LowerCircleFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.LowerRectangleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.LowerRectangleFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.Resolution"><code class="docutils literal notranslate"><span class="pre">GeometryTools.Resolution</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.UpperCircleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.UpperCircleFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.UpperRectangleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.UpperRectangleFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.calc_volume"><code class="docutils literal notranslate"><span class="pre">GeometryTools.calc_volume()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.check_rectangle_oustide"><code class="docutils literal notranslate"><span class="pre">GeometryTools.check_rectangle_oustide()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.check_sphere_inside"><code class="docutils literal notranslate"><span class="pre">GeometryTools.check_sphere_inside()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.getBoundary"><code class="docutils literal notranslate"><span class="pre">GeometryTools.getBoundary()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.get_rectangle_cercle_area"><code class="docutils literal notranslate"><span class="pre">GeometryTools.get_rectangle_cercle_area()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.region_1"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_1()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.region_1_2_theta"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_1_2_theta()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.region_2"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_2()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.region_2_integrand"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_2_integrand()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.region_3"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_3()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.GeometryTools.region_3_integrand"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_3_integrand()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.GeometryTools.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Gradient">cellpack.autopack.Gradient module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient"><code class="docutils literal notranslate"><span class="pre">Gradient</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.build_axis_weight_map"><code class="docutils literal notranslate"><span class="pre">Gradient.build_axis_weight_map()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.build_directional_weight_map"><code class="docutils literal notranslate"><span class="pre">Gradient.build_directional_weight_map()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.build_radial_weight_map"><code class="docutils literal notranslate"><span class="pre">Gradient.build_radial_weight_map()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.build_surface_distance_weight_map"><code class="docutils literal notranslate"><span class="pre">Gradient.build_surface_distance_weight_map()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.build_weight_map"><code class="docutils literal notranslate"><span class="pre">Gradient.build_weight_map()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.defaultFunction"><code class="docutils literal notranslate"><span class="pre">Gradient.defaultFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getBinaryWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getBinaryWeighted()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getForwWeight"><code class="docutils literal notranslate"><span class="pre">Gradient.getForwWeight()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getLinearWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getLinearWeighted()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getMaxWeight"><code class="docutils literal notranslate"><span class="pre">Gradient.getMaxWeight()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getMinWeight"><code class="docutils literal notranslate"><span class="pre">Gradient.getMinWeight()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getRndWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getRndWeighted()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getSubWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getSubWeighted()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.get_center"><code class="docutils literal notranslate"><span class="pre">Gradient.get_center()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.get_gauss_weights"><code class="docutils literal notranslate"><span class="pre">Gradient.get_gauss_weights()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.normalize_vector"><code class="docutils literal notranslate"><span class="pre">Gradient.normalize_vector()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.pickPoint"><code class="docutils literal notranslate"><span class="pre">Gradient.pickPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.set_weights_by_mode"><code class="docutils literal notranslate"><span class="pre">Gradient.set_weights_by_mode()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Graphics">cellpack.autopack.Graphics module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer"><code class="docutils literal notranslate"><span class="pre">AutopackViewer</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.SetHistoVol"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.SetHistoVol()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.addCompartmentFromGeom"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.addCompartmentFromGeom()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.addIngredientFromGeom"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.addIngredientFromGeom()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.addMasterIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.addMasterIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.appendIngrInstance"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.appendIngrInstance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.buildIngrPrimitive"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.buildIngrPrimitive()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.callFunction"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.callFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.checkCreateEmpty"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.checkCreateEmpty()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.checkIngrPartnerProperties"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.checkIngrPartnerProperties()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.checkIngrSpheres"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.checkIngrSpheres()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.clearAll"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearAll()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.clearFill"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearFill()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.clearIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.clearRecipe"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.collectResult"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.collectResult()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.color"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.color()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.colorByDistanceFrom"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.colorByDistanceFrom()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.colorByOrder"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.colorByOrder()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.colorPT"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.colorPT()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.createIngrMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createIngrMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.createOrganelMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createOrganelMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.createTemplate"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createTemplate()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.createTemplateCompartment"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createTemplateCompartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.delIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.delIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.delIngredientGrow"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.delIngredientGrow()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayCompartment"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentPoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartmentPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayCompartments"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartments()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartmentsIngredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsPoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartmentsPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayCytoplasmIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCytoplasmIngredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayDistance"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayDistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayEnv"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayEnv()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayFill"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFill()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayFillBox"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFillBox()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayFreePoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFreePoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayFreePointsAsPS"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFreePointsAsPS()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayGradient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayGradient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngrCylinders"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrCylinders()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrow"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrGrow()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrows"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrGrows()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngrMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngrResults"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrResults()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngrSpheres"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrSpheres()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayInstancesIngredient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayInstancesIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayLeafOctree"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayLeafOctree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayOctree"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayOctree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayOctreeLeaf"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayOctreeLeaf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayOneNodeOctree"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayOneNodeOctree()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayParticleVolumeDistance"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayParticleVolumeDistance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayPoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayPoints()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayPreFill"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayPreFill()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displayRoot"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayRoot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.displaysubnode"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displaysubnode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.dspMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.dspMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.dspSph"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.dspSph()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.exportAsIndexedMeshs"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.exportAsIndexedMeshs()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.exportIngredient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.exportIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.exportRecipeIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.exportRecipeIngredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.hideIngrPrimitive"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.hideIngrPrimitive()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.prepareDynamic"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.prepareDynamic()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.prepareIngredient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.prepareIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.prepareMaster"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.prepareMaster()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.printIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.printIngredients()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.printOneIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.printOneIngr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.replaceIngrMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.replaceIngrMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.showHide"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.showHide()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.showIngrPrimitive"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.showIngrPrimitive()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.timeFunction"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.timeFunction()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMatr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.toggleOrganelMatr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.toggleOrganelMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelSurf"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.toggleOrganelSurf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.undspMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.undspMesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.AutopackViewer.undspSph"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.undspSph()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Graphics.ColladaExporter"><code class="docutils literal notranslate"><span class="pre">ColladaExporter</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Grid">cellpack.autopack.Grid module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Grid.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Grid.Grid.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">Grid.create3DPointLookup()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Grid.Grid.getIJK"><code class="docutils literal notranslate"><span class="pre">Grid.getIJK()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Grid.Grid.reset"><code class="docutils literal notranslate"><span class="pre">Grid.reset()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Grid.Grid.restore"><code class="docutils literal notranslate"><span class="pre">Grid.restore()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Grid.Grid.save"><code class="docutils literal notranslate"><span class="pre">Grid.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.IOutils">cellpack.autopack.IOutils module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.ExportCollada"><code class="docutils literal notranslate"><span class="pre">ExportCollada</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.GrabResult"><code class="docutils literal notranslate"><span class="pre">GrabResult</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.GrabResult.grab"><code class="docutils literal notranslate"><span class="pre">GrabResult.grab()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.GrabResult.reset"><code class="docutils literal notranslate"><span class="pre">GrabResult.reset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool"><code class="docutils literal notranslate"><span class="pre">IOingredientTool</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.clean_arguments"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.clean_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.ingrJsonNode"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.ingrJsonNode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.ingrPythonNode"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.ingrPythonNode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredient"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.makeIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.makeIngredientFromJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.read"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.read()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.IOingredientTool.set_recipe_ingredient"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.set_recipe_ingredient()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.addCompartments"><code class="docutils literal notranslate"><span class="pre">addCompartments()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.checkRotFormat"><code class="docutils literal notranslate"><span class="pre">checkRotFormat()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.gatherResult"><code class="docutils literal notranslate"><span class="pre">gatherResult()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.getAllPosRot"><code class="docutils literal notranslate"><span class="pre">getAllPosRot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.getStringValueOptions"><code class="docutils literal notranslate"><span class="pre">getStringValueOptions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.load_Json"><code class="docutils literal notranslate"><span class="pre">load_Json()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.load_JsonString"><code class="docutils literal notranslate"><span class="pre">load_JsonString()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.load_MixedasJson"><code class="docutils literal notranslate"><span class="pre">load_MixedasJson()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.saveResultBinary"><code class="docutils literal notranslate"><span class="pre">saveResultBinary()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.saveResultBinaryDic"><code class="docutils literal notranslate"><span class="pre">saveResultBinaryDic()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.save_asPython"><code class="docutils literal notranslate"><span class="pre">save_asPython()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.serializedFromResult"><code class="docutils literal notranslate"><span class="pre">serializedFromResult()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.serializedRecipe"><code class="docutils literal notranslate"><span class="pre">serializedRecipe()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.serializedRecipe_group"><code class="docutils literal notranslate"><span class="pre">serializedRecipe_group()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.serializedRecipe_group_dic"><code class="docutils literal notranslate"><span class="pre">serializedRecipe_group_dic()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.setValueToPythonStr"><code class="docutils literal notranslate"><span class="pre">setValueToPythonStr()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.setupFromJsonDic"><code class="docutils literal notranslate"><span class="pre">setupFromJsonDic()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.toBinary"><code class="docutils literal notranslate"><span class="pre">toBinary()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.IOutils.updatePositionsRadii"><code class="docutils literal notranslate"><span class="pre">updatePositionsRadii()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.MeshStore">cellpack.autopack.MeshStore module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore"><code class="docutils literal notranslate"><span class="pre">MeshStore</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.add_mesh_to_scene"><code class="docutils literal notranslate"><span class="pre">MeshStore.add_mesh_to_scene()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.build_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.build_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.calc_scaled_distances_for_positions"><code class="docutils literal notranslate"><span class="pre">MeshStore.calc_scaled_distances_for_positions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.contains_point"><code class="docutils literal notranslate"><span class="pre">MeshStore.contains_point()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.contains_points"><code class="docutils literal notranslate"><span class="pre">MeshStore.contains_points()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.contains_points_slow"><code class="docutils literal notranslate"><span class="pre">MeshStore.contains_points_slow()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.create_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.create_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.create_sphere"><code class="docutils literal notranslate"><span class="pre">MeshStore.create_sphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.create_sphere_data"><code class="docutils literal notranslate"><span class="pre">MeshStore.create_sphere_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.decompose_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.decompose_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_centroid"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_centroid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_collada_material"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_collada_material()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_mesh()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_mesh_filepath_and_extension"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_mesh_filepath_and_extension()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_midpoint"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_midpoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_normal"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_normal()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_nsphere"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_nsphere()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_object"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_object()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_scaled_distances_between_surfaces"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_scaled_distances_between_surfaces()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.get_smallest_radius"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_smallest_radius()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.norm"><code class="docutils literal notranslate"><span class="pre">MeshStore.norm()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.normal_array"><code class="docutils literal notranslate"><span class="pre">MeshStore.normal_array()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.normalize"><code class="docutils literal notranslate"><span class="pre">MeshStore.normalize()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.normalize_v3"><code class="docutils literal notranslate"><span class="pre">MeshStore.normalize_v3()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.MeshStore.MeshStore.read_mesh_file"><code class="docutils literal notranslate"><span class="pre">MeshStore.read_mesh_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack-autopack-outputsimularium-module">cellpack.autopack.OutputSimularium module</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Recipe">cellpack.autopack.Recipe module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe"><code class="docutils literal notranslate"><span class="pre">Recipe</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.addIngredient"><code class="docutils literal notranslate"><span class="pre">Recipe.addIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.delIngredient"><code class="docutils literal notranslate"><span class="pre">Recipe.delIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize"><code class="docutils literal notranslate"><span class="pre">Recipe.getMinMaxProteinSize()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.is_key"><code class="docutils literal notranslate"><span class="pre">Recipe.is_key()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.printFillInfo"><code class="docutils literal notranslate"><span class="pre">Recipe.printFillInfo()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.resetIngrs"><code class="docutils literal notranslate"><span class="pre">Recipe.resetIngrs()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.resolve_composition"><code class="docutils literal notranslate"><span class="pre">Recipe.resolve_composition()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.setCount"><code class="docutils literal notranslate"><span class="pre">Recipe.setCount()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.Recipe.sort"><code class="docutils literal notranslate"><span class="pre">Recipe.sort()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Recipe.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.Serializable">cellpack.autopack.Serializable module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sCompartment"><code class="docutils literal notranslate"><span class="pre">sCompartment</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sCompartment.addCompartment"><code class="docutils literal notranslate"><span class="pre">sCompartment.addCompartment()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sCompartment.addIngredientGroup"><code class="docutils literal notranslate"><span class="pre">sCompartment.addIngredientGroup()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sCompartment.static_id"><code class="docutils literal notranslate"><span class="pre">sCompartment.static_id</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sCompartment.to_JSON"><code class="docutils literal notranslate"><span class="pre">sCompartment.to_JSON()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredient"><code class="docutils literal notranslate"><span class="pre">sIngredient</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredient.static_id"><code class="docutils literal notranslate"><span class="pre">sIngredient.static_id</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredient.to_JSON"><code class="docutils literal notranslate"><span class="pre">sIngredient.to_JSON()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientFiber"><code class="docutils literal notranslate"><span class="pre">sIngredientFiber</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientFiber.static_id"><code class="docutils literal notranslate"><span class="pre">sIngredientFiber.static_id</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientFiber.to_JSON"><code class="docutils literal notranslate"><span class="pre">sIngredientFiber.to_JSON()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientGroup"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientGroup.addIngredient"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup.addIngredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientGroup.static_id"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup.static_id</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Serializable.sIngredientGroup.to_JSON"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup.to_JSON()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.binvox_rw">cellpack.autopack.binvox_rw module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels"><code class="docutils literal notranslate"><span class="pre">Voxels</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.cartesian"><code class="docutils literal notranslate"><span class="pre">Voxels.cartesian()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.clone"><code class="docutils literal notranslate"><span class="pre">Voxels.clone()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.getIndex"><code class="docutils literal notranslate"><span class="pre">Voxels.getIndex()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.getIndexData"><code class="docutils literal notranslate"><span class="pre">Voxels.getIndexData()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.ijkToIndex"><code class="docutils literal notranslate"><span class="pre">Voxels.ijkToIndex()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.ijkToxyz"><code class="docutils literal notranslate"><span class="pre">Voxels.ijkToxyz()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.write"><code class="docutils literal notranslate"><span class="pre">Voxels.write()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.Voxels.xyzToijk"><code class="docutils literal notranslate"><span class="pre">Voxels.xyzToijk()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.dense_to_sparse"><code class="docutils literal notranslate"><span class="pre">dense_to_sparse()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.read_as_3d_array"><code class="docutils literal notranslate"><span class="pre">read_as_3d_array()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.read_as_coord_array"><code class="docutils literal notranslate"><span class="pre">read_as_coord_array()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.read_header"><code class="docutils literal notranslate"><span class="pre">read_header()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.sparse_to_dense"><code class="docutils literal notranslate"><span class="pre">sparse_to_dense()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.binvox_rw.write"><code class="docutils literal notranslate"><span class="pre">write()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ldSequence">cellpack.autopack.ldSequence module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.HaltonSequence"><code class="docutils literal notranslate"><span class="pre">HaltonSequence</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.SphereHalton"><code class="docutils literal notranslate"><span class="pre">SphereHalton()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.cHaltonSequence3"><code class="docutils literal notranslate"><span class="pre">cHaltonSequence3</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.cHaltonSequence3.inc"><code class="docutils literal notranslate"><span class="pre">cHaltonSequence3.inc()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.cHaltonSequence3.reset"><code class="docutils literal notranslate"><span class="pre">cHaltonSequence3.reset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.halton"><code class="docutils literal notranslate"><span class="pre">halton()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.halton2"><code class="docutils literal notranslate"><span class="pre">halton2()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.halton3"><code class="docutils literal notranslate"><span class="pre">halton3()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.halton_sequence"><code class="docutils literal notranslate"><span class="pre">halton_sequence()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ldSequence.haltonterm"><code class="docutils literal notranslate"><span class="pre">haltonterm()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.octree">cellpack.autopack.octree module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.octree.OctNode"><code class="docutils literal notranslate"><span class="pre">OctNode</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.octree.Octree"><code class="docutils literal notranslate"><span class="pre">Octree</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.octree.Octree.addNode"><code class="docutils literal notranslate"><span class="pre">Octree.addNode()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.octree.Octree.findBranch"><code class="docutils literal notranslate"><span class="pre">Octree.findBranch()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.octree.Octree.findPosition"><code class="docutils literal notranslate"><span class="pre">Octree.findPosition()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.octree.Octree.insertNode"><code class="docutils literal notranslate"><span class="pre">Octree.insertNode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.plotly_result">cellpack.autopack.plotly_result module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.add_circle"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.add_circle()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.add_ingredient_positions"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.add_ingredient_positions()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.add_square"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.add_square()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.format_color"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.format_color()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.make_and_show_heatmap"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.make_and_show_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.make_grid_heatmap"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.make_grid_heatmap()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.show"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.show()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.transformPoints2D"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.transformPoints2D()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.update_title"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.update_title()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.randomRot">cellpack.autopack.randomRot module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot"><code class="docutils literal notranslate"><span class="pre">RandomRot</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot.get"><code class="docutils literal notranslate"><span class="pre">RandomRot.get()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot.getOld"><code class="docutils literal notranslate"><span class="pre">RandomRot.getOld()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot.quaternion_matrix"><code class="docutils literal notranslate"><span class="pre">RandomRot.quaternion_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot.random_quaternion"><code class="docutils literal notranslate"><span class="pre">RandomRot.random_quaternion()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix"><code class="docutils literal notranslate"><span class="pre">RandomRot.random_rotation_matrix()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.randomRot.RandomRot.setSeed"><code class="docutils literal notranslate"><span class="pre">RandomRot.setSeed()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.ray">cellpack.autopack.ray module</a><ul>
+<li><a class="reference internal" href="#created-on-saturday-september-1-1-50-00-2012">Created on Saturday September 1 1:50:00 2012</a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.dot"><code class="docutils literal notranslate"><span class="pre">dot()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.f_dot_product"><code class="docutils literal notranslate"><span class="pre">f_dot_product()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.f_ray_intersect_polyhedron"><code class="docutils literal notranslate"><span class="pre">f_ray_intersect_polyhedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.findPointsCenter"><code class="docutils literal notranslate"><span class="pre">findPointsCenter()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.makeMarchingCube"><code class="docutils literal notranslate"><span class="pre">makeMarchingCube()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.ray_intersect_polygon"><code class="docutils literal notranslate"><span class="pre">ray_intersect_polygon()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.ray_intersect_polyhedron"><code class="docutils literal notranslate"><span class="pre">ray_intersect_polyhedron()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.vcross"><code class="docutils literal notranslate"><span class="pre">vcross()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.vdiff"><code class="docutils literal notranslate"><span class="pre">vdiff()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.vlen"><code class="docutils literal notranslate"><span class="pre">vlen()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.ray.vnorm"><code class="docutils literal notranslate"><span class="pre">vnorm()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.trajectory">cellpack.autopack.trajectory module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.applyState"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.applyState_cb"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState_cb()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.applyState_name"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.applyState_primitive_name"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState_primitive_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.completeMapping"><code class="docutils literal notranslate"><span class="pre">Trajectory.completeMapping()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.generalApply"><code class="docutils literal notranslate"><span class="pre">Trajectory.generalApply()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.getIngredientInstancePos"><code class="docutils literal notranslate"><span class="pre">Trajectory.getIngredientInstancePos()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.makeIngrMapping"><code class="docutils literal notranslate"><span class="pre">Trajectory.makeIngrMapping()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.reg"><code class="docutils literal notranslate"><span class="pre">Trajectory.reg</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">Trajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.dcdTrajectory"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.dcdTrajectory.dcd"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.dcd</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.dcdTrajectory.getPosAt"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.getPosAt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.dcdTrajectory.parse"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.parse()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.dcdTrajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory"><code class="docutils literal notranslate"><span class="pre">molbTrajectory</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory.applyState_name"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.applyState_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory.applyState_primitive_name"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.applyState_primitive_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory.getPosAt"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.getPosAt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory.parse"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.parse()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory.parse_one_mol"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.parse_one_mol()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.molbTrajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.xyzTrajectory"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.xyzTrajectory.getPosAt"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.getPosAt()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.xyzTrajectory.getPosLine"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.getPosLine()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.xyzTrajectory.parse"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.parse()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.trajectory.xyzTrajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.transformation">cellpack.autopack.transformation module</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack.utils">cellpack.autopack.utils module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.utils.check_paired_key"><code class="docutils literal notranslate"><span class="pre">check_paired_key()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.cmp_to_key"><code class="docutils literal notranslate"><span class="pre">cmp_to_key()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.deep_merge"><code class="docutils literal notranslate"><span class="pre">deep_merge()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.expand_object_using_key"><code class="docutils literal notranslate"><span class="pre">expand_object_using_key()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.get_distance"><code class="docutils literal notranslate"><span class="pre">get_distance()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.get_distances_from_point"><code class="docutils literal notranslate"><span class="pre">get_distances_from_point()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.get_paired_key"><code class="docutils literal notranslate"><span class="pre">get_paired_key()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.ingredient_compare0"><code class="docutils literal notranslate"><span class="pre">ingredient_compare0()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.ingredient_compare1"><code class="docutils literal notranslate"><span class="pre">ingredient_compare1()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.utils.ingredient_compare2"><code class="docutils literal notranslate"><span class="pre">ingredient_compare2()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.autopack">Module contents</a><ul>
+<li><a class="reference internal" href="#created-on-fri-jul-20-23-53-00-2012">Created on Fri Jul 20 23:53:00 2012</a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DATABASE_NAME"><code class="docutils literal notranslate"><span class="pre">DATABASE_NAME</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DATABASE_NAME.FIREBASE"><code class="docutils literal notranslate"><span class="pre">DATABASE_NAME.FIREBASE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DATABASE_NAME.GITHUB"><code class="docutils literal notranslate"><span class="pre">DATABASE_NAME.GITHUB</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.checkErrorInPath"><code class="docutils literal notranslate"><span class="pre">checkErrorInPath()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.checkPath"><code class="docutils literal notranslate"><span class="pre">checkPath()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.checkRecipeAvailable"><code class="docutils literal notranslate"><span class="pre">checkRecipeAvailable()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.clearCaches"><code class="docutils literal notranslate"><span class="pre">clearCaches()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.convert_db_shortname_to_url"><code class="docutils literal notranslate"><span class="pre">convert_db_shortname_to_url()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.download_file"><code class="docutils literal notranslate"><span class="pre">download_file()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.fixOnePath"><code class="docutils literal notranslate"><span class="pre">fixOnePath()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.fixPath"><code class="docutils literal notranslate"><span class="pre">fixPath()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.get_cache_location"><code class="docutils literal notranslate"><span class="pre">get_cache_location()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.get_local_file_location"><code class="docutils literal notranslate"><span class="pre">get_local_file_location()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.is_full_url"><code class="docutils literal notranslate"><span class="pre">is_full_url()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.is_remote_path"><code class="docutils literal notranslate"><span class="pre">is_remote_path()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.load_file"><code class="docutils literal notranslate"><span class="pre">load_file()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.make_directory_if_needed"><code class="docutils literal notranslate"><span class="pre">make_directory_if_needed()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.read_text_file"><code class="docutils literal notranslate"><span class="pre">read_text_file()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.resetDefault"><code class="docutils literal notranslate"><span class="pre">resetDefault()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.saveRecipeAvailable"><code class="docutils literal notranslate"><span class="pre">saveRecipeAvailable()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.saveRecipeAvailableJSON"><code class="docutils literal notranslate"><span class="pre">saveRecipeAvailableJSON()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.updatePath"><code class="docutils literal notranslate"><span class="pre">updatePath()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.updatePathJSON"><code class="docutils literal notranslate"><span class="pre">updatePathJSON()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.updateRecipAvailableXML"><code class="docutils literal notranslate"><span class="pre">updateRecipAvailableXML()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.updateReplacePath"><code class="docutils literal notranslate"><span class="pre">updateReplacePath()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.url_exists"><code class="docutils literal notranslate"><span class="pre">url_exists()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
   </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="cellpack.html"
+                          title="previous chapter">cellpack package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="cellpack.autopack.ingredient.html"
+                          title="next chapter">cellpack.autopack.ingredient package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/cellpack.autopack.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="cellpack.autopack.ingredient.html" title="cellpack.autopack.ingredient package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cellpack.html" title="cellpack package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="cellpack.html" >cellpack package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+  </body>
 </html>
