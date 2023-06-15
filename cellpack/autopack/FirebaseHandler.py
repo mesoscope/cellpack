@@ -1,4 +1,5 @@
 import firebase_admin
+import json
 from firebase_admin import credentials, firestore
 
 
@@ -7,7 +8,8 @@ class FirebaseHandler(object):
     Retrieve data and perform common tasks when working with firebase.
     """
 
-    def __init__(self, cred_path):
+    def __init__(self):
+        cred_path = FirebaseHandler.get_creds()
         login = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(login)
         self.db = firestore.client()
@@ -16,7 +18,19 @@ class FirebaseHandler(object):
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
-
+    
+    @staticmethod
+    def get_creds():
+        try:
+            with open("./.creds", "r") as file_name:
+                creds = json.load(file_name)
+                firebase_creds = creds["firebase"]
+                return firebase_creds
+        except IOError as error:
+            # TODO: get credentials from user and save in file
+            print(error)
+            
+    
     def db_name(self):
         return self.name
 

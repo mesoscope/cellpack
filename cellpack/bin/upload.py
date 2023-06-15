@@ -13,7 +13,6 @@ class DATABASE_IDS(Enum):
 
 def upload(
     recipe_path,
-    cred_path,
     db_id=DATABASE_IDS.FIREBASE,
 ):
     """
@@ -22,9 +21,8 @@ def upload(
     :return: void
     """
     if db_id == DATABASE_IDS.FIREBASE:
-        cred_path = cred_path
         # fetch the service key json file
-        db_handler = FirebaseHandler(cred_path)
+        db_handler = FirebaseHandler()
         recipe_loader = RecipeLoader(recipe_path)
         recipe_full_data = recipe_loader.recipe_data
         recipe_meta_data = recipe_loader.get_only_recipe_metadata()
