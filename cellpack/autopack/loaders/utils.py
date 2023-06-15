@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 
@@ -21,3 +22,15 @@ def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
         output_folder = Path(output_folder, sub_dir)
     os.makedirs(output_folder, exist_ok=True)
     return output_folder
+
+def read_json_file(path):
+    if not Path(path).exists():
+        return None
+    with open(path, "r") as file_name:
+        return json.load(file_name)
+
+def write_json_file(path, data):
+    Path(path).parent.mkdir(exist_ok=True, parents=True)
+    with open(path, "w") as file_name:
+        json.dump(data, file_name)
+
