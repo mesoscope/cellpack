@@ -230,6 +230,7 @@ class RecipeLoader(object):
         revert_recipe_data["objects"] = obj_dict
         revert_recipe_data["gradients"] = [{**v, "name": k} for k, v in grad_dict.items()]
         revert_recipe_data["composition"] = RecipeLoader.extract_nested_keys(db_recipe_data["composition"])
+        print("comp", json.dumps(db_recipe_data["composition"], indent=4))
         return revert_recipe_data
 
 
@@ -238,8 +239,6 @@ class RecipeLoader(object):
         # print("new_values--", new_values, "database_name--", database_name)
         if database_name == "firebase":
             objects, gradients = self._collect_objs_and_grads(new_values["composition"])
-            print("objects--", objects, "gradients--", gradients)
-            # import ipdb; ipdb.set_trace()
             new_values = self._prep_recipe_from_firebase(new_values, objects, gradients)
             print("recipe_data--", new_values)
         recipe_data = RecipeLoader.default_values.copy()
@@ -262,13 +261,23 @@ class RecipeLoader(object):
                     atomic=reps.get("atomic", None),
                     packing=reps.get("packing", None),
                 )
-                partner_settings = obj["partners"] if "partners" in obj else []
+                # the key "all_partners" exists in obj["partners"] if the recipe is downloaded from a remote db
+                # TODO: check if there are better approaches to handle existing keys in remote recipes  
+                partner_settings = (
+                    []
+                    if (
+                        "partners" in obj
+                        and "all_partners" in obj["partners"]
+                        and not obj["partners"]["all_partners"]
+                    )
+                    else obj.get("partners", [])
+                )
                 obj["partners"] = Partners(partner_settings)
                 if "type" in obj and not INGREDIENT_TYPE.is_member(obj["type"]):
                     raise TypeError(f"{obj['type']} is not an allowed type")
 
         # handle gradients
-        if "gradients" in recipe_data:
+        if "gradients" in recipe_data and not isinstance(recipe_data["gradients"], list):
             gradients = []
             for gradient_name, gradient_dict in recipe_data["gradients"].items():
                 gradients.append(GradientData(gradient_dict, gradient_name).data)
