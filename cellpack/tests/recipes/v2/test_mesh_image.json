@@ -24,7 +24,7 @@
             ],
             "representations": {
                 "mesh": {
-                    "path": "/allen/aics/animated-cell/Saurabh/cellpack/data",
+                    "path": "cellpack/tests/geometry",
                     "name": "sphere.obj",
                     "format": "obj"
                 }

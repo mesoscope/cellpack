@@ -1833,7 +1833,7 @@ class Ingredient(Agent):
                 ):  # you need a gradient here
                     rot_mat = self.alignRotation(env.grid.masterGridPositions[pt_ind])
                 else:
-                    rot_mat = autopack.helper.rotation_matrix(
+                    rot_mat = self.env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
                     )
             # for other points we get a random rotation
@@ -1857,7 +1857,7 @@ class Ingredient(Agent):
                 # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
                     # should we align to this rotation_axis ?
-                    jitter_rotation = autopack.helper.rotation_matrix(
+                    jitter_rotation = self.env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
                     )
             else:

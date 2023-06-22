@@ -40,7 +40,6 @@ def pack(recipe, config_path=None, analysis_config_path=None):
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
     autopack.helper = helper
-
     env = Environment(config=packing_config_data, recipe=recipe_data)
     env.helper = helper
 
