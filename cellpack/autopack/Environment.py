@@ -53,7 +53,6 @@ from scipy import spatial
 import numpy
 import pickle
 import math
-from math import pi
 import json
 from json import encoder
 import logging
@@ -477,7 +476,7 @@ class Environment(CompartmentList):
             return spatial.distance.pdist(positions)
 
     def get_distances(self, ingredient_name, center):
-        
+
         ingredient_positions = self.get_positions_for_ingredient(ingredient_name)
 
         if len(ingredient_positions):
@@ -586,7 +585,8 @@ class Environment(CompartmentList):
 
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
-            # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12
+            # Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.result_file + "_analyze_"
@@ -754,7 +754,8 @@ class Environment(CompartmentList):
             self.log.info("self.gridVolume = %d", self.grid.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
-            #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12
+            # Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
 
     def loadResult(
@@ -1390,7 +1391,8 @@ class Environment(CompartmentList):
 
         if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
-            nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
+            nbFreePoints = nbPoints  # -1
+            # Graham turned this off on 5/16/12 to match August Repair for May Hybrid
             for i, mingrs in enumerate(
                 self.molecules
             ):  # ( jtrans, rotMatj, self, ptInd )
@@ -1721,7 +1723,9 @@ class Environment(CompartmentList):
                 # Graham here: Walk through -priorities first
                 ingr = self.activeIngr[0]
             else:
-                # prob = uniform(vRangeStart,1.0)  #Graham 9/21/11 This is wrong...vRangeStart is the point index, need active list i.e. thresholdPriority to be limited
+                # prob = uniform(vRangeStart,1.0)
+                # Graham 9/21/11 This is wrong...vRangeStart is the point index,
+                # need active list i.e. thresholdPriority to be limited
                 prob = uniform(0, 1.0)
                 ingrInd = 0
                 for threshProb in self.thresholdPriorities:
@@ -1879,7 +1883,8 @@ class Environment(CompartmentList):
                 self.activeIngr.pop(ind)
                 if verbose > 1:
                     print(
-                        "popping this gradient ingredient array must be redone using Sept 25, 2011 thesis version as above for nongraient ingredients, TODO: July 5, 2012"
+                        "popping this gradient ingredient array must be redone using Sept 25,",
+                        " 2011 thesis version as above for nongradient ingredients, TODO: July 5, 2012",
                     )
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
@@ -2923,7 +2928,8 @@ class Environment(CompartmentList):
             loadPrcFileData(
                 "",
                 """
-   load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
+   load-display p3tinydisplay # to force CPU only rendering
+   (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
    audio-library-name null # Prevent ALSA errors
    show-frame-rate-meter 0
    sync-video 0
@@ -3076,7 +3082,8 @@ class Environment(CompartmentList):
         # inodenp.node().setMass(1.0)
         inodenp.node().addShape(
             shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
+        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)
+        # TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
 
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())
