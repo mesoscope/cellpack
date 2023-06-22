@@ -1709,6 +1709,8 @@ class Analysis:
         plt.clf()
         # calculate histogram
         nbins = int(numpy.sqrt(len(distances)))
+        if nbins < 2:
+            return
         y, bin_edges = numpy.histogram(distances, bins=nbins)
         bincenters = 0.5 * (bin_edges[1:] + bin_edges[:-1])
 
