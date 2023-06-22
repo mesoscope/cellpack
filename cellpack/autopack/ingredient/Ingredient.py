@@ -2615,7 +2615,7 @@ class Ingredient(Agent):
 
     def pandaBullet_relax(
         self,
-        histoVol,
+        env,
         ptInd,
         compartment,
         target_grid_point_position,
@@ -2628,16 +2628,16 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        histoVol.setupPanda()
-        afvi = histoVol.afviewer
-        simulationTimes = histoVol.simulationTimes
-        runTimeDisplay = histoVol.runTimeDisplay
+        env.setupPanda()
+        afvi = env.afviewer
+        simulationTimes = env.simulationTimes
+        runTimeDisplay = env.runTimeDisplay
         is_realtime = moving is not None
-        gridPointsCoords = histoVol.grid.masterGridPositions
+        gridPointsCoords = env.grid.masterGridPositions
         insidePoints = {}
         newDistPoints = {}
         jtrans, rotMatj = self.oneJitter(
-            histoVol, target_grid_point_position, rotation_matrix
+            env, target_grid_point_position, rotation_matrix
         )
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
@@ -2660,9 +2660,9 @@ class Ingredient(Agent):
                         parent=afvi.movingMesh,
                     )
         # 2- get the neighboring object from ptInd
-        if histoVol.ingrLookForNeighbours:
+        if env.ingrLookForNeighbours:
             near_by_ingredients, placed_partners = self.get_partners(
-                histoVol, jtrans, rotation_matrix, compartment, afvi
+                env, jtrans, rotation_matrix, compartment, afvi
             )
             for i, elem in enumerate(near_by_ingredients):
                 ing = elem[2]
@@ -2723,7 +2723,7 @@ class Ingredient(Agent):
             ),
         )
         # run he simulation for simulationTimes
-        histoVol.callFunction(
+        env.callFunction(
             self.env.runBullet,
             (
                 self,
