@@ -363,7 +363,7 @@ class simulariumHelper(hostHelper.Helper):
             if extension == ".obj":
                 display_type = DISPLAY_TYPE.OBJ
                 url = (
-                    compartment.path + "?dl=1"
+                    compartment.path
                     if not os.path.isfile(compartment.path)
                     else os.path.basename(compartment.path)
                 )
