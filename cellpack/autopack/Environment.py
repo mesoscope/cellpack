@@ -1116,31 +1116,6 @@ class Environment(CompartmentList):
             )
             return None, None, None
 
-    def setCompartmentMesh(self, compartment, ref_obj):
-        """
-        Require host helper. Change the mesh of the given compartment and recompute
-        inside and surface point.
-        """
-        if compartment.ref_obj == ref_obj:
-            return
-        if os.path.isfile(ref_obj):
-            fileName, fileExtension = os.path.splitext(ref_obj)
-            if helper is not None:  # neeed the helper
-                helper.read(ref_obj)
-                geom = helper.getObject(fileName)
-                # reparent to the fill parent
-                # rotate ?
-                if helper.host != "c4d" and geom is not None:
-                    # need to rotate the transform that carry the shape
-                    helper.rotateObj(geom, [0.0, -pi / 2.0, 0.0])
-        else:
-            geom = helper.getObject(ref_obj)
-        if geom is not None:
-            vertices, faces, vnormals = self.extractMeshComponent(geom)
-            compartment.setMesh(
-                filename=ref_obj, vertices=vertices, faces=faces, vnormals=vnormals
-            )
-
     def update_largest_smallest_size(self, ingr):
         if ingr.encapsulating_radius > self.largestProteinSize:
             self.largestProteinSize = ingr.encapsulating_radius
@@ -1181,7 +1156,6 @@ class Environment(CompartmentList):
             name=compartment_key,
             object_info=object_info,
         )
-        compartment.initialize_shape(self.mesh_store)
         self._add_compartment(compartment, parent)
         return compartment
 
@@ -1311,6 +1285,7 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         # thread ?
         for compartment in self.compartments:
+            compartment.initialize_shape(self.mesh_store)
             self.log.info(
                 f"in Environment, compartment.is_orthogonal_bounding_box={compartment.is_orthogonal_bounding_box}"
             )
