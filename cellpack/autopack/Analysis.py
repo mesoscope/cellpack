@@ -2534,15 +2534,6 @@ class Analysis:
         self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
         self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
-            if image_export_options is not None:
-                image_writer = ImageWriter(
-                    env=self.env,
-                    name=seed_basename,
-                    output_path=self.figures_path,
-                    **image_export_options,
-                )
-                image_writer.export_image()
-
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict
         )
