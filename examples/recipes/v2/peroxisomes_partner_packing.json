@@ -1,7 +1,7 @@
 {
-    "version": "nucleus",
+    "version": "bind",
     "format_version": "2.1",
-    "name": "peroxisomes_surface_gradient",
+    "name": "peroxisomes_partner_packing",
     "bounding_box": [
         [
             -110,
@@ -21,7 +21,7 @@
             "pick_mode": "rnd",
             "mode": "surface",
             "mode_settings": {
-                "object": "nucleus",
+                "object": "membrane",
                 "scale_to_next_surface": false
             }
         }
@@ -30,8 +30,8 @@
         "mean_membrane": {
             "type": "mesh",
             "color": [
-                1,
                 0,
+                1,
                 1
             ],
             "representations": {
@@ -45,8 +45,8 @@
         "mean_nucleus": {
             "type": "mesh",
             "color": [
-                0,
                 1,
+                0,
                 1
             ],
             "representations": {
@@ -66,8 +66,26 @@
                 0.10
             ],
             "radius": 2.30,
+            "partners": [
+                {
+                    "name": "endosome",
+                    "binding_probability": 0.99
+                }
+            ],
+            "rejection_threshold": 1000,
+            "packing_mode": "closePartner"
+        },
+        "endosome": {
+            "jitter_attempts": 300,
+            "type": "single_sphere",
+            "color": [
+                0.80,
+                0.80,
+                0.10
+            ],
+            "radius": 1,
             "gradient": "surface_gradient",
-            "packing_mode": "gradient"
+            "packing_mode": "gradient"            
         }
     },
     "composition": {
@@ -85,8 +103,14 @@
                 "interior": [
                     "nucleus",
                     {
+                        "object": "endosome",
+                        "count": 300,
+                        "priority": -1
+                    },
+                    {
                         "object": "peroxisome",
-                        "count": 121
+                        "count": 121,
+                        "priority": 0
                     }
                 ]
             }

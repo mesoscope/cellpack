@@ -34,6 +34,7 @@ class ConfigLoader(object):
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
+        "parallel": False,
         "place_method": "jitter",
         "randomness_seed": None,
         "save_analyze_result": False,

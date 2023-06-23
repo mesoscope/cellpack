@@ -1077,7 +1077,7 @@ class Compartment(CompartmentList):
             len(env.grid.masterGridPositions),
         )
 
-    def get_surface_distances(self, env, master_grid_positions):
+    def set_surface_distances(self, env, master_grid_positions):
         surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
         surface_ids = numpy.nonzero(surface_mask)
         surface_positions = master_grid_positions[surface_ids]
@@ -1094,7 +1094,7 @@ class Compartment(CompartmentList):
         all_surface_distances = numpy.full(master_grid_positions.shape[0], numpy.nan)
         all_surface_distances[grid_pt_indexes] = surface_distances
 
-        if self.parent is not None:
+        if self.parent is not None and parent_id != 0:
             grid_pts_between_surfaces = numpy.equal(
                 env.grid.compartment_ids, -parent_id
             )
@@ -1113,7 +1113,7 @@ class Compartment(CompartmentList):
             )
             self.scaled_distance_to_next_surface = scaled_distance_to_next_surface
 
-        self.max_distance = max(surface_distances)
+        self.max_distance = numpy.nanmax(surface_distances)
         self.surface_distances = all_surface_distances
 
     def BuildGrid_box(self, env, vSurfaceArea):

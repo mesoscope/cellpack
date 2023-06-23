@@ -52,7 +52,9 @@ class ImageWriter:
 
         self.projection_axis = projection_axis
 
-    def create_gaussian_psf(self, sigma=1.5, size=None):
+        
+    @staticmethod
+    def create_gaussian_psf(sigma=1.5, size=None):
         """
         Creates a gaussian psf
 
@@ -81,7 +83,9 @@ class ImageWriter:
 
         return psf
 
-    def create_box_psf(self, size=None):
+
+    @staticmethod
+    def create_box_psf(size=None):
         """
         Creates a box psf
 
@@ -103,7 +107,9 @@ class ImageWriter:
 
         return psf
 
-    def convolve_channel(self, channel, psf):
+      
+    @staticmethod
+    def convolve_channel(channel, psf):
         """
         Convolves a channel with a psf
 
@@ -123,6 +129,18 @@ class ImageWriter:
         conv_channel = convolve(scaled_channel, psf, mode="constant", cval=0.0)
         conv_channel = (conv_channel * 255).astype(numpy.uint8)
         return conv_channel
+
+
+    @staticmethod
+    def transpose_image_for_projection(image, projection_axis):
+        if projection_axis == "x":
+            image = numpy.transpose(image, axes=(1, 0, 3, 2))
+        elif projection_axis == "y":
+            image = numpy.transpose(image, axes=(2, 0, 3, 1))
+        elif projection_axis == "z":
+            image = numpy.transpose(image, axes=(3, 0, 2, 1))
+        return image
+
 
     def convolve_image(self, image, psf="gaussian", psf_parameters=None):
         """
@@ -161,23 +179,16 @@ class ImageWriter:
             conv_img[channel] = self.convolve_channel(image[channel], psf)
         return conv_img
 
-    @staticmethod
-    def transpose_image_for_projection(image, projection_axis):
-        if projection_axis == "x":
-            image = numpy.transpose(image, axes=(1, 0, 3, 2))
-        elif projection_axis == "y":
-            image = numpy.transpose(image, axes=(2, 0, 3, 1))
-        elif projection_axis == "z":
-            image = numpy.transpose(image, axes=(3, 0, 2, 1))
-        return image
 
     def create_voxelization(self):
         """
         Creates a voxelized representation of the current scene
         """
+
         self.image_data, channel_colors = self.env.create_voxelization(
             self.image_data, self.image_size, self.voxel_size, self.hollow
         )
+
 
         concatenated_image = numpy.zeros(
             (len(self.image_data), *self.image_size), dtype=numpy.uint8

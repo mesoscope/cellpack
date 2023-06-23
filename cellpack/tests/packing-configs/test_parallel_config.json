@@ -1,16 +1,18 @@
 {
-    "name": "test_config",
+    "name": "test_parallel_config",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
     "out": "cellpack/tests/outputs/",
-    "overwrite_place_method": true,
+    "overwrite_place_method": false,
     "place_method": "spheresSST",
     "save_analyze_result": true,
-    "show_grid_plot": false,
-    "spacing": null,
-    "parallel": false,
+    "show_grid_plot": true,
+    "parallel": true,
+    "load_from_grid_file": false,
+    "number_of_packings": 5,
+    "spacing":  null,
     "use_periodicity": false,
     "show_sphere_trees": true
 }

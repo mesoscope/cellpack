@@ -53,7 +53,6 @@ from scipy import spatial
 import numpy
 import pickle
 import math
-from math import pi
 import json
 from json import encoder
 import logging
@@ -90,6 +89,8 @@ from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+
 try:
     helper = autopack.helper
 except ImportError:
@@ -101,6 +102,29 @@ encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 SEED = 15
 LOG = False
 verbose = 0
+
+
+class CountDistributions(MetaEnum):
+    "All available count distributions"
+    UNIFORM = "uniform"
+    NORMAL = "normal"
+    LIST = "list"
+
+
+class CountOptions(MetaEnum):
+    "All available count options"
+    MIN = "min"
+    MAX = "max"
+    MEAN = "mean"
+    STD = "std"
+    LIST_VALUES = "list_values"
+
+
+REQUIRED_COUNT_OPTIONS = {
+    CountDistributions.UNIFORM: [CountOptions.MIN, CountOptions.MAX],
+    CountDistributions.NORMAL: [CountOptions.MEAN, CountOptions.STD],
+    CountDistributions.LIST: [CountOptions.LIST_VALUES],
+}
 
 
 class Environment(CompartmentList):
@@ -312,6 +336,35 @@ class Environment(CompartmentList):
         self.seed_set = True
         self.seed_used = SEED
 
+    @staticmethod
+    def validate_ingredient_info(ingredient_info):
+        """
+        Validates ingredient info and returns validated ingredient info
+        """
+        if "count" not in ingredient_info:
+            raise Exception("Ingredient info must contain a count")
+
+        if ingredient_info["count"] < 0:
+            raise Exception("Ingredient count must be greater than or equal to 0")
+
+        if "count_options" in ingredient_info:
+            count_options = ingredient_info["count_options"]
+            if "distribution" not in count_options:
+                raise Exception("Ingredient count options must contain a distribution")
+            if not CountDistributions.is_member(count_options["distribution"]):
+                raise Exception(
+                    f"{count_options['distribution']} is not a valid count distribution"
+                )
+            for required_option in REQUIRED_COUNT_OPTIONS.get(
+                count_options["distribution"], []
+            ):
+                if required_option not in count_options:
+                    raise Exception(
+                        f"Missing option '{required_option}' for {count_options['distribution']} distribution"
+                    )
+
+        return ingredient_info
+
     def _prep_ingredient_info(self, composition_info, ingredient_name=None):
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
@@ -322,6 +375,7 @@ class Environment(CompartmentList):
             ingredient_name if ingredient_name is not None else object_key
         )
         ingredient_info["object_name"] = object_key
+        ingredient_info = self.validate_ingredient_info(ingredient_info)
         return ingredient_info
 
     def _step_down(self, compartment_key, prev_compartment=None):
@@ -422,10 +476,11 @@ class Environment(CompartmentList):
             return spatial.distance.pdist(positions)
 
     def get_distances(self, ingredient_name, center):
+
         ingredient_positions = self.get_positions_for_ingredient(ingredient_name)
-        distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
 
         if len(ingredient_positions):
+            distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
             distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
@@ -517,7 +572,7 @@ class Environment(CompartmentList):
         self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
         self.store()
-        self.store_asTxt()
+        # self.store_asTxt()
         Writer(format=self.format_output).save(
             self,
             self.result_file,
@@ -1064,31 +1119,6 @@ class Environment(CompartmentList):
             )
             return None, None, None
 
-    def setCompartmentMesh(self, compartment, ref_obj):
-        """
-        Require host helper. Change the mesh of the given compartment and recompute
-        inside and surface point.
-        """
-        if compartment.ref_obj == ref_obj:
-            return
-        if os.path.isfile(ref_obj):
-            fileName, fileExtension = os.path.splitext(ref_obj)
-            if helper is not None:  # neeed the helper
-                helper.read(ref_obj)
-                geom = helper.getObject(fileName)
-                # reparent to the fill parent
-                # rotate ?
-                if helper.host != "c4d" and geom is not None:
-                    # need to rotate the transform that carry the shape
-                    helper.rotateObj(geom, [0.0, -pi / 2.0, 0.0])
-        else:
-            geom = helper.getObject(ref_obj)
-        if geom is not None:
-            vertices, faces, vnormals = self.extractMeshComponent(geom)
-            compartment.setMesh(
-                filename=ref_obj, vertices=vertices, faces=faces, vnormals=vnormals
-            )
-
     def update_largest_smallest_size(self, ingr):
         if ingr.encapsulating_radius > self.largestProteinSize:
             self.largestProteinSize = ingr.encapsulating_radius
@@ -1129,7 +1159,6 @@ class Environment(CompartmentList):
             name=compartment_key,
             object_info=object_info,
         )
-        compartment.initialize_shape(self.mesh_store)
         self._add_compartment(compartment, parent)
         return compartment
 
@@ -1259,6 +1288,7 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         # thread ?
         for compartment in self.compartments:
+            compartment.initialize_shape(self.mesh_store)
             self.log.info(
                 f"in Environment, compartment.is_orthogonal_bounding_box={compartment.is_orthogonal_bounding_box}"
             )
@@ -1363,7 +1393,6 @@ class Environment(CompartmentList):
 
         if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
-            # Graham turned this off on 5/16/12 to match August Repair for May Hybrid
             nbFreePoints = nbPoints  # -1
             for i, mingrs in enumerate(
                 self.molecules
@@ -1384,9 +1413,12 @@ class Environment(CompartmentList):
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
-                    gradient.mode_settings["object"].get_surface_distances(
-                        self, self.grid.masterGridPositions
-                    )
+                    if not hasattr(
+                        gradient.mode_settings["object"], "surface_distances"
+                    ):
+                        gradient.mode_settings["object"].set_surface_distances(
+                            self, self.grid.masterGridPositions
+                        )
                 self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
                 )
@@ -1853,9 +1885,8 @@ class Environment(CompartmentList):
                 self.activeIngr.pop(ind)
                 if verbose > 1:
                     print(
-                        "popping this gradient ingredient array must be redone "
-                        "using Sept 25, 2011 thesis version as above for nongraient "
-                        "ingredients, TODO: July 5, 2012"
+                        "popping this gradient ingredient array must be redone using Sept 25,",
+                        " 2011 thesis version as above for nongradient ingredients, TODO: July 5, 2012",
                     )
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
@@ -1951,6 +1982,44 @@ class Environment(CompartmentList):
         expected_min_distance = self.smallestProteinSize * 2
         return min_distance < expected_min_distance + 0.001
 
+    @staticmethod
+    def get_count_from_options(count_options):
+        """
+        Returns a count from the options
+        """
+        count = None
+        if count_options.get("distribution") == "uniform":
+            count = int(
+                numpy.random.randint(
+                    count_options.get("min", 0), count_options.get("max", 1)
+                )
+            )
+        elif count_options.get("distribution") == "normal":
+            count = int(
+                numpy.rint(
+                    numpy.random.normal(
+                        count_options.get("mean", 0), count_options.get("std", 1)
+                    )
+                )
+            )
+        elif count_options.get("distribution") == "list":
+            count = int(
+                numpy.rint(numpy.random.choice(count_options.get("list_values", None)))
+            )
+
+        return count
+
+    def update_count(self, allIngredients):
+        """
+        updates the count for all ingredients based on input options
+        """
+        for ingr in allIngredients:
+            if hasattr(ingr, "count_options") and ingr.count_options is not None:
+                count = self.get_count_from_options(count_options=ingr.count_options)
+                if count is not None:
+                    ingr.count = count
+                    ingr.left_to_place = count
+
     def pack_grid(
         self,
         seedNum=14,
@@ -1974,8 +2043,11 @@ class Environment(CompartmentList):
         # create a list of active ingredients indices in all recipes to allow
         # removing inactive ingredients when molarity is reached
         allIngredients = self.callFunction(self.getActiveIng)
-        # verify partner
 
+        # set the number of ingredients to pack
+        self.update_count(allIngredients)
+
+        # verify partner
         usePP = False
         if "usePP" in kw:
             usePP = kw["usePP"]
@@ -2303,7 +2375,7 @@ class Environment(CompartmentList):
         all_ingr_as_array = self.prep_molecules_for_save(
             distances, free_points, nbFreePoints
         )
-        print(f"placed {len(self.molecules)}")
+
         if self.saveResult:
             self.save_result(
                 free_points,
@@ -2407,7 +2479,7 @@ class Environment(CompartmentList):
         pickle.dump(result, rfile)
         rfile.close()
         for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "organelle" + str(i), "wb")
+            orfile = open(resultfilename + "_organelle_" + str(i), "wb")
             result = []
             for pos, rot, ingr, ptInd in orga.molecules:
                 result.append([pos, rot, ingr.name, ingr.compNum, ptInd])
@@ -2858,9 +2930,8 @@ class Environment(CompartmentList):
             loadPrcFileData(
                 "",
                 """
-   load-display p3tinydisplay
-   to force CPU only rendering (to make it available as an option
-   if everything else fail, use aux-display p3tinydisplay)
+   load-display p3tinydisplay # to force CPU only rendering
+   (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
    audio-library-name null # Prevent ALSA errors
    show-frame-rate-meter 0
    sync-video 0
@@ -2913,6 +2984,8 @@ class Environment(CompartmentList):
             self.static = []
             self.moving = None
             self.rb_panda = []
+            base.destroy()
+
         for compartment in self.compartments:
             if compartment.rbnode is None:
                 compartment.rbnode = compartment.addShapeRB(
@@ -3009,8 +3082,10 @@ class Environment(CompartmentList):
         # shape.add_geom(geom)
         # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         # inodenp.node().setMass(1.0)
-        inodenp.node().addShape(shape)  # ,TransformState.makePos(Point3(0, 0, 0)))
-        # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
+        inodenp.node().addShape(
+            shape
+        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)
+        # TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
 
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())

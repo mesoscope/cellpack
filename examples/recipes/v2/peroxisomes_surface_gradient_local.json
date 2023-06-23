@@ -1,7 +1,7 @@
 {
-    "version": "nucleus",
+    "version": "membrane",
     "format_version": "2.1",
-    "name": "peroxisomes_surface_gradient",
+    "name": "peroxisomes_surface_gradient_local",
     "bounding_box": [
         [
             -110,
@@ -21,7 +21,7 @@
             "pick_mode": "rnd",
             "mode": "surface",
             "mode_settings": {
-                "object": "nucleus",
+                "object": "membrane",
                 "scale_to_next_surface": false
             }
         }
@@ -36,7 +36,7 @@
             ],
             "representations": {
                 "mesh": {
-                    "path": "https://www.dl.dropboxusercontent.com/s/4d7rys8uwqz72xy/",
+                    "path": "/allen/aics/animated-cell/Saurabh/cellpack/cellpack/tests/geometry",
                     "name": "mean-membrane.obj",
                     "format": "obj"
                 }
@@ -51,7 +51,7 @@
             ],
             "representations": {
                 "mesh": {
-                    "path": "https://www.dl.dropboxusercontent.com/s/3194r3t40ewypxh/",
+                    "path": "/allen/aics/animated-cell/Saurabh/cellpack/cellpack/tests/geometry",
                     "name": "mean-nuc.obj",
                     "format": "obj"
                 }

@@ -40,7 +40,6 @@ def pack(recipe, config_path=None, analysis_config_path=None):
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
     autopack.helper = helper
-
     env = Environment(config=packing_config_data, recipe=recipe_data)
     env.helper = helper
 
@@ -61,6 +60,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
             config_name=packing_config_data["name"],
             recipe_version=recipe_data["version"],
             image_export_options=packing_config_data.get("image_export_options"),
+            parallel=packing_config_data.get("parallel", False),
         )
         if analysis_config_path is not None:
             analyze.run_analysis_workflow(
@@ -76,7 +76,7 @@ def main():
     start_time = time.time()
     fire.Fire(pack)
     execution_time = time.time() - start_time
-    print("The workflow took " + str(execution_time) + "s to run.")
+    print(f"The workflow took {execution_time:.2f} s to run.")
 
 
 if __name__ == "__main__":

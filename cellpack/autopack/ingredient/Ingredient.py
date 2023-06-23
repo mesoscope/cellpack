@@ -127,6 +127,7 @@ class Ingredient(Agent):
     ARGUMENTS = [
         "color",
         "count",
+        "count_options",
         "cutoff_boundary",
         "cutoff_surface",
         "distance_expression",
@@ -163,6 +164,7 @@ class Ingredient(Agent):
         type="single_sphere",
         color=None,
         count=0,
+        count_options=None,
         cutoff_boundary=None,
         cutoff_surface=0.0,
         distance_expression=None,
@@ -212,6 +214,7 @@ class Ingredient(Agent):
 
         self.molarity = molarity
         self.count = count
+        self.count_options = count_options
         self.priority = priority
         self.log.info(
             "priority %d,  self.priority %r",
@@ -1830,7 +1833,7 @@ class Ingredient(Agent):
                 ):  # you need a gradient here
                     rot_mat = self.alignRotation(env.grid.masterGridPositions[pt_ind])
                 else:
-                    rot_mat = autopack.helper.rotation_matrix(
+                    rot_mat = self.env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
                     )
             # for other points we get a random rotation
@@ -1854,7 +1857,7 @@ class Ingredient(Agent):
                 # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
                     # should we align to this rotation_axis ?
-                    jitter_rotation = autopack.helper.rotation_matrix(
+                    jitter_rotation = self.env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
                     )
             else:
@@ -2612,7 +2615,7 @@ class Ingredient(Agent):
 
     def pandaBullet_relax(
         self,
-        histoVol,
+        env,
         ptInd,
         compartment,
         target_grid_point_position,
@@ -2625,16 +2628,16 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        histoVol.setupPanda()
-        afvi = histoVol.afviewer
-        simulationTimes = histoVol.simulationTimes
-        runTimeDisplay = histoVol.runTimeDisplay
+        env.setupPanda()
+        afvi = env.afviewer
+        simulationTimes = env.simulationTimes
+        runTimeDisplay = env.runTimeDisplay
         is_realtime = moving is not None
-        gridPointsCoords = histoVol.grid.masterGridPositions
+        gridPointsCoords = env.grid.masterGridPositions
         insidePoints = {}
         newDistPoints = {}
         jtrans, rotMatj = self.oneJitter(
-            histoVol, target_grid_point_position, rotation_matrix
+            env, target_grid_point_position, rotation_matrix
         )
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
@@ -2657,9 +2660,9 @@ class Ingredient(Agent):
                         parent=afvi.movingMesh,
                     )
         # 2- get the neighboring object from ptInd
-        if histoVol.ingrLookForNeighbours:
+        if env.ingrLookForNeighbours:
             near_by_ingredients, placed_partners = self.get_partners(
-                histoVol, jtrans, rotation_matrix, compartment, afvi
+                env, jtrans, rotation_matrix, compartment, afvi
             )
             for i, elem in enumerate(near_by_ingredients):
                 ing = elem[2]
@@ -2720,7 +2723,7 @@ class Ingredient(Agent):
             ),
         )
         # run he simulation for simulationTimes
-        histoVol.callFunction(
+        env.callFunction(
             self.env.runBullet,
             (
                 self,

@@ -27,6 +27,7 @@ def analyze(
     analysis_config_path,
     recipe_path,
     packing_results_path,
+    output_path=None,
 ):
     """
     Runs specified analyses based on the config
@@ -40,12 +41,17 @@ def analyze(
     :return: void
     """
     t1 = time()
+
+    if output_path is None:
+        output_path = packing_results_path
+
     analysis_config = AnalysisConfigLoader(analysis_config_path).config
     recipe_data = RecipeLoader(recipe_path, False).recipe_data
 
     log.info(f"Packing results path: {packing_results_path}\n")
     analysis = Analysis(
         packing_results_path=packing_results_path,
+        output_path=output_path,
     )
     analysis.run_analysis_workflow(
         analysis_config=analysis_config,

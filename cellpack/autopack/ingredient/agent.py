@@ -148,7 +148,7 @@ class Agent:
                             partner_ingr.encapsulating_radius
                             + self.encapsulating_radius
                         )
-                        distance = partner[2]
+                        distance = partner[2][0]
                         if distance <= needed_distance:
                             return None
                 return current_packing_position

@@ -81,28 +81,28 @@ class Writer(object):
     def save_as_simularium(
         self, env, result_file_path, all_ingr_as_array, compartments
     ):
-        autopack.helper.clear()
+        env.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
-        autopack.helper.init_scene_with_objects(
+        env.helper.init_scene_with_objects(
             all_ingr_as_array, grid_positions, compartment_ids, env.show_sphere_trees
         )
 
         if compartments is not None:
             for compartment in compartments:
-                autopack.helper.add_compartment_to_scene(compartment)
+                env.helper.add_compartment_to_scene(compartment)
 
         # plots the distances used to calculate gradients
         # TODO: add an option to plot grid points for compartments and for gradients
         if grid_positions is not None and len(env.gradients):
             for _, gradient in env.gradients.items():
                 values = gradient.distances
-                autopack.helper.add_grid_data_to_scene(
+                env.helper.add_grid_data_to_scene(
                     f"{gradient.name}-distances", grid_positions, values
                 )
 
-        autopack.helper.writeToFile(
+        env.helper.writeToFile(
             f"{result_file_path}_results", env.boundingBox, env.name, env.version
         )
 

@@ -1,5 +1,5 @@
 {
-    "version": "nucleus",
+    "version": "nucleus_square",
     "format_version": "2.1",
     "name": "peroxisomes_surface_gradient",
     "bounding_box": [
@@ -17,7 +17,7 @@
     "gradients": {
         "surface_gradient": {
             "description": "gradient based on distance from the surface of a mesh",
-            "weight_mode": "cube",
+            "weight_mode": "square",
             "pick_mode": "rnd",
             "mode": "surface",
             "mode_settings": {
