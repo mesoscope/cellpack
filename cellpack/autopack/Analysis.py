@@ -35,7 +35,6 @@ from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
 from cellpack.autopack.writers.ImageWriter import ImageWriter
-
 import concurrent.futures
 import multiprocessing
 
