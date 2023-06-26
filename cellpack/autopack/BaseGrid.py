@@ -208,8 +208,7 @@ class BaseGrid:
         self.free_points = list(range(self.gridVolume))
         self.nbFreePoints = len(self.free_points)
         self.log.info(
-            "Lookup: %d, bounding box: %r, gridSpacing %r, length compartment_ids %r",
-            boundingBox,
+            "gridSpacing %r, length compartment_ids %r",
             self.gridSpacing,
             len(self.compartment_ids),
         )

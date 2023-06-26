@@ -268,7 +268,7 @@ class MeshStore:
         mesh = self.get_object(geomname)
         if mesh is not None:
             query = trimesh.proximity.ProximityQuery(mesh)
-            (closet_point, distance, triangle_id) = query.on_surface([center])
+            (_, distance, _) = query.on_surface([center])
             return distance[0]
         return 1.0
 

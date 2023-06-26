@@ -1085,9 +1085,9 @@ class Ingredient(Agent):
             ):
                 continue
             # checking compartments I don't belong to
-            res = compartment.OGsrfPtsBht.query(tuple(numpy.array([point])))
+            res = compartment.OGsrfPtsBht.query(point)
             if len(res) == 2:
-                d = res[0][0]
+                d = res[0]
                 if d < cutoff:
                     # too close to a surface
                     return False

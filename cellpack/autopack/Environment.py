@@ -74,6 +74,7 @@ from cellpack.autopack.utils import (
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
+    load_object_from_pickle,
 )
 from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
@@ -98,6 +99,9 @@ except ImportError:
 
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
+
+# set default pickle protocol to highest level
+pickle.DEFAULT_PROTOCOL = pickle.HIGHEST_PROTOCOL
 
 SEED = 15
 LOG = False
@@ -1049,6 +1053,44 @@ class Environment(CompartmentList):
             json.dump(data, fp=f)
         f.close()
 
+    def restore_grids_from_pickle(self, grid_file_path):
+        """
+        Read and setup the grid from the given filename. (pickle)
+        """
+        print(f"Loading grid from {grid_file_path}")
+        with open(grid_file_path, "rb") as file_obj:
+            # load env grid
+            self.grid = load_object_from_pickle(self.grid, file_obj)
+
+            # load compartment grids
+            for ct, compartment in enumerate(self.compartments):
+                self.compartments[ct] = load_object_from_pickle(compartment, file_obj)
+
+            # load mesh store
+            self.mesh_store = load_object_from_pickle(self.mesh_store, file_obj)
+
+            # clear the triangles_tree cache
+            for _, geom in self.mesh_store.scene.geometry.items():
+                geom._cache.delete("triangles_tree")
+
+    def save_grids_to_pickle(self, grid_file_path):
+        """
+        Save the current grid and compartment grids to file. (pickle)
+        """
+        print(f"Saving grid to {grid_file_path}")
+        if not os.path.exists(os.path.dirname(grid_file_path)):
+            raise ValueError(f"Check grid file path: {grid_file_path}")
+        with open(grid_file_path, "wb") as file_obj:
+            # dump env grid
+            pickle.dump(self.grid, file_obj)
+
+            # dump compartment grids
+            for compartment in self.compartments:
+                pickle.dump(compartment, file_obj)
+
+            # dump mesh store
+            pickle.dump(self.mesh_store, file_obj)
+
     def restoreGridFromFile(self, gridFileName):
         """
         Read and setup the grid from the given filename. (pickle)
@@ -1058,8 +1100,9 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
         self.readArraysFromFile(f)
-        for compartment in self.compartments:
-            compartment.readGridFromFile(f)
+        for ct, compartment in enumerate(self.compartments):
+            # compartment.readGridFromFile(f)
+            compartment = compartment.load_compartment_object(f)
             aInteriorGrids.append(compartment.insidePoints)
             aSurfaceGrids.append(compartment.surfacePoints)
             compartment.OGsrfPtsBht = spatial.cKDTree(
@@ -1068,6 +1111,7 @@ class Environment(CompartmentList):
             compartment.compute_volume_and_set_count(
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
+            self.compartments[ct] = compartment
         f.close()
         # TODO: restore surface distances on loading from grid
         self.grid.aInteriorGrids = aInteriorGrids
@@ -1368,30 +1412,27 @@ class Environment(CompartmentList):
             self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
-                self.restoreGridFromFile(self.previous_grid_file)
+                # self.restoreGridFromFile(self.previous_grid_file)
+                self.restore_grids_from_pickle(self.previous_grid_file)
         else:
             self.build_compartment_grids()
 
-        self.exteriorVolume = self.grid.computeExteriorVolume(
-            compartments=self.compartments,
-            space=self.smallestProteinSize,
-            fbox_bb=self.fbox_bb,
-        )
-        if self.previous_grid_file is None:
-            self.saveGridToFile(self.grid_file_out)
-            self.grid.filename = self.grid_file_out
-            self.previous_grid_file = self.grid_file_out
+            self.exteriorVolume = self.grid.computeExteriorVolume(
+                compartments=self.compartments,
+                space=self.smallestProteinSize,
+                fbox_bb=self.fbox_bb,
+            )
 
-        r = self.exteriorRecipe
-        if r:
-            r.setCount(self.exteriorVolume)  # should actually use the fillBB
-        if not rebuild:
-            for c in self.compartments:
-                c.setCount()
-        else:
-            self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
+            r = self.exteriorRecipe
+            if r:
+                r.setCount(self.exteriorVolume)  # should actually use the fillBB
 
-        if self.previous_grid_file is not None:
+            if not rebuild:
+                for c in self.compartments:
+                    c.setCount()
+            else:
+                self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
+
             distance = self.grid.distToClosestSurf  # [:]
             nbFreePoints = nbPoints  # -1
             for i, mingrs in enumerate(
@@ -1408,6 +1449,13 @@ class Environment(CompartmentList):
                         i, mingrs, distance, nbFreePoints, organelle.molecules
                     )
             self.grid.nbFreePoints = nbFreePoints
+
+            # save grids to pickle
+            # self.saveGridToFile(self.grid_file_out)
+            self.grid.filename = self.grid_file_out
+            self.previous_grid_file = self.grid_file_out
+
+            self.save_grids_to_pickle(self.grid_file_out)
 
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
@@ -2251,6 +2299,7 @@ class Environment(CompartmentList):
 
             if ingr.encapsulating_radius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulating_radius
+
             self.log.info(
                 "attempting to place near %d: %r",
                 ptInd,
@@ -2930,17 +2979,16 @@ class Environment(CompartmentList):
             loadPrcFileData(
                 "",
                 """
-   load-display p3tinydisplay # to force CPU only rendering
-   (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
-   audio-library-name null # Prevent ALSA errors
-   show-frame-rate-meter 0
-   sync-video 0
-   bullet-max-objects 10240
-   bullet-broadphase-algorithm sap
-   bullet-sap-extents 10000.0
-   textures-power-2 up
-   textures-auto-power-2 #t
-""",
+                load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
+                audio-library-name null # Prevent ALSA errors
+                show-frame-rate-meter 0
+                sync-video 0
+                bullet-max-objects 10240
+                bullet-broadphase-algorithm sap
+                bullet-sap-extents 10000.0
+                textures-power-2 up
+                textures-auto-power-2 #t
+                """,
             )
             #            loadPrcFileData("", "window-type none" )
             # Make sure we don't need a graphics engine
