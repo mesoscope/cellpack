@@ -432,6 +432,8 @@ class DBRecipeHandler(object):
             _, doc_id = object_doc.should_write(self.db)
             if doc_id:
                 print(f"objects/{object_doc.name} is already in firestore")
+                obj_path = self.db.create_path("objects", doc_id)
+                self.objects_to_path_map[obj_name] = obj_path
             else:
                 _, obj_path = self.upload_data("objects", object_doc.as_dict())
                 self.objects_to_path_map[obj_name] = obj_path
