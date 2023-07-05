@@ -41,6 +41,7 @@ import os
 import re
 import shutil
 from os import path, environ
+import pwd
 from pathlib import Path
 import urllib.request as urllib
 from collections import OrderedDict
@@ -48,6 +49,9 @@ import ssl
 import json
 
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+from cellpack.autopack.FirebaseHandler import FirebaseHandler
+from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
+from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
 
 packageContainsVFCommands = 1
@@ -281,7 +285,8 @@ def is_remote_path(file_path):
     @param file_path: str
     """
     for ele in DATABASE_NAME:
-        return ele in file_path
+        if ele in file_path:
+            return ele in file_path
 
 
 def convert_db_shortname_to_url(file_location):
@@ -381,12 +386,17 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
 
 
 def load_file(filename, destination="", cache="geometries", force=None):
+    # what is the param destination for? should we use it to store db names?
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
+        # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-linear -c examples/packing-configs/run.json`
         if database_name == "firebase":
-            # TODO: read from firebase
-            # return data
-            pass
+            recipe_id = file_path.split("/")[-1]
+            db = FirebaseHandler()
+            db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
+            db_handler = DBRecipeHandler(db)
+            downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
+            return downloaded_recipe_data, database_name
         else:
             local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force
@@ -395,7 +405,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
         )
-    return json.load(open(local_file_path, "r"))
+    return json.load(open(local_file_path, "r")), None
 
 
 def fixPath(adict):  # , k, v):
@@ -531,6 +541,15 @@ def clearCaches(*args):
             print("problem cleaning ", cache_dir[k])
 
 
+def write_username_to_creds():
+    username = pwd.getpwuid(os.getuid())[0]
+    creds = read_json_file("./.creds")
+    if creds is None or "username" not in creds:
+        creds = {}
+        creds["username"] = username
+        write_json_file("./.creds", creds)
+
+
 # we should read a file to fill the RECIPE Dictionary
 # so we can add some and write/save setup
 # afdir  or user_pref
@@ -539,6 +558,7 @@ if checkAtstartup:
     checkPath()
     updatePathJSON()
     checkRecipeAvailable()
+    write_username_to_creds()
     log.info("path are updated ")
 
 log.info(f"currently number recipes is {len(RECIPES)}")

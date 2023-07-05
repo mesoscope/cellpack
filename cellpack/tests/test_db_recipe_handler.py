@@ -95,6 +95,12 @@ def test_upload_compositions():
     }
 
 
+def test_upload_gradients():
+    data = [{"name": "test_grad_name", "test_key": "test_value"}]
+    gradient_doc = DBRecipeHandler(mock_db)
+    gradient_doc.upload_gradients(data)
+
+
 def test_get_recipe_id():
     recipe_data = {
         "name": "test",
@@ -103,7 +109,7 @@ def test_get_recipe_id():
         "composition": {},
     }
     recipe_doc = DBRecipeHandler(mock_db)
-    assert recipe_doc.get_recipe_id(recipe_data) == "test_v1.0.0"
+    assert recipe_doc.get_recipe_id(recipe_data) == "test_v-1.0.0"
 
 
 def test_upload_collections():

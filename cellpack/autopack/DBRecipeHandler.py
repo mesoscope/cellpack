@@ -57,6 +57,14 @@ class CompositionDoc(DataDoc):
         return data
 
     @staticmethod
+    def get_gradient_reference(downloaded_data, db):
+        if "gradient" in downloaded_data and db.is_reference(
+            downloaded_data["gradient"]
+        ):
+            gradient_key = downloaded_data["gradient"]
+            downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
+
+    @staticmethod
     def get_reference_data(key_or_dict, db):
         """
         Returns the db data for a reference, and the key if it exists.
@@ -66,12 +74,14 @@ class CompositionDoc(DataDoc):
         if DataDoc.is_key(key_or_dict) and db.is_reference(key_or_dict):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
+            CompositionDoc.get_gradient_reference(downloaded_data, db)
             return downloaded_data, None
         elif key_or_dict and isinstance(key_or_dict, dict):
             object_dict = key_or_dict
             if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
                 downloaded_data, _ = db.get_doc_by_ref(key)
+                CompositionDoc.get_gradient_reference(downloaded_data, db)
                 return downloaded_data, key
         return {}, None
 
@@ -96,6 +106,19 @@ class CompositionDoc(DataDoc):
                 ):
                     self.resolve_db_regions(downloaded_data, db)
 
+    @staticmethod
+    def gradient_list_to_dict(prep_recipe_data):
+        """
+        Convert gradient list to dict for resolve_local_regions
+        """
+        if "gradients" in prep_recipe_data and isinstance(
+            prep_recipe_data["gradients"], list
+        ):
+            gradient_dict = {}
+            for gradient in prep_recipe_data["gradients"]:
+                gradient_dict[gradient["name"]] = gradient
+            prep_recipe_data["gradients"] = gradient_dict
+
     def resolve_local_regions(self, local_data, recipe_data, db):
         """
         Recursively resolves the regions of a composition from local data.
@@ -103,12 +126,20 @@ class CompositionDoc(DataDoc):
         """
         unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
         prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
+        # `gradients` is a list, convert it to dict for easy access and replace
+        CompositionDoc.gradient_list_to_dict(prep_recipe_data)
         if "object" in local_data and local_data["object"] is not None:
             if DataDoc.is_key(local_data["object"]):
                 key_name = local_data["object"]
             else:
                 key_name = local_data["object"]["name"]
             local_data["object"] = prep_recipe_data["objects"][key_name]
+            if "gradient" in local_data["object"] and isinstance(
+                local_data["object"]["gradient"], str
+            ):
+                local_data["object"]["gradient"] = prep_recipe_data["gradients"][
+                    local_data["object"]["gradient"]
+                ]
         for region_name in local_data["regions"]:
             for index, key_or_dict in enumerate(local_data["regions"][region_name]):
                 if not DataDoc.is_key(key_or_dict):
@@ -121,6 +152,12 @@ class CompositionDoc(DataDoc):
                         local_data["regions"][region_name][index][
                             "object"
                         ] = prep_recipe_data["objects"][obj_item["name"]]
+                    # replace gradient reference with gradient data
+                    obj_data = local_data["regions"][region_name][index]["object"]
+                    if "gradient" in obj_data and isinstance(obj_data["gradient"], str):
+                        local_data["regions"][region_name][index]["object"][
+                            "gradient"
+                        ] = prep_recipe_data["gradients"][obj_data["gradient"]]
                 else:
                     comp_name = local_data["regions"][region_name][index]
                     prep_comp_data = prep_recipe_data["composition"][comp_name]
@@ -296,11 +333,29 @@ class ObjectDoc(DataDoc):
         return None, None
 
 
+class GradientDoc(DataDoc):
+    def __init__(self, settings):
+        super().__init__()
+        self.settings = settings
+
+    def should_write(self, db, grad_name):
+        docs = db.get_doc_by_name("gradients", grad_name)
+        if docs and len(docs) >= 1:
+            for doc in docs:
+                local_data = DBRecipeHandler.prep_data_for_db(db.doc_to_dict(doc))
+                db_data = db.doc_to_dict(doc)
+                difference = DeepDiff(db_data, local_data, ignore_order=True)
+                if not difference:
+                    return doc, db.doc_id(doc)
+        return None, None
+
+
 class DBRecipeHandler(object):
     def __init__(self, db_handler):
         self.db = db_handler
         self.objects_to_path_map = {}
         self.comp_to_path_map = {}
+        self.grad_to_path_map = {}
 
     @staticmethod
     def is_nested_list(item):
@@ -309,6 +364,14 @@ class DBRecipeHandler(object):
             and len(item) > 0
             and isinstance(item[0], (list, tuple))
         )
+
+    @staticmethod
+    def is_db_dict(item):
+        if isinstance(item, dict) and len(item) > 0:
+            for key, value in item.items():
+                if key.isdigit() and isinstance(value, list):
+                    return True
+        return False
 
     @staticmethod
     def prep_data_for_db(data):
@@ -355,10 +418,29 @@ class DBRecipeHandler(object):
             doc = self.db.set_doc(collection, id, modified_data)
             return id, self.db.create_path(collection, id)
 
+    def upload_gradients(self, gradients):
+        for gradient in gradients:
+            gradient_name = gradient["name"]
+            gradient_doc = GradientDoc(settings=gradient)
+            _, doc_id = gradient_doc.should_write(self.db, gradient_name)
+            if doc_id:
+                print(f"gradients/{gradient_name} is already exists in firestore")
+                self.grad_to_path_map[gradient_name] = self.db.create_path(
+                    "gradients", doc_id
+                )
+            else:
+                _, grad_path = self.upload_data("gradients", gradient_doc.settings)
+                self.grad_to_path_map[gradient_name] = grad_path
+
     def upload_objects(self, objects):
         for obj_name in objects:
             objects[obj_name]["name"] = obj_name
-            object_doc = ObjectDoc(name=obj_name, settings=objects[obj_name])
+            modify_objects = copy.deepcopy(objects)
+            # replace gradient name with path before uploading
+            if "gradient" in modify_objects[obj_name]:
+                grad_name = modify_objects[obj_name]["gradient"]
+                modify_objects[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
+            object_doc = ObjectDoc(name=obj_name, settings=modify_objects[obj_name])
             _, doc_id = object_doc.should_write(self.db)
             if doc_id:
                 print(f"objects/{object_doc.name} is already in firestore")
@@ -416,7 +498,7 @@ class DBRecipeHandler(object):
         """
         recipe_name = recipe_data["name"]
         recipe_version = recipe_data["version"]
-        key = f"{recipe_name}_v{recipe_version}"
+        key = f"{recipe_name}_v-{recipe_version}"
         return key
 
     def upload_collections(self, recipe_meta_data, recipe_data):
@@ -424,10 +506,12 @@ class DBRecipeHandler(object):
         Separate collections from recipe data and upload them to db
         """
         recipe_to_save = copy.deepcopy(recipe_meta_data)
+        gradients = recipe_data.get("gradients")
         objects = recipe_data["objects"]
         compositions = recipe_data["composition"]
-        # TODO: test gradients recipes
-        # gradients = recipe_data.get("gradients")
+        # save gradients to db
+        if gradients:
+            self.upload_gradients(gradients)
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
@@ -461,3 +545,34 @@ class DBRecipeHandler(object):
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
+
+    def prep_db_doc_for_download(self, db_doc):
+        """
+        convert data from db and resolve references.
+        """
+        prep_data = {}
+        if isinstance(db_doc, dict):
+            for key, value in db_doc.items():
+                if self.is_db_dict(value):
+                    unpack_dict = [value[str(i)] for i in range(len(value))]
+                    prep_data[key] = unpack_dict
+                elif key == "composition":
+                    compositions = db_doc["composition"]
+                    for comp_name, reference in compositions.items():
+                        ref_link = reference["inherit"]
+                        comp_doc = CompositionDoc(
+                            comp_name,
+                            object_key=None,
+                            count=None,
+                            regions={},
+                            molarity=None,
+                        )
+                        composition_data, _ = comp_doc.get_reference_data(
+                            ref_link, self.db
+                        )
+                        comp_doc.resolve_db_regions(composition_data, self.db)
+                        compositions[comp_name] = composition_data
+                    prep_data[key] = compositions
+                else:
+                    prep_data[key] = value
+        return prep_data
