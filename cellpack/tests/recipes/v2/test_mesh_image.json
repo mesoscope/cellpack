@@ -59,7 +59,7 @@
         },
         "primitive_sphere": {
             "object": "primitive_sphere",
-            "count": 10
+            "count": 5
         }
     }
 }

@@ -1,24 +1,31 @@
 {
-    "name": "analyze_parallel",
+    "name": "analyze_parallel_convolved",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
-    "out": "out/parallel",
+    "out": "out",
     "overwrite_place_method": true,
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": false,
-    "save_plot_figures": true,
-    "parallel": true,
+    "save_plot_figures": false,
+    "parallel": false,
     "load_from_grid_file": true,
-    "number_of_packings": 64,
+    "number_of_packings": 1,
     "spacing": null,
     "use_periodicity": false,
     "show_sphere_trees": false,
     "image_export_options": {
         "hollow": false,
         "voxel_size": [1,1,1],
-        "projection_axis": "z"
+        "projection_axis": "z",
+        "convolution_options": {
+            "psf": "gaussian",
+            "psf_parameters":{
+                "sigma": 3,
+                "size": [5,5,5]
+            }
+        }
     }
 }

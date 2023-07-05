@@ -68,6 +68,7 @@ class Gradient:
         self.weight_mode = gradient_data["weight_mode"]
         self.pick_mode = gradient_data["pick_mode"]
         self.mode_settings = gradient_data["mode_settings"]
+        self.weight_mode_settings = gradient_data["weight_mode_settings"]
 
         self.weight = None
         self.bb = None  # this is set when weight map is built in the env
@@ -212,6 +213,11 @@ class Gradient:
             self.weight = (1.0 - scaled_distances) ** 2
         elif self.weight_mode == "cube":
             self.weight = (1.0 - scaled_distances) ** 3  # TODO: make general power mode
+        elif self.weight_mode == "power":
+            self.weight = (1.0 - scaled_distances) ** self.weight_mode_settings["power"]
+        elif self.weight_mode == "exponential":
+            self.weight = numpy.exp(-scaled_distances / self.weight_mode_settings["decay_length"])
+    
         self.weight[numpy.isnan(self.weight)] = 0
         # TODO: talk to Ludo about calculating gaussian weights
 

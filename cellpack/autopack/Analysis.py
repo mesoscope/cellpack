@@ -2179,9 +2179,8 @@ class Analysis:
         for seed_index, ingr_dict in input_dict.items():
             for ingr_name, value_list in ingr_dict.items():
                 if ingr_name not in output_dict:
-                    output_dict[ingr_name] = value_list
-                else:
-                    output_dict[ingr_name].extend(value_list)
+                    output_dict[ingr_name] = []
+                output_dict[ingr_name].extend(value_list)
 
         return output_dict
 
