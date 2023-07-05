@@ -553,13 +553,14 @@ def write_username_to_creds():
 # we should read a file to fill the RECIPE Dictionary
 # so we can add some and write/save setup
 # afdir  or user_pref
-
 if checkAtstartup:
     checkPath()
     updatePathJSON()
     checkRecipeAvailable()
-    write_username_to_creds()
     log.info("path are updated ")
+
+# write username to creds
+write_username_to_creds()
 
 log.info(f"currently number recipes is {len(RECIPES)}")
 # check cache directory create if doesnt exit.abs//should be in user pref?
