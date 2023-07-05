@@ -21,6 +21,9 @@ from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 from cellpack.autopack.upy import hostHelper
 import collada
 
+import boto3
+import logging
+
 
 class Instance:
     def __init__(self, name, instance_id, unique_id, radius, viz_type, mesh=None):
@@ -1331,6 +1334,7 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
+        print("simularium helper---", vars(converted_data))
         TrajectoryConverter(converted_data).save(file_name, False)
 
     def raycast(self, **kw):
@@ -1345,3 +1349,16 @@ class simulariumHelper(hostHelper.Helper):
 
     def raycast_test(self, obj, start, end, length, **kw):
         return
+    
+    # def store_results_in_s3(bucket_name, file_name, object_name=None):
+    #     if object_name is None:
+    #         object_name = file_name
+
+    #     s3_client = boto3.client("3s")
+    #     try:
+    #         response = s3_client.upload_file(file_name, bucket_name, object_name)
+    #     except ClientError as e:
+    #         logging.error(e)
+    #         return False
+    #     return True
+
