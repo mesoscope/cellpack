@@ -3,6 +3,7 @@ import ast
 from firebase_admin import credentials, firestore
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
+
 class FirebaseHandler(object):
     """
     Retrieve data and perform common tasks when working with firebase.
@@ -18,7 +19,7 @@ class FirebaseHandler(object):
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
-    
+
     @staticmethod
     def write_creds_path():
         path = ast.literal_eval(input("provide path to firebase credentials: "))
@@ -26,17 +27,19 @@ class FirebaseHandler(object):
         data = read_json_file(path)
         if data is None:
             raise ValueError("The path to your credentials doesn't exist")
-        firebase_cred = {
-            "firebase": data
-        }
-        write_json_file("./.creds", firebase_cred)
+        firebase_cred = {"firebase": data}
+        creds = read_json_file("./.creds")
+        if creds is None:
+            write_json_file("./.creds", firebase_cred)
+        else:
+            creds["firebase"] = data
+            write_json_file("./.creds", creds)
         return firebase_cred
-    
 
     @staticmethod
     def get_creds():
         creds = read_json_file("./.creds")
-        if creds is None:
+        if creds is None or "firebase" not in creds:
             creds = FirebaseHandler.write_creds_path()
         return creds["firebase"]
 

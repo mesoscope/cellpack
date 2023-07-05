@@ -41,6 +41,7 @@ import os
 import re
 import shutil
 from os import path, environ
+import pwd
 from pathlib import Path
 import urllib.request as urllib
 from collections import OrderedDict
@@ -50,6 +51,7 @@ import json
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
+from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
 
 packageContainsVFCommands = 1
@@ -539,6 +541,15 @@ def clearCaches(*args):
             print("problem cleaning ", cache_dir[k])
 
 
+def write_username_to_creds():
+    username = pwd.getpwuid(os.getuid())[0]
+    creds = read_json_file("./.creds")
+    if creds is None or "username" not in creds:
+        creds = {}
+        creds["username"] = username
+        write_json_file("./.creds", creds)
+
+
 # we should read a file to fill the RECIPE Dictionary
 # so we can add some and write/save setup
 # afdir  or user_pref
@@ -547,6 +558,7 @@ if checkAtstartup:
     checkPath()
     updatePathJSON()
     checkRecipeAvailable()
+    write_username_to_creds()
     log.info("path are updated ")
 
 log.info(f"currently number recipes is {len(RECIPES)}")

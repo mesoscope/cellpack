@@ -180,7 +180,7 @@ class RecipeLoader(object):
 
     @staticmethod
     def _is_obj(comp_or_obj):
-        # if the top level of a downloaded comp doesn't have the key `name`, it's an obj 
+        # if the top level of a downloaded comp doesn't have the key `name`, it's an obj
         return not comp_or_obj.get("name") and "object" in comp_or_obj
 
     def _collect_and_sort_data(self, comp_data):
@@ -208,14 +208,16 @@ class RecipeLoader(object):
                 # RecipeLoader._remove_name_key(object_copy)
             if "regions" in comp_value and comp_value["regions"] is not None:
                 for region_name in comp_value["regions"]:
-                    composition[comp_name]["regions"]={}
-                    composition[comp_name].setdefault("regions",{})[region_name]=[]
+                    composition[comp_name]["regions"] = {}
+                    composition[comp_name].setdefault("regions", {})[region_name] = []
                     for region_item in comp_value["regions"][region_name]:
-                        if RecipeLoader._is_obj(region_item):  
-                            composition[comp_name]["regions"][region_name].append({
-                                "object": region_item["object"].get("name"),
-                                "count": region_item.get("count")
-                            })
+                        if RecipeLoader._is_obj(region_item):
+                            composition[comp_name]["regions"][region_name].append(
+                                {
+                                    "object": region_item["object"].get("name"),
+                                    "count": region_item.get("count"),
+                                }
+                            )
                             object_copy = copy.deepcopy(region_item["object"])
                             objects[object_copy["name"]] = object_copy
                             if "gradient" in object_copy and isinstance(
@@ -225,12 +227,15 @@ class RecipeLoader(object):
                                     object_copy, objects, gradients
                                 )
                         # RecipeLoader._remove_name_key(object_copy)
-                        else: 
-                            composition[comp_name]["regions"][region_name].append(region_item["name"])
+                        else:
+                            composition[comp_name]["regions"][region_name].append(
+                                region_item["name"]
+                            )
         return objects, gradients, composition
 
-
-    def _compile_recipe_from_firebase(self, db_recipe_data, obj_dict, grad_dict, comp_dict):
+    def _compile_recipe_from_firebase(
+        self, db_recipe_data, obj_dict, grad_dict, comp_dict
+    ):
         """
         Compile recipe data from firebase recipe data into a ready-to-pack structure
         """
@@ -241,17 +246,19 @@ class RecipeLoader(object):
         recipe_data["bounding_box"] = db_recipe_data["bounding_box"]
         recipe_data["objects"] = obj_dict
         if grad_dict:
-            recipe_data["gradients"] = [
-                {**v} for v in grad_dict.values()
-            ]
+            recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
         recipe_data["composition"] = comp_dict
         return recipe_data
 
     def _read(self):
         new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
         if database_name == "firebase":
-            objects, gradients, composition = self._collect_and_sort_data(new_values["composition"])
-            new_values = self._compile_recipe_from_firebase(new_values, objects, gradients, composition)
+            objects, gradients, composition = self._collect_and_sort_data(
+                new_values["composition"]
+            )
+            new_values = self._compile_recipe_from_firebase(
+                new_values, objects, gradients, composition
+            )
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
