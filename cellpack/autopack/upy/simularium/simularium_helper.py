@@ -17,12 +17,11 @@ from simulariumio import (
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
+from cellpack.autopack.FirebaseHandler import FirebaseHandler
 
 from cellpack.autopack.upy import hostHelper
+from cellpack.autopack.AWSHandler import AWSHandler
 import collada
-
-import boto3
-import logging
 
 
 class Instance:
@@ -1334,8 +1333,11 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
-        print("simularium helper---", vars(converted_data))
         TrajectoryConverter(converted_data).save(file_name, False)
+        print("file--", file_name)
+        simularium_file = file_name + ".simularium"
+        print("sim_file", simularium_file)
+        # simulariumHelper.store_results_to_s3(simularium_file,folder_name="simularium/")
 
     def raycast(self, **kw):
         intersect = False
@@ -1350,15 +1352,28 @@ class simulariumHelper(hostHelper.Helper):
     def raycast_test(self, obj, start, end, length, **kw):
         return
     
-    # def store_results_in_s3(bucket_name, file_name, object_name=None):
-    #     if object_name is None:
-    #         object_name = file_name
+    @staticmethod
+    def store_results_to_s3(file_name, folder_name=None, object_name=None):
+        handler = AWSHandler(
+            bucket_name="cellpack-results",
+            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
+            region_name="us-west-2",
+        )
+        print(handler.upload_file(file_name,folder_name,object_name))
 
-    #     s3_client = boto3.client("3s")
-    #     try:
-    #         response = s3_client.upload_file(file_name, bucket_name, object_name)
-    #     except ClientError as e:
-    #         logging.error(e)
-    #         return False
-    #     return True
+    def upload_metadata_to_firebase(result_name, aws_url):
+        db = FirebaseHandler()
+        username = db.get_username()
+        timestamp = db.create_timestamp()
+        db.set_doc(
+            "results", 
+            result_name,
+            {
+            "user": username,
+            "created": timestamp,
+            "aws_url": aws_url
+            }
+        )
+    upload_metadata_to_firebase("testing result2", "testing_url2")
 

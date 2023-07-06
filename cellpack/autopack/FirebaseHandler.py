@@ -42,6 +42,14 @@ class FirebaseHandler(object):
         if creds is None or "firebase" not in creds:
             creds = FirebaseHandler.write_creds_path()
         return creds["firebase"]
+    
+    @staticmethod
+    def get_username():
+        creds = read_json_file("./.creds")
+        try:
+            return creds["username"]
+        except KeyError:
+            raise ValueError("No username found in .creds file")
 
     def db_name(self):
         return self.name
@@ -53,6 +61,10 @@ class FirebaseHandler(object):
     @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
+    
+    @staticmethod
+    def create_timestamp():
+        return firestore.SERVER_TIMESTAMP
 
     @staticmethod
     def get_path_from_ref(doc):
