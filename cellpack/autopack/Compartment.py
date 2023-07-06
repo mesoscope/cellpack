@@ -3131,6 +3131,14 @@ class Compartment(CompartmentList):
     ):
         """
         Creates a mask of the compartment voxelization
+
+        :param x_width: number of voxels in the x direction
+        :param y_width: number of voxels in the y direction
+        :param z_width: number of voxels in the z direction
+        :param center: center of the voxelization
+        :param voxel_size: size of the voxels
+        :param mesh_store: mesh store
+        :param hollow: if True, the mask will be hollow otherwise it will fill in the segmentation
         """
         if voxel_size is None:
             voxel_size = numpy.array([1, 1, 1], dtype=int)

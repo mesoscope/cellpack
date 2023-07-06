@@ -90,8 +90,6 @@ from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
-from cellpack.autopack.interface_objects.meta_enum import MetaEnum
-
 try:
     helper = autopack.helper
 except ImportError:
@@ -106,29 +104,6 @@ pickle.DEFAULT_PROTOCOL = pickle.HIGHEST_PROTOCOL
 SEED = 15
 LOG = False
 verbose = 0
-
-
-class CountDistributions(MetaEnum):
-    "All available count distributions"
-    UNIFORM = "uniform"
-    NORMAL = "normal"
-    LIST = "list"
-
-
-class CountOptions(MetaEnum):
-    "All available count options"
-    MIN = "min"
-    MAX = "max"
-    MEAN = "mean"
-    STD = "std"
-    LIST_VALUES = "list_values"
-
-
-REQUIRED_COUNT_OPTIONS = {
-    CountDistributions.UNIFORM: [CountOptions.MIN, CountOptions.MAX],
-    CountDistributions.NORMAL: [CountOptions.MEAN, CountOptions.STD],
-    CountDistributions.LIST: [CountOptions.LIST_VALUES],
-}
 
 
 class Environment(CompartmentList):
@@ -340,35 +315,6 @@ class Environment(CompartmentList):
         self.seed_set = True
         self.seed_used = SEED
 
-    @staticmethod
-    def validate_ingredient_info(ingredient_info):
-        """
-        Validates ingredient info and returns validated ingredient info
-        """
-        if "count" not in ingredient_info:
-            raise Exception("Ingredient info must contain a count")
-
-        if ingredient_info["count"] < 0:
-            raise Exception("Ingredient count must be greater than or equal to 0")
-
-        if "count_options" in ingredient_info:
-            count_options = ingredient_info["count_options"]
-            if "distribution" not in count_options:
-                raise Exception("Ingredient count options must contain a distribution")
-            if not CountDistributions.is_member(count_options["distribution"]):
-                raise Exception(
-                    f"{count_options['distribution']} is not a valid count distribution"
-                )
-            for required_option in REQUIRED_COUNT_OPTIONS.get(
-                count_options["distribution"], []
-            ):
-                if required_option not in count_options:
-                    raise Exception(
-                        f"Missing option '{required_option}' for {count_options['distribution']} distribution"
-                    )
-
-        return ingredient_info
-
     def _prep_ingredient_info(self, composition_info, ingredient_name=None):
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
@@ -379,7 +325,9 @@ class Environment(CompartmentList):
             ingredient_name if ingredient_name is not None else object_key
         )
         ingredient_info["object_name"] = object_key
-        ingredient_info = self.validate_ingredient_info(ingredient_info)
+        ingredient_info = ingredient.Ingredient.validate_ingredient_info(
+            ingredient_info
+        )
         return ingredient_info
 
     def _step_down(self, compartment_key, prev_compartment=None):

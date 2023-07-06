@@ -64,11 +64,35 @@ from .utils import (
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 import cellpack.autopack as autopack
 from cellpack.autopack.ingredient.agent import Agent
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 
 helper = autopack.helper
 reporthook = None
 if helper is not None:
     reporthook = helper.reporthook
+
+
+class CountDistributions(MetaEnum):
+    "All available count distributions"
+    UNIFORM = "uniform"
+    NORMAL = "normal"
+    LIST = "list"
+
+
+class CountOptions(MetaEnum):
+    "All available count options"
+    MIN = "min"
+    MAX = "max"
+    MEAN = "mean"
+    STD = "std"
+    LIST_VALUES = "list_values"
+
+
+REQUIRED_COUNT_OPTIONS = {
+    CountDistributions.UNIFORM: [CountOptions.MIN, CountOptions.MAX],
+    CountDistributions.NORMAL: [CountOptions.MEAN, CountOptions.STD],
+    CountDistributions.LIST: [CountOptions.LIST_VALUES],
+}
 
 
 class IngredientInstanceDrop:
@@ -335,6 +359,35 @@ class Ingredient(Agent):
         self.score = ""
         self.organism = ""
         # add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type
+
+    @staticmethod
+    def validate_ingredient_info(ingredient_info):
+        """
+        Validates ingredient info and returns validated ingredient info
+        """
+        if "count" not in ingredient_info:
+            raise Exception("Ingredient info must contain a count")
+
+        if ingredient_info["count"] < 0:
+            raise Exception("Ingredient count must be greater than or equal to 0")
+
+        if "count_options" in ingredient_info:
+            count_options = ingredient_info["count_options"]
+            if "distribution" not in count_options:
+                raise Exception("Ingredient count options must contain a distribution")
+            if not CountDistributions.is_member(count_options["distribution"]):
+                raise Exception(
+                    f"{count_options['distribution']} is not a valid count distribution"
+                )
+            for required_option in REQUIRED_COUNT_OPTIONS.get(
+                count_options["distribution"], []
+            ):
+                if required_option not in count_options:
+                    raise Exception(
+                        f"Missing option '{required_option}' for {count_options['distribution']} distribution"
+                    )
+
+        return ingredient_info
 
     def reset(self):
         """reset the states of an ingredient"""

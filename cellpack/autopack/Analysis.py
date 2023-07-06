@@ -407,9 +407,9 @@ class Analysis:
                     numpy.array(e3[2]),
                     delimiter=",",
                 )
-                self.histo(e3[0], ingrname + "_euler_X.png")
-                self.histo(e3[1], ingrname + "_euler_Y.png")
-                self.histo(e3[2], ingrname + "_euler_Z.png")
+                self.histogram(e3[0], ingrname + "_euler_X.png")
+                self.histogram(e3[1], ingrname + "_euler_Y.png")
+                self.histogram(e3[2], ingrname + "_euler_Z.png")
         return ingrpos, ingrrot
 
     # should take any type of list...
@@ -491,7 +491,7 @@ class Analysis:
             numpy.array(self.env.ingredient_positions[ingr.name]),
             delimiter=",",
         )
-        self.histo(distances, basename + ingr.name + "_histo.png")
+        self.histogram(distances, basename + ingr.name + "_histo.png")
         numpy.savetxt(
             basename + ingr.name + "_distances.csv",
             numpy.array(distances),
@@ -600,7 +600,7 @@ class Analysis:
             numpy.array(self.env.ingredient_positions[ingr.name]),
             delimiter=",",
         )
-        self.histo(distances, basename + ingr.name + "_histo.png")
+        self.histogram(distances, basename + ingr.name + "_histo.png")
         numpy.savetxt(
             basename + ingr.name + "_distances.csv",
             numpy.array(distances),
@@ -654,7 +654,7 @@ class Analysis:
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
-            self.histo(
+            self.histogram(
                 all_pos[:, ind],
                 self.figures_path
                 / f"all_ingredient_histo_{dim}_{self.env.basename}.png",
@@ -670,7 +670,7 @@ class Analysis:
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
-            self.histo(
+            self.histogram(
                 all_pos[:, ind],
                 self.figures_path / f"{ingr.name}_histo_{dim}_{self.env.basename}.png",
                 title_str=ingr.name,
@@ -691,7 +691,7 @@ class Analysis:
             x_label="seed",
             y_label="occurrences",
         )
-        self.histo(
+        self.histogram(
             distances=numpy.array(occ),
             filename=self.figures_path
             / f"{ingr.name}_occurrence_{self.env.basename}_histo.png",
@@ -707,7 +707,7 @@ class Analysis:
         for ingr_key, distances in all_ingredient_distances.items():
             if len(distances) <= 1:
                 continue
-            self.histo(
+            self.histogram(
                 distances=numpy.array(distances),
                 filename=self.figures_path
                 / f"{ingr_key}_pairwise_distances_{self.env.basename}.png",
@@ -1704,7 +1704,7 @@ class Analysis:
 
         return all_spilr
 
-    def histo(self, distances, filename, title_str="", x_label="", y_label=""):
+    def histogram(self, distances, filename, title_str="", x_label="", y_label=""):
         plt.clf()
         # calculate histogram
         nbins = int(numpy.sqrt(len(distances)))
@@ -2584,7 +2584,7 @@ class Analysis:
 
             # plot histograms for all combined distances
             if len(all_center_distance_array) > 1:
-                self.histo(
+                self.histogram(
                     all_center_distance_array,
                     self.figures_path
                     / f"all_ingredient_center_distances_{self.env.basename}.png",
@@ -2594,7 +2594,7 @@ class Analysis:
                 )
 
             if len(all_center_distance_array) > 1:
-                self.histo(
+                self.histogram(
                     all_pairwise_distance_array,
                     self.figures_path
                     / f"all_ingredient_pairwise_distances_{self.env.basename}.png",
@@ -2605,21 +2605,21 @@ class Analysis:
 
             # plot the angle
             if len(all_ingredient_angle_array) > 1:
-                self.histo(
+                self.histogram(
                     all_ingredient_angle_array[0],
                     self.figures_path / f"all_angles_X_{self.env.basename}.png",
                     title_str="all_ingredients",
                     x_label="angles X",
                     y_label="count",
                 )
-                self.histo(
+                self.histogram(
                     all_ingredient_angle_array[1],
                     self.figures_path / f"all_angles_Y_{self.env.basename}.png",
                     title_str="all_ingredients",
                     x_label="angles Y",
                     y_label="count",
                 )
-                self.histo(
+                self.histogram(
                     all_ingredient_angle_array[2],
                     self.figures_path / f"all_angles_Z_{self.env.basename}.png",
                     title_str="all_ingredients",
