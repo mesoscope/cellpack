@@ -90,7 +90,6 @@ from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
-from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 from tqdm import tqdm
 
 try:
