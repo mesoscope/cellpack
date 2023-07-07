@@ -25,6 +25,7 @@ class WeightModes(MetaEnum):
     """
     All available weight modes
     """
+
     LINEAR = "linear"
     SQUARE = "square"
     CUBE = "cube"
@@ -63,6 +64,7 @@ class WeightModeOptions(MetaEnum):
     """
     All available options for individual weight modes
     """
+
     power = "power"
     decay_length = "decay_length"
 
@@ -132,8 +134,10 @@ class GradientData:
                 raise ValueError(
                     f"Missing required mode setting {option} for {mode_name}"
                 )
-            
-    def validate_weight_mode_settings(self, weight_mode_name, weight_mode_settings_dict):
+
+    def validate_weight_mode_settings(
+        self, weight_mode_name, weight_mode_settings_dict
+    ):
         required_options = REQUIRED_WEIGHT_MODE_OPTIONS.get(weight_mode_name)
 
         if required_options is None:

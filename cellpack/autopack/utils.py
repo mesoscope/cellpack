@@ -172,12 +172,12 @@ def get_paired_key(val_dict, key1=None, key2=None):
             return key
 
 
-def load_object_from_pickle(input_object, pickle_file_object):
+def load_object_from_pickle(pickle_file_object):
     """
     Update an object from a pickle file
     """
     try:
-        input_object = pickle.load(pickle_file_object)
+        output_object = pickle.load(pickle_file_object)
     except Exception as e:
         raise ValueError(f"Error loading saved object: {e}")
-    return input_object
+    return output_object

@@ -135,9 +135,7 @@ def test_gradient_data(input, expected_options):
                 {
                     "mode": "surface",
                     "weight_mode": "power",
-                    "mode_settings": {
-                        "object": "object_name"
-                    }
+                    "mode_settings": {"object": "object_name"},
                 },
                 "gradient_name",
             ),

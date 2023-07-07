@@ -216,8 +216,10 @@ class Gradient:
         elif self.weight_mode == "power":
             self.weight = (1.0 - scaled_distances) ** self.weight_mode_settings["power"]
         elif self.weight_mode == "exponential":
-            self.weight = numpy.exp(-scaled_distances / self.weight_mode_settings["decay_length"])
-    
+            self.weight = numpy.exp(
+                -scaled_distances / self.weight_mode_settings["decay_length"]
+            )
+
         self.weight[numpy.isnan(self.weight)] = 0
         # TODO: talk to Ludo about calculating gaussian weights
 

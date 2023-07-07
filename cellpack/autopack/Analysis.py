@@ -2423,7 +2423,6 @@ class Analysis:
         """
         if seed_list is None:
             seed_list = self.getHaltonUnique(number_of_packings)
-
         packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
         numpy.savetxt(
             self.env.out_folder / f"seeds_{packing_basename}.txt",

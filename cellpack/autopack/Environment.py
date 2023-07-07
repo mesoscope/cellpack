@@ -91,6 +91,7 @@ from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+from tqdm import tqdm
 
 try:
     helper = autopack.helper
@@ -167,6 +168,7 @@ class Environment(CompartmentList):
         self.boundingBox = numpy.array(recipe["bounding_box"])
         self.spacing = config["spacing"]
         self.load_from_grid_file = config["load_from_grid_file"]
+        self.show_progress_bar = config["show_progress_bar"]
         self.name = name
         self.version = recipe.get("version", "default")
         # saving/pickle option
@@ -292,7 +294,7 @@ class Environment(CompartmentList):
         self.rb_func_dic = {}
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
-        self.dump = True
+        self.dump = False
         self.dump_freq = 120.0
         self.jsondic = None
 
@@ -1016,7 +1018,6 @@ class Environment(CompartmentList):
         Save the current grid and the compartment grid information in a file. (pickle)
         """
         d = os.path.dirname(gridFileOut)
-        print("SAVED GRID TO ", gridFileOut)
         if not os.path.exists(d):
             print("gridfilename path problem", gridFileOut)
             return
@@ -1025,6 +1026,7 @@ class Environment(CompartmentList):
 
         for compartment in self.compartments:
             compartment.saveGridToFile(f)
+        print("SAVED GRID TO ", gridFileOut)
         f.close()
 
     def saveGridLogsAsJson(self, gridFileOut):
@@ -1053,25 +1055,59 @@ class Environment(CompartmentList):
             json.dump(data, fp=f)
         f.close()
 
+    @staticmethod
+    def get_attributes_to_update():
+        return [
+            "faces",
+            "vertices",
+            "vnormals",
+            "filename",
+            "ref_obj",
+            "bb",
+            "center",
+            "encapsulating_radius",
+            "radius",
+            "insidePoints",
+            "surfacePoints",
+            "surfacePointsCoords",
+            "surfacePointsNormals",
+            "ogsurfacePoints",
+            "ogsurfacePointsNormals",
+            "OGsrfPtsBht",
+            "closestId",
+        ]
+
     def restore_grids_from_pickle(self, grid_file_path):
         """
         Read and setup the grid from the given filename. (pickle)
         """
         print(f"Loading grid from {grid_file_path}")
+
         with open(grid_file_path, "rb") as file_obj:
             # load env grid
-            self.grid = load_object_from_pickle(self.grid, file_obj)
+            grid_obj = load_object_from_pickle(file_obj)
+            self.grid = grid_obj
 
             # load compartment grids
-            for ct, compartment in enumerate(self.compartments):
-                self.compartments[ct] = load_object_from_pickle(compartment, file_obj)
+            for ct, _ in enumerate(self.compartments):
+                comp_obj = load_object_from_pickle(file_obj)
+                for update_attr in self.get_attributes_to_update():
+                    setattr(
+                        self.compartments[ct],
+                        update_attr,
+                        getattr(comp_obj, update_attr),
+                    )
 
             # load mesh store
-            self.mesh_store = load_object_from_pickle(self.mesh_store, file_obj)
+            mesh_store_obj = load_object_from_pickle(file_obj)
+            self.mesh_store = mesh_store_obj
 
             # clear the triangles_tree cache
             for _, geom in self.mesh_store.scene.geometry.items():
                 geom._cache.delete("triangles_tree")
+
+            # reset grid
+            self.grid.reset()
 
     def save_grids_to_pickle(self, grid_file_path):
         """
@@ -1101,8 +1137,8 @@ class Environment(CompartmentList):
         f = open(gridFileName, "rb")
         self.readArraysFromFile(f)
         for ct, compartment in enumerate(self.compartments):
-            # compartment.readGridFromFile(f)
-            compartment = compartment.load_compartment_object(f)
+            compartment.readGridFromFile(f)
+            # compartment = compartment.load_compartment_object(f)
             aInteriorGrids.append(compartment.insidePoints)
             aSurfaceGrids.append(compartment.surfacePoints)
             compartment.OGsrfPtsBht = spatial.cKDTree(
@@ -1417,45 +1453,42 @@ class Environment(CompartmentList):
         else:
             self.build_compartment_grids()
 
-            self.exteriorVolume = self.grid.computeExteriorVolume(
-                compartments=self.compartments,
-                space=self.smallestProteinSize,
-                fbox_bb=self.fbox_bb,
-            )
-
-            r = self.exteriorRecipe
-            if r:
-                r.setCount(self.exteriorVolume)  # should actually use the fillBB
-
-            if not rebuild:
-                for c in self.compartments:
-                    c.setCount()
-            else:
-                self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-
-            distance = self.grid.distToClosestSurf  # [:]
-            nbFreePoints = nbPoints  # -1
-            for i, mingrs in enumerate(
-                self.molecules
-            ):  # ( jtrans, rotMatj, self, ptInd )
-                nbFreePoints = self.onePrevIngredient(
-                    i, mingrs, distance, nbFreePoints, self.molecules
-                )
-            for organelle in self.compartments:
-                for i, mingrs in enumerate(
-                    organelle.molecules
-                ):  # ( jtrans, rotMatj, self, ptInd )
-                    nbFreePoints = self.onePrevIngredient(
-                        i, mingrs, distance, nbFreePoints, organelle.molecules
-                    )
-            self.grid.nbFreePoints = nbFreePoints
-
             # save grids to pickle
             # self.saveGridToFile(self.grid_file_out)
             self.grid.filename = self.grid_file_out
             self.previous_grid_file = self.grid_file_out
-
             self.save_grids_to_pickle(self.grid_file_out)
+
+        self.exteriorVolume = self.grid.computeExteriorVolume(
+            compartments=self.compartments,
+            space=self.smallestProteinSize,
+            fbox_bb=self.fbox_bb,
+        )
+
+        r = self.exteriorRecipe
+        if r:
+            r.setCount(self.exteriorVolume)  # should actually use the fillBB
+
+        if not rebuild:
+            for c in self.compartments:
+                c.setCount()
+        else:
+            self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
+
+        distance = self.grid.distToClosestSurf  # [:]
+        nbFreePoints = nbPoints  # -1
+        for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )
+            nbFreePoints = self.onePrevIngredient(
+                i, mingrs, distance, nbFreePoints, self.molecules
+            )
+        for organelle in self.compartments:
+            for i, mingrs in enumerate(
+                organelle.molecules
+            ):  # ( jtrans, rotMatj, self, ptInd )
+                nbFreePoints = self.onePrevIngredient(
+                    i, mingrs, distance, nbFreePoints, organelle.molecules
+                )
+        self.grid.nbFreePoints = nbFreePoints
 
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
@@ -1663,7 +1696,7 @@ class Environment(CompartmentList):
         self.resetIngrRecip(r)
         self.molecules = []
         for orga in self.compartments:
-            # orga.reset()
+            orga.reset()
             rs = orga.surfaceRecipe
             self.resetIngrRecip(rs)
             ri = orga.innerRecipe
@@ -2208,7 +2241,8 @@ class Environment(CompartmentList):
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time()
-
+        if self.show_progress_bar:
+            pbar = tqdm(total=totalNumMols, mininterval=0, miniters=1)
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart
@@ -2252,7 +2286,6 @@ class Environment(CompartmentList):
                     )
                     if self.afviewer.renderDistance:
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
-
             current_ingr_compartment = ingr.compNum
             # compute dpad which is the distance at which we need to update
             # distances after the drop is successfull
@@ -2342,6 +2375,8 @@ class Environment(CompartmentList):
                 # if ingredient_too_close:
                 #     print("GOT A FAIL", self.grid.masterGridPositions[ptInd])
                 #     nbFreePoints = 0
+                if self.show_progress_bar:
+                    pbar.update(1)
             else:
                 self.log.info("rejected %r", ingr.rejectionCounter)
 
@@ -2399,6 +2434,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(np + previousThresh)
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
+
             if dump and ((time() - stime) > dump_freq):
                 print("SAVING", self.result_file)
                 all_ingr_as_array = self.prep_molecules_for_save(
@@ -2420,6 +2456,8 @@ class Environment(CompartmentList):
                     )
 
         t2 = time()
+        if self.show_progress_bar:
+            pbar.close()
         self.log.info("time to fill %d", t2 - t1)
         all_ingr_as_array = self.prep_molecules_for_save(
             distances, free_points, nbFreePoints
