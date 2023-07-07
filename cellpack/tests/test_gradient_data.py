@@ -26,6 +26,7 @@ from cellpack.autopack.interface_objects import GradientData
                 "mode_settings": {
                     "direction": [1, 0, 0],
                 },
+                "weight_mode_settings": {},
             },
         ),
         (
@@ -51,8 +52,8 @@ from cellpack.autopack.interface_objects import GradientData
                 "mode_settings": {
                     "center": [0, 0, 0],
                     "radius": 1,
-                    "direction": [1, 0, 0],
                 },
+                "weight_mode_settings": {},
             },
         ),
         (
@@ -73,6 +74,37 @@ from cellpack.autopack.interface_objects import GradientData
                 "reversed": True,
                 "name": "gradient_name",
                 "mode_settings": {"direction": [0, -1, 0]},
+                "weight_mode_settings": {},
+            },
+        ),
+        (
+            (
+                {
+                    "mode": "surface",
+                    "weight_mode": "power",
+                    "description": "power law gradient from surface",
+                    "mode_settings": {
+                        "object": "object_name",
+                    },
+                    "weight_mode_settings": {
+                        "power": 2,
+                    },
+                },
+                "gradient_name",
+            ),
+            {
+                "mode": "surface",
+                "weight_mode": "power",
+                "description": "power law gradient from surface",
+                "pick_mode": "linear",
+                "reversed": False,
+                "mode_settings": {
+                    "object": "object_name",
+                },
+                "weight_mode_settings": {
+                    "power": 2,
+                },
+                "name": "gradient_name",
             },
         ),
     ],
@@ -97,6 +129,17 @@ def test_gradient_data(input, expected_options):
                 "gradient_name",
             ),
             "Missing required mode setting object for surface",
+        ),
+        (
+            (
+                {
+                    "mode": "surface",
+                    "weight_mode": "power",
+                    "mode_settings": {"object": "object_name"},
+                },
+                "gradient_name",
+            ),
+            "Missing weight mode settings for power",
         ),
     ],
 )

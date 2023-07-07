@@ -2179,9 +2179,8 @@ class Analysis:
         for seed_index, ingr_dict in input_dict.items():
             for ingr_name, value_list in ingr_dict.items():
                 if ingr_name not in output_dict:
-                    output_dict[ingr_name] = value_list
-                else:
-                    output_dict[ingr_name].extend(value_list)
+                    output_dict[ingr_name] = []
+                output_dict[ingr_name].extend(value_list)
 
         return output_dict
 
@@ -2424,7 +2423,6 @@ class Analysis:
         """
         if seed_list is None:
             seed_list = self.getHaltonUnique(number_of_packings)
-
         packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
         numpy.savetxt(
             self.env.out_folder / f"seeds_{packing_basename}.txt",

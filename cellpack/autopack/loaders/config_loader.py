@@ -41,6 +41,7 @@ class ConfigLoader(object):
         "save_converted_recipe": False,
         "show_grid_plot": False,
         "show_sphere_trees": False,
+        "show_progress_bar": False,
         "spacing": None,
         "use_periodicity": False,
         "version": 1.0,
