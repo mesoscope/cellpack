@@ -166,27 +166,23 @@ class RecipeLoader(object):
             )
 
     @staticmethod
-    def _get_gradient_data(obj_data, obj_dict, grad_dict):
+    def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
         grad_name = obj_data["gradient"]["name"]
         grad_dict[grad_name] = obj_data["gradient"]
         obj_dict[obj_data["name"]]["gradient"] = grad_name
         return obj_dict, grad_dict
-
-    # @staticmethod
-    # # TODO: remove or handle other unoriginal keys
-    # def _remove_name_key(doc_data):
-    #     if "name" in doc_data:
-    #         del doc_data["name"]
 
     @staticmethod
     def _is_obj(comp_or_obj):
         # if the top level of a downloaded comp doesn't have the key `name`, it's an obj
         return not comp_or_obj.get("name") and "object" in comp_or_obj
 
-    def _collect_and_sort_data(self, comp_data):
+    @staticmethod
+    def _collect_and_sort_data(comp_data):
         """
         Collect all object and gradient info from the downloaded firebase composition data
         Return autopack object data dict and gradient data dict with name as key
+        Return restructured composition dict with "composition" as key
         """
         objects = {}
         gradients = {}
@@ -202,10 +198,9 @@ class RecipeLoader(object):
                 if "gradient" in object_copy and isinstance(
                     object_copy["gradient"], dict
                 ):
-                    objects, gradients = RecipeLoader._get_gradient_data(
+                    objects, gradients = RecipeLoader._get_grad_and_obj(
                         object_copy, objects, gradients
                     )
-                # RecipeLoader._remove_name_key(object_copy)
             if "regions" in comp_value and comp_value["regions"] is not None:
                 for region_name in comp_value["regions"]:
                     composition[comp_name]["regions"] = {}
@@ -223,19 +218,17 @@ class RecipeLoader(object):
                             if "gradient" in object_copy and isinstance(
                                 object_copy["gradient"], dict
                             ):
-                                objects, gradients = RecipeLoader._get_gradient_data(
+                                objects, gradients = RecipeLoader._get_grad_and_obj(
                                     object_copy, objects, gradients
                                 )
-                        # RecipeLoader._remove_name_key(object_copy)
                         else:
                             composition[comp_name]["regions"][region_name].append(
                                 region_item["name"]
                             )
         return objects, gradients, composition
 
-    def _compile_recipe_from_firebase(
-        self, db_recipe_data, obj_dict, grad_dict, comp_dict
-    ):
+    @staticmethod
+    def _compile_recipe_from_firebase(db_recipe_data, obj_dict, grad_dict, comp_dict):
         """
         Compile recipe data from firebase recipe data into a ready-to-pack structure
         """
@@ -253,10 +246,10 @@ class RecipeLoader(object):
     def _read(self):
         new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
         if database_name == "firebase":
-            objects, gradients, composition = self._collect_and_sort_data(
+            objects, gradients, composition = RecipeLoader._collect_and_sort_data(
                 new_values["composition"]
             )
-            new_values = self._compile_recipe_from_firebase(
+            new_values = RecipeLoader._compile_recipe_from_firebase(
                 new_values, objects, gradients, composition
             )
         recipe_data = RecipeLoader.default_values.copy()
@@ -280,7 +273,6 @@ class RecipeLoader(object):
                     packing=reps.get("packing", None),
                 )
                 # the key "all_partners" exists in obj["partners"] if the recipe is downloaded from a remote db
-                # TODO: check if there are better approaches to handle existing keys in remote recipes
                 partner_settings = (
                     []
                     if (
@@ -295,6 +287,7 @@ class RecipeLoader(object):
                     raise TypeError(f"{obj['type']} is not an allowed type")
 
         # handle gradients
+        # gradients in firebase recipes are already stored as a list of dicts
         if "gradients" in recipe_data and not isinstance(
             recipe_data["gradients"], list
         ):
