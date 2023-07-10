@@ -181,7 +181,7 @@ class RecipeLoader(object):
     @staticmethod
     def _is_obj(comp_or_obj):
         # if the top level of a downloaded comp doesn't have the key `name`, it's an obj
-        # TODO: true for all cases? better approaches? 
+        # TODO: true for all cases? better approaches?
         return not comp_or_obj.get("name") and "object" in comp_or_obj
 
     @staticmethod
@@ -239,9 +239,12 @@ class RecipeLoader(object):
         Compile recipe data from firebase recipe data into a ready-to-pack structure
         """
         recipe_data = {
-            **{k: db_recipe_data[k] for k in ["format_version", "version", "name", "bounding_box"]},
+            **{
+                k: db_recipe_data[k]
+                for k in ["format_version", "version", "name", "bounding_box"]
+            },
             "objects": obj_dict,
-            "composition": comp_dict
+            "composition": comp_dict,
         }
         if grad_dict:
             recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
