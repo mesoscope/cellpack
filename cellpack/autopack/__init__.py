@@ -389,7 +389,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
     # what is the param destination for? should we use it to store db names?
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-linear -c examples/packing-configs/run.json`
+        # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-linear -c examples/packing-configs/peroxisome_packing_config.json`
         if database_name == "firebase":
             recipe_id = file_path.split("/")[-1]
             db = FirebaseHandler()
