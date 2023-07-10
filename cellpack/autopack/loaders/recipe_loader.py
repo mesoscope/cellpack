@@ -167,14 +167,21 @@ class RecipeLoader(object):
 
     @staticmethod
     def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
-        grad_name = obj_data["gradient"]["name"]
+        try:
+            grad_name = obj_data["gradient"]["name"]
+            obj_name = obj_data["name"]
+        except KeyError as e:
+            print(f"Missing keys in object: {e}")
+            return obj_dict, grad_dict
+
         grad_dict[grad_name] = obj_data["gradient"]
-        obj_dict[obj_data["name"]]["gradient"] = grad_name
+        obj_dict[obj_name]["gradient"] = grad_name
         return obj_dict, grad_dict
 
     @staticmethod
     def _is_obj(comp_or_obj):
         # if the top level of a downloaded comp doesn't have the key `name`, it's an obj
+        # TODO: true for all cases? better approaches? 
         return not comp_or_obj.get("name") and "object" in comp_or_obj
 
     @staticmethod
@@ -203,7 +210,6 @@ class RecipeLoader(object):
                     )
             if "regions" in comp_value and comp_value["regions"] is not None:
                 for region_name in comp_value["regions"]:
-                    composition[comp_name]["regions"] = {}
                     composition[comp_name].setdefault("regions", {})[region_name] = []
                     for region_item in comp_value["regions"][region_name]:
                         if RecipeLoader._is_obj(region_item):
@@ -232,15 +238,13 @@ class RecipeLoader(object):
         """
         Compile recipe data from firebase recipe data into a ready-to-pack structure
         """
-        recipe_data = {}
-        recipe_data["format_version"] = db_recipe_data["format_version"]
-        recipe_data["version"] = db_recipe_data["version"]
-        recipe_data["name"] = db_recipe_data["name"]
-        recipe_data["bounding_box"] = db_recipe_data["bounding_box"]
-        recipe_data["objects"] = obj_dict
+        recipe_data = {
+            **{k: db_recipe_data[k] for k in ["format_version", "version", "name", "bounding_box"]},
+            "objects": obj_dict,
+            "composition": comp_dict
+        }
         if grad_dict:
             recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
-        recipe_data["composition"] = comp_dict
         return recipe_data
 
     def _read(self):
