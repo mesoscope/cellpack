@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # standardmodule
 import os
+import webbrowser
 import matplotlib
 import numpy as np
 import trimesh
@@ -1334,10 +1335,20 @@ class simulariumHelper(hostHelper.Helper):
             spatial_units=UnitData("nm"),  # nanometers
         )
         TrajectoryConverter(converted_data).save(file_name, False)
-        print("file--", file_name)
+        # check if the file exists, if so, store it to S3 and upload the metadata in Firebase
         simularium_file = file_name + ".simularium"
-        print("sim_file", simularium_file)
-        # simulariumHelper.store_results_to_s3(simularium_file,folder_name="simularium/")
+        if simulariumHelper.check_file_exists(simularium_file):
+            try:
+                simulariumHelper.store_results_to_s3(simularium_file,folder_name="simularium/")
+            except Exception as e:
+                print(f"An error occurred while storing the file {simularium_file} to S3:", e)
+        else:
+            print(f"File {simularium_file} does not exist.")
+        
+
+    @staticmethod
+    def check_file_exists(file_name):
+        return os.path.isfile(file_name)
 
     def raycast(self, **kw):
         intersect = False
@@ -1360,7 +1371,9 @@ class simulariumHelper(hostHelper.Helper):
             aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
             region_name="us-west-2",
         )
-        print(handler.upload_file(file_name,folder_name,object_name))
+        # TODO: get object_name
+        handler.upload_file(file_name,folder_name,object_name)
+        return handler.create_presigned_url(object_name)
 
     def upload_metadata_to_firebase(result_name, aws_url):
         db = FirebaseHandler()
@@ -1375,5 +1388,12 @@ class simulariumHelper(hostHelper.Helper):
             "aws_url": aws_url
             }
         )
+    # TODO: where to call this func?
     upload_metadata_to_firebase("testing result2", "testing_url2")
+
+    @staticmethod
+    def open_in_simularium(aws_url):
+        # TODO: save the endpoint,routes and options somewhere? 
+        webbrowser.open_new_tab(f"https://simularium.allencell.org/viewer?trajUrl={aws_url}")
+    open_in_simularium()
 
