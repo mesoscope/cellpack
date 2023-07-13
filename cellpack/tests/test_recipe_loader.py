@@ -229,6 +229,32 @@ compiled_firebase_recipe_example = {
 }
 
 
+def test_get_grad_and_obj():
+    obj_data = downloaded_data_from_firebase["composition"]["membrane"]["regions"][
+        "interior"
+    ][0]["object"]
+    obj_dict = {
+        "peroxisome": {
+            "gradient": {
+                "mode": "surface",
+                "name": "nucleus_surface_gradient",
+            },
+            "name": "peroxisome",
+        }
+    }
+    grad_dict = {}
+    obj_dict, grad_dict = RecipeLoader._get_grad_and_obj(obj_data, obj_dict, grad_dict)
+    assert obj_dict == {
+        "peroxisome": {"gradient": "nucleus_surface_gradient", "name": "peroxisome"}
+    }
+    assert grad_dict == {
+        "nucleus_surface_gradient": {
+            "mode": "surface",
+            "name": "nucleus_surface_gradient",
+        }
+    }
+
+
 @pytest.fixture
 def sort_data_from_composition():
     return RecipeLoader._collect_and_sort_data(
@@ -254,33 +280,3 @@ def test_compile_recipe_from_firebase(sort_data_from_composition):
         downloaded_data_from_firebase, objects, gradients, composition
     )
     assert compiled_recipe == compiled_firebase_recipe_example
-
-
-def test_get_grad_and_obj():
-    obj_data = {
-        "gradient": {
-            "mode": "surface",
-            "name": "nucleus_surface_gradient",
-        },
-        "name": "peroxisome",
-    }
-    obj_dict = {
-        "peroxisome": {
-            "gradient": {
-                "mode": "surface",
-                "name": "nucleus_surface_gradient",
-            },
-            "name": "peroxisome",
-        }
-    }
-    grad_dict = {}
-    obj_dict, grad_dict = RecipeLoader._get_grad_and_obj(obj_data, obj_dict, grad_dict)
-    assert obj_dict == {
-        "peroxisome": {"gradient": "nucleus_surface_gradient", "name": "peroxisome"}
-    }
-    assert grad_dict == {
-        "nucleus_surface_gradient": {
-            "mode": "surface",
-            "name": "nucleus_surface_gradient",
-        }
-    }
