@@ -45,6 +45,7 @@ dev_requirements = [
 ]
 
 requirements = [
+    "boto3>=1.28.3",
     "fire>=0.4.0",
     "firebase_admin>=6.0.1",
     "matplotlib>=3.3.4",
