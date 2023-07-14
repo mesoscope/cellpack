@@ -4,14 +4,14 @@
     "name": "pcna",
     "bounding_box": [
         [
-            -110,
-            -45,
-            -62
+            -80,
+            -40,
+            -55
         ],
         [
-            110,
-            45,
-            62
+            80,
+            40,
+            55
         ]
     ],
     "gradients": {
@@ -25,7 +25,7 @@
                 "scale_to_next_surface": false
             },
             "weight_mode_settings": {
-                "decay_length": 1
+                "decay_length": 0.05
             }
         }
     },
