@@ -1098,7 +1098,6 @@ class Environment(CompartmentList):
         self.readArraysFromFile(f)
         for ct, compartment in enumerate(self.compartments):
             compartment.readGridFromFile(f)
-            # compartment = compartment.load_compartment_object(f)
             aInteriorGrids.append(compartment.insidePoints)
             aSurfaceGrids.append(compartment.surfacePoints)
             compartment.OGsrfPtsBht = spatial.cKDTree(
@@ -1408,13 +1407,11 @@ class Environment(CompartmentList):
             self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
-                # self.restoreGridFromFile(self.previous_grid_file)
                 self.restore_grids_from_pickle(self.previous_grid_file)
         else:
             self.build_compartment_grids()
 
             # save grids to pickle
-            # self.saveGridToFile(self.grid_file_out)
             self.grid.filename = self.grid_file_out
             self.previous_grid_file = self.grid_file_out
             self.save_grids_to_pickle(self.grid_file_out)
