@@ -42,7 +42,7 @@ class FirebaseHandler(object):
         if creds is None or "firebase" not in creds:
             creds = FirebaseHandler.write_creds_path()
         return creds["firebase"]
-    
+
     @staticmethod
     def get_username():
         creds = read_json_file("./.creds")
@@ -61,7 +61,7 @@ class FirebaseHandler(object):
     @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
-    
+
     @staticmethod
     def create_timestamp():
         return firestore.SERVER_TIMESTAMP
@@ -83,7 +83,7 @@ class FirebaseHandler(object):
         doc_ref.update(data)
         print(f"successfully updated to path: {doc_ref.path}")
         return doc_ref
-    
+
     @staticmethod
     def update_reference_on_doc(doc_ref, index, new_item_ref):
         doc_ref.update({index: new_item_ref})

@@ -391,9 +391,7 @@ class DBHandler(object):
                 unpacked_value = vars(value)
                 modified_data[key] = unpacked_value
                 if isinstance(unpacked_value, dict):
-                    modified_data[key] = DBHandler.prep_data_for_db(
-                        unpacked_value
-                    )
+                    modified_data[key] = DBHandler.prep_data_for_db(unpacked_value)
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
                 modified_data[key] = DBHandler.prep_data_for_db(value)
@@ -556,8 +554,6 @@ class DBHandler(object):
             self.db.update_doc(collection, id, data)
         except NotFound:
             self.db.set_doc(collection, id, data)
-
-
 
     def prep_db_doc_for_download(self, db_doc):
         """

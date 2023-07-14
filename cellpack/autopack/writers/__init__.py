@@ -101,7 +101,7 @@ class Writer(object):
                 autopack.helper.add_grid_data_to_scene(
                     f"{gradient.name}-distances", grid_positions, values
                 )
-        
+
         file_name = autopack.helper.writeToFile(
             f"{result_file_path}_results", env.boundingBox, env.name, env.version
         )
