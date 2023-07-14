@@ -1,4 +1,4 @@
-from cellpack.autopack.DBRecipeHandler import CompositionDoc
+from cellpack.autopack.DBHandler import CompositionDoc
 from cellpack.tests.mocks.mock_db import MockDB
 
 mock_db = MockDB({})

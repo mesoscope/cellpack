@@ -81,7 +81,7 @@ class FirebaseHandler(object):
     def update_doc(self, collection, id, data):
         doc_ref = self.db.collection(collection).document(id)
         doc_ref.update(data)
-        print(f"successfully uploaded to path: {doc_ref.path}")
+        print(f"successfully updated to path: {doc_ref.path}")
         return doc_ref
     
     @staticmethod

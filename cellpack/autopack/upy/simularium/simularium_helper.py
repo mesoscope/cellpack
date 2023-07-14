@@ -20,6 +20,7 @@ from simulariumio import (
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
+from cellpack.autopack.DBHandler import DBHandler
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
 
 from cellpack.autopack.upy import hostHelper
@@ -1352,6 +1353,7 @@ class simulariumHelper(hostHelper.Helper):
                 # TODO: add info on AWS installation and setup to our documetation
                 # TODO: link to documentation section on setting up AWS CLI and boto3 authentation
                 print(f"need to configure your aws account (link to readme here)")
+            # TODO: an ValueError is raised (in autopack/__init__ L396) when firebase app is already initialized, i.e. storing the recipe that downloaded from firebase
             else:
                 print(
                     f"An error occurred while storing the file {simularium_file} to S3:",
@@ -1384,19 +1386,15 @@ class simulariumHelper(hostHelper.Helper):
         )
         file_name = handler.upload_file(file_path)
         url = handler.create_presigned_url(file_name)
-        # simulariumHelper.upload_metadata_to_firebase(file_name, url)
+        simulariumHelper.upload_metadata_to_firebase(file_name, url)
         return url
 
     @staticmethod
     def upload_metadata_to_firebase(result_file_name, aws_url):
-        # TODO: use db handler (rename to not have recipe in it)
-        # write a update_doc function that in the firebase handler
-        # class update doc instead of set doc
-        # check to make sure it writes a doc if non exists
-        db = FirebaseHandler()
-        username = db.get_username()
-        timestamp = db.create_timestamp()
-        db.update_doc(
+        db_handler = DBHandler(FirebaseHandler())
+        username = db_handler.db.get_username()
+        timestamp = db_handler.db.create_timestamp()
+        db_handler.update_or_create_metadata(
             "results",
             result_file_name,
             {"user": username, "created": timestamp, "aws_url": aws_url},

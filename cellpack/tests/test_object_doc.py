@@ -1,4 +1,4 @@
-from cellpack.autopack.DBRecipeHandler import ObjectDoc
+from cellpack.autopack.DBHandler import ObjectDoc
 from cellpack.tests.mocks.mock_db import MockDB
 
 mock_db = MockDB({})

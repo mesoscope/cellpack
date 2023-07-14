@@ -4,6 +4,8 @@ from deepdiff import DeepDiff
 
 from cellpack.autopack.utils import deep_merge
 
+from google.cloud.exceptions import NotFound
+
 
 class DataDoc(object):
     def __init__(
@@ -124,7 +126,7 @@ class CompositionDoc(DataDoc):
         Recursively resolves the regions of a composition from local data.
         Restructure the local data to match the db data.
         """
-        unpack_recipe_data = DBRecipeHandler.prep_data_for_db(recipe_data)
+        unpack_recipe_data = DBHandler.prep_data_for_db(recipe_data)
         prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
         # `gradients` is a list, convert it to dict for easy access and replace
         CompositionDoc.gradient_list_to_dict(prep_recipe_data)
@@ -326,7 +328,7 @@ class ObjectDoc(DataDoc):
                 # if there is repr in the obj doc from db
                 full_doc_data = ObjectDoc.convert_representation(doc, db)
                 # unpack objects to dicts in local data for comparison
-                local_data = DBRecipeHandler.prep_data_for_db(self.as_dict())
+                local_data = DBHandler.prep_data_for_db(self.as_dict())
                 difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
                 if not difference:
                     return doc, db.doc_id(doc)
@@ -342,7 +344,7 @@ class GradientDoc(DataDoc):
         docs = db.get_doc_by_name("gradients", grad_name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                local_data = DBRecipeHandler.prep_data_for_db(db.doc_to_dict(doc))
+                local_data = DBHandler.prep_data_for_db(db.doc_to_dict(doc))
                 db_data = db.doc_to_dict(doc)
                 difference = DeepDiff(db_data, local_data, ignore_order=True)
                 if not difference:
@@ -350,7 +352,7 @@ class GradientDoc(DataDoc):
         return None, None
 
 
-class DBRecipeHandler(object):
+class DBHandler(object):
     def __init__(self, db_handler):
         self.db = db_handler
         self.objects_to_path_map = {}
@@ -381,20 +383,20 @@ class DBRecipeHandler(object):
         modified_data = {}
         for key, value in data.items():
             # convert 2d array to dict
-            if DBRecipeHandler.is_nested_list(value):
+            if DBHandler.is_nested_list(value):
                 flatten_dict = dict(zip([str(i) for i in range(len(value))], value))
-                modified_data[key] = DBRecipeHandler.prep_data_for_db(flatten_dict)
+                modified_data[key] = DBHandler.prep_data_for_db(flatten_dict)
             # If the value is an object, we want to convert it to dict
             elif isinstance(value, object) and "__dict__" in dir(value):
                 unpacked_value = vars(value)
                 modified_data[key] = unpacked_value
                 if isinstance(unpacked_value, dict):
-                    modified_data[key] = DBRecipeHandler.prep_data_for_db(
+                    modified_data[key] = DBHandler.prep_data_for_db(
                         unpacked_value
                     )
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
-                modified_data[key] = DBRecipeHandler.prep_data_for_db(value)
+                modified_data[key] = DBHandler.prep_data_for_db(value)
             else:
                 modified_data[key] = value
         return modified_data
@@ -404,7 +406,7 @@ class DBRecipeHandler(object):
         If should_write is true, upload the data to the database
         """
         # check if we need to convert part of the data(2d arrays and objs to dict)
-        modified_data = DBRecipeHandler.prep_data_for_db(data)
+        modified_data = DBHandler.prep_data_for_db(data)
         if id is None:
             name = modified_data["name"]
             doc = self.db.upload_doc(collection, modified_data)
@@ -545,6 +547,17 @@ class DBRecipeHandler(object):
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         key = self.get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
+
+    def update_or_create_metadata(self, collection, id, data):
+        """
+        If the input id exists, update the metadata. If not, create a new file.
+        """
+        try:
+            self.db.update_doc(collection, id, data)
+        except NotFound:
+            self.db.set_doc(collection, id, data)
+
+
 
     def prep_db_doc_for_download(self, db_doc):
         """
