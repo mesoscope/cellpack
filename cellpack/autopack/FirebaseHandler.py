@@ -78,6 +78,12 @@ class FirebaseHandler(object):
         id = components[1]
         return collection, id
 
+    def update_doc(self, collection, id, data):
+        doc_ref = self.db.collection(collection).document(id)
+        doc_ref.update(data)
+        print(f"successfully uploaded to path: {doc_ref.path}")
+        return doc_ref
+    
     @staticmethod
     def update_reference_on_doc(doc_ref, index, new_item_ref):
         doc_ref.update({index: new_item_ref})

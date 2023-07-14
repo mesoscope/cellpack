@@ -1,7 +1,7 @@
 import logging
 import boto3
 from botocore.exceptions import ClientError
-import os
+from pathlib import Path
 
 
 class AWSHandler(object):
@@ -12,43 +12,53 @@ class AWSHandler(object):
     def __init__(
         self,
         bucket_name,
+        sub_folder_name=None, 
         aws_access_key_id=None,
         aws_secret_access_key=None,
         region_name=None,
     ):
         self.bucket_name = bucket_name
-        self.s3_client = boto3.client(
+        self.folder_name = sub_folder_name
+        session = boto3.Session()
+        self.s3_client = session.client(
             "s3",
+            endpoint_url=f"https://{bucket_name}.s3.{region_name}.amazonaws.com",
             aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,  # TODO: check how do we want to handle credentials?
+            aws_secret_access_key=aws_secret_access_key,
             region_name=region_name,
         )
 
-    def upload_file(self, file_name, folder_name=None, object_name=None):
+    def get_aws_object_key(self, object_name):
+        if self.folder_name is not None: 
+            object_name = self.folder_name + object_name
+        else:
+            object_name = object_name
+        return object_name
+
+
+    def upload_file(self, file_path):
         """Upload a file to an S3 bucket
 
-        :param file_name: File to upload
+        :param file_path: File to upload
         :param bucket: Bucket to upload to
-        :param object_name: S3 object name. If not specified then file_name is used
+        :param object_name: S3 object name. If not specified then file_path is used
         :return: True if file was uploaded, else False
         """
 
-        # If S3 object_name was not specified, use file_name
-        if object_name is None:
-            object_name = folder_name + os.path.basename(file_name)
-        else:
-            object_name = folder_name + object_name
+        file_name = Path(file_path).stem
 
+        object_name = self.get_aws_object_key(file_name)
         # Upload the file
         try:
-            response = self.s3_client.upload_file(
-                file_name, self.bucket_name, object_name
+            self.s3_client.upload_file(
+                file_path, self.bucket_name, object_name
             )
-        # TODO: check what is response, return object name if successful
+            self.s3_client.put_object_acl( ACL='public-read', Bucket=self.bucket_name, Key=object_name )
+        
         except ClientError as e:
             logging.error(e)
             return False
-        return True
+        return file_name
 
     def create_presigned_url(self, object_name, expiration=3600):
         """Generate a presigned URL to share an S3 object
@@ -57,10 +67,10 @@ class AWSHandler(object):
         :param expiration: Time in seconds for the presigned URL to remain valid
         :return: Presigned URL as string. If error, returns None.
         """
-
+        object_name = self.get_aws_object_key(object_name)
         # Generate a presigned URL for the S3 object
         try:
-            response = self.s3_client.generate_presigned_url(
+            url = self.s3_client.generate_presigned_url(
                 "get_object",
                 Params={"Bucket": self.bucket_name, "Key": object_name},
                 ExpiresIn=expiration,
@@ -68,6 +78,6 @@ class AWSHandler(object):
         except ClientError as e:
             logging.error(e)
             return None
-
         # The response contains the presigned URL
-        return response
+        # https://{self.bucket_name}.s3.{region}.amazonaws.com/{object_key}
+        return url

@@ -5,6 +5,8 @@ import webbrowser
 import matplotlib
 import numpy as np
 import trimesh
+from pathlib import Path
+from botocore.exceptions import NoCredentialsError
 
 from simulariumio import (
     TrajectoryConverter,
@@ -1335,20 +1337,28 @@ class simulariumHelper(hostHelper.Helper):
             spatial_units=UnitData("nm"),  # nanometers
         )
         TrajectoryConverter(converted_data).save(file_name, False)
-        # check if the file exists, if so, store it to S3 and upload the metadata in Firebase
-        simularium_file = file_name + ".simularium"
-        if simulariumHelper.check_file_exists(simularium_file):
-            try:
-                simulariumHelper.store_results_to_s3(simularium_file,folder_name="simularium/")
-            except Exception as e:
-                print(f"An error occurred while storing the file {simularium_file} to S3:", e)
-        else:
-            print(f"File {simularium_file} does not exist.")
-        
+        return file_name
 
-    @staticmethod
-    def check_file_exists(file_name):
-        return os.path.isfile(file_name)
+
+    def post_and_open_file(self, file_name):
+        simularium_file = Path(f"{file_name}.simularium")
+        url = None
+        try:
+            url = simulariumHelper.store_results_to_s3(
+                simularium_file
+            )
+        except Exception as e:
+            if isinstance(e, NoCredentialsError):
+                # TODO: add info on AWS installation and setup to our documetation
+                # TODO: link to documentation section on setting up AWS CLI and boto3 authentation
+                print(f"need to configure your aws account (link to readme here)")
+            else:
+                print(
+                    f"An error occurred while storing the file {simularium_file} to S3:",
+                    e,
+                )
+        if url is not None:
+            simulariumHelper.open_in_simularium(url)
 
     def raycast(self, **kw):
         intersect = False
@@ -1362,38 +1372,39 @@ class simulariumHelper(hostHelper.Helper):
 
     def raycast_test(self, obj, start, end, length, **kw):
         return
-    
+
     @staticmethod
-    def store_results_to_s3(file_name, folder_name=None, object_name=None):
+    def store_results_to_s3(file_path):
         handler = AWSHandler(
             bucket_name="cellpack-results",
             aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
             aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
             region_name="us-west-2",
+            sub_folder_name="simularium/"
         )
-        # TODO: get object_name
-        handler.upload_file(file_name,folder_name,object_name)
-        return handler.create_presigned_url(object_name)
+        file_name = handler.upload_file(file_path)
+        url = handler.create_presigned_url(file_name)
+        # simulariumHelper.upload_metadata_to_firebase(file_name, url)
+        return url
 
-    def upload_metadata_to_firebase(result_name, aws_url):
+    @staticmethod
+    def upload_metadata_to_firebase(result_file_name, aws_url):
+        # TODO: use db handler (rename to not have recipe in it)
+        # write a update_doc function that in the firebase handler
+        # class update doc instead of set doc
+        # check to make sure it writes a doc if non exists
         db = FirebaseHandler()
         username = db.get_username()
         timestamp = db.create_timestamp()
-        db.set_doc(
-            "results", 
-            result_name,
-            {
-            "user": username,
-            "created": timestamp,
-            "aws_url": aws_url
-            }
+        db.update_doc(
+            "results",
+            result_file_name,
+            {"user": username, "created": timestamp, "aws_url": aws_url},
         )
-    # TODO: where to call this func?
-    upload_metadata_to_firebase("testing result2", "testing_url2")
 
     @staticmethod
     def open_in_simularium(aws_url):
-        # TODO: save the endpoint,routes and options somewhere? 
-        webbrowser.open_new_tab(f"https://simularium.allencell.org/viewer?trajUrl={aws_url}")
-    open_in_simularium()
-
+        # TODO: save the endpoint,routes and options somewhere?
+        webbrowser.open_new_tab(
+            f"https://simularium.allencell.org/viewer?trajUrl={aws_url}"
+        )
