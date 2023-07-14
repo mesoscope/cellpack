@@ -12,9 +12,7 @@ class AWSHandler(object):
     def __init__(
         self,
         bucket_name,
-        sub_folder_name=None, 
-        aws_access_key_id=None,
-        aws_secret_access_key=None,
+        sub_folder_name=None,
         region_name=None,
     ):
         self.bucket_name = bucket_name
@@ -22,19 +20,16 @@ class AWSHandler(object):
         session = boto3.Session()
         self.s3_client = session.client(
             "s3",
-            endpoint_url=f"https://{bucket_name}.s3.{region_name}.amazonaws.com",
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
+            endpoint_url=f"https://s3.{region_name}.amazonaws.com",
             region_name=region_name,
         )
 
     def get_aws_object_key(self, object_name):
-        if self.folder_name is not None: 
+        if self.folder_name is not None:
             object_name = self.folder_name + object_name
         else:
             object_name = object_name
         return object_name
-
 
     def upload_file(self, file_path):
         """Upload a file to an S3 bucket
@@ -50,11 +45,11 @@ class AWSHandler(object):
         object_name = self.get_aws_object_key(file_name)
         # Upload the file
         try:
-            self.s3_client.upload_file(
-                file_path, self.bucket_name, object_name
+            self.s3_client.upload_file(file_path, self.bucket_name, object_name)
+            self.s3_client.put_object_acl(
+                ACL="public-read", Bucket=self.bucket_name, Key=object_name
             )
-            self.s3_client.put_object_acl( ACL='public-read', Bucket=self.bucket_name, Key=object_name )
-        
+
         except ClientError as e:
             logging.error(e)
             return False

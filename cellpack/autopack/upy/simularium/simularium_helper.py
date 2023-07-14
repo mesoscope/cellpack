@@ -1340,14 +1340,11 @@ class simulariumHelper(hostHelper.Helper):
         TrajectoryConverter(converted_data).save(file_name, False)
         return file_name
 
-
     def post_and_open_file(self, file_name):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         try:
-            url = simulariumHelper.store_results_to_s3(
-                simularium_file
-            )
+            url = simulariumHelper.store_results_to_s3(simularium_file)
         except Exception as e:
             if isinstance(e, NoCredentialsError):
                 # TODO: add info on AWS installation and setup to our documetation
@@ -1379,10 +1376,8 @@ class simulariumHelper(hostHelper.Helper):
     def store_results_to_s3(file_path):
         handler = AWSHandler(
             bucket_name="cellpack-results",
-            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
+            sub_folder_name="simularium/",
             region_name="us-west-2",
-            sub_folder_name="simularium/"
         )
         file_name = handler.upload_file(file_path)
         url = handler.create_presigned_url(file_name)
@@ -1399,6 +1394,10 @@ class simulariumHelper(hostHelper.Helper):
             result_file_name,
             {"user": username, "created": timestamp, "aws_url": aws_url},
         )
+        # result_file_name examples:
+        # github:autopack_recipe.json
+        # firebase:recipes/peroxisomes_surface_gradient_v-linear
+        # results_seed_0_test_spheres_test_spheres_config_1.0.0_results
 
     @staticmethod
     def open_in_simularium(aws_url):
