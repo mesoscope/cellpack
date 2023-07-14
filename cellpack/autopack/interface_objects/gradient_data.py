@@ -71,7 +71,6 @@ class WeightModeOptions(MetaEnum):
 
 REQUIRED_MODE_OPTIONS = {
     GradientModes.VECTOR: [ModeOptions.direction],
-    GradientModes.RADIAL: [ModeOptions.radius],
     GradientModes.SURFACE: [ModeOptions.object],
 }
 

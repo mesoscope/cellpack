@@ -515,7 +515,16 @@ class Environment(CompartmentList):
         return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
 
     def save_result(
-        self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
+        self,
+        free_points,
+        distances,
+        t0,
+        vAnalysis,
+        vTestid,
+        seedNum,
+        all_ingr_as_array,
+        save_grid_logs=False,
+        save_result_as_file=False,
     ):
         self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
@@ -524,10 +533,12 @@ class Environment(CompartmentList):
             # do not overwrite if grid was loaded from file
             self.grid.result_filename = self.grid_file_out
             self.saveGridToFile(self.grid_file_out)
-        self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
+        if save_grid_logs:
+            self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
-        self.store()
-        # self.store_asTxt()
+        if save_result_as_file:
+            self.store()
+            self.store_asTxt()
         Writer(format=self.format_output).save(
             self,
             self.result_file,

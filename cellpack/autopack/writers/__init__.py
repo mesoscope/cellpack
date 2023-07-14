@@ -97,9 +97,11 @@ class Writer(object):
         # TODO: add an option to plot grid points for compartments and for gradients
         if grid_positions is not None and len(env.gradients):
             for _, gradient in env.gradients.items():
-                values = gradient.distances
                 env.helper.add_grid_data_to_scene(
-                    f"{gradient.name}-distances", grid_positions, values
+                    f"{gradient.name}-distances", grid_positions, gradient.distances
+                )
+                env.helper.add_grid_data_to_scene(
+                    f"{gradient.name}-weights", grid_positions, gradient.weight
                 )
 
         env.helper.writeToFile(
