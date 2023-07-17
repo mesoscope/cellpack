@@ -374,7 +374,7 @@ class DBRecipeHandler(object):
             gradient_doc = GradientDoc(settings=gradient)
             _, doc_id = gradient_doc.should_write(self.db, gradient_name)
             if doc_id:
-                print(f"gradients/{gradient_name} is already exists in firestore")
+                print(f"gradients/{gradient_name} already exists in firestore")
                 self.grad_to_path_map[gradient_name] = self.db.create_path(
                     "gradients", doc_id
                 )
