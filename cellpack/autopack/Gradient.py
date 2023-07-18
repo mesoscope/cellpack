@@ -191,7 +191,7 @@ class Gradient:
         direction = self.normalize_vector(direction)
         self.weight = []
         center = self.mode_settings.get("center", self.get_center())
-        self.distances = numpy.dot(master_grid_positions - center, direction)
+        self.distances = numpy.abs(numpy.dot(master_grid_positions - center, direction))
         self.set_weights_by_mode()
 
     def build_axis_weight_map(self, bb, master_grid_positions):
@@ -232,9 +232,7 @@ class Gradient:
                 -self.scaled_distances / self.weight_mode_settings["decay_length"]
             )
         # normalize the weight
-        self.weight = (self.weight - numpy.min(self.weight)) / (
-            numpy.max(self.weight) - numpy.min(self.weight)
-        )
+        self.weight = self.get_normalized_values(self.weight)
 
         self.weight[numpy.isnan(self.weight)] = 0
 
