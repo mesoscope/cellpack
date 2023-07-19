@@ -282,7 +282,7 @@ def is_remote_path(file_path):
     """
     for ele in DATABASE_NAME:
         if ele in file_path:
-            return ele in file_path
+            return True
 
 
 def convert_db_shortname_to_url(file_location):
