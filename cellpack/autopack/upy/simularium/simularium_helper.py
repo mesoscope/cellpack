@@ -1347,9 +1347,7 @@ class simulariumHelper(hostHelper.Helper):
             url = simulariumHelper.store_results_to_s3(simularium_file)
         except Exception as e:
             if isinstance(e, NoCredentialsError):
-                # TODO: add info on AWS installation and setup to our documetation
-                # TODO: link to documentation section on setting up AWS CLI and boto3 authentation
-                print(f"need to configure your aws account (link to readme here)")
+                print(f"need to configure your aws account, find instructions here: https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3")
             # TODO: an ValueError is raised (in autopack/__init__ L396) when firebase app is already initialized, i.e. storing the recipe that downloaded from firebase
             else:
                 print(
