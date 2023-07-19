@@ -71,6 +71,21 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
    each set of changes to `main` atomic and as a side effect naturally encourages small
    well defined PR's.
 
+## Introduction to Remote Databases 
+### AWS S3
+1. Pre-requisites
+   * Obtain an AWS account for AICS. Please contact the IT team or the code owner. 
+   * Generate an `aws_access_key_id` and `aws_secret_access_key` in your AWS account.
+
+2. Step-by-step Guide
+   * Download and install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+   * Configure AWS CLI by running `aws configure`, then enter your credentials as prompted
+   * Install Boto3, the AWS SDK for Python. Run `conda install -c conda-forge boto3` or `pip install boto3`.  
+
+### Firebase Firestore
+1. Step-by-step Guide
+   * Create a Firebase project in test mode with your google account, select `firebase_admin` as the SDK. [Firebase Firestore tutorial](https://firebase.google.com/docs/firestore))
+   * Generate a new private key by navigating to "Project settings">"Service account" in the project's dashboard 
 
 **MIT license**
 
