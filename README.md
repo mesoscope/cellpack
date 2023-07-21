@@ -79,13 +79,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
 2. Step-by-step Guide
    * Download and install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-   * Configure AWS CLI by running `aws configure`, then enter your credentials as prompted
-   * Install Boto3, the AWS SDK for Python. Run `conda install -c conda-forge boto3` or `pip install boto3`.  
+   * Configure AWS CLI by running `aws configure`, then enter your credentials as prompted.
+   * Ensure that Boto3, the AWS SDK for Python is installed and included in the requirements section of `setup.py`. 
 
 ### Firebase Firestore
 1. Step-by-step Guide
-   * Create a Firebase project in test mode with your google account, select `firebase_admin` as the SDK. [Firebase Firestore tutorial](https://firebase.google.com/docs/firestore))
-   * Generate a new private key by navigating to "Project settings">"Service account" in the project's dashboard 
+   * Create a Firebase project in test mode with your google account, select `firebase_admin` as the SDK. [Firebase Firestore tutorial](https://firebase.google.com/docs/firestore)
+   * Generate a new private key by navigating to "Project settings">"Service account" in the project's dashboard.
 
 **MIT license**
 
