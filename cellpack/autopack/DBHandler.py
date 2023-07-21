@@ -6,6 +6,8 @@ from cellpack.autopack.utils import deep_merge
 
 from google.cloud.exceptions import NotFound
 
+from cellpack.autopack import FirebaseHandler
+
 
 class DataDoc(object):
     def __init__(
@@ -355,6 +357,8 @@ class GradientDoc(DataDoc):
 class DBHandler(object):
     def __init__(self, db_handler):
         self.db = db_handler
+        if isinstance(db_handler, FirebaseHandler):
+            DBHandler.firebase_handler = db_handler
         self.objects_to_path_map = {}
         self.comp_to_path_map = {}
         self.grad_to_path_map = {}

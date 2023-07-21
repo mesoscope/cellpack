@@ -1348,11 +1348,9 @@ class simulariumHelper(hostHelper.Helper):
         except Exception as e:
             if isinstance(e, NoCredentialsError):
                 print(f"need to configure your aws account, find instructions here: https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3")
-            # TODO: an ValueError is raised (in autopack/__init__ L396) when firebase app is already initialized, i.e. storing the recipe that downloaded from firebase
             else:
                 print(
-                    f"An error occurred while storing the file {simularium_file} to S3:",
-                    e,
+                    f"An error occurred while storing the file {simularium_file} to S3: {e}"
                 )
         if url is not None:
             simulariumHelper.open_in_simularium(url)
@@ -1384,22 +1382,20 @@ class simulariumHelper(hostHelper.Helper):
 
     @staticmethod
     def upload_metadata_to_firebase(result_file_name, aws_url):
-        db_handler = DBHandler(FirebaseHandler())
+        if DBHandler.firebase_handler is None:
+            db_handler = DBHandler(FirebaseHandler())
+        else:
+            db_handler = DBHandler(DBHandler.firebase_handler)
         username = db_handler.db.get_username()
         timestamp = db_handler.db.create_timestamp()
         db_handler.update_or_create_metadata(
             "results",
             result_file_name,
-            {"user": username, "created": timestamp, "aws_url": aws_url},
+            {"user": username, "created": timestamp, "aws_url": aws_url.split("?")[0]},
         )
-        # result_file_name examples:
-        # github:autopack_recipe.json
-        # firebase:recipes/peroxisomes_surface_gradient_v-linear
-        # results_seed_0_test_spheres_test_spheres_config_1.0.0_results
 
     @staticmethod
     def open_in_simularium(aws_url):
-        # TODO: save the endpoint,routes and options somewhere?
         webbrowser.open_new_tab(
             f"https://simularium.allencell.org/viewer?trajUrl={aws_url}"
         )

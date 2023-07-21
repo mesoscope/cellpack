@@ -392,7 +392,6 @@ def load_file(filename, destination="", cache="geometries", force=None):
         # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-linear -c examples/packing-configs/peroxisome_packing_config.json`
         if database_name == "firebase":
             recipe_id = file_path.split("/")[-1]
-            # TODO: do we need to include the case where the recipe is downloaded from firebase?
             db_handler = DBHandler(FirebaseHandler())
             db_doc, _ = db_handler.db.get_doc_by_id(collection="recipes", id=recipe_id)
             downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
