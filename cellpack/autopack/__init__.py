@@ -41,7 +41,7 @@ import os
 import re
 import shutil
 from os import path, environ
-import pwd
+import getpass
 from pathlib import Path
 import urllib.request as urllib
 from collections import OrderedDict
@@ -541,7 +541,7 @@ def clearCaches(*args):
 
 
 def write_username_to_creds():
-    username = pwd.getpwuid(os.getuid())[0]
+    username = getpass.getuser()
     creds = read_json_file("./.creds")
     if creds is None or "username" not in creds:
         creds = {}
