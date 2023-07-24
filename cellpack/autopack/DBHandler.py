@@ -356,6 +356,7 @@ class GradientDoc(DataDoc):
 
 class DBHandler(object):
     firebase_handler = None
+
     def __init__(self, db_handler):
         self.db = db_handler
         if isinstance(db_handler, FirebaseHandler):

@@ -1346,8 +1346,11 @@ class simulariumHelper(hostHelper.Helper):
         try:
             url = simulariumHelper.store_results_to_s3(simularium_file)
         except Exception as e:
+            aws_readme_url = "https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3"
             if isinstance(e, NoCredentialsError):
-                print(f"need to configure your aws account, find instructions here: https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3")
+                print(
+                    f"need to configure your aws account, find instructions here: {aws_readme_url}"
+                )
             else:
                 print(
                     f"An error occurred while storing the file {simularium_file} to S3: {e}"
