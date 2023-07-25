@@ -1318,9 +1318,11 @@ class Analysis:
         dims_to_normalize = self.get_list_of_dims() + ["pairwise_distance"]
         for dim in dims_to_normalize:
             values = similarity_df.loc[:, dim].values
-            similarity_df.loc[:, dim] = (values - numpy.min(values)) / (
+            normalized_values = (values - numpy.min(values)) / (
                 numpy.max(values) - numpy.min(values)
             )
+            normalized_values[numpy.isnan(normalized_values)] = 0
+            similarity_df.loc[:, dim] = normalized_values
         return similarity_df
 
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
