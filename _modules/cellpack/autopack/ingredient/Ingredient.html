@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.ingredient.Ingredient &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -104,11 +104,35 @@
 <span class="kn">from</span> <span class="nn">cellpack.autopack.upy.simularium.simularium_helper</span> <span class="kn">import</span> <span class="n">simulariumHelper</span>
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.meta_enum</span> <span class="kn">import</span> <span class="n">MetaEnum</span>
 
 <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
 <span class="n">reporthook</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">reporthook</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">reporthook</span>
+
+
+<div class="viewcode-block" id="CountDistributions"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.CountDistributions">[docs]</a><span class="k">class</span> <span class="nc">CountDistributions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+    <span class="s2">&quot;All available count distributions&quot;</span>
+    <span class="n">UNIFORM</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span>
+    <span class="n">NORMAL</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span>
+    <span class="n">LIST</span> <span class="o">=</span> <span class="s2">&quot;list&quot;</span></div>
+
+
+<div class="viewcode-block" id="CountOptions"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.CountOptions">[docs]</a><span class="k">class</span> <span class="nc">CountOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+    <span class="s2">&quot;All available count options&quot;</span>
+    <span class="n">MIN</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span>
+    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span>
+    <span class="n">MEAN</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
+    <span class="n">STD</span> <span class="o">=</span> <span class="s2">&quot;std&quot;</span>
+    <span class="n">LIST_VALUES</span> <span class="o">=</span> <span class="s2">&quot;list_values&quot;</span></div>
+
+
+<span class="n">REQUIRED_COUNT_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">CountDistributions</span><span class="o">.</span><span class="n">UNIFORM</span><span class="p">:</span> <span class="p">[</span><span class="n">CountOptions</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">CountOptions</span><span class="o">.</span><span class="n">MAX</span><span class="p">],</span>
+    <span class="n">CountDistributions</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">:</span> <span class="p">[</span><span class="n">CountOptions</span><span class="o">.</span><span class="n">MEAN</span><span class="p">,</span> <span class="n">CountOptions</span><span class="o">.</span><span class="n">STD</span><span class="p">],</span>
+    <span class="n">CountDistributions</span><span class="o">.</span><span class="n">LIST</span><span class="p">:</span> <span class="p">[</span><span class="n">CountOptions</span><span class="o">.</span><span class="n">LIST_VALUES</span><span class="p">],</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="IngredientInstanceDrop"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.IngredientInstanceDrop">[docs]</a><span class="k">class</span> <span class="nc">IngredientInstanceDrop</span><span class="p">:</span>
@@ -167,6 +191,7 @@
     <span class="n">ARGUMENTS</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;color&quot;</span><span class="p">,</span>
         <span class="s2">&quot;count&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;count_options&quot;</span><span class="p">,</span>
         <span class="s2">&quot;cutoff_boundary&quot;</span><span class="p">,</span>
         <span class="s2">&quot;cutoff_surface&quot;</span><span class="p">,</span>
         <span class="s2">&quot;distance_expression&quot;</span><span class="p">,</span>
@@ -203,6 +228,7 @@
         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;single_sphere&quot;</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">count_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cutoff_boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cutoff_surface</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">distance_expression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -252,6 +278,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">molarity</span> <span class="o">=</span> <span class="n">molarity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count_options</span> <span class="o">=</span> <span class="n">count_options</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;priority </span><span class="si">%d</span><span class="s2">,  self.priority </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
@@ -372,6 +399,35 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">organism</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="c1"># add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type</span>
+
+<div class="viewcode-block" id="Ingredient.validate_ingredient_info"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.validate_ingredient_info">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_ingredient_info</span><span class="p">(</span><span class="n">ingredient_info</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates ingredient info and returns validated ingredient info</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;count&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredient_info</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Ingredient info must contain a count&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ingredient_info</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Ingredient count must be greater than or equal to 0&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;count_options&quot;</span> <span class="ow">in</span> <span class="n">ingredient_info</span><span class="p">:</span>
+            <span class="n">count_options</span> <span class="o">=</span> <span class="n">ingredient_info</span><span class="p">[</span><span class="s2">&quot;count_options&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;distribution&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">count_options</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Ingredient count options must contain a distribution&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">CountDistributions</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">count_options</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">count_options</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid count distribution&quot;</span>
+                <span class="p">)</span>
+            <span class="k">for</span> <span class="n">required_option</span> <span class="ow">in</span> <span class="n">REQUIRED_COUNT_OPTIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">count_options</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">],</span> <span class="p">[]</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">required_option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">count_options</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Missing option &#39;</span><span class="si">{</span><span class="n">required_option</span><span class="si">}</span><span class="s2">&#39; for </span><span class="si">{</span><span class="n">count_options</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> distribution&quot;</span>
+                    <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ingredient_info</span></div>
 
 <div class="viewcode-block" id="Ingredient.reset"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;reset the states of an ingredient&quot;&quot;&quot;</span>
@@ -1122,9 +1178,9 @@
             <span class="p">):</span>
                 <span class="k">continue</span>
             <span class="c1"># checking compartments I don&#39;t belong to</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point</span><span class="p">])))</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">d</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">:</span>
                     <span class="c1"># too close to a surface</span>
                     <span class="k">return</span> <span class="kc">False</span>
@@ -1870,7 +1926,7 @@
                 <span class="p">):</span>  <span class="c1"># you need a gradient here</span>
                     <span class="n">rot_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignRotation</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span>
+                    <span class="n">rot_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span>
                         <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_axis</span>
                     <span class="p">)</span>
             <span class="c1"># for other points we get a random rotation</span>
@@ -1894,7 +1950,7 @@
                 <span class="c1"># weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># should we align to this rotation_axis ?</span>
-                    <span class="n">jitter_rotation</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span>
+                    <span class="n">jitter_rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span>
                         <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_axis</span>
                     <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -2652,7 +2708,7 @@
 
 <div class="viewcode-block" id="Ingredient.pandaBullet_relax"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_relax">[docs]</a>    <span class="k">def</span> <span class="nf">pandaBullet_relax</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">histoVol</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
         <span class="n">compartment</span><span class="p">,</span>
         <span class="n">target_grid_point_position</span><span class="p">,</span>
@@ -2665,16 +2721,16 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">histoVol</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
-        <span class="n">afvi</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">afviewer</span>
-        <span class="n">simulationTimes</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">simulationTimes</span>
-        <span class="n">runTimeDisplay</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">runTimeDisplay</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
+        <span class="n">afvi</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">afviewer</span>
+        <span class="n">simulationTimes</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">simulationTimes</span>
+        <span class="n">runTimeDisplay</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">runTimeDisplay</span>
         <span class="n">is_realtime</span> <span class="o">=</span> <span class="n">moving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">gridPointsCoords</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
+        <span class="n">gridPointsCoords</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">oneJitter</span><span class="p">(</span>
-            <span class="n">histoVol</span><span class="p">,</span> <span class="n">target_grid_point_position</span><span class="p">,</span> <span class="n">rotation_matrix</span>
+            <span class="n">env</span><span class="p">,</span> <span class="n">target_grid_point_position</span><span class="p">,</span> <span class="n">rotation_matrix</span>
         <span class="p">)</span>
         <span class="c1"># here should go the simulation</span>
         <span class="c1"># 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj</span>
@@ -2697,9 +2753,9 @@
                         <span class="n">parent</span><span class="o">=</span><span class="n">afvi</span><span class="o">.</span><span class="n">movingMesh</span><span class="p">,</span>
                     <span class="p">)</span>
         <span class="c1"># 2- get the neighboring object from ptInd</span>
-        <span class="k">if</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">ingrLookForNeighbours</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">ingrLookForNeighbours</span><span class="p">:</span>
             <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partners</span><span class="p">(</span>
-                <span class="n">histoVol</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span>
+                <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">near_by_ingredients</span><span class="p">):</span>
                 <span class="n">ing</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -2760,7 +2816,7 @@
             <span class="p">),</span>
         <span class="p">)</span>
         <span class="c1"># run he simulation for simulationTimes</span>
-        <span class="n">histoVol</span><span class="o">.</span><span class="n">callFunction</span><span class="p">(</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">callFunction</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">runBullet</span><span class="p">,</span>
             <span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span>
@@ -2823,8 +2879,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.Analysis &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -74,6 +74,9 @@
 <span class="kn">from</span> <span class="nn">cellpack.autopack.upy</span> <span class="kn">import</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">col</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.upy.colors</span> <span class="kn">import</span> <span class="n">map_colors</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">check_paired_key</span><span class="p">,</span> <span class="n">get_paired_key</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.writers.ImageWriter</span> <span class="kn">import</span> <span class="n">ImageWriter</span>
+<span class="kn">import</span> <span class="nn">concurrent.futures</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
 
 
 <div class="viewcode-block" id="Analysis"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis">[docs]</a><span class="k">class</span> <span class="nc">Analysis</span><span class="p">:</span>
@@ -83,6 +86,7 @@
         <span class="n">viewer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">result_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">packing_results_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smallest</span> <span class="o">=</span> <span class="mf">99999.0</span>
@@ -111,10 +115,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">packing_results_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;out/&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;figures&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -440,9 +447,9 @@
                     <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
                     <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ingrname</span> <span class="o">+</span> <span class="s2">&quot;_euler_X.png&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ingrname</span> <span class="o">+</span> <span class="s2">&quot;_euler_Y.png&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ingrname</span> <span class="o">+</span> <span class="s2">&quot;_euler_Z.png&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ingrname</span> <span class="o">+</span> <span class="s2">&quot;_euler_X.png&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ingrname</span> <span class="o">+</span> <span class="s2">&quot;_euler_Y.png&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">e3</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ingrname</span> <span class="o">+</span> <span class="s2">&quot;_euler_Z.png&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ingrpos</span><span class="p">,</span> <span class="n">ingrrot</span></div>
 
     <span class="c1"># should take any type of list...</span>
@@ -524,7 +531,7 @@
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">ingredient_positions</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]),</span>
             <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_histo.png&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_histo.png&quot;</span><span class="p">)</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
             <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_distances.csv&quot;</span><span class="p">,</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">),</span>
@@ -633,7 +640,7 @@
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">ingredient_positions</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]),</span>
             <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_histo.png&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_histo.png&quot;</span><span class="p">)</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
             <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_distances.csv&quot;</span><span class="p">,</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">),</span>
@@ -687,7 +694,7 @@
         <span class="n">pos_sph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_to_sph</span><span class="p">(</span><span class="n">pos_xyz</span><span class="p">)</span>
         <span class="n">all_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">pos_xyz</span><span class="p">,</span> <span class="n">pos_sph</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">()):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                 <span class="n">all_pos</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">],</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span>
                 <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;all_ingredient_histo_</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
@@ -703,7 +710,7 @@
         <span class="n">pos_sph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_to_sph</span><span class="p">(</span><span class="n">pos_xyz</span><span class="p">)</span>
         <span class="n">all_pos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">pos_xyz</span><span class="p">,</span> <span class="n">pos_sph</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">()):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                 <span class="n">all_pos</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">],</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_histo_</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                 <span class="n">title_str</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -718,10 +725,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">simpleplot</span><span class="p">(</span>
             <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">occ</span><span class="p">)),</span>
             <span class="n">occ</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_occurrence_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span>
+            <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_occurrence_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">_lineplot.png&quot;</span><span class="p">,</span>
             <span class="n">title_str</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;seed&quot;</span><span class="p">,</span>
-            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;occurences&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;occurrences&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+            <span class="n">distances</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">occ</span><span class="p">),</span>
+            <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span>
+            <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_occurrence_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">_histo.png&quot;</span><span class="p">,</span>
+            <span class="n">title_str</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;occurrences&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Analysis.plot_distance_distribution"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.plot_distance_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">plot_distance_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_ingredient_distances</span><span class="p">):</span>
@@ -731,7 +747,7 @@
         <span class="k">for</span> <span class="n">ingr_key</span><span class="p">,</span> <span class="n">distances</span> <span class="ow">in</span> <span class="n">all_ingredient_distances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                 <span class="n">distances</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">),</span>
                 <span class="n">filename</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span>
                 <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr_key</span><span class="si">}</span><span class="s2">_pairwise_distances_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
@@ -1335,6 +1351,20 @@
                 <span class="o">**</span><span class="n">analysis_config</span><span class="p">[</span><span class="s2">&quot;create_report&quot;</span><span class="p">],</span>
             <span class="p">)</span></div>
 
+<div class="viewcode-block" id="Analysis.normalize_similarity_df"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.normalize_similarity_df">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_similarity_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">similarity_df</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normalizes the similarity dataframe</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dims_to_normalize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;pairwise_distance&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dims_to_normalize</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">dim</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">normalized_values</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">normalized_values</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">normalized_values</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized_values</span>
+        <span class="k">return</span> <span class="n">similarity_df</span></div>
+
 <div class="viewcode-block" id="Analysis.calc_avg_similarity_values_for_dim"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.calc_avg_similarity_values_for_dim">[docs]</a>    <span class="k">def</span> <span class="nf">calc_avg_similarity_values_for_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">similarity_vals_for_dim</span><span class="p">):</span>
         <span class="n">packing_inds</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_seeds_per_packing</span><span class="p">])</span>
@@ -1368,17 +1398,32 @@
             <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">similarity_df</span><span class="p">[</span><span class="s2">&quot;packing_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dims_to_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;pairwise_distance&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">seed1</span><span class="p">,</span> <span class="n">pos_dict1</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">all_objs</span><span class="p">[</span><span class="n">ingredient_key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">seed1</span><span class="p">,</span> <span class="s2">&quot;packing_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_id_dict</span><span class="p">[</span>
-                <span class="nb">int</span><span class="p">(</span><span class="n">seed1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="p">]</span>
+            <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">seed1</span><span class="p">,</span> <span class="s2">&quot;packing_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">seed2</span><span class="p">,</span> <span class="n">pos_dict2</span> <span class="ow">in</span> <span class="n">all_objs</span><span class="p">[</span><span class="n">ingredient_key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">():</span>
-                    <span class="n">arr1</span> <span class="o">=</span> <span class="n">pos_dict1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
-                    <span class="n">arr2</span> <span class="o">=</span> <span class="n">pos_dict2</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dims_to_calc</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="s2">&quot;pairwise_distance&quot;</span><span class="p">:</span>
+                        <span class="n">pos1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">pos_dict1</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">pos_dict1</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">pos_dict1</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]]</span>
+                        <span class="p">)</span>
+                        <span class="n">pos2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">pos_dict2</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">pos_dict2</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">pos_dict2</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]]</span>
+                        <span class="p">)</span>
+                        <span class="n">arr1</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">pos1</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                        <span class="n">arr2</span> <span class="o">=</span> <span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">pos2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">arr1</span> <span class="o">=</span> <span class="n">pos_dict1</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+                        <span class="n">arr2</span> <span class="o">=</span> <span class="n">pos_dict2</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+
+                    <span class="n">min_dim</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">arr1</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">arr2</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+                    <span class="n">max_dim</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">arr1</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">arr2</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+                    <span class="n">arr1</span> <span class="o">=</span> <span class="p">(</span><span class="n">arr1</span> <span class="o">-</span> <span class="n">min_dim</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_dim</span>
+                    <span class="n">arr2</span> <span class="o">=</span> <span class="p">(</span><span class="n">arr2</span> <span class="o">-</span> <span class="n">min_dim</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_dim</span>
+
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="c1"># cannot determine similarity when only one instance is packed</span>
-                        <span class="n">scaled_sig</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">similarity_score</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">arr1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">arr2</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                         <span class="c1"># if there is only one unique value, compare the value</span>
                         <span class="k">if</span> <span class="p">(</span>
@@ -1386,17 +1431,38 @@
                             <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">arr2</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span>
                         <span class="p">):</span>
                             <span class="c1"># both packings have only one unique value, compare the value</span>
-                            <span class="n">scaled_sig</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">similarity_score</span> <span class="o">=</span> <span class="p">(</span>
                                 <span class="mi">1</span> <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
                             <span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="c1"># one of the packings has more than one unique value, cannot compare</span>
-                            <span class="n">scaled_sig</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="n">similarity_score</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">ad_stat</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">anderson_ksamp</span><span class="p">([</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">])</span>
-                        <span class="n">scaled_sig</span> <span class="o">=</span> <span class="p">(</span><span class="n">ad_stat</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">-</span> <span class="mf">0.001</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.25</span> <span class="o">-</span> <span class="mf">0.001</span><span class="p">)</span>
-                    <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">seed1</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">seed2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">scaled_sig</span>
+                        <span class="c1"># anderson-darling test</span>
+                        <span class="c1"># ad_stat = stats.anderson_ksamp([arr1, arr2])</span>
+                        <span class="c1"># similarity_score = (ad_stat.significance_level - 0.001) / (</span>
+                        <span class="c1">#     0.25 - 0.001</span>
+                        <span class="c1"># )</span>
+                        <span class="c1"># similarity_score = 1 - ad_stat.statistic</span>
 
+                        <span class="c1"># 2 sample ks</span>
+                        <span class="n">ks_stat</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ks_2samp</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">)</span>
+                        <span class="n">similarity_score</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">ks_stat</span><span class="o">.</span><span class="n">statistic</span>
+                        <span class="c1"># similarity_score = ks_stat.pvalue</span>
+
+                        <span class="c1"># histograms for bhattacharyya and jensen-shannon distances</span>
+                        <span class="c1"># hist1, bin_edges1 = numpy.histogram(arr1, bins=&quot;auto&quot;, density=True)</span>
+                        <span class="c1"># hist2, bin_edges2 = numpy.histogram(arr2, bins=bin_edges1, density=True)</span>
+
+                        <span class="c1"># bhattacharyya distance</span>
+                        <span class="c1"># similarity_score = numpy.sqrt(numpy.sum(numpy.sqrt(hist1 * hist2)))</span>
+
+                        <span class="c1"># jensen-shannon distance</span>
+                        <span class="c1"># similarity_score = 1 - distance.jensenshannon(arr1, arr2)</span>
+
+                    <span class="n">similarity_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">seed1</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">seed2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">similarity_score</span>
+
+        <span class="n">similarity_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_similarity_df</span><span class="p">(</span><span class="n">similarity_df</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dfpath</span> <span class="o">=</span> <span class="n">save_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;similarity_df_</span><span class="si">{</span><span class="n">ingredient_key</span><span class="si">}</span><span class="s2">.csv&quot;</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving similarity df to </span><span class="si">{</span><span class="n">dfpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1419,7 +1485,8 @@
         <span class="n">figdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="s2">&quot;clustering&quot;</span>
         <span class="n">figdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">():</span>
+        <span class="n">dims_to_calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_list_of_dims</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;pairwise_distance&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dims_to_calc</span><span class="p">:</span>
             <span class="n">avg_similarity_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_avg_similarity_values_for_dim</span><span class="p">(</span>
                 <span class="n">similarity_df</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
             <span class="p">)</span>
@@ -1451,6 +1518,7 @@
                 <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">g</span><span class="o">.</span><span class="n">ax_col_dendrogram</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">ax_row_dendrogram</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">g</span><span class="o">.</span><span class="n">ax_heatmap</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingredient_key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">g</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">figdir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;clustermap_</span><span class="si">{</span><span class="n">ingredient_key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span></div>
 
@@ -1459,28 +1527,25 @@
         <span class="n">all_objs</span><span class="p">,</span>
         <span class="n">ingredient_key</span><span class="p">,</span>
         <span class="n">save_heatmaps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">recalculate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        TODO: add docs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running similarity analysis...&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">save_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
-        <span class="n">save_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ingredient_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_objs</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing ingredient: </span><span class="si">{</span><span class="n">ingredient_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">dfpath</span> <span class="o">=</span> <span class="n">save_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;similarity_df_</span><span class="si">{</span><span class="n">ingredient_key</span><span class="si">}</span><span class="s2">.csv&quot;</span>
-        <span class="k">if</span> <span class="n">dfpath</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">dfpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;similarity_df_</span><span class="si">{</span><span class="n">ingredient_key</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+        <span class="k">if</span> <span class="n">dfpath</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">recalculate</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading similarity values from </span><span class="si">{</span><span class="n">dfpath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">similarity_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dfpath</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">similarity_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_similarity_df</span><span class="p">(</span>
                 <span class="n">all_objs</span><span class="p">,</span>
                 <span class="n">ingredient_key</span><span class="o">=</span><span class="n">ingredient_key</span><span class="p">,</span>
-                <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+                <span class="n">save_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">save_heatmaps</span><span class="p">:</span>
@@ -1681,10 +1746,12 @@
 
         <span class="k">return</span> <span class="n">all_spilr</span></div>
 
-<div class="viewcode-block" id="Analysis.histo"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.histo">[docs]</a>    <span class="k">def</span> <span class="nf">histo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">title_str</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="Analysis.histogram"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.histogram">[docs]</a>    <span class="k">def</span> <span class="nf">histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">title_str</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="c1"># calculate histogram</span>
         <span class="n">nbins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">nbins</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="n">y</span><span class="p">,</span> <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">nbins</span><span class="p">)</span>
         <span class="n">bincenters</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">bin_edges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
@@ -1720,42 +1787,34 @@
 <div class="viewcode-block" id="Analysis.simpleplot"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.simpleplot">[docs]</a>    <span class="k">def</span> <span class="nf">simpleplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">title_str</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title_str</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Analysis.build_grid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.build_grid">[docs]</a>    <span class="k">def</span> <span class="nf">build_grid</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">forceBuild</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">buildGrid</span><span class="p">()</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="n">gridTime</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time to Build Grid&quot;</span><span class="p">,</span> <span class="n">gridTime</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time to build grid: </span><span class="si">{</span><span class="n">gridTime</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Analysis.pack"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">seed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-        <span class="n">vTestid</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">vAnalysis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">show_plotly_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">show_plotly_plot</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plotly</span><span class="o">.</span><span class="n">update_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">place_method</span><span class="p">)</span>
 
         <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">pack_grid</span><span class="p">(</span>
-            <span class="n">seedNum</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-            <span class="n">vTestid</span><span class="o">=</span><span class="n">vTestid</span><span class="p">,</span>
-            <span class="n">vAnalysis</span><span class="o">=</span><span class="n">vAnalysis</span><span class="p">,</span>
-            <span class="n">fbox</span><span class="o">=</span><span class="n">fbox_bb</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">pack_grid</span><span class="p">(</span><span class="n">seedNum</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time to run pack_grid&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">place_method</span><span class="p">,</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;num placed&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">))</span>
+        <span class="n">run_time</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time to run pack_grid for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">place_method</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num placed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">show_plotly_plot</span><span class="p">:</span>
             <span class="n">min_bound</span><span class="p">,</span> <span class="n">max_bound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_bounding_box_limits</span><span class="p">()</span>
             <span class="n">width</span> <span class="o">=</span> <span class="n">max_bound</span> <span class="o">-</span> <span class="n">min_bound</span>
@@ -2162,9 +2221,8 @@
         <span class="k">for</span> <span class="n">seed_index</span><span class="p">,</span> <span class="n">ingr_dict</span> <span class="ow">in</span> <span class="n">input_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">ingr_name</span><span class="p">,</span> <span class="n">value_list</span> <span class="ow">in</span> <span class="n">ingr_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">ingr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output_dict</span><span class="p">:</span>
-                    <span class="n">output_dict</span><span class="p">[</span><span class="n">ingr_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_list</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">output_dict</span><span class="p">[</span><span class="n">ingr_name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value_list</span><span class="p">)</span>
+                    <span class="n">output_dict</span><span class="p">[</span><span class="n">ingr_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">output_dict</span><span class="p">[</span><span class="n">ingr_name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value_list</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">output_dict</span></div>
 
@@ -2177,18 +2235,194 @@
             <span class="n">output_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value_list</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output_list</span></div>
 
+<div class="viewcode-block" id="Analysis.pack_one_seed"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.pack_one_seed">[docs]</a>    <span class="k">def</span> <span class="nf">pack_one_seed</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seed_index</span><span class="p">,</span>
+        <span class="n">seed_list</span><span class="p">,</span>
+        <span class="n">bounding_box</span><span class="p">,</span>
+        <span class="n">packing_basename</span><span class="p">,</span>
+        <span class="n">center_distance_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">get_distance_distribution</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">image_export_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">show_grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">plot_figures</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Packs one seed of a recipe and returns the recipe object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seed_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;seed_</span><span class="si">{</span><span class="n">seed_index</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">packing_basename</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">result_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;results_seed_</span><span class="si">{</span><span class="n">seed_index</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">packing_basename</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Clear</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">clearFill</span><span class="p">(</span><span class="s2">&quot;Test_Spheres2D&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">saveResult</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="n">seed_list</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span>  <span class="c1"># int(time())</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_grid</span><span class="p">()</span>
+        <span class="n">two_d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">is_two_d</span><span class="p">()</span>
+        <span class="n">use_simularium</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="c1"># TODO: fix this to disable plotly if using simularium</span>
+            <span class="n">show_plotly_plot</span><span class="o">=</span><span class="p">(</span><span class="n">show_grid</span> <span class="ow">and</span> <span class="n">two_d</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">use_simularium</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getCenter</span><span class="p">()</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">plot_figures</span> <span class="ow">and</span> <span class="n">two_d</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_size_of_bounding_box</span><span class="p">()</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">get_distance_distribution</span><span class="p">:</span>
+            <span class="n">center_distance_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">pairwise_distance_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ingredient_position_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ingredient_angle_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">ingredient_occurence_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">):</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getCenter</span><span class="p">()</span>  <span class="c1"># center of the grid</span>
+
+            <span class="n">ext_recipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+            <span class="k">if</span> <span class="n">ext_recipe</span><span class="p">:</span>
+                <span class="p">(</span>
+                    <span class="n">center_distance_dict</span><span class="p">,</span>
+                    <span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_position_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_key_dict</span><span class="p">,</span>
+                    <span class="n">ax</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ingredients_in_recipe</span><span class="p">(</span>
+                    <span class="n">recipe</span><span class="o">=</span><span class="n">ext_recipe</span><span class="p">,</span>
+                    <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
+                    <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
+                    <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
+                    <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+                    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                    <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
+                    <span class="n">two_d</span><span class="o">=</span><span class="n">two_d</span><span class="p">,</span>
+                    <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">comparment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+                <span class="n">surface_recipe</span> <span class="o">=</span> <span class="n">comparment</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+                <span class="k">if</span> <span class="n">surface_recipe</span><span class="p">:</span>
+                    <span class="p">(</span>
+                        <span class="n">center_distance_dict</span><span class="p">,</span>
+                        <span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_position_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_key_dict</span><span class="p">,</span>
+                        <span class="n">ax</span><span class="p">,</span>
+                    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ingredients_in_recipe</span><span class="p">(</span>
+                        <span class="n">recipe</span><span class="o">=</span><span class="n">surface_recipe</span><span class="p">,</span>
+                        <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
+                        <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
+                        <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
+                        <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+                        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                        <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
+                        <span class="n">two_d</span><span class="o">=</span><span class="n">two_d</span><span class="p">,</span>
+                        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="n">inner_recipe</span> <span class="o">=</span> <span class="n">comparment</span><span class="o">.</span><span class="n">innerRecipe</span>
+                <span class="k">if</span> <span class="n">inner_recipe</span><span class="p">:</span>
+                    <span class="p">(</span>
+                        <span class="n">center_distance_dict</span><span class="p">,</span>
+                        <span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_position_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_key_dict</span><span class="p">,</span>
+                        <span class="n">ax</span><span class="p">,</span>
+                    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ingredients_in_recipe</span><span class="p">(</span>
+                        <span class="n">recipe</span><span class="o">=</span><span class="n">inner_recipe</span><span class="p">,</span>
+                        <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
+                        <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                        <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
+                        <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
+                        <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+                        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                        <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
+                        <span class="n">two_d</span><span class="o">=</span><span class="n">two_d</span><span class="p">,</span>
+                        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">plot_figures</span> <span class="ow">and</span> <span class="n">two_d</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;packing_image_</span><span class="si">{</span><span class="n">seed_basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># closes the current figure</span>
+
+        <span class="k">if</span> <span class="n">image_export_options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">image_writer</span> <span class="o">=</span> <span class="n">ImageWriter</span><span class="p">(</span>
+                <span class="n">env</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">seed_basename</span><span class="p">,</span>
+                <span class="n">output_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">image_export_options</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">image_writer</span><span class="o">.</span><span class="n">export_image</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">center_distance_dict</span><span class="p">,</span>
+            <span class="n">pairwise_distance_dict</span><span class="p">,</span>
+            <span class="n">ingredient_position_dict</span><span class="p">,</span>
+            <span class="n">ingredient_angle_dict</span><span class="p">,</span>
+            <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+            <span class="n">ingredient_key_dict</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
 <div class="viewcode-block" id="Analysis.doloop"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.doloop">[docs]</a>    <span class="k">def</span> <span class="nf">doloop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">number_of_packings</span><span class="p">,</span>
         <span class="n">bounding_box</span><span class="p">,</span>
         <span class="n">get_distance_distribution</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">plot_figures</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">show_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">seed_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">config_name</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">recipe_version</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="n">image_export_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs multiple packings of the same recipe in a loop. This workflow</span>
@@ -2231,7 +2465,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">seed_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">seed_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getHaltonUnique</span><span class="p">(</span><span class="n">number_of_packings</span><span class="p">)</span>
-
         <span class="n">packing_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">config_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">recipe_version</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;seeds_</span><span class="si">{</span><span class="n">packing_basename</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="p">,</span>
@@ -2263,153 +2496,83 @@
         <span class="n">ingredient_occurence_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">ingredient_key_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="n">rebuild</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">for</span> <span class="n">seed_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_packings</span><span class="p">):</span>
-            <span class="n">seed_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;seed_</span><span class="si">{</span><span class="n">seed_index</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">packing_basename</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">result_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;results_seed_</span><span class="si">{</span><span class="n">seed_index</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">packing_basename</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">parallel</span><span class="p">:</span>
+            <span class="n">num_processes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())),</span>
+                    <span class="n">number_of_packings</span><span class="p">,</span>
+                <span class="p">]</span>
             <span class="p">)</span>
-            <span class="c1"># Clear</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">clearFill</span><span class="p">(</span><span class="s2">&quot;Test_Spheres2D&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">saveResult</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">seed</span> <span class="o">=</span> <span class="n">seed_list</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span>  <span class="c1"># int(time())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">build_grid</span><span class="p">(</span>
-                <span class="n">forceBuild</span><span class="o">=</span><span class="n">rebuild</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">two_d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">is_two_d</span><span class="p">()</span>
-            <span class="n">use_simularium</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-                <span class="n">vTestid</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
-                <span class="n">vAnalysis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                <span class="n">fbox_bb</span><span class="o">=</span><span class="n">fbox_bb</span><span class="p">,</span>
-                <span class="c1"># TODO: fix this to disable plotly if using simularium</span>
-                <span class="n">show_plotly_plot</span><span class="o">=</span><span class="p">(</span><span class="n">show_grid</span> <span class="ow">and</span> <span class="n">two_d</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">use_simularium</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getCenter</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">render</span><span class="p">:</span>
-                <span class="c1"># render/save scene if hosted otherwise nothing</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">seed_basename</span> <span class="o">+</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">seed_basename</span> <span class="o">+</span> <span class="s2">&quot;.c4d&quot;</span><span class="p">,</span> <span class="p">[])</span>
-
-            <span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="n">plot_figures</span> <span class="ow">and</span> <span class="n">two_d</span><span class="p">:</span>
-                <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_size_of_bounding_box</span><span class="p">()</span>
-                <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-                <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">get_distance_distribution</span><span class="p">:</span>
-                <span class="n">center_distance_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">pairwise_distance_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">ingredient_position_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">ingredient_angle_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">ingredient_occurence_dict</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-                <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getCenter</span><span class="p">()</span>  <span class="c1"># center of the grid</span>
-
-                <span class="n">ext_recipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">exteriorRecipe</span>
-                <span class="k">if</span> <span class="n">ext_recipe</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="p">(</span>
+                <span class="n">max_workers</span><span class="o">=</span><span class="n">num_processes</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+                <span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">seed_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_packings</span><span class="p">):</span>
+                    <span class="n">futures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">pack_one_seed</span><span class="p">,</span>
+                            <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
+                            <span class="n">seed_list</span><span class="o">=</span><span class="n">seed_list</span><span class="p">,</span>
+                            <span class="n">bounding_box</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">,</span>
+                            <span class="n">packing_basename</span><span class="o">=</span><span class="n">packing_basename</span><span class="p">,</span>
+                            <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
+                            <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                            <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
+                            <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                            <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                            <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
+                            <span class="n">get_distance_distribution</span><span class="o">=</span><span class="n">get_distance_distribution</span><span class="p">,</span>
+                            <span class="n">image_export_options</span><span class="o">=</span><span class="n">image_export_options</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
                     <span class="p">(</span>
-                        <span class="n">center_distance_dict</span><span class="p">,</span>
-                        <span class="n">pairwise_distance_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_position_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_angle_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_key_dict</span><span class="p">,</span>
-                        <span class="n">ax</span><span class="p">,</span>
-                    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ingredients_in_recipe</span><span class="p">(</span>
-                        <span class="n">recipe</span><span class="o">=</span><span class="n">ext_recipe</span><span class="p">,</span>
-                        <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
-                        <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
-                        <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
-                        <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
-                        <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
-                        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                        <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
-                        <span class="n">two_d</span><span class="o">=</span><span class="n">two_d</span><span class="p">,</span>
-                        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-                    <span class="p">)</span>
+                        <span class="n">seed_center_distance_dict</span><span class="p">,</span>
+                        <span class="n">seed_pairwise_distance_dict</span><span class="p">,</span>
+                        <span class="n">seed_ingredient_position_dict</span><span class="p">,</span>
+                        <span class="n">seed_ingredient_angle_dict</span><span class="p">,</span>
+                        <span class="n">seed_ingredient_occurence_dict</span><span class="p">,</span>
+                        <span class="n">seed_ingredient_key_dict</span><span class="p">,</span>
+                    <span class="p">)</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                    <span class="n">center_distance_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seed_center_distance_dict</span><span class="p">)</span>
+                    <span class="n">pairwise_distance_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seed_pairwise_distance_dict</span><span class="p">)</span>
+                    <span class="n">ingredient_position_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seed_ingredient_position_dict</span><span class="p">)</span>
+                    <span class="n">ingredient_angle_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seed_ingredient_angle_dict</span><span class="p">)</span>
+                    <span class="n">ingredient_occurence_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seed_ingredient_occurence_dict</span><span class="p">)</span>
+                    <span class="n">ingredient_key_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">seed_ingredient_key_dict</span><span class="p">)</span>
 
-                <span class="k">for</span> <span class="n">comparment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-                    <span class="n">surface_recipe</span> <span class="o">=</span> <span class="n">comparment</span><span class="o">.</span><span class="n">surfaceRecipe</span>
-                    <span class="k">if</span> <span class="n">surface_recipe</span><span class="p">:</span>
-                        <span class="p">(</span>
-                            <span class="n">center_distance_dict</span><span class="p">,</span>
-                            <span class="n">pairwise_distance_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_position_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_angle_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_key_dict</span><span class="p">,</span>
-                            <span class="n">ax</span><span class="p">,</span>
-                        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ingredients_in_recipe</span><span class="p">(</span>
-                            <span class="n">recipe</span><span class="o">=</span><span class="n">surface_recipe</span><span class="p">,</span>
-                            <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
-                            <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
-                            <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
-                            <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
-                            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                            <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
-                            <span class="n">two_d</span><span class="o">=</span><span class="n">two_d</span><span class="p">,</span>
-                            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-                        <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">seed_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_packings</span><span class="p">):</span>
+                <span class="p">(</span>
+                    <span class="n">center_distance_dict</span><span class="p">,</span>
+                    <span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_position_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_key_dict</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pack_one_seed</span><span class="p">(</span>
+                    <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
+                    <span class="n">seed_list</span><span class="o">=</span><span class="n">seed_list</span><span class="p">,</span>
+                    <span class="n">bounding_box</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">,</span>
+                    <span class="n">packing_basename</span><span class="o">=</span><span class="n">packing_basename</span><span class="p">,</span>
+                    <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
+                    <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
+                    <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
+                    <span class="n">get_distance_distribution</span><span class="o">=</span><span class="n">get_distance_distribution</span><span class="p">,</span>
+                    <span class="n">image_export_options</span><span class="o">=</span><span class="n">image_export_options</span><span class="p">,</span>
+                    <span class="n">show_grid</span><span class="o">=</span><span class="n">show_grid</span><span class="p">,</span>
+                    <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
+                <span class="p">)</span>
 
-                    <span class="n">inner_recipe</span> <span class="o">=</span> <span class="n">comparment</span><span class="o">.</span><span class="n">innerRecipe</span>
-                    <span class="k">if</span> <span class="n">inner_recipe</span><span class="p">:</span>
-                        <span class="p">(</span>
-                            <span class="n">center_distance_dict</span><span class="p">,</span>
-                            <span class="n">pairwise_distance_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_position_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_angle_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_occurence_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_key_dict</span><span class="p">,</span>
-                            <span class="n">ax</span><span class="p">,</span>
-                        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_ingredients_in_recipe</span><span class="p">(</span>
-                            <span class="n">recipe</span><span class="o">=</span><span class="n">inner_recipe</span><span class="p">,</span>
-                            <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
-                            <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_angle_dict</span><span class="o">=</span><span class="n">ingredient_angle_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_occurence_dict</span><span class="o">=</span><span class="n">ingredient_occurence_dict</span><span class="p">,</span>
-                            <span class="n">ingredient_key_dict</span><span class="o">=</span><span class="n">ingredient_key_dict</span><span class="p">,</span>
-                            <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
-                            <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
-                            <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
-                            <span class="n">plot_figures</span><span class="o">=</span><span class="n">plot_figures</span><span class="p">,</span>
-                            <span class="n">two_d</span><span class="o">=</span><span class="n">two_d</span><span class="p">,</span>
-                            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-                        <span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">plot_figures</span> <span class="ow">and</span> <span class="n">two_d</span><span class="p">:</span>
-                    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span>
-                        <span class="p">[</span>
-                            <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                            <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
-                            <span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
-                        <span class="p">]</span>
-                    <span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;packing_image_</span><span class="si">{</span><span class="n">seed_basename</span><span class="si">}</span><span class="s2">.png&quot;</span>
-                    <span class="p">)</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># closes the current figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">center_distance_file</span><span class="p">,</span> <span class="n">center_distance_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">pairwise_distance_file</span><span class="p">,</span> <span class="n">pairwise_distance_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_position_file</span><span class="p">,</span> <span class="n">ingredient_position_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_angle_file</span><span class="p">,</span> <span class="n">ingredient_angle_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_occurences_file</span><span class="p">,</span> <span class="n">ingredient_occurence_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_key_file</span><span class="p">,</span> <span class="n">ingredient_key_dict</span><span class="p">)</span>
 
         <span class="n">all_ingredient_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_results_from_seeds</span><span class="p">(</span>
             <span class="n">ingredient_position_dict</span>
@@ -2436,13 +2599,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">combine_results_from_ingredients</span><span class="p">(</span><span class="n">all_ingredient_angles</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">center_distance_file</span><span class="p">,</span> <span class="n">center_distance_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">pairwise_distance_file</span><span class="p">,</span> <span class="n">pairwise_distance_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_position_file</span><span class="p">,</span> <span class="n">ingredient_position_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_angle_file</span><span class="p">,</span> <span class="n">ingredient_angle_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_occurences_file</span><span class="p">,</span> <span class="n">ingredient_occurence_dict</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_key_file</span><span class="p">,</span> <span class="n">ingredient_key_dict</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">ingredient_positions</span> <span class="o">=</span> <span class="n">all_ingredient_positions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="n">all_ingredient_distances</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="n">packing_basename</span>
@@ -2468,7 +2624,7 @@
 
             <span class="c1"># plot histograms for all combined distances</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_center_distance_array</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                     <span class="n">all_center_distance_array</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span>
                     <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;all_ingredient_center_distances_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
@@ -2478,7 +2634,7 @@
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_center_distance_array</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                     <span class="n">all_pairwise_distance_array</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span>
                     <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;all_ingredient_pairwise_distances_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
@@ -2489,21 +2645,21 @@
 
             <span class="c1"># plot the angle</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_ingredient_angle_array</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                     <span class="n">all_ingredient_angle_array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;all_angles_X_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                     <span class="n">title_str</span><span class="o">=</span><span class="s2">&quot;all_ingredients&quot;</span><span class="p">,</span>
                     <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;angles X&quot;</span><span class="p">,</span>
                     <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                     <span class="n">all_ingredient_angle_array</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;all_angles_Y_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                     <span class="n">title_str</span><span class="o">=</span><span class="s2">&quot;all_ingredients&quot;</span><span class="p">,</span>
                     <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;angles Y&quot;</span><span class="p">,</span>
                     <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
                     <span class="n">all_ingredient_angle_array</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;all_angles_Z_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span>
                     <span class="n">title_str</span><span class="o">=</span><span class="s2">&quot;all_ingredients&quot;</span><span class="p">,</span>
@@ -2549,8 +2705,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

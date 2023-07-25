@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.ingredient.single_sphere &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -65,6 +65,7 @@
         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;single_sphere&quot;</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">count_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cutoff_boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cutoff_surface</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">distance_expression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -99,6 +100,7 @@
             <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
             <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+            <span class="n">count_options</span><span class="o">=</span><span class="n">count_options</span><span class="p">,</span>
             <span class="n">cutoff_boundary</span><span class="o">=</span><span class="n">cutoff_boundary</span><span class="p">,</span>
             <span class="n">cutoff_surface</span><span class="o">=</span><span class="n">cutoff_surface</span><span class="p">,</span>
             <span class="n">distance_expression</span><span class="o">=</span><span class="n">distance_expression</span><span class="p">,</span>
@@ -289,7 +291,60 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_basic&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
             <span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SingleSphereIngr.create_circular_mask"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_circular_mask">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_circular_mask</span><span class="p">(</span>
+        <span class="n">x_width</span><span class="p">,</span> <span class="n">y_width</span><span class="p">,</span> <span class="n">z_width</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a circular mask of the given shape with the specified center</span>
+<span class="sd">        and radius</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use the middle of the image</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">radius</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>  <span class="c1"># use the smallest distance between the center and image walls</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">x_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">y_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">z_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ogrid</span><span class="p">[:</span><span class="n">x_width</span><span class="p">,</span> <span class="p">:</span><span class="n">y_width</span><span class="p">,</span> <span class="p">:</span><span class="n">z_width</span><span class="p">]</span>
+        <span class="n">dist_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="p">((</span><span class="n">X</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">((</span><span class="n">Y</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">((</span><span class="n">Z</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">dist_from_center</span> <span class="o">&lt;=</span> <span class="n">radius</span>
+        <span class="k">return</span> <span class="n">mask</span></div>
+
+<div class="viewcode-block" id="SingleSphereIngr.create_voxelization"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_voxelization">[docs]</a>    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">bounding_box</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a voxelization for the sphere</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">relative_position</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">voxelized_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">relative_position</span> <span class="o">/</span> <span class="n">voxel_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_circular_mask</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">image_size</span><span class="p">,</span>
+            <span class="n">center</span><span class="o">=</span><span class="n">voxelized_position</span><span class="p">,</span>
+            <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+            <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span>
+        <span class="p">)</span>
+        <span class="n">image_data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+
+        <span class="k">return</span> <span class="n">image_data</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -329,8 +384,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.Compartment &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -184,7 +184,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_mesh_path</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stype</span> <span class="o">=</span> <span class="s2">&quot;mesh&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">object_info</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;radius&quot;</span> <span class="ow">in</span> <span class="n">object_info</span> <span class="k">else</span> <span class="mf">200.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">object_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;radius&quot;</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -194,9 +194,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diag</span> <span class="o">=</span> <span class="mf">9999.9</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ghost</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">object_info</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;radius&quot;</span> <span class="ow">in</span> <span class="n">object_info</span> <span class="k">else</span> <span class="mf">200.0</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">object_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;radius&quot;</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">object_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">checkinside</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">innerRecipe</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfaceRecipe</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1118,7 +1117,7 @@
             <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">),</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Compartment.get_surface_distances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_surface_distances">[docs]</a>    <span class="k">def</span> <span class="nf">get_surface_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+<div class="viewcode-block" id="Compartment.set_surface_distances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.set_surface_distances">[docs]</a>    <span class="k">def</span> <span class="nf">set_surface_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
         <span class="n">surface_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">)</span>
         <span class="n">surface_ids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">surface_mask</span><span class="p">)</span>
         <span class="n">surface_positions</span> <span class="o">=</span> <span class="n">master_grid_positions</span><span class="p">[</span><span class="n">surface_ids</span><span class="p">]</span>
@@ -1135,7 +1134,7 @@
         <span class="n">all_surface_distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
         <span class="n">all_surface_distances</span><span class="p">[</span><span class="n">grid_pt_indexes</span><span class="p">]</span> <span class="o">=</span> <span class="n">surface_distances</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parent_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">grid_pts_between_surfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span>
                 <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="o">-</span><span class="n">parent_id</span>
             <span class="p">)</span>
@@ -1154,7 +1153,7 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scaled_distance_to_next_surface</span> <span class="o">=</span> <span class="n">scaled_distance_to_next_surface</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">surface_distances</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">surface_distances</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surface_distances</span> <span class="o">=</span> <span class="n">all_surface_distances</span></div>
 
 <div class="viewcode-block" id="Compartment.BuildGrid_box"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_box">[docs]</a>    <span class="k">def</span> <span class="nf">BuildGrid_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">):</span>
@@ -3160,6 +3159,84 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_distances</span> <span class="o">=</span> <span class="n">distances</span>
         <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">surfacePoints</span></div>
 
+<div class="viewcode-block" id="Compartment.create_voxelized_mask"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create_voxelized_mask">[docs]</a>    <span class="k">def</span> <span class="nf">create_voxelized_mask</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x_width</span><span class="p">,</span>
+        <span class="n">y_width</span><span class="p">,</span>
+        <span class="n">z_width</span><span class="p">,</span>
+        <span class="n">center</span><span class="p">,</span>
+        <span class="n">voxel_size</span><span class="p">,</span>
+        <span class="n">mesh_store</span><span class="p">,</span>
+        <span class="n">hollow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a mask of the compartment voxelization</span>
+
+<span class="sd">        :param x_width: number of voxels in the x direction</span>
+<span class="sd">        :param y_width: number of voxels in the y direction</span>
+<span class="sd">        :param z_width: number of voxels in the z direction</span>
+<span class="sd">        :param center: center of the voxelization</span>
+<span class="sd">        :param voxel_size: size of the voxels</span>
+<span class="sd">        :param mesh_store: mesh store</span>
+<span class="sd">        :param hollow: if True, the mask will be hollow otherwise it will fill in the segmentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use the middle of the grid</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+        <span class="n">Z</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">z_width</span><span class="p">),</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_width</span><span class="p">),</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_width</span><span class="p">),</span>
+            <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="n">X</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="p">(</span><span class="n">Y</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="p">(</span><span class="n">Z</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">hollow</span><span class="p">:</span>
+            <span class="n">trimesh_grid</span> <span class="o">=</span> <span class="n">creation</span><span class="o">.</span><span class="n">voxelize</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">))</span><span class="o">.</span><span class="n">hollow</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trimesh_grid</span> <span class="o">=</span> <span class="n">creation</span><span class="o">.</span><span class="n">voxelize</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">))</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+        <span class="n">mask_ravel</span> <span class="o">=</span> <span class="n">trimesh_grid</span><span class="o">.</span><span class="n">is_filled</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">mask_ravel</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">x_width</span><span class="p">,</span> <span class="n">y_width</span><span class="p">,</span> <span class="n">z_width</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mask</span></div>
+
+<div class="viewcode-block" id="Compartment.create_voxelization"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create_voxelization">[docs]</a>    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">image_data</span><span class="p">,</span>
+        <span class="n">bounding_box</span><span class="p">,</span>
+        <span class="n">voxel_size</span><span class="p">,</span>
+        <span class="n">image_size</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">,</span>
+        <span class="n">mesh_store</span><span class="p">,</span>
+        <span class="n">hollow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a voxelization mask at the position of the compartment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">relative_position</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_voxelized_mask</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">image_size</span><span class="p">,</span>
+            <span class="n">center</span><span class="o">=</span><span class="n">relative_position</span><span class="p">,</span>
+            <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">,</span>
+            <span class="n">mesh_store</span><span class="o">=</span><span class="n">mesh_store</span><span class="p">,</span>
+            <span class="n">hollow</span><span class="o">=</span><span class="n">hollow</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">image_data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+
+        <span class="k">return</span> <span class="n">image_data</span></div>
+
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPointsPandaRay"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPandaRay">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPointsPandaRay</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
@@ -3438,8 +3515,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

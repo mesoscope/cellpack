@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>cellpack.autopack.interface_objects package &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -64,7 +64,7 @@
 GradientData instance</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.default_values">
-<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{'direction':</span> <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear'}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'invert':</span> <span class="pre">False,</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear',</span> <span class="pre">'weight_mode_settings':</span> <span class="pre">{}}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -80,6 +80,11 @@ GradientData instance</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings">
 <span class="sig-name descname"><span class="pre">validate_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings">
+<span class="sig-name descname"><span class="pre">validate_weight_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_weight_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -201,6 +206,23 @@ GradientData instance</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModeOptions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModeOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModeOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
+<p>All available options for individual weight modes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.decay_length">
+<span class="sig-name descname"><span class="pre">decay_length</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'decay_length'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.decay_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.power">
+<span class="sig-name descname"><span class="pre">power</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'power'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
@@ -211,8 +233,18 @@ GradientData instance</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.EXPONENTIAL">
+<span class="sig-name descname"><span class="pre">EXPONENTIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'exponential'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.EXPONENTIAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR">
 <span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.POWER">
+<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'power'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.POWER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -456,6 +488,7 @@ packing: Sphere tree file or sphere tree data</p>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties"><code class="docutils literal notranslate"><span class="pre">GradientData.set_mode_properties()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_gradient_data()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_mode_settings()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_weight_mode_settings()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes"><code class="docutils literal notranslate"><span class="pre">GradientModes</span></code></a><ul>
@@ -486,9 +519,16 @@ packing: Sphere tree file or sphere tree data</p>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.SUB"><code class="docutils literal notranslate"><span class="pre">PickModes.SUB</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions"><code class="docutils literal notranslate"><span class="pre">WeightModeOptions</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.decay_length"><code class="docutils literal notranslate"><span class="pre">WeightModeOptions.decay_length</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.power"><code class="docutils literal notranslate"><span class="pre">WeightModeOptions.power</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes"><code class="docutils literal notranslate"><span class="pre">WeightModes</span></code></a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE"><code class="docutils literal notranslate"><span class="pre">WeightModes.CUBE</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.EXPONENTIAL"><code class="docutils literal notranslate"><span class="pre">WeightModes.EXPONENTIAL</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR"><code class="docutils literal notranslate"><span class="pre">WeightModes.LINEAR</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.POWER"><code class="docutils literal notranslate"><span class="pre">WeightModes.POWER</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE"><code class="docutils literal notranslate"><span class="pre">WeightModes.SQUARE</span></code></a></li>
 </ul>
 </li>
@@ -612,8 +652,8 @@ packing: Sphere tree file or sphere tree data</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

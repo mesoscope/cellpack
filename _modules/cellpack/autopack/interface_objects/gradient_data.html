@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.interface_objects.gradient_data &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -68,7 +68,9 @@
 
     <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
     <span class="n">SQUARE</span> <span class="o">=</span> <span class="s2">&quot;square&quot;</span>
-    <span class="n">CUBE</span> <span class="o">=</span> <span class="s2">&quot;cube&quot;</span></div>
+    <span class="n">CUBE</span> <span class="o">=</span> <span class="s2">&quot;cube&quot;</span>
+    <span class="n">POWER</span> <span class="o">=</span> <span class="s2">&quot;power&quot;</span>
+    <span class="n">EXPONENTIAL</span> <span class="o">=</span> <span class="s2">&quot;exponential&quot;</span></div>
 
 
 <div class="viewcode-block" id="PickModes"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.PickModes">[docs]</a><span class="k">class</span> <span class="nc">PickModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
@@ -98,9 +100,17 @@
     <span class="n">scale_distance_between</span> <span class="o">=</span> <span class="s2">&quot;scale_distance_between&quot;</span></div>
 
 
+<div class="viewcode-block" id="WeightModeOptions"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions">[docs]</a><span class="k">class</span> <span class="nc">WeightModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All available options for individual weight modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">power</span> <span class="o">=</span> <span class="s2">&quot;power&quot;</span>
+    <span class="n">decay_length</span> <span class="o">=</span> <span class="s2">&quot;decay_length&quot;</span></div>
+
+
 <span class="n">REQUIRED_MODE_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">GradientModes</span><span class="o">.</span><span class="n">VECTOR</span><span class="p">:</span> <span class="p">[</span><span class="n">ModeOptions</span><span class="o">.</span><span class="n">direction</span><span class="p">],</span>
-    <span class="n">GradientModes</span><span class="o">.</span><span class="n">RADIAL</span><span class="p">:</span> <span class="p">[</span><span class="n">ModeOptions</span><span class="o">.</span><span class="n">radius</span><span class="p">],</span>
     <span class="n">GradientModes</span><span class="o">.</span><span class="n">SURFACE</span><span class="p">:</span> <span class="p">[</span><span class="n">ModeOptions</span><span class="o">.</span><span class="n">object</span><span class="p">],</span>
 <span class="p">}</span>
 
@@ -108,6 +118,11 @@
     <span class="n">GradientModes</span><span class="o">.</span><span class="n">X</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
     <span class="n">GradientModes</span><span class="o">.</span><span class="n">Y</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
     <span class="n">GradientModes</span><span class="o">.</span><span class="n">Z</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">REQUIRED_WEIGHT_MODE_OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">WeightModes</span><span class="o">.</span><span class="n">POWER</span><span class="p">:</span> <span class="p">[</span><span class="n">WeightModeOptions</span><span class="o">.</span><span class="n">power</span><span class="p">],</span>
+    <span class="n">WeightModes</span><span class="o">.</span><span class="n">EXPONENTIAL</span><span class="p">:</span> <span class="p">[</span><span class="n">WeightModeOptions</span><span class="o">.</span><span class="n">decay_length</span><span class="p">],</span>
 <span class="p">}</span>
 
 
@@ -139,6 +154,9 @@
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate_mode_settings</span><span class="p">(</span>
             <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">],</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_weight_mode_settings</span><span class="p">(</span>
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;weight_mode&quot;</span><span class="p">],</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weight_mode_settings&quot;</span><span class="p">)</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GradientData.validate_mode_settings"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings">[docs]</a>    <span class="k">def</span> <span class="nf">validate_mode_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_name</span><span class="p">,</span> <span class="n">mode_settings_dict</span><span class="p">):</span>
@@ -156,9 +174,29 @@
                     <span class="sa">f</span><span class="s2">&quot;Missing required mode setting </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">mode_name</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span></div>
 
+<div class="viewcode-block" id="GradientData.validate_weight_mode_settings"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings">[docs]</a>    <span class="k">def</span> <span class="nf">validate_weight_mode_settings</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">weight_mode_name</span><span class="p">,</span> <span class="n">weight_mode_settings_dict</span>
+    <span class="p">):</span>
+        <span class="n">required_options</span> <span class="o">=</span> <span class="n">REQUIRED_WEIGHT_MODE_OPTIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">weight_mode_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">required_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">weight_mode_settings_dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing weight mode settings for </span><span class="si">{</span><span class="n">weight_mode_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">required_options</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">option</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">weight_mode_settings_dict</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Missing required weight mode setting </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">weight_mode_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span></div>
+
 <div class="viewcode-block" id="GradientData.set_mode_properties"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties">[docs]</a>    <span class="k">def</span> <span class="nf">set_mode_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">):</span>
             <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weight_mode_settings&quot;</span><span class="p">):</span>
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;weight_mode_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">GradientModes</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">GradientModes</span><span class="o">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">GradientModes</span><span class="o">.</span><span class="n">Z</span><span class="p">]:</span>
             <span class="n">direction_vector</span> <span class="o">=</span> <span class="n">DIRECTION_MAP</span><span class="p">[</span><span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]]</span>
@@ -206,8 +244,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

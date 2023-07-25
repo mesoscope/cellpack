@@ -1,6 +1,17 @@
 cellpack.autopack.writers package
 =================================
 
+Submodules
+----------
+
+cellpack.autopack.writers.ImageWriter module
+--------------------------------------------
+
+.. automodule:: cellpack.autopack.writers.ImageWriter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

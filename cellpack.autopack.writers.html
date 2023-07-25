@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>cellpack.autopack.writers package &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -48,6 +48,113 @@
             
   <section id="cellpack-autopack-writers-package">
 <h1>cellpack.autopack.writers package<a class="headerlink" href="#cellpack-autopack-writers-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-cellpack.autopack.writers.ImageWriter">
+<span id="cellpack-autopack-writers-imagewriter-module"></span><h2>cellpack.autopack.writers.ImageWriter module<a class="headerlink" href="#module-cellpack.autopack.writers.ImageWriter" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.writers.ImageWriter.</span></span><span class="sig-name descname"><span class="pre">ImageWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_voxels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hollow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convolution_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'z'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_channel">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convolve_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.convolve_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convolves a channel with a psf</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>numpy.ndarray</em>) – channel to be convolved</p></li>
+<li><p><strong>psf</strong> (<em>numpy.ndarray</em>) – psf</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>convolved channel</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_image">
+<span class="sig-name descname"><span class="pre">convolve_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gaussian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psf_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.convolve_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convolves the image with a psf</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<em>numpy.ndarray</em>) – image to be convolved</p></li>
+<li><p><strong>psf</strong> (<em>str or numpy.ndarray</em>) – psf type</p></li>
+<li><p><strong>psf_parameters</strong> (<em>dict</em>) – psf parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>convolved image</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.create_box_psf">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_box_psf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.create_box_psf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.create_box_psf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a box psf</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size</strong> (<em>np.ndarray</em>) – size of the psf</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>psf</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.create_gaussian_psf">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_gaussian_psf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.create_gaussian_psf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.create_gaussian_psf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a gaussian psf</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sigma</strong> (<em>float</em>) – sigma of the gaussian</p></li>
+<li><p><strong>size</strong> (<em>np.ndarray</em>) – size of the psf</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>psf</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.create_voxelization">
+<span class="sig-name descname"><span class="pre">create_voxelization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.create_voxelization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.create_voxelization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a voxelized representation of the current scene</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.export_image">
+<span class="sig-name descname"><span class="pre">export_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.export_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.export_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the results as a tiff file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.writers.ImageWriter.ImageWriter.transpose_image_for_projection">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transpose_image_for_projection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection_axis</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/writers/ImageWriter.html#ImageWriter.transpose_image_for_projection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.transpose_image_for_projection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-cellpack.autopack.writers">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.writers" title="Permalink to this heading">¶</a></h2>
 <p>Write out data for cellpack.</p>
@@ -165,6 +272,20 @@ env is the environment / recipe to be exported.</p>
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">cellpack.autopack.writers package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cellpack.autopack.writers.ImageWriter">cellpack.autopack.writers.ImageWriter module</a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter"><code class="docutils literal notranslate"><span class="pre">ImageWriter</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_channel"><code class="docutils literal notranslate"><span class="pre">ImageWriter.convolve_channel()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_image"><code class="docutils literal notranslate"><span class="pre">ImageWriter.convolve_image()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.create_box_psf"><code class="docutils literal notranslate"><span class="pre">ImageWriter.create_box_psf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.create_gaussian_psf"><code class="docutils literal notranslate"><span class="pre">ImageWriter.create_gaussian_psf()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.create_voxelization"><code class="docutils literal notranslate"><span class="pre">ImageWriter.create_voxelization()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.export_image"><code class="docutils literal notranslate"><span class="pre">ImageWriter.export_image()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.writers.ImageWriter.ImageWriter.transpose_image_for_projection"><code class="docutils literal notranslate"><span class="pre">ImageWriter.transpose_image_for_projection()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-cellpack.autopack.writers">Module contents</a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.writers.IOingredientTool"><code class="docutils literal notranslate"><span class="pre">IOingredientTool</span></code></a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.writers.IOingredientTool.write"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.write()</span></code></a></li>
@@ -243,8 +364,8 @@ env is the environment / recipe to be exported.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

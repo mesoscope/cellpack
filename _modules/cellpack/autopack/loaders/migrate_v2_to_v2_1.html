@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.loaders.migrate_v2_to_v2_1 &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -53,16 +53,16 @@
         <span class="k">if</span> <span class="n">positions</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">):</span>
             <span class="n">position</span> <span class="o">=</span> <span class="n">positions</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
 
-        <span class="n">binding_probably</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">binding_probability</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="k">if</span> <span class="s2">&quot;probability_binding&quot;</span> <span class="ow">in</span> <span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]:</span>
-            <span class="n">binding_probably</span> <span class="o">=</span> <span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">][</span><span class="s2">&quot;probability_binding&quot;</span><span class="p">]</span>
+            <span class="n">binding_probability</span> <span class="o">=</span> <span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">][</span><span class="s2">&quot;probability_binding&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;probability_repelled&quot;</span> <span class="ow">in</span> <span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]:</span>
-            <span class="n">binding_probably</span> <span class="o">=</span> <span class="o">-</span><span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">][</span><span class="s2">&quot;probability_repelled&quot;</span><span class="p">]</span>
+            <span class="n">binding_probability</span> <span class="o">=</span> <span class="o">-</span><span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">][</span><span class="s2">&quot;probability_repelled&quot;</span><span class="p">]</span>
 
         <span class="n">partner</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
             <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">position</span><span class="p">,</span>
-            <span class="s2">&quot;binding_probably&quot;</span><span class="p">:</span> <span class="n">binding_probably</span><span class="p">,</span>
+            <span class="s2">&quot;binding_probability&quot;</span><span class="p">:</span> <span class="n">binding_probability</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">partners_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">partner</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">partners_list</span></div>
@@ -134,8 +134,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>

@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.MeshStore &#8212; cellPack 1.0.3 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -293,8 +293,8 @@
 <div class="viewcode-block" id="MeshStore.contains_point"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_point">[docs]</a>    <span class="k">def</span> <span class="nf">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_triangle</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">([</span><span class="n">point</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">inside</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">contains</span><span class="p">([</span><span class="n">point</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">inside</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="MeshStore.contains_points"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points">[docs]</a>    <span class="k">def</span> <span class="nf">contains_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
@@ -304,18 +304,11 @@
             <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="MeshStore.contains_points_slow"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points_slow">[docs]</a>    <span class="k">def</span> <span class="nf">contains_points_slow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
-        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_triangle</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span></div>
-
 <div class="viewcode-block" id="MeshStore.get_smallest_radius"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_smallest_radius">[docs]</a>    <span class="k">def</span> <span class="nf">get_smallest_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">proximity</span><span class="o">.</span><span class="n">ProximityQuery</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">closet_point</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">triangle_id</span><span class="p">)</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">on_surface</span><span class="p">([</span><span class="n">center</span><span class="p">])</span>
+            <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">on_surface</span><span class="p">([</span><span class="n">center</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="mf">1.0</span></div>
 
@@ -459,8 +452,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.0.
     </div>
   </body>
 </html>
