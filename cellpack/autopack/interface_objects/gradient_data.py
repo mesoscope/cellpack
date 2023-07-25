@@ -29,6 +29,8 @@ class WeightModes(MetaEnum):
     LINEAR = "linear"
     SQUARE = "square"
     CUBE = "cube"
+    POWER = "power"
+    EXPONENTIAL = "exponential"
 
 
 class PickModes(MetaEnum):
@@ -58,9 +60,17 @@ class ModeOptions(MetaEnum):
     scale_distance_between = "scale_distance_between"
 
 
+class WeightModeOptions(MetaEnum):
+    """
+    All available options for individual weight modes
+    """
+
+    power = "power"
+    decay_length = "decay_length"
+
+
 REQUIRED_MODE_OPTIONS = {
     GradientModes.VECTOR: [ModeOptions.direction],
-    GradientModes.RADIAL: [ModeOptions.radius],
     GradientModes.SURFACE: [ModeOptions.object],
 }
 
@@ -68,6 +78,11 @@ DIRECTION_MAP = {
     GradientModes.X: [1, 0, 0],
     GradientModes.Y: [0, 1, 0],
     GradientModes.Z: [0, 0, 1],
+}
+
+REQUIRED_WEIGHT_MODE_OPTIONS = {
+    WeightModes.POWER: [WeightModeOptions.power],
+    WeightModes.EXPONENTIAL: [WeightModeOptions.decay_length],
 }
 
 
@@ -100,6 +115,9 @@ class GradientData:
         self.validate_mode_settings(
             gradient_data["mode"], gradient_data.get("mode_settings")
         )
+        self.validate_weight_mode_settings(
+            gradient_data["weight_mode"], gradient_data.get("weight_mode_settings")
+        )
 
     def validate_mode_settings(self, mode_name, mode_settings_dict):
         required_options = REQUIRED_MODE_OPTIONS.get(mode_name)
@@ -116,9 +134,29 @@ class GradientData:
                     f"Missing required mode setting {option} for {mode_name}"
                 )
 
+    def validate_weight_mode_settings(
+        self, weight_mode_name, weight_mode_settings_dict
+    ):
+        required_options = REQUIRED_WEIGHT_MODE_OPTIONS.get(weight_mode_name)
+
+        if required_options is None:
+            return
+
+        if not weight_mode_settings_dict:
+            raise ValueError(f"Missing weight mode settings for {weight_mode_name}")
+
+        for option in required_options:
+            if option not in weight_mode_settings_dict:
+                raise ValueError(
+                    f"Missing required weight mode setting {option} for {weight_mode_name}"
+                )
+
     def set_mode_properties(self, gradient_data):
         if not gradient_data.get("mode_settings"):
             gradient_data["mode_settings"] = {}
+
+        if not gradient_data.get("weight_mode_settings"):
+            gradient_data["weight_mode_settings"] = {}
 
         if gradient_data["mode"] in [GradientModes.X, GradientModes.Y, GradientModes.Z]:
             direction_vector = DIRECTION_MAP[gradient_data["mode"]]

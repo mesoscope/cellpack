@@ -1,0 +1,9 @@
+{
+    "version": "1.0.0",
+    "format_version": "1.0",
+    "similarity_analysis": {
+        "ingredient_key" : "membrane_interior_peroxisome",
+        "save_heatmaps": true,
+        "recalculate": true
+    }
+}

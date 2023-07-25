@@ -30,6 +30,7 @@ test_config = {
     "show_sphere_trees": False,
     "spacing": None,
     "use_periodicity": False,
+    "show_progress_bar": False,
 }
 
 
