@@ -1,9 +1,6 @@
 name: Analyze
 
-on: 
-  push:
-    branches:
-      - fix/update-comment
+on: push
 
 jobs:
     Analyze:
