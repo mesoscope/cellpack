@@ -34,7 +34,6 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
-from cellpack.autopack.writers.ImageWriter import ImageWriter
 import concurrent.futures
 import multiprocessing
 
@@ -2354,6 +2353,8 @@ class Analysis:
                 plt.close()  # closes the current figure
 
         if image_export_options is not None:
+            from cellpack.autopack.writers.ImageWriter import ImageWriter
+
             image_writer = ImageWriter(
                 env=self.env,
                 name=seed_basename,

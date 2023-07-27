@@ -2200,6 +2200,7 @@ class Environment(CompartmentList):
         stime = time()
         if self.show_progress_bar:
             pbar = tqdm(total=totalNumMols, mininterval=0, miniters=1)
+            pbar.set_description(f"Packing {self.name}")
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart

@@ -264,6 +264,12 @@ class MeshStore:
             return intersector.contains_points(points)
         return [False]
 
+    def contains_points_mesh(self, geomname, points):
+        mesh = self.get_object(geomname)
+        if mesh is not None:
+            return mesh.contains(points)
+        return numpy.full(len(points), False)
+
     def get_smallest_radius(self, geomname, center):
         mesh = self.get_object(geomname)
         if mesh is not None:
