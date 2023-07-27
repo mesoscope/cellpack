@@ -526,6 +526,9 @@ class Environment(CompartmentList):
         save_grid_logs=False,
         save_result_as_file=False,
     ):
+        self.result_file = (
+            f"{self.out_folder}/{self.name}_{self.config_data['name']}_{self.version}_seed_{seedNum}"
+        )
         self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
