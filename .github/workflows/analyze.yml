@@ -1,10 +1,28 @@
 name: Analyze
 
-on: push
+on: 
+  push:
+    branches:
+      - fix/update-comment
 
 jobs:
+    Check_pr:
+        runs-on: ubuntu-latest
+        outputs:
+            is_pr: ${{ steps.check.outputs.is_pr }}
+        steps:
+            - name: Check if PR
+              id: check
+              run: |
+                  if [[ "${{ github.event.pull_request }}" != "" ]]; then
+                    echo "::set-output name=is_pr::true"
+                  else
+                    echo "::set-output name=is_pr::false"
+                  fi
     Analyze:
         runs-on: ${{ matrix.os }}
+        needs: [Check_pr]
+        if: needs.Check_pr.outputs.is_pr == 'true'
         strategy:
             matrix:
                 python-version: [3.9]
@@ -35,7 +53,8 @@ jobs:
                   path: cellpack/tests/outputs/test_spheres/
     Comment:
         runs-on: ubuntu-latest
-        needs: [Analyze]
+        needs: [Analyze, Check_pr]
+        if: needs.Check_pr.outputs.is_pr == 'true'
         steps:
             - uses: actions/checkout@v3
             - name: Configure AWS credentials
@@ -52,9 +71,5 @@ jobs:
               env:
                   REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  if [[ "${{ github.event.pull_request }}" != "" ]]; then
-                    cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --target=pr
-                    cat ./results/analysis_report.md
-                  else
-                    echo "Not a PR, skipping comment update."
-                  fi
+                  cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --target=pr
+                  cat ./results/analysis_report.md
