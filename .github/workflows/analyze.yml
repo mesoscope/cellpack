@@ -1,6 +1,9 @@
 name: Analyze
 
-on: push
+on: 
+  push:
+    branches:
+      - fix/update-comment
 
 jobs:
     Analyze:
@@ -52,5 +55,9 @@ jobs:
               env:
                   REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --target=pr
-                  cat ./results/analysis_report.md
+                  if [[ "${{ github.event.pull_request }}" != "" ]]; then
+                    cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --target=pr
+                    cat ./results/analysis_report.md
+                  else
+                    echo "Not a PR, skipping comment update."
+                  fi
