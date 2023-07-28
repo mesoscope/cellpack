@@ -15,9 +15,10 @@ jobs:
               id: check
               run: |
                   if [[ "${{ github.event.pull_request }}" != "" ]]; then
-                    echo "::set-output name=is_pr::true"
+                    echo "is_pr=true" >> $GITHUB_OUTPUT
                   else
-                    echo "::set-output name=is_pr::false"
+                    echo "is_pr=false" >> $GITHUB_OUTPUT
+                    echo "Not a PR, skipping analysis"
                   fi
     Analyze:
         runs-on: ${{ matrix.os }}
