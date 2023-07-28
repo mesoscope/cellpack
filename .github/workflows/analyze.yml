@@ -54,8 +54,7 @@ jobs:
                   path: cellpack/tests/outputs/test_spheres/
     Comment:
         runs-on: ubuntu-latest
-        needs: [Analyze, Check_pr]
-        if: needs.Check_pr.outputs.is_pr == 'true'
+        needs: [Analyze]
         steps:
             - uses: actions/checkout@v3
             - name: Configure AWS credentials
