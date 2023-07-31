@@ -1313,13 +1313,14 @@ class Compartment(CompartmentList):
                 self.center,
                 self.encapsulating_radius + env.grid.gridSpacing * 2,
                 return_sorted=True,
-            )
+            ),
+            dtype=numpy.int32,
         )
         self.log.info(f"GOT POINTS IN SPHERE {len(points_in_encap_sphere)}")
 
         point_compartment_ids = compartment_ids[points_in_encap_sphere]
         point_ids_to_assign = points_in_encap_sphere[point_compartment_ids == 0]
-        point_positions = master_grid_positions[point_ids_to_assign]
+        point_positions = numpy.float16(master_grid_positions[point_ids_to_assign])
 
         # check surface points
         points_on_surface = trimesh_grid_surface.is_filled(point_positions)
@@ -1327,6 +1328,7 @@ class Compartment(CompartmentList):
 
         # check inside points
         points_in_mesh = mesh_store.contains_points_mesh(self.gname, point_positions)
+
         points_in_mesh = points_in_mesh & ~points_on_surface
         compartment_ids[point_ids_to_assign[points_in_mesh]] = -number
         insidePoints = point_ids_to_assign[points_in_mesh]
@@ -2466,7 +2468,7 @@ class Compartment(CompartmentList):
     # TOD add and store the grid_distances  (closest distance for each point). not only inside / outside
 
     def getSurfaceInnerPoints_sdf(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
@@ -2538,7 +2540,7 @@ class Compartment(CompartmentList):
         return pointinside[0], self.vertices
 
     def getSurfaceInnerPoints_kevin(
-        self, boundingBox, spacing, display=True, superFine=False
+        self, boundingBox, spacing, display=False, superFine=False
     ):
         """
         Takes a polyhedron, and builds a grid. In this grid:
@@ -2857,7 +2859,7 @@ class Compartment(CompartmentList):
         return insidePoints, surfacePoints
 
     def getSurfaceInnerPoints_sdf_interpolate(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
@@ -2923,7 +2925,7 @@ class Compartment(CompartmentList):
         # need to update the surface. need to create a aligned grid
         return pointinside[0], self.vertices
 
-    def getSurfaceInnerPoints(self, boundingBox, spacing, display=True, useFix=False):
+    def getSurfaceInnerPoints(self, boundingBox, spacing, display=False, useFix=False):
         """
         Only compute the inner point. No grid.
         This is independant from the packing. Help build ingredient sphere tree and representation
@@ -3208,7 +3210,7 @@ class Compartment(CompartmentList):
         return image_data
 
     def getSurfaceInnerPointsPandaRay(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
@@ -3363,7 +3365,7 @@ class Compartment(CompartmentList):
         return insidePoints, surfacePoints
 
     def getSurfaceInnerPointsPanda(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
