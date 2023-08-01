@@ -270,7 +270,7 @@ class MeshStore:
         mesh = self.get_object(geomname)
         if mesh is not None:
             if len(points) <= CHUNK_SIZE:
-                return mesh.contains(points)  #  TODO: check for memory leak
+                return mesh.contains(points)  # TODO: check for memory leak
             else:
                 # chunk the points
                 for i in range(0, len(points), CHUNK_SIZE):
