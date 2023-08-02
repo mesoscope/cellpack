@@ -104,8 +104,13 @@ class Writer(object):
                     f"{gradient.name}-weights", grid_positions, gradient.weight
                 )
 
+        # env.helper.writeToFile(
+        #     f"{result_file_path}_results", env.boundingBox, env.name, env.version
+        # )
+
+        # TODO: maybe use f"{env.out_folder}/results_{env.base_name}" instead of f"{env.result_file}_results"
         env.helper.writeToFile(
-            f"{result_file_path}_results", env.boundingBox, env.name, env.version
+            f"{env.result_file}_results", env.boundingBox, env.name, env.version
         )
 
     def save_Mixed_asJson(

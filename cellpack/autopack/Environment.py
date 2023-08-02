@@ -150,9 +150,8 @@ class Environment(CompartmentList):
         # saving/pickle option
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
-        self.result_file = (
-            f"{self.out_folder}/{self.name}_{config['name']}_{self.version}"
-        )
+        self.base_name = f"{self.name}_{config['name']}_{self.version}"
+        self.result_file = f"{self.out_folder}/{self.base_name}"
         self.grid_file_out = (
             f"{self.out_folder}/{self.name}_{config['name']}_{self.version}_grid.dat"
         )
@@ -526,9 +525,6 @@ class Environment(CompartmentList):
         save_grid_logs=False,
         save_result_as_file=False,
     ):
-        self.result_file = (
-            f"{self.out_folder}/{self.name}_{self.config_data['name']}_{self.version}_seed_{seedNum}"
-        )
         self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
@@ -2061,9 +2057,13 @@ class Environment(CompartmentList):
                     ingr.count = count
                     ingr.left_to_place = count
 
+    @staticmethod
+    def add_seed_number_to_base_name(base_name, seed_number):
+        return f"{base_name}_seed_{seed_number}"
+
     def pack_grid(
         self,
-        seedNum=14,
+        seedNum=0,
         name=None,
         vTestid=3,
         vAnalysis=0,
@@ -2076,6 +2076,8 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
+        seed_base_name = self.add_seed_number_to_base_name(self.base_name, seedNum)
+        self.result_file = f"{self.out_folder}/{seed_base_name}"
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:

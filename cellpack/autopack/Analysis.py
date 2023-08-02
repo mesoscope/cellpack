@@ -2215,9 +2215,10 @@ class Analysis:
         """
         Packs one seed of a recipe and returns the recipe object
         """
-        seed_basename = f"seed_{seed_index}_{packing_basename}"
+        seed = seed_list[seed_index]  # int(time())
+        seed_basename = self.env.add_seed_number_to_base_name(packing_basename, seed)
         self.env.result_file = str(
-            self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
+            self.env.out_folder / seed_basename
         )
         # Clear
         if self.afviewer:
@@ -2225,7 +2226,6 @@ class Analysis:
         else:
             self.env.reset()
         self.env.saveResult = True
-        seed = seed_list[seed_index]  # int(time())
         numpy.random.seed(seed)
         self.build_grid()
         two_d = self.env.is_two_d()
@@ -2425,7 +2425,7 @@ class Analysis:
         """
         if seed_list is None:
             seed_list = self.getHaltonUnique(number_of_packings)
-        packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
+        packing_basename = self.env.base_name
         numpy.savetxt(
             self.env.out_folder / f"seeds_{packing_basename}.txt",
             seed_list,
