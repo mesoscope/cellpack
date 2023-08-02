@@ -1,26 +1,12 @@
 name: Analyze
 
-on: push
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-    Check_pr:
-        runs-on: ubuntu-latest
-        outputs:
-            is_pr: ${{ steps.check.outputs.is_pr }}
-        steps:
-            - name: Check if PR
-              id: check
-              run: |
-                  if [[ "${{ github.event.pull_request }}" != "" ]]; then
-                    echo "is_pr=true" >> $GITHUB_OUTPUT
-                  else
-                    echo "is_pr=false" >> $GITHUB_OUTPUT
-                    echo "Not a PR, skipping analysis"
-                  fi
     Analyze:
         runs-on: ${{ matrix.os }}
-        needs: [Check_pr]
-        if: needs.Check_pr.outputs.is_pr == 'true'
         strategy:
             matrix:
                 python-version: [3.9]
