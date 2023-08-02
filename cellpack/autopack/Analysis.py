@@ -34,6 +34,9 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
+from cellpack.autopack.writers.ImageWriter import ImageWriter
+import concurrent.futures
+import multiprocessing
 
 
 class Analysis:
@@ -43,6 +46,7 @@ class Analysis:
         viewer=None,
         result_file=None,
         packing_results_path=None,
+        output_path=None,
     ):
         self.env = None
         self.smallest = 99999.0
@@ -71,10 +75,13 @@ class Analysis:
         else:
             self.packing_results_path = Path()
 
-        if self.env is not None:
+        if output_path is not None:
+            self.output_path = Path(output_path)
+        elif self.env is not None:
             self.output_path = Path(self.env.out_folder)
         else:
             self.output_path = Path("out/")
+
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
 
@@ -400,9 +407,9 @@ class Analysis:
                     numpy.array(e3[2]),
                     delimiter=",",
                 )
-                self.histo(e3[0], ingrname + "_euler_X.png")
-                self.histo(e3[1], ingrname + "_euler_Y.png")
-                self.histo(e3[2], ingrname + "_euler_Z.png")
+                self.histogram(e3[0], ingrname + "_euler_X.png")
+                self.histogram(e3[1], ingrname + "_euler_Y.png")
+                self.histogram(e3[2], ingrname + "_euler_Z.png")
         return ingrpos, ingrrot
 
     # should take any type of list...
@@ -484,7 +491,7 @@ class Analysis:
             numpy.array(self.env.ingredient_positions[ingr.name]),
             delimiter=",",
         )
-        self.histo(distances, basename + ingr.name + "_histo.png")
+        self.histogram(distances, basename + ingr.name + "_histo.png")
         numpy.savetxt(
             basename + ingr.name + "_distances.csv",
             numpy.array(distances),
@@ -593,7 +600,7 @@ class Analysis:
             numpy.array(self.env.ingredient_positions[ingr.name]),
             delimiter=",",
         )
-        self.histo(distances, basename + ingr.name + "_histo.png")
+        self.histogram(distances, basename + ingr.name + "_histo.png")
         numpy.savetxt(
             basename + ingr.name + "_distances.csv",
             numpy.array(distances),
@@ -647,7 +654,7 @@ class Analysis:
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
-            self.histo(
+            self.histogram(
                 all_pos[:, ind],
                 self.figures_path
                 / f"all_ingredient_histo_{dim}_{self.env.basename}.png",
@@ -663,7 +670,7 @@ class Analysis:
         pos_sph = self.cartesian_to_sph(pos_xyz)
         all_pos = numpy.hstack([pos_xyz, pos_sph])
         for ind, dim in enumerate(self.get_list_of_dims()):
-            self.histo(
+            self.histogram(
                 all_pos[:, ind],
                 self.figures_path / f"{ingr.name}_histo_{dim}_{self.env.basename}.png",
                 title_str=ingr.name,
@@ -678,10 +685,19 @@ class Analysis:
         self.simpleplot(
             range(len(occ)),
             occ,
-            self.figures_path / f"{ingr.name}_occurrence_{self.env.basename}.png",
+            self.figures_path
+            / f"{ingr.name}_occurrence_{self.env.basename}_lineplot.png",
             title_str=ingr.name,
             x_label="seed",
-            y_label="occurences",
+            y_label="occurrences",
+        )
+        self.histogram(
+            distances=numpy.array(occ),
+            filename=self.figures_path
+            / f"{ingr.name}_occurrence_{self.env.basename}_histo.png",
+            title_str=ingr.name,
+            x_label="occurrences",
+            y_label="count",
         )
 
     def plot_distance_distribution(self, all_ingredient_distances):
@@ -691,7 +707,7 @@ class Analysis:
         for ingr_key, distances in all_ingredient_distances.items():
             if len(distances) <= 1:
                 continue
-            self.histo(
+            self.histogram(
                 distances=numpy.array(distances),
                 filename=self.figures_path
                 / f"{ingr_key}_pairwise_distances_{self.env.basename}.png",
@@ -1295,6 +1311,20 @@ class Analysis:
                 **analysis_config["create_report"],
             )
 
+    def normalize_similarity_df(self, similarity_df):
+        """
+        Normalizes the similarity dataframe
+        """
+        dims_to_normalize = self.get_list_of_dims() + ["pairwise_distance"]
+        for dim in dims_to_normalize:
+            values = similarity_df.loc[:, dim].values
+            normalized_values = (values - numpy.min(values)) / (
+                numpy.max(values) - numpy.min(values)
+            )
+            normalized_values[numpy.isnan(normalized_values)] = 0
+            similarity_df.loc[:, dim] = normalized_values
+        return similarity_df
+
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
         packing_inds = numpy.cumsum(
             numpy.hstack([0, self.num_seeds_per_packing])
@@ -1328,17 +1358,32 @@ class Analysis:
             dtype=float,
         )
         similarity_df["packing_id"] = 0
+        dims_to_calc = self.get_list_of_dims() + ["pairwise_distance"]
         for seed1, pos_dict1 in tqdm(all_objs[ingredient_key].items()):
-            similarity_df.loc[seed1, "packing_id"] = self.packing_id_dict[
-                int(seed1.split("_")[-1])
-            ]
+            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
             for seed2, pos_dict2 in all_objs[ingredient_key].items():
-                for dim in self.get_list_of_dims():
-                    arr1 = pos_dict1[dim]
-                    arr2 = pos_dict2[dim]
+                for dim in dims_to_calc:
+                    if dim == "pairwise_distance":
+                        pos1 = numpy.array(
+                            [pos_dict1["x"], pos_dict1["y"], pos_dict1["z"]]
+                        )
+                        pos2 = numpy.array(
+                            [pos_dict2["x"], pos_dict2["y"], pos_dict2["z"]]
+                        )
+                        arr1 = distance.pdist(pos1.T)
+                        arr2 = distance.pdist(pos2.T)
+                    else:
+                        arr1 = pos_dict1[dim]
+                        arr2 = pos_dict2[dim]
+
+                    min_dim = numpy.min([arr1.ravel(), arr2.ravel()])
+                    max_dim = numpy.max([arr1.ravel(), arr2.ravel()])
+                    arr1 = (arr1 - min_dim) / max_dim
+                    arr2 = (arr2 - min_dim) / max_dim
+
                     if len(arr1) == 1 or len(arr2) == 1:
                         # cannot determine similarity when only one instance is packed
-                        scaled_sig = 0
+                        similarity_score = 0
                     elif len(numpy.unique(arr1)) == 1 or len(numpy.unique(arr2)) == 1:
                         # if there is only one unique value, compare the value
                         if (
@@ -1346,17 +1391,38 @@ class Analysis:
                             and len(numpy.unique(arr2)) == 1
                         ):
                             # both packings have only one unique value, compare the value
-                            scaled_sig = (
+                            similarity_score = (
                                 1 if numpy.unique(arr1) == numpy.unique(arr2) else 0
                             )
                         else:
                             # one of the packings has more than one unique value, cannot compare
-                            scaled_sig = 0
+                            similarity_score = 0
                     else:
-                        ad_stat = stats.anderson_ksamp([arr1, arr2])
-                        scaled_sig = (ad_stat.pvalue - 0.001) / (0.25 - 0.001)
-                    similarity_df.loc[seed1, (dim, seed2)] = scaled_sig
+                        # anderson-darling test
+                        # ad_stat = stats.anderson_ksamp([arr1, arr2])
+                        # similarity_score = (ad_stat.significance_level - 0.001) / (
+                        #     0.25 - 0.001
+                        # )
+                        # similarity_score = 1 - ad_stat.statistic
 
+                        # 2 sample ks
+                        ks_stat = stats.ks_2samp(arr1, arr2)
+                        similarity_score = 1 - ks_stat.statistic
+                        # similarity_score = ks_stat.pvalue
+
+                        # histograms for bhattacharyya and jensen-shannon distances
+                        # hist1, bin_edges1 = numpy.histogram(arr1, bins="auto", density=True)
+                        # hist2, bin_edges2 = numpy.histogram(arr2, bins=bin_edges1, density=True)
+
+                        # bhattacharyya distance
+                        # similarity_score = numpy.sqrt(numpy.sum(numpy.sqrt(hist1 * hist2)))
+
+                        # jensen-shannon distance
+                        # similarity_score = 1 - distance.jensenshannon(arr1, arr2)
+
+                    similarity_df.loc[seed1, (dim, seed2)] = similarity_score
+
+        similarity_df = self.normalize_similarity_df(similarity_df)
         if save_path is not None:
             dfpath = save_path / f"similarity_df_{ingredient_key}.csv"
             print(f"Saving similarity df to {dfpath}")
@@ -1379,7 +1445,8 @@ class Analysis:
         figdir = self.figures_path / "clustering"
         figdir.mkdir(parents=True, exist_ok=True)
 
-        for dim in self.get_list_of_dims():
+        dims_to_calc = self.get_list_of_dims() + ["pairwise_distance"]
+        for dim in dims_to_calc:
             avg_similarity_values = self.calc_avg_similarity_values_for_dim(
                 similarity_df[dim].values
             )
@@ -1411,6 +1478,7 @@ class Analysis:
                 loc="upper right",
             )
             g.ax_col_dendrogram.set_visible(False)
+            g.ax_row_dendrogram.set_visible(False)
             g.ax_heatmap.set_xlabel(f"{ingredient_key}_{dim}")
             g.savefig(figdir / f"clustermap_{ingredient_key}_{dim}", dpi=300)
 
@@ -1419,28 +1487,25 @@ class Analysis:
         all_objs,
         ingredient_key,
         save_heatmaps=False,
-        save_path=None,
+        recalculate=False,
     ):
         """
         TODO: add docs
         """
         print("Running similarity analysis...")
-        if save_path is None:
-            save_path = self.output_path
-        save_path = Path(save_path)
 
         if ingredient_key not in all_objs:
             raise ValueError(f"Missing ingredient: {ingredient_key}")
 
-        dfpath = save_path / f"similarity_df_{ingredient_key}.csv"
-        if dfpath.is_file():
+        dfpath = self.output_path / f"similarity_df_{ingredient_key}.csv"
+        if dfpath.is_file() and not recalculate:
             print(f"Loading similarity values from {dfpath}")
             similarity_df = pd.read_csv(dfpath, header=[0, 1])
         else:
             similarity_df = self.calc_similarity_df(
                 all_objs,
                 ingredient_key=ingredient_key,
-                save_path=save_path,
+                save_path=self.output_path,
             )
 
         if save_heatmaps:
@@ -1641,10 +1706,12 @@ class Analysis:
 
         return all_spilr
 
-    def histo(self, distances, filename, title_str="", x_label="", y_label=""):
+    def histogram(self, distances, filename, title_str="", x_label="", y_label=""):
         plt.clf()
         # calculate histogram
         nbins = int(numpy.sqrt(len(distances)))
+        if nbins < 2:
+            return
         y, bin_edges = numpy.histogram(distances, bins=nbins)
         bincenters = 0.5 * (bin_edges[1:] + bin_edges[:-1])
 
@@ -1680,42 +1747,34 @@ class Analysis:
     def simpleplot(self, X, Y, filename, w=3, title_str="", x_label="", y_label=""):
         plt.clf()
         plt.plot(X, Y, linewidth=w)
-        plt.savefig(filename)
         plt.title(title_str)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
+        plt.savefig(filename)
 
     def build_grid(
         self,
-        forceBuild=True,
     ):
         t1 = time()
         self.env.buildGrid()
         t2 = time()
         gridTime = t2 - t1
-        print("time to Build Grid", gridTime)
+        print(f"time to build grid: {gridTime:0.2f}")
 
     def pack(
         self,
         seed=20,
-        vTestid=3,
-        vAnalysis=0,
-        fbox_bb=None,
         show_plotly_plot=True,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.place_method)
 
         t1 = time()
-        self.env.pack_grid(
-            seedNum=seed,
-            vTestid=vTestid,
-            vAnalysis=vAnalysis,
-            fbox=fbox_bb,
-        )
+        self.env.pack_grid(seedNum=seed)
         t2 = time()
-        print("time to run pack_grid", self.env.place_method, t2 - t1)
-        print("num placed", len(self.env.molecules))
+        run_time = t2 - t1
+        print(f"time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
+        print(f"num placed: {len(self.env.molecules)}")
         if show_plotly_plot:
             min_bound, max_bound = self.env.get_bounding_box_limits()
             width = max_bound - min_bound
@@ -2122,9 +2181,8 @@ class Analysis:
         for seed_index, ingr_dict in input_dict.items():
             for ingr_name, value_list in ingr_dict.items():
                 if ingr_name not in output_dict:
-                    output_dict[ingr_name] = value_list
-                else:
-                    output_dict[ingr_name].extend(value_list)
+                    output_dict[ingr_name] = []
+                output_dict[ingr_name].extend(value_list)
 
         return output_dict
 
@@ -2137,18 +2195,194 @@ class Analysis:
             output_list.extend(value_list)
         return output_list
 
+    def pack_one_seed(
+        self,
+        seed_index,
+        seed_list,
+        bounding_box,
+        packing_basename,
+        center_distance_dict=None,
+        pairwise_distance_dict=None,
+        ingredient_position_dict=None,
+        ingredient_angle_dict=None,
+        ingredient_occurence_dict=None,
+        ingredient_key_dict=None,
+        get_distance_distribution=False,
+        image_export_options=None,
+        show_grid=False,
+        plot_figures=False,
+    ):
+        """
+        Packs one seed of a recipe and returns the recipe object
+        """
+        seed_basename = f"seed_{seed_index}_{packing_basename}"
+        self.env.result_file = str(
+            self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
+        )
+        # Clear
+        if self.afviewer:
+            self.afviewer.clearFill("Test_Spheres2D")
+        else:
+            self.env.reset()
+        self.env.saveResult = True
+        seed = seed_list[seed_index]  # int(time())
+        numpy.random.seed(seed)
+        self.build_grid()
+        two_d = self.env.is_two_d()
+        use_simularium = False
+        self.pack(
+            seed=seed,
+            # TODO: fix this to disable plotly if using simularium
+            show_plotly_plot=(show_grid and two_d) and not use_simularium,
+        )
+
+        self.center = self.env.grid.getCenter()
+
+        ax = None
+        width = 0
+        if plot_figures and two_d:
+            width = self.env.get_size_of_bounding_box()
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+
+        if get_distance_distribution:
+            center_distance_dict[seed_index] = {}
+            pairwise_distance_dict[seed_index] = {}
+            ingredient_position_dict[seed_index] = {}
+            ingredient_angle_dict[seed_index] = {}
+            ingredient_occurence_dict[seed_index] = {}
+
+            if hasattr(self, "center"):
+                center = self.center
+            else:
+                center = self.env.grid.getCenter()  # center of the grid
+
+            ext_recipe = self.env.exteriorRecipe
+            if ext_recipe:
+                (
+                    center_distance_dict,
+                    pairwise_distance_dict,
+                    ingredient_position_dict,
+                    ingredient_angle_dict,
+                    ingredient_occurence_dict,
+                    ingredient_key_dict,
+                    ax,
+                ) = self.process_ingredients_in_recipe(
+                    recipe=ext_recipe,
+                    center_distance_dict=center_distance_dict,
+                    pairwise_distance_dict=pairwise_distance_dict,
+                    ingredient_position_dict=ingredient_position_dict,
+                    ingredient_angle_dict=ingredient_angle_dict,
+                    ingredient_occurence_dict=ingredient_occurence_dict,
+                    ingredient_key_dict=ingredient_key_dict,
+                    seed_index=seed_index,
+                    center=center,
+                    ax=ax,
+                    plot_figures=plot_figures,
+                    two_d=two_d,
+                    width=width,
+                )
+
+            for comparment in self.env.compartments:
+                surface_recipe = comparment.surfaceRecipe
+                if surface_recipe:
+                    (
+                        center_distance_dict,
+                        pairwise_distance_dict,
+                        ingredient_position_dict,
+                        ingredient_angle_dict,
+                        ingredient_occurence_dict,
+                        ingredient_key_dict,
+                        ax,
+                    ) = self.process_ingredients_in_recipe(
+                        recipe=surface_recipe,
+                        center_distance_dict=center_distance_dict,
+                        pairwise_distance_dict=pairwise_distance_dict,
+                        ingredient_position_dict=ingredient_position_dict,
+                        ingredient_angle_dict=ingredient_angle_dict,
+                        ingredient_occurence_dict=ingredient_occurence_dict,
+                        ingredient_key_dict=ingredient_key_dict,
+                        seed_index=seed_index,
+                        center=center,
+                        ax=ax,
+                        plot_figures=plot_figures,
+                        two_d=two_d,
+                        width=width,
+                    )
+
+                inner_recipe = comparment.innerRecipe
+                if inner_recipe:
+                    (
+                        center_distance_dict,
+                        pairwise_distance_dict,
+                        ingredient_position_dict,
+                        ingredient_angle_dict,
+                        ingredient_occurence_dict,
+                        ingredient_key_dict,
+                        ax,
+                    ) = self.process_ingredients_in_recipe(
+                        recipe=inner_recipe,
+                        center_distance_dict=center_distance_dict,
+                        pairwise_distance_dict=pairwise_distance_dict,
+                        ingredient_position_dict=ingredient_position_dict,
+                        ingredient_angle_dict=ingredient_angle_dict,
+                        ingredient_occurence_dict=ingredient_occurence_dict,
+                        ingredient_key_dict=ingredient_key_dict,
+                        seed_index=seed_index,
+                        center=center,
+                        ax=ax,
+                        plot_figures=plot_figures,
+                        two_d=two_d,
+                        width=width,
+                    )
+
+            if plot_figures and two_d:
+                ax.set_aspect(1.0)
+                plt.axhline(y=bounding_box[0][1], color="k")
+                plt.axhline(y=bounding_box[1][1], color="k")
+                plt.axvline(x=bounding_box[0][0], color="k")
+                plt.axvline(x=bounding_box[1][0], color="k")
+                plt.axis(
+                    [
+                        bounding_box[0][0],
+                        bounding_box[1][0],
+                        bounding_box[0][1],
+                        bounding_box[1][1],
+                    ]
+                )
+                plt.savefig(self.figures_path / f"packing_image_{seed_basename}.png")
+                plt.close()  # closes the current figure
+
+        if image_export_options is not None:
+            image_writer = ImageWriter(
+                env=self.env,
+                name=seed_basename,
+                output_path=self.figures_path,
+                **image_export_options,
+            )
+            image_writer.export_image()
+
+        return (
+            center_distance_dict,
+            pairwise_distance_dict,
+            ingredient_position_dict,
+            ingredient_angle_dict,
+            ingredient_occurence_dict,
+            ingredient_key_dict,
+        )
+
     def doloop(
         self,
         number_of_packings,
         bounding_box,
         get_distance_distribution=True,
-        render=False,
         plot_figures=True,
         show_grid=True,
-        fbox_bb=None,
         seed_list=None,
         config_name="default",
         recipe_version="1.0.0",
+        image_export_options=None,
+        parallel=False,
     ):
         """
         Runs multiple packings of the same recipe in a loop. This workflow
@@ -2191,7 +2425,6 @@ class Analysis:
         """
         if seed_list is None:
             seed_list = self.getHaltonUnique(number_of_packings)
-
         packing_basename = f"{self.env.name}_{config_name}_{recipe_version}"
         numpy.savetxt(
             self.env.out_folder / f"seeds_{packing_basename}.txt",
@@ -2223,153 +2456,83 @@ class Analysis:
         ingredient_occurence_dict = {}
         ingredient_key_dict = {}
 
-        rebuild = True
-
-        for seed_index in range(number_of_packings):
-            seed_basename = f"seed_{seed_index}_{packing_basename}"
-            self.env.result_file = str(
-                self.env.out_folder / f"results_seed_{seed_index}_{packing_basename}"
+        if parallel:
+            num_processes = numpy.min(
+                [
+                    int(numpy.floor(0.8 * multiprocessing.cpu_count())),
+                    number_of_packings,
+                ]
             )
-            # Clear
-            if self.afviewer:
-                self.afviewer.clearFill("Test_Spheres2D")
-            else:
-                self.env.reset()
-            self.env.saveResult = True
-            seed = seed_list[seed_index]  # int(time())
-            self.build_grid(
-                forceBuild=rebuild,
-            )
-            two_d = self.env.is_two_d()
-            use_simularium = False
-            self.pack(
-                seed=seed,
-                vTestid=seed_index,
-                vAnalysis=0,
-                fbox_bb=fbox_bb,
-                # TODO: fix this to disable plotly if using simularium
-                show_plotly_plot=(show_grid and two_d) and not use_simularium,
-            )
-
-            self.center = self.env.grid.getCenter()
-            if render:
-                # render/save scene if hosted otherwise nothing
-                self.helper.render(seed_basename + ".jpg", 640, 480)
-                self.helper.write(seed_basename + ".c4d", [])
-
-            ax = None
-            width = 0
-            if plot_figures and two_d:
-                width = self.env.get_size_of_bounding_box()
-                fig = plt.figure()
-                ax = fig.add_subplot(111)
-
-            if get_distance_distribution:
-                center_distance_dict[seed_index] = {}
-                pairwise_distance_dict[seed_index] = {}
-                ingredient_position_dict[seed_index] = {}
-                ingredient_angle_dict[seed_index] = {}
-                ingredient_occurence_dict[seed_index] = {}
-
-                center = self.env.grid.getCenter()  # center of the grid
-
-                ext_recipe = self.env.exteriorRecipe
-                if ext_recipe:
+            with concurrent.futures.ProcessPoolExecutor(
+                max_workers=num_processes
+            ) as executor:
+                futures = []
+                for seed_index in range(number_of_packings):
+                    futures.append(
+                        executor.submit(
+                            self.pack_one_seed,
+                            seed_index=seed_index,
+                            seed_list=seed_list,
+                            bounding_box=bounding_box,
+                            packing_basename=packing_basename,
+                            center_distance_dict=center_distance_dict,
+                            pairwise_distance_dict=pairwise_distance_dict,
+                            ingredient_position_dict=ingredient_position_dict,
+                            ingredient_angle_dict=ingredient_angle_dict,
+                            ingredient_occurence_dict=ingredient_occurence_dict,
+                            ingredient_key_dict=ingredient_key_dict,
+                            get_distance_distribution=get_distance_distribution,
+                            image_export_options=image_export_options,
+                        )
+                    )
+                for future in concurrent.futures.as_completed(futures):
                     (
-                        center_distance_dict,
-                        pairwise_distance_dict,
-                        ingredient_position_dict,
-                        ingredient_angle_dict,
-                        ingredient_occurence_dict,
-                        ingredient_key_dict,
-                        ax,
-                    ) = self.process_ingredients_in_recipe(
-                        recipe=ext_recipe,
-                        center_distance_dict=center_distance_dict,
-                        pairwise_distance_dict=pairwise_distance_dict,
-                        ingredient_position_dict=ingredient_position_dict,
-                        ingredient_angle_dict=ingredient_angle_dict,
-                        ingredient_occurence_dict=ingredient_occurence_dict,
-                        ingredient_key_dict=ingredient_key_dict,
-                        seed_index=seed_index,
-                        center=center,
-                        ax=ax,
-                        plot_figures=plot_figures,
-                        two_d=two_d,
-                        width=width,
-                    )
+                        seed_center_distance_dict,
+                        seed_pairwise_distance_dict,
+                        seed_ingredient_position_dict,
+                        seed_ingredient_angle_dict,
+                        seed_ingredient_occurence_dict,
+                        seed_ingredient_key_dict,
+                    ) = future.result()
+                    center_distance_dict.update(seed_center_distance_dict)
+                    pairwise_distance_dict.update(seed_pairwise_distance_dict)
+                    ingredient_position_dict.update(seed_ingredient_position_dict)
+                    ingredient_angle_dict.update(seed_ingredient_angle_dict)
+                    ingredient_occurence_dict.update(seed_ingredient_occurence_dict)
+                    ingredient_key_dict.update(seed_ingredient_key_dict)
 
-                for comparment in self.env.compartments:
-                    surface_recipe = comparment.surfaceRecipe
-                    if surface_recipe:
-                        (
-                            center_distance_dict,
-                            pairwise_distance_dict,
-                            ingredient_position_dict,
-                            ingredient_angle_dict,
-                            ingredient_occurence_dict,
-                            ingredient_key_dict,
-                            ax,
-                        ) = self.process_ingredients_in_recipe(
-                            recipe=surface_recipe,
-                            center_distance_dict=center_distance_dict,
-                            pairwise_distance_dict=pairwise_distance_dict,
-                            ingredient_position_dict=ingredient_position_dict,
-                            ingredient_angle_dict=ingredient_angle_dict,
-                            ingredient_occurence_dict=ingredient_occurence_dict,
-                            ingredient_key_dict=ingredient_key_dict,
-                            seed_index=seed_index,
-                            center=center,
-                            ax=ax,
-                            plot_figures=plot_figures,
-                            two_d=two_d,
-                            width=width,
-                        )
+        else:
+            for seed_index in range(number_of_packings):
+                (
+                    center_distance_dict,
+                    pairwise_distance_dict,
+                    ingredient_position_dict,
+                    ingredient_angle_dict,
+                    ingredient_occurence_dict,
+                    ingredient_key_dict,
+                ) = self.pack_one_seed(
+                    seed_index=seed_index,
+                    seed_list=seed_list,
+                    bounding_box=bounding_box,
+                    packing_basename=packing_basename,
+                    center_distance_dict=center_distance_dict,
+                    pairwise_distance_dict=pairwise_distance_dict,
+                    ingredient_position_dict=ingredient_position_dict,
+                    ingredient_angle_dict=ingredient_angle_dict,
+                    ingredient_occurence_dict=ingredient_occurence_dict,
+                    ingredient_key_dict=ingredient_key_dict,
+                    get_distance_distribution=get_distance_distribution,
+                    image_export_options=image_export_options,
+                    show_grid=show_grid,
+                    plot_figures=plot_figures,
+                )
 
-                    inner_recipe = comparment.innerRecipe
-                    if inner_recipe:
-                        (
-                            center_distance_dict,
-                            pairwise_distance_dict,
-                            ingredient_position_dict,
-                            ingredient_angle_dict,
-                            ingredient_occurence_dict,
-                            ingredient_key_dict,
-                            ax,
-                        ) = self.process_ingredients_in_recipe(
-                            recipe=inner_recipe,
-                            center_distance_dict=center_distance_dict,
-                            pairwise_distance_dict=pairwise_distance_dict,
-                            ingredient_position_dict=ingredient_position_dict,
-                            ingredient_angle_dict=ingredient_angle_dict,
-                            ingredient_occurence_dict=ingredient_occurence_dict,
-                            ingredient_key_dict=ingredient_key_dict,
-                            seed_index=seed_index,
-                            center=center,
-                            ax=ax,
-                            plot_figures=plot_figures,
-                            two_d=two_d,
-                            width=width,
-                        )
-
-                if plot_figures and two_d:
-                    ax.set_aspect(1.0)
-                    plt.axhline(y=bounding_box[0][1], color="k")
-                    plt.axhline(y=bounding_box[1][1], color="k")
-                    plt.axvline(x=bounding_box[0][0], color="k")
-                    plt.axvline(x=bounding_box[1][0], color="k")
-                    plt.axis(
-                        [
-                            bounding_box[0][0],
-                            bounding_box[1][0],
-                            bounding_box[0][1],
-                            bounding_box[1][1],
-                        ]
-                    )
-                    plt.savefig(
-                        self.figures_path / f"packing_image_{seed_basename}.png"
-                    )
-                    plt.close()  # closes the current figure
+        self.writeJSON(center_distance_file, center_distance_dict)
+        self.writeJSON(pairwise_distance_file, pairwise_distance_dict)
+        self.writeJSON(ingredient_position_file, ingredient_position_dict)
+        self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
+        self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
+        self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict
@@ -2396,13 +2559,6 @@ class Analysis:
             self.combine_results_from_ingredients(all_ingredient_angles)
         )
 
-        self.writeJSON(center_distance_file, center_distance_dict)
-        self.writeJSON(pairwise_distance_file, pairwise_distance_dict)
-        self.writeJSON(ingredient_position_file, ingredient_position_dict)
-        self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
-        self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
-        self.writeJSON(ingredient_key_file, ingredient_key_dict)
-
         self.env.ingredient_positions = all_ingredient_positions
         self.env.distances = all_ingredient_distances
         self.env.basename = packing_basename
@@ -2428,7 +2584,7 @@ class Analysis:
 
             # plot histograms for all combined distances
             if len(all_center_distance_array) > 1:
-                self.histo(
+                self.histogram(
                     all_center_distance_array,
                     self.figures_path
                     / f"all_ingredient_center_distances_{self.env.basename}.png",
@@ -2438,7 +2594,7 @@ class Analysis:
                 )
 
             if len(all_center_distance_array) > 1:
-                self.histo(
+                self.histogram(
                     all_pairwise_distance_array,
                     self.figures_path
                     / f"all_ingredient_pairwise_distances_{self.env.basename}.png",
@@ -2449,21 +2605,21 @@ class Analysis:
 
             # plot the angle
             if len(all_ingredient_angle_array) > 1:
-                self.histo(
+                self.histogram(
                     all_ingredient_angle_array[0],
                     self.figures_path / f"all_angles_X_{self.env.basename}.png",
                     title_str="all_ingredients",
                     x_label="angles X",
                     y_label="count",
                 )
-                self.histo(
+                self.histogram(
                     all_ingredient_angle_array[1],
                     self.figures_path / f"all_angles_Y_{self.env.basename}.png",
                     title_str="all_ingredients",
                     x_label="angles Y",
                     y_label="count",
                 )
-                self.histo(
+                self.histogram(
                     all_ingredient_angle_array[2],
                     self.figures_path / f"all_angles_Z_{self.env.basename}.png",
                     title_str="all_ingredients",

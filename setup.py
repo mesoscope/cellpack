@@ -26,6 +26,7 @@ analysis_requirements = [
     "tqdm>=4.64.1",
     "scikit-learn>=1.1.3",
     "seaborn>=0.12.1",
+    "aicsimageio>=4.10.0",
 ]
 
 dev_requirements = [

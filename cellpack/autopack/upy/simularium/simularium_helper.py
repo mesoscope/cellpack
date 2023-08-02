@@ -369,7 +369,10 @@ class simulariumHelper(hostHelper.Helper):
                 )
                 radius = 1
         self.display_data[compartment.name] = DisplayData(
-            name=compartment.name, display_type=display_type, url=url
+            name=compartment.name,
+            display_type=display_type,
+            url=url,
+            color=simulariumHelper.format_rgb_color(compartment.color),
         )
         self.add_instance(
             compartment.name,

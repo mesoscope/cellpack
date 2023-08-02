@@ -538,8 +538,8 @@ def clearCaches(*args):
 
 if checkAtstartup:
     checkPath()
-    updatePathJSON()
-    checkRecipeAvailable()
+    # updatePathJSON()
+    # checkRecipeAvailable()
     log.info("path are updated ")
 
 log.info(f"currently number recipes is {len(RECIPES)}")

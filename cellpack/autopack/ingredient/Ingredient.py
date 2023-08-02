@@ -64,11 +64,35 @@ from .utils import (
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 import cellpack.autopack as autopack
 from cellpack.autopack.ingredient.agent import Agent
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 
 helper = autopack.helper
 reporthook = None
 if helper is not None:
     reporthook = helper.reporthook
+
+
+class CountDistributions(MetaEnum):
+    "All available count distributions"
+    UNIFORM = "uniform"
+    NORMAL = "normal"
+    LIST = "list"
+
+
+class CountOptions(MetaEnum):
+    "All available count options"
+    MIN = "min"
+    MAX = "max"
+    MEAN = "mean"
+    STD = "std"
+    LIST_VALUES = "list_values"
+
+
+REQUIRED_COUNT_OPTIONS = {
+    CountDistributions.UNIFORM: [CountOptions.MIN, CountOptions.MAX],
+    CountDistributions.NORMAL: [CountOptions.MEAN, CountOptions.STD],
+    CountDistributions.LIST: [CountOptions.LIST_VALUES],
+}
 
 
 class IngredientInstanceDrop:
@@ -127,6 +151,7 @@ class Ingredient(Agent):
     ARGUMENTS = [
         "color",
         "count",
+        "count_options",
         "cutoff_boundary",
         "cutoff_surface",
         "distance_expression",
@@ -163,6 +188,7 @@ class Ingredient(Agent):
         type="single_sphere",
         color=None,
         count=0,
+        count_options=None,
         cutoff_boundary=None,
         cutoff_surface=0.0,
         distance_expression=None,
@@ -212,6 +238,7 @@ class Ingredient(Agent):
 
         self.molarity = molarity
         self.count = count
+        self.count_options = count_options
         self.priority = priority
         self.log.info(
             "priority %d,  self.priority %r",
@@ -332,6 +359,35 @@ class Ingredient(Agent):
         self.score = ""
         self.organism = ""
         # add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type
+
+    @staticmethod
+    def validate_ingredient_info(ingredient_info):
+        """
+        Validates ingredient info and returns validated ingredient info
+        """
+        if "count" not in ingredient_info:
+            raise Exception("Ingredient info must contain a count")
+
+        if ingredient_info["count"] < 0:
+            raise Exception("Ingredient count must be greater than or equal to 0")
+
+        if "count_options" in ingredient_info:
+            count_options = ingredient_info["count_options"]
+            if "distribution" not in count_options:
+                raise Exception("Ingredient count options must contain a distribution")
+            if not CountDistributions.is_member(count_options["distribution"]):
+                raise Exception(
+                    f"{count_options['distribution']} is not a valid count distribution"
+                )
+            for required_option in REQUIRED_COUNT_OPTIONS.get(
+                count_options["distribution"], []
+            ):
+                if required_option not in count_options:
+                    raise Exception(
+                        f"Missing option '{required_option}' for {count_options['distribution']} distribution"
+                    )
+
+        return ingredient_info
 
     def reset(self):
         """reset the states of an ingredient"""
@@ -1082,9 +1138,9 @@ class Ingredient(Agent):
             ):
                 continue
             # checking compartments I don't belong to
-            res = compartment.OGsrfPtsBht.query(tuple(numpy.array([point])))
+            res = compartment.OGsrfPtsBht.query(point)
             if len(res) == 2:
-                d = res[0][0]
+                d = res[0]
                 if d < cutoff:
                     # too close to a surface
                     return False
@@ -1830,7 +1886,7 @@ class Ingredient(Agent):
                 ):  # you need a gradient here
                     rot_mat = self.alignRotation(env.grid.masterGridPositions[pt_ind])
                 else:
-                    rot_mat = autopack.helper.rotation_matrix(
+                    rot_mat = self.env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
                     )
             # for other points we get a random rotation
@@ -1854,7 +1910,7 @@ class Ingredient(Agent):
                 # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
                     # should we align to this rotation_axis ?
-                    jitter_rotation = autopack.helper.rotation_matrix(
+                    jitter_rotation = self.env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
                     )
             else:
@@ -2612,7 +2668,7 @@ class Ingredient(Agent):
 
     def pandaBullet_relax(
         self,
-        histoVol,
+        env,
         ptInd,
         compartment,
         target_grid_point_position,
@@ -2625,16 +2681,16 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        histoVol.setupPanda()
-        afvi = histoVol.afviewer
-        simulationTimes = histoVol.simulationTimes
-        runTimeDisplay = histoVol.runTimeDisplay
+        env.setupPanda()
+        afvi = env.afviewer
+        simulationTimes = env.simulationTimes
+        runTimeDisplay = env.runTimeDisplay
         is_realtime = moving is not None
-        gridPointsCoords = histoVol.grid.masterGridPositions
+        gridPointsCoords = env.grid.masterGridPositions
         insidePoints = {}
         newDistPoints = {}
         jtrans, rotMatj = self.oneJitter(
-            histoVol, target_grid_point_position, rotation_matrix
+            env, target_grid_point_position, rotation_matrix
         )
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
@@ -2657,9 +2713,9 @@ class Ingredient(Agent):
                         parent=afvi.movingMesh,
                     )
         # 2- get the neighboring object from ptInd
-        if histoVol.ingrLookForNeighbours:
+        if env.ingrLookForNeighbours:
             near_by_ingredients, placed_partners = self.get_partners(
-                histoVol, jtrans, rotation_matrix, compartment, afvi
+                env, jtrans, rotation_matrix, compartment, afvi
             )
             for i, elem in enumerate(near_by_ingredients):
                 ing = elem[2]
@@ -2720,7 +2776,7 @@ class Ingredient(Agent):
             ),
         )
         # run he simulation for simulationTimes
-        histoVol.callFunction(
+        env.callFunction(
             self.env.runBullet,
             (
                 self,

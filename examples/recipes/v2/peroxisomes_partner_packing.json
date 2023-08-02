@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
-    "format_version": "2.0",
-    "name": "peroxisomes",
+    "version": "bind",
+    "format_version": "2.1",
+    "name": "peroxisomes_partner_packing",
     "bounding_box": [
         [
             -110,
@@ -14,6 +14,18 @@
             62
         ]
     ],
+    "gradients": {
+        "surface_gradient": {
+            "description": "gradient based on distance from the surface of a mesh",
+            "weight_mode": "cube",
+            "pick_mode": "rnd",
+            "mode": "surface",
+            "mode_settings": {
+                "object": "membrane",
+                "scale_to_next_surface": false
+            }
+        }
+    },
     "objects": {
         "mean_membrane": {
             "type": "mesh",
@@ -53,7 +65,27 @@
                 0.70,
                 0.10
             ],
-            "radius": 2.30
+            "radius": 2.30,
+            "partners": [
+                {
+                    "name": "endosome",
+                    "binding_probability": 0.99
+                }
+            ],
+            "rejection_threshold": 1000,
+            "packing_mode": "closePartner"
+        },
+        "endosome": {
+            "jitter_attempts": 300,
+            "type": "single_sphere",
+            "color": [
+                0.80,
+                0.80,
+                0.10
+            ],
+            "radius": 1,
+            "gradient": "surface_gradient",
+            "packing_mode": "gradient"            
         }
     },
     "composition": {
@@ -71,8 +103,14 @@
                 "interior": [
                     "nucleus",
                     {
+                        "object": "endosome",
+                        "count": 300,
+                        "priority": -1
+                    },
+                    {
                         "object": "peroxisome",
-                        "count": 121
+                        "count": 121,
+                        "priority": 0
                     }
                 ]
             }
