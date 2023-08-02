@@ -411,7 +411,7 @@ class DBRecipeHandler(object):
             gradient_doc = GradientDoc(settings=gradient)
             _, doc_id = gradient_doc.should_write(self.db, gradient_name)
             if doc_id:
-                print(f"gradients/{gradient_name} already exists in firestore")
+                print(f"gradients/{gradient_name} is already in firestore")
                 self.grad_to_path_map[gradient_name] = self.db.create_path(
                     "gradients", doc_id
                 )
@@ -422,8 +422,9 @@ class DBRecipeHandler(object):
     def upload_objects(self, objects):
         for obj_name in objects:
             objects[obj_name]["name"] = obj_name
+            # modify a copy of objects to avoid key error when resolving local regions
             modify_objects = copy.deepcopy(objects)
-            # replace gradient name with path before uploading
+            # replace gradient name with path to check if gradient exists in db
             if "gradient" in modify_objects[obj_name]:
                 grad_name = modify_objects[obj_name]["gradient"]
                 modify_objects[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
