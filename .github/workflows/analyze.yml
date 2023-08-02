@@ -3,7 +3,7 @@ name: Analyze
 on: 
   push:
     branches:
-      - main
+      - test/analyze-workflow
   pull_request:
     types: [opened, synchronize, reopened]
 
