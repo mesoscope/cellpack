@@ -1,5 +1,5 @@
 {
-    "name": "test_config",
+    "name": "test_mesh_config",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
