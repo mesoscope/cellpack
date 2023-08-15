@@ -14,7 +14,7 @@ setup_requirements = [
 
 test_requirements = [
     "black>=19.10b0, <=23.0",
-    "flake8>=3.8.3",
+    "flake8>=3.8.3, <=6.0.0",
     "flake8-debugger>=3.2.1",
     "mdutils>=1.4.0",
     "pytest>=5.4.3",
