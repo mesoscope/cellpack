@@ -259,13 +259,6 @@ class MeshStore:
             return inside[0]
         return False
 
-    def contains_points(self, geomname, points):
-        mesh = self.get_object(geomname)
-        if mesh is not None:
-            intersector = trimesh.ray.ray_pyembree.RayMeshIntersector(mesh)
-            return intersector.contains_points(points)
-        return [False]
-
     def contains_points_mesh(self, geomname, points):
         mesh = self.get_object(geomname)
         if mesh is not None:
