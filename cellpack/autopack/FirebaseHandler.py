@@ -51,6 +51,8 @@ class FirebaseHandler(object):
 
     @staticmethod
     def is_reference(path):
+        if not isinstance(path, str):
+            return False
         if path is None:
             return False
         if path.startswith("firebase:"):
