@@ -2047,11 +2047,22 @@ Checks if the object or comp is a reference in the nesting regions, and replaces
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.get_gradient_reference">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_gradient_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">downloaded_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.get_gradient_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_gradient_reference" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_reference_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_or_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.get_reference_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the db data for a reference, and the key if it exists.
 Key –&gt; the name of a composition
 Dict –&gt; the object data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.gradient_list_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gradient_list_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prep_recipe_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.gradient_list_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.gradient_list_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert gradient list to dict for resolve_local_regions</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2121,6 +2132,11 @@ To determine whether the composition data already exists or if it needs to be wr
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_gradients">
+<span class="sig-name descname"><span class="pre">upload_gradients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBRecipeHandler.upload_gradients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_gradients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_objects">
 <span class="sig-name descname"><span class="pre">upload_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBRecipeHandler.upload_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2150,6 +2166,17 @@ To determine whether the composition data already exists or if it needs to be wr
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DataDoc.should_write">
 <span class="sig-name descname"><span class="pre">should_write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DataDoc.should_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DataDoc.should_write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.GradientDoc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.DBRecipeHandler.</span></span><span class="sig-name descname"><span class="pre">GradientDoc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#GradientDoc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.GradientDoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc" title="cellpack.autopack.DBRecipeHandler.DataDoc"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDoc</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.GradientDoc.should_write">
+<span class="sig-name descname"><span class="pre">should_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#GradientDoc.should_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.GradientDoc.should_write" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -5746,7 +5773,9 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.SHALLOW_MATCH"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.SHALLOW_MATCH</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.as_dict"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.as_dict()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.check_and_replace_references"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.check_and_replace_references()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_gradient_reference"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.get_gradient_reference()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.get_reference_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.gradient_list_to_dict"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.gradient_list_to_dict()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_db_regions"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_db_regions()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_local_regions"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_local_regions()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.should_write"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.should_write()</span></code></a></li>
@@ -5760,6 +5789,7 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_collections"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_collections()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_compositions"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_compositions()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_data"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_gradients"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_gradients()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_objects"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_objects()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_recipe"><code class="docutils literal notranslate"><span class="pre">DBRecipeHandler.upload_recipe()</span></code></a></li>
 </ul>
@@ -5768,6 +5798,10 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc.as_dict"><code class="docutils literal notranslate"><span class="pre">DataDoc.as_dict()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc.is_key"><code class="docutils literal notranslate"><span class="pre">DataDoc.is_key()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DataDoc.should_write"><code class="docutils literal notranslate"><span class="pre">DataDoc.should_write()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.GradientDoc"><code class="docutils literal notranslate"><span class="pre">GradientDoc</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.GradientDoc.should_write"><code class="docutils literal notranslate"><span class="pre">GradientDoc.should_write()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc"><code class="docutils literal notranslate"><span class="pre">ObjectDoc</span></code></a><ul>

@@ -96,6 +96,14 @@
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
+<div class="viewcode-block" id="CompositionDoc.get_gradient_reference"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_gradient_reference">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_gradient_reference</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">downloaded_data</span> <span class="ow">and</span> <span class="n">db</span><span class="o">.</span><span class="n">is_reference</span><span class="p">(</span>
+            <span class="n">downloaded_data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">gradient_key</span> <span class="o">=</span> <span class="n">downloaded_data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+            <span class="n">downloaded_data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_ref</span><span class="p">(</span><span class="n">gradient_key</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="CompositionDoc.get_reference_data"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_reference_data</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -106,12 +114,14 @@
         <span class="k">if</span> <span class="n">DataDoc</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">db</span><span class="o">.</span><span class="n">is_reference</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">):</span>
             <span class="n">key</span> <span class="o">=</span> <span class="n">key_or_dict</span>
             <span class="n">downloaded_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_ref</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">get_gradient_reference</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">downloaded_data</span><span class="p">,</span> <span class="kc">None</span>
         <span class="k">elif</span> <span class="n">key_or_dict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">object_dict</span> <span class="o">=</span> <span class="n">key_or_dict</span>
             <span class="k">if</span> <span class="s2">&quot;object&quot;</span> <span class="ow">in</span> <span class="n">object_dict</span> <span class="ow">and</span> <span class="n">db</span><span class="o">.</span><span class="n">is_reference</span><span class="p">(</span><span class="n">object_dict</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]):</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="n">object_dict</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
                 <span class="n">downloaded_data</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_ref</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">get_gradient_reference</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">downloaded_data</span><span class="p">,</span> <span class="n">key</span>
         <span class="k">return</span> <span class="p">{},</span> <span class="kc">None</span></div>
 
@@ -136,6 +146,19 @@
                 <span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">resolve_db_regions</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="CompositionDoc.gradient_list_to_dict"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.gradient_list_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">gradient_list_to_dict</span><span class="p">(</span><span class="n">prep_recipe_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert gradient list to dict for resolve_local_regions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;gradients&quot;</span> <span class="ow">in</span> <span class="n">prep_recipe_data</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">],</span> <span class="nb">list</span>
+        <span class="p">):</span>
+            <span class="n">gradient_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">gradient</span> <span class="ow">in</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]:</span>
+                <span class="n">gradient_dict</span><span class="p">[</span><span class="n">gradient</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">gradient</span>
+            <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient_dict</span></div>
+
 <div class="viewcode-block" id="CompositionDoc.resolve_local_regions"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_local_regions">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_local_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively resolves the regions of a composition from local data.</span>
@@ -143,12 +166,20 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">unpack_recipe_data</span> <span class="o">=</span> <span class="n">DBRecipeHandler</span><span class="o">.</span><span class="n">prep_data_for_db</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">)</span>
         <span class="n">prep_recipe_data</span> <span class="o">=</span> <span class="n">ObjectDoc</span><span class="o">.</span><span class="n">convert_representation</span><span class="p">(</span><span class="n">unpack_recipe_data</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+        <span class="c1"># `gradients` is a list, convert it to dict for easy access and replace</span>
+        <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">gradient_list_to_dict</span><span class="p">(</span><span class="n">prep_recipe_data</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;object&quot;</span> <span class="ow">in</span> <span class="n">local_data</span> <span class="ow">and</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">DataDoc</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span><span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]):</span>
                 <span class="n">key_name</span> <span class="o">=</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">key_name</span> <span class="o">=</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
             <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">key_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="nb">str</span>
+            <span class="p">):</span>
+                <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">][</span>
+                    <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+                <span class="p">]</span>
         <span class="k">for</span> <span class="n">region_name</span> <span class="ow">in</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key_or_dict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">]):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">DataDoc</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">):</span>
@@ -161,6 +192,12 @@
                         <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span>
                             <span class="s2">&quot;object&quot;</span>
                         <span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">obj_item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+                    <span class="c1"># replace gradient reference with gradient data</span>
+                    <span class="n">obj_data</span> <span class="o">=</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">obj_data</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">][</span>
+                            <span class="s2">&quot;gradient&quot;</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">][</span><span class="n">obj_data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">comp_name</span> <span class="o">=</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
                     <span class="n">prep_comp_data</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">][</span><span class="n">comp_name</span><span class="p">]</span>
@@ -249,14 +286,9 @@
         <span class="k">if</span> <span class="n">db_docs</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">db_docs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">db_docs</span><span class="p">:</span>
                 <span class="n">db_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">doc_to_dict</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
-                <span class="n">shallow_match</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">SHALLOW_MATCH</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">db_data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">!=</span> <span class="n">local_data</span><span class="p">[</span><span class="n">item</span><span class="p">]:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">db_data</span><span class="p">[</span><span class="n">item</span><span class="p">],</span> <span class="n">local_data</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
-                        <span class="n">shallow_match</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="k">break</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">shallow_match</span><span class="p">:</span>
-                    <span class="k">continue</span>
                 <span class="k">if</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">db_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># found a match, so shouldn&#39;t write</span>
                     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">doc_id</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
@@ -336,11 +368,29 @@
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div></div>
 
 
+<div class="viewcode-block" id="GradientDoc"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.GradientDoc">[docs]</a><span class="k">class</span> <span class="nc">GradientDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">settings</span>
+
+<div class="viewcode-block" id="GradientDoc.should_write"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.GradientDoc.should_write">[docs]</a>    <span class="k">def</span> <span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">grad_name</span><span class="p">):</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_name</span><span class="p">(</span><span class="s2">&quot;gradients&quot;</span><span class="p">,</span> <span class="n">grad_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">docs</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+                <span class="n">local_data</span> <span class="o">=</span> <span class="n">DBRecipeHandler</span><span class="o">.</span><span class="n">prep_data_for_db</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">doc_to_dict</span><span class="p">(</span><span class="n">doc</span><span class="p">))</span>
+                <span class="n">db_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">doc_to_dict</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+                <span class="n">difference</span> <span class="o">=</span> <span class="n">DeepDiff</span><span class="p">(</span><span class="n">db_data</span><span class="p">,</span> <span class="n">local_data</span><span class="p">,</span> <span class="n">ignore_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">difference</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">doc</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">doc_id</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div></div>
+
+
 <div class="viewcode-block" id="DBRecipeHandler"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeHandler">[docs]</a><span class="k">class</span> <span class="nc">DBRecipeHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_path_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">comp_to_path_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="DBRecipeHandler.is_nested_list"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.is_nested_list">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_nested_list</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
@@ -395,13 +445,35 @@
             <span class="n">doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">set_doc</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">modified_data</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="DBRecipeHandler.upload_gradients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_gradients">[docs]</a>    <span class="k">def</span> <span class="nf">upload_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradients</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">gradient</span> <span class="ow">in</span> <span class="n">gradients</span><span class="p">:</span>
+            <span class="n">gradient_name</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">gradient_doc</span> <span class="o">=</span> <span class="n">GradientDoc</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">gradient</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">doc_id</span> <span class="o">=</span> <span class="n">gradient_doc</span><span class="o">.</span><span class="n">should_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">,</span> <span class="n">gradient_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">doc_id</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;gradients/</span><span class="si">{</span><span class="n">gradient_name</span><span class="si">}</span><span class="s2"> is already in firestore&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span><span class="p">[</span><span class="n">gradient_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span>
+                    <span class="s2">&quot;gradients&quot;</span><span class="p">,</span> <span class="n">doc_id</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">grad_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_data</span><span class="p">(</span><span class="s2">&quot;gradients&quot;</span><span class="p">,</span> <span class="n">gradient_doc</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span><span class="p">[</span><span class="n">gradient_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">grad_path</span></div>
+
 <div class="viewcode-block" id="DBRecipeHandler.upload_objects"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_objects">[docs]</a>    <span class="k">def</span> <span class="nf">upload_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">obj_name</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
             <span class="n">objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj_name</span>
-            <span class="n">object_doc</span> <span class="o">=</span> <span class="n">ObjectDoc</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">])</span>
+            <span class="c1"># modify a copy of objects to avoid key error when resolving local regions</span>
+            <span class="n">modify_objects</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+            <span class="c1"># replace gradient name with path to check if gradient exists in db</span>
+            <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">modify_objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]:</span>
+                <span class="n">grad_name</span> <span class="o">=</span> <span class="n">modify_objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+                <span class="n">modify_objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span><span class="p">[</span><span class="n">grad_name</span><span class="p">]</span>
+            <span class="n">object_doc</span> <span class="o">=</span> <span class="n">ObjectDoc</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">modify_objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">])</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">doc_id</span> <span class="o">=</span> <span class="n">object_doc</span><span class="o">.</span><span class="n">should_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">doc_id</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;objects/</span><span class="si">{</span><span class="n">object_doc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is already in firestore&quot;</span><span class="p">)</span>
+                <span class="n">obj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="s2">&quot;objects&quot;</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_path_map</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj_path</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">obj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_data</span><span class="p">(</span><span class="s2">&quot;objects&quot;</span><span class="p">,</span> <span class="n">object_doc</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_path_map</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj_path</span></div>
@@ -456,7 +528,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">recipe_name</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="n">recipe_version</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">recipe_name</span><span class="si">}</span><span class="s2">_v</span><span class="si">{</span><span class="n">recipe_version</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">recipe_name</span><span class="si">}</span><span class="s2">_v-</span><span class="si">{</span><span class="n">recipe_version</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">key</span></div>
 
 <div class="viewcode-block" id="DBRecipeHandler.upload_collections"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeHandler.upload_collections">[docs]</a>    <span class="k">def</span> <span class="nf">upload_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
@@ -464,10 +536,12 @@
 <span class="sd">        Separate collections from recipe data and upload them to db</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">recipe_to_save</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">recipe_meta_data</span><span class="p">)</span>
+        <span class="n">gradients</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gradients&quot;</span><span class="p">)</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span>
         <span class="n">compositions</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span>
-        <span class="c1"># TODO: test gradients recipes</span>
-        <span class="c1"># gradients = recipe_data.get(&quot;gradients&quot;)</span>
+        <span class="c1"># save gradients to db</span>
+        <span class="k">if</span> <span class="n">gradients</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upload_gradients</span><span class="p">(</span><span class="n">gradients</span><span class="p">)</span>
         <span class="c1"># save objects to db</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upload_objects</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
         <span class="c1"># save comps to db</span>
