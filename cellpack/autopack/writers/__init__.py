@@ -79,7 +79,7 @@ class Writer(object):
         return vdic
 
     def save_as_simularium(
-        self, env, result_file_path, all_ingr_as_array, compartments
+        self, env, all_ingr_as_array, compartments
     ):
         env.helper.clear()
 
@@ -350,6 +350,6 @@ class Writer(object):
                 transpose=transpose,
             )
         elif output_format == "simularium":
-            self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
+            self.save_as_simularium(env, all_ingr_as_array, compartments)
         else:
             print("format output " + output_format + " not recognized (json,python)")
