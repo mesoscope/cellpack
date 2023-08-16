@@ -151,7 +151,6 @@ class Environment(CompartmentList):
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
         self.base_name = f"{self.name}_{config['name']}_{self.version}"
-        self.result_file = f"{self.out_folder}/{self.base_name}"
         self.grid_file_out = (
             f"{self.out_folder}/{self.name}_{config['name']}_{self.version}_grid.dat"
         )
@@ -518,9 +517,7 @@ class Environment(CompartmentList):
         free_points,
         distances,
         t0,
-        vAnalysis,
         vTestid,
-        seedNum,
         all_ingr_as_array,
         save_grid_logs=False,
         save_result_as_file=False,
@@ -540,151 +537,14 @@ class Environment(CompartmentList):
             self.store_asTxt()
         Writer(format=self.format_output).save(
             self,
-            self.result_file,
             kwds=["compNum"],
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
             compartments=self.compartments,
-        )
+        ) 
 
         self.log.info("time to save result file %d", time() - t0)
-        if vAnalysis == 1:
-            # START Analysis Tools: Graham added back this big chunk of code
-            # for analysis tools and graphic on 5/16/12
-            # Needs to be cleaned up into a function and proper uPy code
-            # totalVolume = self.grid.gridVolume*unitVol
-            unitVol = self.grid.gridSpacing**3
-            wrkDirRes = self.result_file + "_analyze_"
-            for o in self.compartments:  # only for compartment ?
-                # totalVolume -= o.surfaceVolume
-                # totalVolume -= o.interiorVolume
-                innerPointNum = len(o.insidePoints) - 1
-                self.log.info("  .  .  .  . ")
-                self.log.info("for compartment o = %s", o.name)
-                self.log.info("inner Point Count = %d", innerPointNum)
-                self.log.info("inner Volume = %s", o.interiorVolume)
-                self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
-                usedPts = 0
-                unUsedPts = 0
-                vDistanceString = ""
-                insidepointindce = numpy.nonzero(
-                    numpy.equal(self.grid.compartment_ids, -o.number)
-                )[0]
-                for i in insidepointindce:  # xrange(innerPointNum):
-                    #                        pt = o.insidePoints[i] #fpts[i]
-                    #                        print (pt,type(pt))
-                    # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                    d = self.distancesAfterFill[i]
-                    vDistanceString += str(d) + "\n"
-                    if d <= 0:  # >self.smallestProteinSize-0.001:
-                        usedPts += 1
-                    else:
-                        unUsedPts += 1
-                filename = (
-                    wrkDirRes
-                    + "vResultMatrix1"
-                    + o.name
-                    + "_Testid"
-                    + str(vTestid)
-                    + "_Seed"
-                    + str(seedNum)
-                    + "_dists.txt"
-                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                #            filename = wrkDirRes+"/vDistances1.txt"
-                f = open(filename, "w")
-                f.write(vDistanceString)
-                f.close()
-
-                # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
-                # if resultfilename == None:
-                # resultfilename = self.result_file
-                resultfilenameT = (
-                    wrkDirRes
-                    + "vResultMatrix1"
-                    + o.name
-                    + "_Testid"
-                    + str(vTestid)
-                    + "_Seed"
-                    + str(seedNum)
-                    + "_Trans.txt"
-                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                resultfilenameR = (
-                    wrkDirRes
-                    + "vResultMatrix1"
-                    + o.name
-                    + "_Testid"
-                    + str(vTestid)
-                    + "_Seed"
-                    + str(seedNum)
-                    + "_Rot.txt"
-                )
-                vTranslationString = ""
-                vRotationString = ""
-                result = []
-                matCount = 0
-                for pos, rot, ingr, ptInd in o.molecules:
-                    # BEGIN: newer code from Theis version added July 5, 2012
-                    if hasattr(self, "afviewer"):
-                        mat = rot.copy()
-                        mat[:3, 3] = pos
-
-                        # r = R.from_matrix(mat).as_euler("xyz", degrees=False)
-                        r = euler_from_matrix(mat, "rxyz")
-                        h1 = math.degrees(math.pi + r[0])
-                        p1 = math.degrees(r[1])
-                        b1 = math.degrees(-math.pi + r[2])
-                        self.log.info("rot from matrix = %r %r %r %r", r, h1, p1, b1)
-                        # END: newer code from Theis version added July 5, 2012
-                    result.append([pos, rot])
-                    pt3d = result[matCount][0]
-                    (
-                        x,
-                        y,
-                        z,
-                    ) = pt3d
-
-                    vTranslationString += (
-                        str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
-                    )
-                    # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
-                    vRotationString += (
-                        str(h1)
-                        + ",\t"
-                        + str(p1)
-                        + ",\t"
-                        + str(b1)
-                        + ",\t"
-                        + ingr.name
-                        + "\n"
-                    )
-                    matCount += 1
-
-                rfile = open(resultfilenameT, "w")
-                rfile.write(vTranslationString)
-                rfile.close()
-
-                rfile = open(resultfilenameR, "w")
-                rfile.write(vRotationString)
-                rfile.close()
-                self.log.info("len(result) = %d", len(result))
-                self.log.info("len(self.molecules) = %d", len(self.molecules))
-                # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-                # and we have a separate translation vector in the results and molecules arrays.
-                #  Get rid of the translation vector and move it to the rotation matrix to save space...
-                # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-                self.log.info(
-                    "*************************************************** vDistance String Should be on"
-                )
-                self.log.info("unitVolume2 = %d", unitVol)
-                self.log.info("Number of Points Unused = %d", unUsedPts)
-                self.log.info("Number of Points Used   = %d", usedPts)
-                self.log.info("Volume Used   = %d", usedPts * unitVol)
-                self.log.info("Volume Unused = %d", unUsedPts * unitVol)
-                self.log.info("vTestid = %d", vTestid)
-                self.log.info("self.grid.nbGridPoints = %r", self.grid.nbGridPoints)
-                self.log.info("self.gridVolume = %d", self.grid.gridVolume)
-
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
             unitVol = self.grid.gridSpacing**3
@@ -2057,16 +1917,19 @@ class Environment(CompartmentList):
                     ingr.count = count
                     ingr.left_to_place = count
 
-    @staticmethod
-    def add_seed_number_to_base_name(base_name, seed_number):
-        return f"{base_name}_seed_{seed_number}"
+    def add_seed_number_to_base_name(self, seed_number):
+        return f"{self.base_name}_seed_{seed_number}"
+    
+    def set_result_file_name(self, seed_basename):
+        self.result_file = str(
+            self.out_folder / f"results_{seed_basename}"
+        )
 
     def pack_grid(
         self,
         seedNum=0,
         name=None,
         vTestid=3,
-        vAnalysis=0,
         **kw,
     ):
         """
@@ -2076,8 +1939,8 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
-        seed_base_name = self.add_seed_number_to_base_name(self.base_name, seedNum)
-        self.result_file = f"{self.out_folder}/{seed_base_name}"
+        seed_base_name = self.add_seed_number_to_base_name(seedNum)
+        self.set_result_file_name(seed_base_name)
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2411,9 +2274,7 @@ class Environment(CompartmentList):
                         free_points,
                         distances=distances,
                         t0=stime,
-                        vAnalysis=vAnalysis,
                         vTestid=vTestid,
-                        seedNum=seedNum,
                         all_ingr_as_array=all_ingr_as_array,
                     )
 
@@ -2430,9 +2291,7 @@ class Environment(CompartmentList):
                 free_points,
                 distances=distances,
                 t0=time(),
-                vAnalysis=vAnalysis,
                 vTestid=vTestid,
-                seedNum=seedNum,
                 all_ingr_as_array=all_ingr_as_array,
             )
 
