@@ -52,7 +52,6 @@ from random import random, uniform, seed
 from scipy import spatial
 import numpy
 import pickle
-import math
 import json
 from json import encoder
 import logging
@@ -83,7 +82,7 @@ from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
-from .transformation import euler_from_matrix, signed_angle_between_vectors
+from .transformation import signed_angle_between_vectors
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -542,7 +541,7 @@ class Environment(CompartmentList):
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
             compartments=self.compartments,
-        ) 
+        )
 
         self.log.info("time to save result file %d", time() - t0)
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
@@ -1919,11 +1918,9 @@ class Environment(CompartmentList):
 
     def add_seed_number_to_base_name(self, seed_number):
         return f"{self.base_name}_seed_{seed_number}"
-    
+
     def set_result_file_name(self, seed_basename):
-        self.result_file = str(
-            self.out_folder / f"results_{seed_basename}"
-        )
+        self.result_file = str(self.out_folder / f"results_{seed_basename}")
 
     def pack_grid(
         self,

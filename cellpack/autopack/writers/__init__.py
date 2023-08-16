@@ -12,6 +12,7 @@ from cellpack import autopack
 from cellpack.autopack.ingredient.grow import ActinIngredient, GrowIngredient
 import cellpack.autopack.transformation as tr
 
+
 def updatePositionsRadii(ingr):
     toupdate = {"positions": []}
     toupdate["radii"] = []
@@ -23,6 +24,7 @@ def updatePositionsRadii(ingr):
             )
             toupdate["radii"].append({"radii": ingr.radii[i]})
     return toupdate
+
 
 class IOingredientTool(object):
     # parser that can return an ingredient
@@ -48,7 +50,6 @@ class IOingredientTool(object):
             f = open(filename + ".py", "w")
             f.write(ingrnode)
             f.close()
-
 
     def ingrJsonNode(self, ingr, result=False, kwds=None, transpose=False):
         # force position instead of sphereFile
@@ -107,7 +108,6 @@ class IOingredientTool(object):
         return ingdic
 
 
-
 class NumpyArrayEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, numpy.ndarray):
@@ -149,9 +149,7 @@ class Writer(object):
         vdic[attrname] = value
         return vdic
 
-    def save_as_simularium(
-        self, env, all_ingr_as_array, compartments
-    ):
+    def save_as_simularium(self, env, all_ingr_as_array, compartments):
         env.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
@@ -175,9 +173,7 @@ class Writer(object):
                     f"{gradient.name}-weights", grid_positions, gradient.weight
                 )
         # TODO: maybe use f"{env.out_folder}/results_{env.base_name}" instead of f"{env.result_file}_results"
-        env.helper.writeToFile(
-            env.result_file, env.boundingBox, env.name, env.version
-        )
+        env.helper.writeToFile(env.result_file, env.boundingBox, env.name, env.version)
 
     def save_Mixed_asJson(
         self,
@@ -200,9 +196,7 @@ class Writer(object):
         file_name = f"{env.result_file}.json"
         # the output path for this recipes files
         if file_name.find("http") != -1 or file_name.find("ftp") != -1:
-            pathout = os.path.dirname(
-                os.path.abspath(autopack.retrieveFile(file_name))
-            )
+            pathout = os.path.dirname(os.path.abspath(autopack.retrieveFile(file_name)))
         else:
             pathout = os.path.dirname(os.path.abspath(file_name))
         if env.version is None:
