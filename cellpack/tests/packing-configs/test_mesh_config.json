@@ -1,0 +1,18 @@
+{
+    "name": "test_mesh_config",
+    "format": "simularium",
+    "inner_grid_method": "trimesh",
+    "live_packing": false,
+    "ordered_packing": false,
+    "out": "cellpack/tests/outputs/",
+    "overwrite_place_method": true,
+    "place_method": "spheresSST",
+    "save_analyze_result": true,
+    "load_from_grid_file": false,
+    "show_progress_bar": true,
+    "show_grid_plot": true,
+    "spacing": null,
+    "parallel": false,
+    "use_periodicity": false,
+    "show_sphere_trees": true
+}

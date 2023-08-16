@@ -1286,7 +1286,15 @@ class Compartment(CompartmentList):
 
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_trimesh(self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store):
+    def BuildGrid_trimesh(
+        self,
+        env,
+        master_grid_positions,
+        vSurfaceArea,
+        off_grid_surface_points,
+        compartment_ids,
+        mesh_store,
+    ):
         """Build the compartment grid ie surface and inside points"""
         insidePoints = []
         number = self.number
@@ -1299,26 +1307,32 @@ class Compartment(CompartmentList):
         ).hollow()
         self.log.info("VOXELIZED MESH")
         # the main loop
-        tree = spatial.cKDTree(grdPos, leafsize=10)
-        points_in_encap_sphere = tree.query_ball_point(
-            self.center,
-            self.encapsulating_radius + env.grid.gridSpacing * 2,
-            return_sorted=True,
+        tree = spatial.cKDTree(master_grid_positions, leafsize=10)
+        points_in_encap_sphere = numpy.array(
+            tree.query_ball_point(
+                self.center,
+                self.encapsulating_radius + env.grid.gridSpacing * 2,
+                return_sorted=True,
+            ),
+            dtype=numpy.int32,
         )
         self.log.info(f"GOT POINTS IN SPHERE {len(points_in_encap_sphere)}")
-        for ptInd in points_in_encap_sphere:
-            coord = [
-                grdPos.item((ptInd, 0)),
-                grdPos.item((ptInd, 1)),
-                grdPos.item((ptInd, 2)),
-            ]
-            if idarray[ptInd] > 0:
-                continue
-            if trimesh_grid_surface.is_filled(coord):
-                idarray.itemset(ptInd, number)
-            elif mesh_store.contains_point(self.gname, coord):
-                insidePoints.append(ptInd)
-                idarray.itemset(ptInd, -number)
+
+        point_compartment_ids = compartment_ids[points_in_encap_sphere]
+        point_ids_to_assign = points_in_encap_sphere[point_compartment_ids == 0]
+        point_positions = numpy.float16(master_grid_positions[point_ids_to_assign])
+
+        # check surface points
+        points_on_surface = trimesh_grid_surface.is_filled(point_positions)
+        compartment_ids[point_ids_to_assign[points_on_surface]] = number
+
+        # check inside points
+        points_in_mesh = mesh_store.contains_points_mesh(self.gname, point_positions)
+
+        points_in_mesh = points_in_mesh & ~points_on_surface
+        compartment_ids[point_ids_to_assign[points_in_mesh]] = -number
+        insidePoints = point_ids_to_assign[points_in_mesh]
+
         self.log.info("ASSIGNED INSIDE OUTSIDE")
 
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -1326,15 +1340,15 @@ class Compartment(CompartmentList):
         (
             surface_points_in_bounding_box,
             surfPtsBBNorms,
-        ) = self.filter_surface_pts_to_fill_box(srfPts, env)
+        ) = self.filter_surface_pts_to_fill_box(off_grid_surface_points, env)
 
-        srfPts = surface_points_in_bounding_box
+        off_grid_surface_points = surface_points_in_bounding_box
 
         ex = False  # True if nbGridPoints == len(idarray) else False
 
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints,
-            srfPts,
+            off_grid_surface_points,
             surfPtsBBNorms,
             env,
             surfacePointsNormals=self.surfacePointsNormals,
@@ -2454,7 +2468,7 @@ class Compartment(CompartmentList):
     # TOD add and store the grid_distances  (closest distance for each point). not only inside / outside
 
     def getSurfaceInnerPoints_sdf(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
@@ -2526,7 +2540,7 @@ class Compartment(CompartmentList):
         return pointinside[0], self.vertices
 
     def getSurfaceInnerPoints_kevin(
-        self, boundingBox, spacing, display=True, superFine=False
+        self, boundingBox, spacing, display=False, superFine=False
     ):
         """
         Takes a polyhedron, and builds a grid. In this grid:
@@ -2541,8 +2555,6 @@ class Compartment(CompartmentList):
         It is simply there as a safeguard.
         """
         # Start the timer.
-        from time import time
-
         startTime = time()
 
         gridSpacing = spacing
@@ -2847,7 +2859,7 @@ class Compartment(CompartmentList):
         return insidePoints, surfacePoints
 
     def getSurfaceInnerPoints_sdf_interpolate(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
@@ -2913,7 +2925,7 @@ class Compartment(CompartmentList):
         # need to update the surface. need to create a aligned grid
         return pointinside[0], self.vertices
 
-    def getSurfaceInnerPoints(self, boundingBox, spacing, display=True, useFix=False):
+    def getSurfaceInnerPoints(self, boundingBox, spacing, display=False, useFix=False):
         """
         Only compute the inner point. No grid.
         This is independant from the packing. Help build ingredient sphere tree and representation
@@ -3198,7 +3210,7 @@ class Compartment(CompartmentList):
         return image_data
 
     def getSurfaceInnerPointsPandaRay(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.
@@ -3353,7 +3365,7 @@ class Compartment(CompartmentList):
         return insidePoints, surfacePoints
 
     def getSurfaceInnerPointsPanda(
-        self, boundingBox, spacing, display=True, useFix=False
+        self, boundingBox, spacing, display=False, useFix=False
     ):
         """
         Only compute the inner point. No grid.

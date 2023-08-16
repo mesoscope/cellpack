@@ -213,9 +213,6 @@ class Environment(CompartmentList):
         self.host = None
         self.afviewer = None
 
-        # version of setup used
-        self.version = "1.0"
-
         # option for packing using host dynamics capability
         self.windowsSize = 100
         self.windowsSize_overwrite = False
@@ -2200,6 +2197,7 @@ class Environment(CompartmentList):
         stime = time()
         if self.show_progress_bar:
             pbar = tqdm(total=totalNumMols, mininterval=0, miniters=1)
+            pbar.set_description(f"Packing {self.name}_{self.version}")
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart
