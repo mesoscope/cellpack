@@ -76,6 +76,7 @@ from cellpack.autopack.utils import (
     ingredient_compare2,
     load_object_from_pickle,
 )
+from cellpack.autopack.interface_objects import INGREDIENT_TYPE
 from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
@@ -2018,42 +2019,59 @@ class Environment(CompartmentList):
         return min_distance < expected_min_distance + 0.001
 
     @staticmethod
-    def get_count_from_options(count_options):
+    def get_value_from_distribution(distribution_options, return_int=False):
         """
-        Returns a count from the options
+        Returns a value from the distribution options
         """
-        count = None
-        if count_options.get("distribution") == "uniform":
-            count = int(
-                numpy.random.randint(
-                    count_options.get("min", 0), count_options.get("max", 1)
-                )
-            )
-        elif count_options.get("distribution") == "normal":
-            count = int(
-                numpy.rint(
-                    numpy.random.normal(
-                        count_options.get("mean", 0), count_options.get("std", 1)
+        if distribution_options.get("distribution") == "uniform":
+            if return_int:
+                return int(
+                    numpy.random.randint(
+                        distribution_options.get("min", 0),
+                        distribution_options.get("max", 1),
                     )
                 )
+            else:
+                return numpy.random.uniform(
+                    distribution_options.get("min", 0),
+                    distribution_options.get("max", 1),
+                )
+        if distribution_options.get("distribution") == "normal":
+            value = numpy.random.normal(
+                distribution_options.get("mean", 0), distribution_options.get("std", 1)
             )
-        elif count_options.get("distribution") == "list":
-            count = int(
-                numpy.rint(numpy.random.choice(count_options.get("list_values", None)))
-            )
+        elif distribution_options.get("distribution") == "list":
+            value = numpy.random.choice(distribution_options.get("list_values", None))
+        else:
+            value = None
 
-        return count
+        if return_int:
+            value = int(numpy.rint(value))
 
-    def update_count(self, allIngredients):
+        return value
+
+    def update_variable_ingredient_attributes(self, allIngredients):
         """
-        updates the count for all ingredients based on input options
+        updates variable attributes for all ingredients based on input options
         """
         for ingr in allIngredients:
             if hasattr(ingr, "count_options") and ingr.count_options is not None:
-                count = self.get_count_from_options(count_options=ingr.count_options)
+
+                count = self.get_value_from_distribution(
+                    distribution_options=ingr.count_options
+                )
                 if count is not None:
                     ingr.count = count
                     ingr.left_to_place = count
+
+            if hasattr(ingr, "size_options") and ingr.size_options is not None:
+                if ingr.type == INGREDIENT_TYPE.SINGLE_SPHERE:
+                    radius = self.get_value_from_distribution(
+                        distribution_options=ingr.size_options
+                    )
+                    if radius is not None:
+                        ingr.radius = radius
+                        ingr.encapsulating_radius = radius
 
     def pack_grid(
         self,
@@ -2080,7 +2098,7 @@ class Environment(CompartmentList):
         allIngredients = self.callFunction(self.getActiveIng)
 
         # set the number of ingredients to pack
-        self.update_count(allIngredients)
+        self.update_variable_ingredient_attributes(allIngredients)
 
         # verify partner
         usePP = False

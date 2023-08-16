@@ -72,14 +72,14 @@ if helper is not None:
     reporthook = helper.reporthook
 
 
-class CountDistributions(MetaEnum):
+class DistributionTypes(MetaEnum):
     "All available count distributions"
     UNIFORM = "uniform"
     NORMAL = "normal"
     LIST = "list"
 
 
-class CountOptions(MetaEnum):
+class DistributionOptions(MetaEnum):
     "All available count options"
     MIN = "min"
     MAX = "max"
@@ -88,10 +88,10 @@ class CountOptions(MetaEnum):
     LIST_VALUES = "list_values"
 
 
-REQUIRED_COUNT_OPTIONS = {
-    CountDistributions.UNIFORM: [CountOptions.MIN, CountOptions.MAX],
-    CountDistributions.NORMAL: [CountOptions.MEAN, CountOptions.STD],
-    CountDistributions.LIST: [CountOptions.LIST_VALUES],
+REQUIRED_DISTRIBUTION_OPTIONS = {
+    DistributionTypes.UNIFORM: [DistributionOptions.MIN, DistributionOptions.MAX],
+    DistributionTypes.NORMAL: [DistributionOptions.MEAN, DistributionOptions.STD],
+    DistributionTypes.LIST: [DistributionOptions.LIST_VALUES],
 }
 
 
@@ -361,6 +361,26 @@ class Ingredient(Agent):
         # add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type
 
     @staticmethod
+    def validate_distribution_options(distribution_options):
+        """
+        Validates distribution options and returns validated distribution options
+        """
+        if "distribution" not in distribution_options:
+            raise Exception("Ingredient count options must contain a distribution")
+        if not DistributionTypes.is_member(distribution_options["distribution"]):
+            raise Exception(
+                f"{distribution_options['distribution']} is not a valid count distribution"
+            )
+        for required_option in REQUIRED_DISTRIBUTION_OPTIONS.get(
+            distribution_options["distribution"], []
+        ):
+            if required_option not in distribution_options:
+                raise Exception(
+                    f"Missing option '{required_option}' for {distribution_options['distribution']} distribution"
+                )
+        return distribution_options
+
+    @staticmethod
     def validate_ingredient_info(ingredient_info):
         """
         Validates ingredient info and returns validated ingredient info
@@ -372,20 +392,14 @@ class Ingredient(Agent):
             raise Exception("Ingredient count must be greater than or equal to 0")
 
         if "count_options" in ingredient_info:
-            count_options = ingredient_info["count_options"]
-            if "distribution" not in count_options:
-                raise Exception("Ingredient count options must contain a distribution")
-            if not CountDistributions.is_member(count_options["distribution"]):
-                raise Exception(
-                    f"{count_options['distribution']} is not a valid count distribution"
-                )
-            for required_option in REQUIRED_COUNT_OPTIONS.get(
-                count_options["distribution"], []
-            ):
-                if required_option not in count_options:
-                    raise Exception(
-                        f"Missing option '{required_option}' for {count_options['distribution']} distribution"
-                    )
+            ingredient_info["count_options"] = Ingredient.validate_distribution_options(
+                ingredient_info["count_options"]
+            )
+
+        if "size_options" in ingredient_info:
+            ingredient_info["size_options"] = Ingredient.validate_distribution_options(
+                ingredient_info["size_options"]
+            )
 
         return ingredient_info
 
