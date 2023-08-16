@@ -44,6 +44,8 @@
 <span class="kn">import</span> <span class="nn">trimesh</span>
 <span class="kn">from</span> <span class="nn">cellpack</span> <span class="kn">import</span> <span class="n">autopack</span>
 
+<span class="n">CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">100000</span>
+
 
 <div class="viewcode-block" id="MeshStore"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore">[docs]</a><span class="k">class</span> <span class="nc">MeshStore</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -297,12 +299,21 @@
             <span class="k">return</span> <span class="n">inside</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="MeshStore.contains_points"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points">[docs]</a>    <span class="k">def</span> <span class="nf">contains_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+<div class="viewcode-block" id="MeshStore.contains_points_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">contains_points_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_pyembree</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span></div>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">CHUNK_SIZE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>  <span class="c1"># TODO: check for memory leak</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># chunk the points</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">CHUNK_SIZE</span><span class="p">):</span>
+                    <span class="n">chunk</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">CHUNK_SIZE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))]</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">inside</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">inside</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inside</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">chunk</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">inside</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MeshStore.get_smallest_radius"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_smallest_radius">[docs]</a>    <span class="k">def</span> <span class="nf">get_smallest_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>

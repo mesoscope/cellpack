@@ -1326,7 +1326,15 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insidePoints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfacePoints</span></div>
 
-<div class="viewcode-block" id="Compartment.BuildGrid_trimesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_trimesh">[docs]</a>    <span class="k">def</span> <span class="nf">BuildGrid_trimesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">grdPos</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">,</span> <span class="n">srfPts</span><span class="p">,</span> <span class="n">idarray</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+<div class="viewcode-block" id="Compartment.BuildGrid_trimesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_trimesh">[docs]</a>    <span class="k">def</span> <span class="nf">BuildGrid_trimesh</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="n">master_grid_positions</span><span class="p">,</span>
+        <span class="n">vSurfaceArea</span><span class="p">,</span>
+        <span class="n">off_grid_surface_points</span><span class="p">,</span>
+        <span class="n">compartment_ids</span><span class="p">,</span>
+        <span class="n">mesh_store</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the compartment grid ie surface and inside points&quot;&quot;&quot;</span>
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span>
@@ -1339,26 +1347,32 @@
         <span class="p">)</span><span class="o">.</span><span class="n">hollow</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;VOXELIZED MESH&quot;</span><span class="p">)</span>
         <span class="c1"># the main loop</span>
-        <span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">grdPos</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-        <span class="n">points_in_encap_sphere</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="n">return_sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">points_in_encap_sphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">return_sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GOT POINTS IN SPHERE </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">points_in_encap_sphere</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">points_in_encap_sphere</span><span class="p">:</span>
-            <span class="n">coord</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
-                <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
-                <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-            <span class="p">]</span>
-            <span class="k">if</span> <span class="n">idarray</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">trimesh_grid_surface</span><span class="o">.</span><span class="n">is_filled</span><span class="p">(</span><span class="n">coord</span><span class="p">):</span>
-                <span class="n">idarray</span><span class="o">.</span><span class="n">itemset</span><span class="p">(</span><span class="n">ptInd</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
-                <span class="n">insidePoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ptInd</span><span class="p">)</span>
-                <span class="n">idarray</span><span class="o">.</span><span class="n">itemset</span><span class="p">(</span><span class="n">ptInd</span><span class="p">,</span> <span class="o">-</span><span class="n">number</span><span class="p">)</span>
+
+        <span class="n">point_compartment_ids</span> <span class="o">=</span> <span class="n">compartment_ids</span><span class="p">[</span><span class="n">points_in_encap_sphere</span><span class="p">]</span>
+        <span class="n">point_ids_to_assign</span> <span class="o">=</span> <span class="n">points_in_encap_sphere</span><span class="p">[</span><span class="n">point_compartment_ids</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">point_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="p">[</span><span class="n">point_ids_to_assign</span><span class="p">])</span>
+
+        <span class="c1"># check surface points</span>
+        <span class="n">points_on_surface</span> <span class="o">=</span> <span class="n">trimesh_grid_surface</span><span class="o">.</span><span class="n">is_filled</span><span class="p">(</span><span class="n">point_positions</span><span class="p">)</span>
+        <span class="n">compartment_ids</span><span class="p">[</span><span class="n">point_ids_to_assign</span><span class="p">[</span><span class="n">points_on_surface</span><span class="p">]]</span> <span class="o">=</span> <span class="n">number</span>
+
+        <span class="c1"># check inside points</span>
+        <span class="n">points_in_mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">contains_points_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">point_positions</span><span class="p">)</span>
+
+        <span class="n">points_in_mesh</span> <span class="o">=</span> <span class="n">points_in_mesh</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">points_on_surface</span>
+        <span class="n">compartment_ids</span><span class="p">[</span><span class="n">point_ids_to_assign</span><span class="p">[</span><span class="n">points_in_mesh</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="n">number</span>
+        <span class="n">insidePoints</span> <span class="o">=</span> <span class="n">point_ids_to_assign</span><span class="p">[</span><span class="n">points_in_mesh</span><span class="p">]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ASSIGNED INSIDE OUTSIDE&quot;</span><span class="p">)</span>
 
         <span class="n">nbGridPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">)</span>
@@ -1366,15 +1380,15 @@
         <span class="p">(</span>
             <span class="n">surface_points_in_bounding_box</span><span class="p">,</span>
             <span class="n">surfPtsBBNorms</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_surface_pts_to_fill_box</span><span class="p">(</span><span class="n">srfPts</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_surface_pts_to_fill_box</span><span class="p">(</span><span class="n">off_grid_surface_points</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
 
-        <span class="n">srfPts</span> <span class="o">=</span> <span class="n">surface_points_in_bounding_box</span>
+        <span class="n">off_grid_surface_points</span> <span class="o">=</span> <span class="n">surface_points_in_bounding_box</span>
 
         <span class="n">ex</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># True if nbGridPoints == len(idarray) else False</span>
 
         <span class="n">surfacePoints</span><span class="p">,</span> <span class="n">surfacePointsNormals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extendGridArrays</span><span class="p">(</span>
             <span class="n">nbGridPoints</span><span class="p">,</span>
-            <span class="n">srfPts</span><span class="p">,</span>
+            <span class="n">off_grid_surface_points</span><span class="p">,</span>
             <span class="n">surfPtsBBNorms</span><span class="p">,</span>
             <span class="n">env</span><span class="p">,</span>
             <span class="n">surfacePointsNormals</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">,</span>
@@ -2494,7 +2508,7 @@
     <span class="c1"># TOD add and store the grid_distances  (closest distance for each point). not only inside / outside</span>
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints_sdf"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints_sdf</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
@@ -2566,7 +2580,7 @@
         <span class="k">return</span> <span class="n">pointinside</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span></div>
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints_kevin"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_kevin">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints_kevin</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">superFine</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">superFine</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Takes a polyhedron, and builds a grid. In this grid:</span>
@@ -2581,8 +2595,6 @@
 <span class="sd">        It is simply there as a safeguard.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Start the timer.</span>
-        <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-
         <span class="n">startTime</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
         <span class="n">gridSpacing</span> <span class="o">=</span> <span class="n">spacing</span>
@@ -2887,7 +2899,7 @@
         <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">surfacePoints</span></div>
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints_sdf_interpolate"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf_interpolate">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints_sdf_interpolate</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
@@ -2953,7 +2965,7 @@
         <span class="c1"># need to update the surface. need to create a aligned grid</span>
         <span class="k">return</span> <span class="n">pointinside</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span></div>
 
-<div class="viewcode-block" id="Compartment.getSurfaceInnerPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Compartment.getSurfaceInnerPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
 <span class="sd">        This is independant from the packing. Help build ingredient sphere tree and representation</span>
@@ -3238,7 +3250,7 @@
         <span class="k">return</span> <span class="n">image_data</span></div>
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPointsPandaRay"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPandaRay">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPointsPandaRay</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
@@ -3393,7 +3405,7 @@
         <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">surfacePoints</span></div>
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPointsPanda"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPanda">[docs]</a>    <span class="k">def</span> <span class="nf">getSurfaceInnerPointsPanda</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
