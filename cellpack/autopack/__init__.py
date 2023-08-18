@@ -286,7 +286,7 @@ def is_remote_path(file_path):
     """
     for ele in DATABASE_NAME:
         if ele in file_path:
-            return ele in file_path
+            return True
 
 
 def convert_db_shortname_to_url(file_location):
@@ -386,7 +386,6 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
 
 
 def load_file(filename, destination="", cache="geometries", force=None):
-    # what is the param destination for? should we use it to store db names?
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
         # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-linear -c examples/packing-configs/peroxisome_packing_config.json`
@@ -405,7 +404,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
         )
-    return json.load(open(local_file_path, "r")), None
+    return json.load(open(local_file_path, "r"))
 
 
 def fixPath(adict):  # , k, v):
@@ -555,8 +554,8 @@ def write_username_to_creds():
 # afdir  or user_pref
 if checkAtstartup:
     checkPath()
-    updatePathJSON()
-    checkRecipeAvailable()
+    # updatePathJSON()
+    # checkRecipeAvailable()
     log.info("path are updated ")
 
 # write username to creds

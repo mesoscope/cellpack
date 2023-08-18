@@ -13,8 +13,8 @@ setup_requirements = [
 ]
 
 test_requirements = [
-    "black>=19.10b0, <=23.0",    
-    "flake8>=3.8.3",
+    "black>=19.10b0, <=23.0",
+    "flake8>=3.8.3, <=6.0.0",
     "flake8-debugger>=3.2.1",
     "mdutils>=1.4.0",
     "pytest>=5.4.3",
@@ -26,6 +26,7 @@ analysis_requirements = [
     "tqdm>=4.64.1",
     "scikit-learn>=1.1.3",
     "seaborn>=0.12.1",
+    "aicsimageio>=4.10.0",
 ]
 
 dev_requirements = [

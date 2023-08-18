@@ -68,6 +68,8 @@ class Gradient:
         self.weight_mode = gradient_data["weight_mode"]
         self.pick_mode = gradient_data["pick_mode"]
         self.mode_settings = gradient_data["mode_settings"]
+        self.weight_mode_settings = gradient_data["weight_mode_settings"]
+        self.invert = gradient_data["invert"]
 
         self.weight = None
         self.bb = None  # this is set when weight map is built in the env
@@ -111,6 +113,14 @@ class Gradient:
         """
         return vector / numpy.linalg.norm(vector)
 
+    def get_normalized_values(self, values):
+        """
+        Scale values between 0 and 1
+        """
+        max_value = max(values)
+        min_value = min(values)
+        return (values - min_value) / (max_value - min_value)
+
     def pickPoint(self, listPts):
         """
         pick next random point according to the chosen function
@@ -146,10 +156,11 @@ class Gradient:
 
     def build_radial_weight_map(self, bb, master_grid_positions):
         self.bb = bb
+        diag = numpy.linalg.norm(bb[1] - bb[0])
         center = self.mode_settings.get("center", self.get_center())
-        radius = self.mode_settings.get("radius")
+        radius = self.mode_settings.get("radius", diag)
         distances = get_distances_from_point(master_grid_positions, center)
-        self.distances = numpy.where(distances < radius, distances, radius) / radius
+        self.distances = numpy.where(distances < radius, distances, radius)
         self.set_weights_by_mode()
 
     def build_surface_distance_weight_map(self):
@@ -180,10 +191,7 @@ class Gradient:
         direction = self.normalize_vector(direction)
         self.weight = []
         center = self.mode_settings.get("center", self.get_center())
-        distances = numpy.dot(master_grid_positions - center, direction)
-        max_d = max(distances)
-        min_d = min(distances)
-        self.distances = 1 - (distances - min_d) / (max_d - min_d)
+        self.distances = numpy.abs(numpy.dot(master_grid_positions - center, direction))
         self.set_weights_by_mode()
 
     def build_axis_weight_map(self, bb, master_grid_positions):
@@ -193,26 +201,41 @@ class Gradient:
         """
         self.bb = bb
         ind = self.axes[self.mode]
-        maxi = max(bb[1][ind], bb[0][ind])
         mini = min(bb[1][ind], bb[0][ind])
         self.weight = []
-        self.distances = (master_grid_positions[:, ind] - mini) / (maxi - mini)
+        self.distances = numpy.abs((master_grid_positions[:, ind] - mini))
         self.set_weights_by_mode()
 
     def set_weights_by_mode(self):
-        scaled_distances = self.distances
-        if (max(scaled_distances) > 1.0) or (min(scaled_distances) < 0.0):
-            self.log.error(
+
+        self.scaled_distances = self.get_normalized_values(self.distances)
+
+        if (max(self.scaled_distances) > 1.0) or (min(self.scaled_distances) < 0.0):
+            raise ValueError(
                 "CHECK CALCULATED DISTANCES",
-                f"Max: {max(scaled_distances)}, Min: {min(scaled_distances)}",
+                f"Max: {max(self.scaled_distances)}, Min: {min(self.scaled_distances)}",
             )
+        if self.invert:
+            self.scaled_distances = 1.0 - self.scaled_distances
         if self.weight_mode == "linear":
-            self.weight = 1.0 - scaled_distances
+            self.weight = 1.0 - self.scaled_distances
         elif self.weight_mode == "square":
-            self.weight = (1.0 - scaled_distances) ** 2
+            self.weight = (1.0 - self.scaled_distances) ** 2
         elif self.weight_mode == "cube":
-            self.weight = (1.0 - scaled_distances) ** 3
+            self.weight = (1.0 - self.scaled_distances) ** 3
+        elif self.weight_mode == "power":
+            self.weight = (1.0 - self.scaled_distances) ** self.weight_mode_settings[
+                "power"
+            ]
+        elif self.weight_mode == "exponential":
+            self.weight = numpy.exp(
+                -self.scaled_distances / self.weight_mode_settings["decay_length"]
+            )
+        # normalize the weight
+        self.weight = self.get_normalized_values(self.weight)
+
         self.weight[numpy.isnan(self.weight)] = 0
+
         # TODO: talk to Ludo about calculating gaussian weights
 
     def getMaxWeight(self, listPts):

@@ -1,5 +1,6 @@
 from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
 from cellpack.tests.mocks.mock_db import MockDB
+from unittest.mock import MagicMock, patch
 
 mock_db = MockDB({})
 
@@ -61,8 +62,26 @@ def test_upload_objects():
     data = {"test": {"test_key": "test_value"}}
     object_doc = DBRecipeHandler(mock_db)
     object_doc.upload_objects(data)
-
     assert object_doc.objects_to_path_map == {"test": "firebase:objects/test_id"}
+
+
+def test_upload_objects_with_gradient():
+    data = {"test": {"test_key": "test_value", "gradient": "test_grad_name"}}
+    object_handler = DBRecipeHandler(mock_db)
+    object_handler.grad_to_path_map = {"test_grad_name": "firebase:gradients/test_id"}
+
+    with patch(
+        "cellpack.autopack.DBRecipeHandler.ObjectDoc", return_value=MagicMock()
+    ) as mock_object_doc:
+        mock_object_doc.return_value.should_write.return_value = (
+            None,
+            "firebase:gradients/test_id",
+        )
+        object_handler.upload_objects(data)
+        mock_object_doc.assert_called()
+        called_with_settings = mock_object_doc.call_args.kwargs["settings"]
+    assert data["test"]["gradient"] == "test_grad_name"
+    assert called_with_settings["gradient"] == "firebase:gradients/test_id"
 
 
 def test_upload_compositions():
@@ -99,6 +118,9 @@ def test_upload_gradients():
     data = [{"name": "test_grad_name", "test_key": "test_value"}]
     gradient_doc = DBRecipeHandler(mock_db)
     gradient_doc.upload_gradients(data)
+    assert gradient_doc.grad_to_path_map == {
+        "test_grad_name": "firebase:gradients/test_id"
+    }
 
 
 def test_get_recipe_id():

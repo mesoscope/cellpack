@@ -1,0 +1,65 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0",
+    "name": "test_mesh_image",
+    "bounding_box": [
+        [
+            -4,
+            -4,
+            -4
+        ],
+        [
+            4,
+            4,
+            4
+        ]
+    ],
+    "objects": {
+        "sphere_mesh": {
+            "type": "mesh",
+            "color": [
+                1,
+                0,
+                1
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "cellpack/tests/geometry",
+                    "name": "sphere.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "primitive_sphere": {
+            "type": "single_sphere",
+            "color": [
+                0,
+                1,
+                1
+            ],
+            "radius": 1
+        }
+    },
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "sphere_mesh"
+                ]
+            }
+        },
+        "sphere_mesh": {
+            "object": "sphere_mesh",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    "primitive_sphere"
+                ]
+            }
+        },
+        "primitive_sphere": {
+            "object": "primitive_sphere",
+            "count": 5
+        }
+    }
+}

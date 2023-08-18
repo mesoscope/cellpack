@@ -4,6 +4,8 @@ import numpy
 import trimesh
 from cellpack import autopack
 
+CHUNK_SIZE = 100000
+
 
 class MeshStore:
     def __init__(self):
@@ -253,29 +255,31 @@ class MeshStore:
     def contains_point(self, geomname, point):
         mesh = self.get_object(geomname)
         if mesh is not None:
-            intersector = trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
-            return intersector.contains_points([point])[0]
+            inside = mesh.contains([point])
+            return inside[0]
         return False
 
-    def contains_points(self, geomname, points):
+    def contains_points_mesh(self, geomname, points):
         mesh = self.get_object(geomname)
         if mesh is not None:
-            intersector = trimesh.ray.ray_pyembree.RayMeshIntersector(mesh)
-            return intersector.contains_points(points)
-        return [False]
-
-    def contains_points_slow(self, geomname, points):
-        mesh = self.get_object(geomname)
-        if mesh is not None:
-            intersector = trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
-            return intersector.contains_points(points)
-        return [False]
+            if len(points) <= CHUNK_SIZE:
+                return mesh.contains(points)  # TODO: check for memory leak
+            else:
+                # chunk the points
+                for i in range(0, len(points), CHUNK_SIZE):
+                    chunk = points[i : min(i + CHUNK_SIZE, len(points))]
+                    if i == 0:
+                        inside = mesh.contains(chunk)
+                    else:
+                        inside = numpy.append(inside, mesh.contains(chunk))
+                return inside
+        return numpy.full(len(points), False)
 
     def get_smallest_radius(self, geomname, center):
         mesh = self.get_object(geomname)
         if mesh is not None:
             query = trimesh.proximity.ProximityQuery(mesh)
-            (closet_point, distance, triangle_id) = query.on_surface([center])
+            (_, distance, _) = query.on_surface([center])
             return distance[0]
         return 1.0
 

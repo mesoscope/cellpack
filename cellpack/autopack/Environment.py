@@ -53,7 +53,6 @@ from scipy import spatial
 import numpy
 import pickle
 import math
-from math import pi
 import json
 from json import encoder
 import logging
@@ -75,6 +74,7 @@ from cellpack.autopack.utils import (
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
+    load_object_from_pickle,
 )
 from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
@@ -90,6 +90,8 @@ from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
+from tqdm import tqdm
+
 try:
     helper = autopack.helper
 except ImportError:
@@ -97,6 +99,9 @@ except ImportError:
 
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
+
+# set default pickle protocol to highest level
+pickle.DEFAULT_PROTOCOL = pickle.HIGHEST_PROTOCOL
 
 SEED = 15
 LOG = False
@@ -139,6 +144,7 @@ class Environment(CompartmentList):
         self.boundingBox = numpy.array(recipe["bounding_box"])
         self.spacing = config["spacing"]
         self.load_from_grid_file = config["load_from_grid_file"]
+        self.show_progress_bar = config["show_progress_bar"]
         self.name = name
         self.version = recipe.get("version", "default")
         # saving/pickle option
@@ -207,9 +213,6 @@ class Environment(CompartmentList):
         self.host = None
         self.afviewer = None
 
-        # version of setup used
-        self.version = "1.0"
-
         # option for packing using host dynamics capability
         self.windowsSize = 100
         self.windowsSize_overwrite = False
@@ -264,7 +267,7 @@ class Environment(CompartmentList):
         self.rb_func_dic = {}
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
-        self.dump = True
+        self.dump = False
         self.dump_freq = 120.0
         self.jsondic = None
 
@@ -322,6 +325,9 @@ class Environment(CompartmentList):
             ingredient_name if ingredient_name is not None else object_key
         )
         ingredient_info["object_name"] = object_key
+        ingredient_info = ingredient.Ingredient.validate_ingredient_info(
+            ingredient_info
+        )
         return ingredient_info
 
     def _step_down(self, compartment_key, prev_compartment=None):
@@ -422,10 +428,11 @@ class Environment(CompartmentList):
             return spatial.distance.pdist(positions)
 
     def get_distances(self, ingredient_name, center):
+
         ingredient_positions = self.get_positions_for_ingredient(ingredient_name)
-        distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
 
         if len(ingredient_positions):
+            distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
             distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
@@ -505,7 +512,16 @@ class Environment(CompartmentList):
         return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
 
     def save_result(
-        self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
+        self,
+        free_points,
+        distances,
+        t0,
+        vAnalysis,
+        vTestid,
+        seedNum,
+        all_ingr_as_array,
+        save_grid_logs=False,
+        save_result_as_file=False,
     ):
         self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
@@ -514,10 +530,12 @@ class Environment(CompartmentList):
             # do not overwrite if grid was loaded from file
             self.grid.result_filename = self.grid_file_out
             self.saveGridToFile(self.grid_file_out)
-        self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
+        if save_grid_logs:
+            self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
-        self.store()
-        self.store_asTxt()
+        if save_result_as_file:
+            self.store()
+            self.store_asTxt()
         Writer(format=self.format_output).save(
             self,
             self.result_file,
@@ -530,7 +548,9 @@ class Environment(CompartmentList):
 
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
-            # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # START Analysis Tools: Graham added back this big chunk of code
+            # for analysis tools and graphic on 5/16/12
+            # Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.result_file + "_analyze_"
@@ -698,7 +718,9 @@ class Environment(CompartmentList):
             self.log.info("self.gridVolume = %d", self.grid.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
-            #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            #    END Analysis Tools: Graham added back this big chunk of code
+            #  for analysis tools and graphic on 5/16/12
+            #  Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
 
     def loadResult(
@@ -953,7 +975,6 @@ class Environment(CompartmentList):
         Save the current grid and the compartment grid information in a file. (pickle)
         """
         d = os.path.dirname(gridFileOut)
-        print("SAVED GRID TO ", gridFileOut)
         if not os.path.exists(d):
             print("gridfilename path problem", gridFileOut)
             return
@@ -962,6 +983,7 @@ class Environment(CompartmentList):
 
         for compartment in self.compartments:
             compartment.saveGridToFile(f)
+        print("SAVED GRID TO ", gridFileOut)
         f.close()
 
     def saveGridLogsAsJson(self, gridFileOut):
@@ -990,6 +1012,78 @@ class Environment(CompartmentList):
             json.dump(data, fp=f)
         f.close()
 
+    @staticmethod
+    def get_attributes_to_update():
+        return [
+            "faces",
+            "vertices",
+            "vnormals",
+            "filename",
+            "ref_obj",
+            "bb",
+            "center",
+            "encapsulating_radius",
+            "radius",
+            "insidePoints",
+            "surfacePoints",
+            "surfacePointsCoords",
+            "surfacePointsNormals",
+            "ogsurfacePoints",
+            "ogsurfacePointsNormals",
+            "OGsrfPtsBht",
+            "closestId",
+        ]
+
+    def restore_grids_from_pickle(self, grid_file_path):
+        """
+        Read and setup the grid from the given filename. (pickle)
+        """
+        print(f"Loading grid from {grid_file_path}")
+
+        with open(grid_file_path, "rb") as file_obj:
+            # load env grid
+            grid_obj = load_object_from_pickle(file_obj)
+            self.grid = grid_obj
+
+            # load compartment grids
+            for ct, _ in enumerate(self.compartments):
+                comp_obj = load_object_from_pickle(file_obj)
+                for update_attr in self.get_attributes_to_update():
+                    setattr(
+                        self.compartments[ct],
+                        update_attr,
+                        getattr(comp_obj, update_attr),
+                    )
+
+            # load mesh store
+            mesh_store_obj = load_object_from_pickle(file_obj)
+            self.mesh_store = mesh_store_obj
+
+            # clear the triangles_tree cache
+            for _, geom in self.mesh_store.scene.geometry.items():
+                geom._cache.delete("triangles_tree")
+
+            # reset grid
+            self.grid.reset()
+
+    def save_grids_to_pickle(self, grid_file_path):
+        """
+        Save the current grid and compartment grids to file. (pickle)
+        """
+        print(f"Saving grid to {grid_file_path}")
+        if not os.path.exists(os.path.dirname(grid_file_path)):
+            raise ValueError(f"Check grid file path: {grid_file_path}")
+        with open(grid_file_path, "wb") as file_obj:
+            # dump env grid
+            pickle.dump(self.grid, file_obj)
+
+            # dump compartment grids
+            for compartment in self.compartments:
+                pickle.dump(compartment, file_obj)
+
+            # dump mesh store
+            pickle.dump(self.mesh_store, file_obj)
+
     def restoreGridFromFile(self, gridFileName):
         """
         Read and setup the grid from the given filename. (pickle)
@@ -999,7 +1093,7 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
         self.readArraysFromFile(f)
-        for compartment in self.compartments:
+        for ct, compartment in enumerate(self.compartments):
             compartment.readGridFromFile(f)
             aInteriorGrids.append(compartment.insidePoints)
             aSurfaceGrids.append(compartment.surfacePoints)
@@ -1009,6 +1103,7 @@ class Environment(CompartmentList):
             compartment.compute_volume_and_set_count(
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
+            self.compartments[ct] = compartment
         f.close()
         # TODO: restore surface distances on loading from grid
         self.grid.aInteriorGrids = aInteriorGrids
@@ -1060,31 +1155,6 @@ class Environment(CompartmentList):
             )
             return None, None, None
 
-    def setCompartmentMesh(self, compartment, ref_obj):
-        """
-        Require host helper. Change the mesh of the given compartment and recompute
-        inside and surface point.
-        """
-        if compartment.ref_obj == ref_obj:
-            return
-        if os.path.isfile(ref_obj):
-            fileName, fileExtension = os.path.splitext(ref_obj)
-            if helper is not None:  # neeed the helper
-                helper.read(ref_obj)
-                geom = helper.getObject(fileName)
-                # reparent to the fill parent
-                # rotate ?
-                if helper.host != "c4d" and geom is not None:
-                    # need to rotate the transform that carry the shape
-                    helper.rotateObj(geom, [0.0, -pi / 2.0, 0.0])
-        else:
-            geom = helper.getObject(ref_obj)
-        if geom is not None:
-            vertices, faces, vnormals = self.extractMeshComponent(geom)
-            compartment.setMesh(
-                filename=ref_obj, vertices=vertices, faces=faces, vnormals=vnormals
-            )
-
     def update_largest_smallest_size(self, ingr):
         if ingr.encapsulating_radius > self.largestProteinSize:
             self.largestProteinSize = ingr.encapsulating_radius
@@ -1125,7 +1195,6 @@ class Environment(CompartmentList):
             name=compartment_key,
             object_info=object_info,
         )
-        compartment.initialize_shape(self.mesh_store)
         self._add_compartment(compartment, parent)
         return compartment
 
@@ -1255,6 +1324,7 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         # thread ?
         for compartment in self.compartments:
+            compartment.initialize_shape(self.mesh_store)
             self.log.info(
                 f"in Environment, compartment.is_orthogonal_bounding_box={compartment.is_orthogonal_bounding_box}"
             )
@@ -1286,9 +1356,9 @@ class Environment(CompartmentList):
                 verts.tolist()
             )  # should do it only on inside grid point
 
-    def extend_bounding_box_for_compartments(self):
+    def extend_bounding_box_for_compartments(self, spacing):
         for _, compartment in enumerate(self.compartments):
-            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+            fits, bb = compartment.inBox(self.boundingBox, spacing)
             if not fits:
                 self.boundingBox = bb
 
@@ -1302,7 +1372,8 @@ class Environment(CompartmentList):
         compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
-        self.extend_bounding_box_for_compartments()
+        spacing = self.spacing or self.smallestProteinSize
+        self.extend_bounding_box_for_compartments(spacing)
 
         boundingBox = self.boundingBox
         if self.use_halton:
@@ -1316,7 +1387,6 @@ class Environment(CompartmentList):
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.spacing or self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
@@ -1334,54 +1404,56 @@ class Environment(CompartmentList):
             self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
-                self.restoreGridFromFile(self.previous_grid_file)
+                self.restore_grids_from_pickle(self.previous_grid_file)
         else:
             self.build_compartment_grids()
+
+            # save grids to pickle
+            self.grid.filename = self.grid_file_out
+            self.previous_grid_file = self.grid_file_out
+            self.save_grids_to_pickle(self.grid_file_out)
 
         self.exteriorVolume = self.grid.computeExteriorVolume(
             compartments=self.compartments,
             space=self.smallestProteinSize,
             fbox_bb=self.fbox_bb,
         )
-        if self.previous_grid_file is None:
-            self.saveGridToFile(self.grid_file_out)
-            self.grid.filename = self.grid_file_out
-            self.previous_grid_file = self.grid_file_out
 
         r = self.exteriorRecipe
         if r:
             r.setCount(self.exteriorVolume)  # should actually use the fillBB
+
         if not rebuild:
             for c in self.compartments:
                 c.setCount()
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
 
-        if self.previous_grid_file is not None:
-            distance = self.grid.distToClosestSurf  # [:]
-            nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
+        distance = self.grid.distToClosestSurf  # [:]
+        nbFreePoints = nbPoints  # -1
+        for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )
+            nbFreePoints = self.onePrevIngredient(
+                i, mingrs, distance, nbFreePoints, self.molecules
+            )
+        for organelle in self.compartments:
             for i, mingrs in enumerate(
-                self.molecules
+                organelle.molecules
             ):  # ( jtrans, rotMatj, self, ptInd )
                 nbFreePoints = self.onePrevIngredient(
-                    i, mingrs, distance, nbFreePoints, self.molecules
+                    i, mingrs, distance, nbFreePoints, organelle.molecules
                 )
-            for organelle in self.compartments:
-                for i, mingrs in enumerate(
-                    organelle.molecules
-                ):  # ( jtrans, rotMatj, self, ptInd )
-                    nbFreePoints = self.onePrevIngredient(
-                        i, mingrs, distance, nbFreePoints, organelle.molecules
-                    )
-            self.grid.nbFreePoints = nbFreePoints
+        self.grid.nbFreePoints = nbFreePoints
 
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
-                    gradient.mode_settings["object"].get_surface_distances(
-                        self, self.grid.masterGridPositions
-                    )
+                    if not hasattr(
+                        gradient.mode_settings["object"], "surface_distances"
+                    ):
+                        gradient.mode_settings["object"].set_surface_distances(
+                            self, self.grid.masterGridPositions
+                        )
                 self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
                 )
@@ -1578,7 +1650,7 @@ class Environment(CompartmentList):
         self.resetIngrRecip(r)
         self.molecules = []
         for orga in self.compartments:
-            # orga.reset()
+            orga.reset()
             rs = orga.surfaceRecipe
             self.resetIngrRecip(rs)
             ri = orga.innerRecipe
@@ -1687,7 +1759,10 @@ class Environment(CompartmentList):
                 # Graham here: Walk through -priorities first
                 ingr = self.activeIngr[0]
             else:
-                # prob = uniform(vRangeStart,1.0)  #Graham 9/21/11 This is wrong...vRangeStart is the point index, need active list i.e. thresholdPriority to be limited
+                # prob = uniform(vRangeStart,1.0)
+                # #Graham 9/21/11 This is wrong...
+                # vRangeStart is the point index, need active list
+                # i.e. thresholdPriority to be limited
                 prob = uniform(0, 1.0)
                 ingrInd = 0
                 for threshProb in self.thresholdPriorities:
@@ -1845,7 +1920,8 @@ class Environment(CompartmentList):
                 self.activeIngr.pop(ind)
                 if verbose > 1:
                     print(
-                        "popping this gradient ingredient array must be redone using Sept 25, 2011 thesis version as above for nongraient ingredients, TODO: July 5, 2012"
+                        "popping this gradient ingredient array must be redone using Sept 25,",
+                        " 2011 thesis version as above for nongradient ingredients, TODO: July 5, 2012",
                     )
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
@@ -1941,6 +2017,44 @@ class Environment(CompartmentList):
         expected_min_distance = self.smallestProteinSize * 2
         return min_distance < expected_min_distance + 0.001
 
+    @staticmethod
+    def get_count_from_options(count_options):
+        """
+        Returns a count from the options
+        """
+        count = None
+        if count_options.get("distribution") == "uniform":
+            count = int(
+                numpy.random.randint(
+                    count_options.get("min", 0), count_options.get("max", 1)
+                )
+            )
+        elif count_options.get("distribution") == "normal":
+            count = int(
+                numpy.rint(
+                    numpy.random.normal(
+                        count_options.get("mean", 0), count_options.get("std", 1)
+                    )
+                )
+            )
+        elif count_options.get("distribution") == "list":
+            count = int(
+                numpy.rint(numpy.random.choice(count_options.get("list_values", None)))
+            )
+
+        return count
+
+    def update_count(self, allIngredients):
+        """
+        updates the count for all ingredients based on input options
+        """
+        for ingr in allIngredients:
+            if hasattr(ingr, "count_options") and ingr.count_options is not None:
+                count = self.get_count_from_options(count_options=ingr.count_options)
+                if count is not None:
+                    ingr.count = count
+                    ingr.left_to_place = count
+
     def pack_grid(
         self,
         seedNum=14,
@@ -1964,8 +2078,11 @@ class Environment(CompartmentList):
         # create a list of active ingredients indices in all recipes to allow
         # removing inactive ingredients when molarity is reached
         allIngredients = self.callFunction(self.getActiveIng)
-        # verify partner
 
+        # set the number of ingredients to pack
+        self.update_count(allIngredients)
+
+        # verify partner
         usePP = False
         if "usePP" in kw:
             usePP = kw["usePP"]
@@ -2078,7 +2195,9 @@ class Environment(CompartmentList):
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time()
-
+        if self.show_progress_bar:
+            pbar = tqdm(total=totalNumMols, mininterval=0, miniters=1)
+            pbar.set_description(f"Packing {self.name}_{self.version}")
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart
@@ -2122,7 +2241,6 @@ class Environment(CompartmentList):
                     )
                     if self.afviewer.renderDistance:
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
-
             current_ingr_compartment = ingr.compNum
             # compute dpad which is the distance at which we need to update
             # distances after the drop is successfull
@@ -2169,6 +2287,7 @@ class Environment(CompartmentList):
 
             if ingr.encapsulating_radius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulating_radius
+
             self.log.info(
                 "attempting to place near %d: %r",
                 ptInd,
@@ -2211,6 +2330,8 @@ class Environment(CompartmentList):
                 # if ingredient_too_close:
                 #     print("GOT A FAIL", self.grid.masterGridPositions[ptInd])
                 #     nbFreePoints = 0
+                if self.show_progress_bar:
+                    pbar.update(1)
             else:
                 self.log.info("rejected %r", ingr.rejectionCounter)
 
@@ -2268,6 +2389,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(np + previousThresh)
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
+
             if dump and ((time() - stime) > dump_freq):
                 print("SAVING", self.result_file)
                 all_ingr_as_array = self.prep_molecules_for_save(
@@ -2289,11 +2411,13 @@ class Environment(CompartmentList):
                     )
 
         t2 = time()
+        if self.show_progress_bar:
+            pbar.close()
         self.log.info("time to fill %d", t2 - t1)
         all_ingr_as_array = self.prep_molecules_for_save(
             distances, free_points, nbFreePoints
         )
-        print(f"placed {len(self.molecules)}")
+
         if self.saveResult:
             self.save_result(
                 free_points,
@@ -2397,7 +2521,7 @@ class Environment(CompartmentList):
         pickle.dump(result, rfile)
         rfile.close()
         for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "organelle" + str(i), "wb")
+            orfile = open(resultfilename + "_organelle_" + str(i), "wb")
             result = []
             for pos, rot, ingr, ptInd in orga.molecules:
                 result.append([pos, rot, ingr.name, ingr.compNum, ptInd])
@@ -2848,16 +2972,16 @@ class Environment(CompartmentList):
             loadPrcFileData(
                 "",
                 """
-   load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
-   audio-library-name null # Prevent ALSA errors
-   show-frame-rate-meter 0
-   sync-video 0
-   bullet-max-objects 10240
-   bullet-broadphase-algorithm sap
-   bullet-sap-extents 10000.0
-   textures-power-2 up
-   textures-auto-power-2 #t
-""",
+                load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
+                audio-library-name null # Prevent ALSA errors
+                show-frame-rate-meter 0
+                sync-video 0
+                bullet-max-objects 10240
+                bullet-broadphase-algorithm sap
+                bullet-sap-extents 10000.0
+                textures-power-2 up
+                textures-auto-power-2 #t
+                """,
             )
             #            loadPrcFileData("", "window-type none" )
             # Make sure we don't need a graphics engine
@@ -2901,6 +3025,8 @@ class Environment(CompartmentList):
             self.static = []
             self.moving = None
             self.rb_panda = []
+            base.destroy()
+
         for compartment in self.compartments:
             if compartment.rbnode is None:
                 compartment.rbnode = compartment.addShapeRB(
@@ -2999,7 +3125,8 @@ class Environment(CompartmentList):
         # inodenp.node().setMass(1.0)
         inodenp.node().addShape(
             shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
+        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)
+        # TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
 
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())
@@ -3266,3 +3393,68 @@ class Environment(CompartmentList):
         # if self.traj.traj_type=="dcd" or self.traj.traj_type=="xyz":
         self.traj.applyState_primitive_name(self, step)
         # ho can we apply to parent instance the rotatiotn?
+
+    def create_voxelization(self, image_data, image_size, voxel_size, hollow=False):
+        """
+        Update the image data for all molecules in the recipe by creating voxelized
+        representations.
+
+        Parameters
+        ----------
+        image_data: numpy.ndarray
+            The image data to update.
+        image_size: list
+            The size of the image data.
+        voxel_size: float
+            The size of a voxel in the image data.
+        hollow: bool
+            If True, the voxelization will be hollow.
+
+        Returns
+        ----------
+        image_data: numpy.ndarray
+            The updated image data.
+        """
+        channel_colors = []
+        for pos, rot, ingr, _ in self.molecules:
+            if ingr.name not in image_data:
+                image_data[ingr.name] = numpy.zeros(image_size, dtype=numpy.uint8)
+                if ingr.color is not None:
+                    color = ingr.color
+                    if all([x <= 1 for x in ingr.color]):
+                        color = [int(col * 255) for col in ingr.color]
+                    channel_colors.append(color)
+
+            image_data[ingr.name] = ingr.create_voxelization(
+                image_data=image_data[ingr.name],
+                bounding_box=self.boundingBox,
+                voxel_size=voxel_size,
+                image_size=image_size,
+                position=pos,
+                rotation=rot,
+            )
+
+        for compartment in self.compartments:
+            if compartment.name not in image_data:
+                image_data[compartment.name] = numpy.zeros(
+                    image_size, dtype=numpy.uint8
+                )
+                if hasattr(compartment, "color") and compartment.color is not None:
+                    color = compartment.color
+                    if all([x <= 1 for x in compartment.color]):
+                        color = [int(col * 255) for col in compartment.color]
+                    channel_colors.append(color)
+                else:
+                    channel_colors.append([0, 255, 0])
+
+            image_data[compartment.name] = compartment.create_voxelization(
+                image_data=image_data[compartment.name],
+                bounding_box=self.boundingBox,
+                voxel_size=voxel_size,
+                image_size=image_size,
+                position=compartment.position,
+                mesh_store=self.mesh_store,
+                hollow=hollow,
+            )
+
+        return image_data, channel_colors

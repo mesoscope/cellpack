@@ -13,16 +13,16 @@ def convert_partners(object_data):
         if positions and index < len(positions):
             position = positions[index]
 
-        binding_probably = 1.0
+        binding_probability = 1.0
         if "probability_binding" in object_data["partners"]:
-            binding_probably = object_data["partners"]["probability_binding"]
+            binding_probability = object_data["partners"]["probability_binding"]
         if "probability_repelled" in object_data["partners"]:
-            binding_probably = -object_data["partners"]["probability_repelled"]
+            binding_probability = -object_data["partners"]["probability_repelled"]
 
         partner = {
             "name": name,
             "position": position,
-            "binding_probably": binding_probably,
+            "binding_probability": binding_probability,
         }
         partners_list.append(partner)
     return partners_list
