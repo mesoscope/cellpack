@@ -172,7 +172,6 @@ class Writer(object):
                 env.helper.add_grid_data_to_scene(
                     f"{gradient.name}-weights", grid_positions, gradient.weight
                 )
-        # TODO: maybe use f"{env.out_folder}/results_{env.base_name}" instead of f"{env.result_file}_results"
         env.helper.writeToFile(env.result_file, env.boundingBox, env.name, env.version)
 
     def save_Mixed_asJson(

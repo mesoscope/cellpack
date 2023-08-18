@@ -1920,6 +1920,9 @@ class Environment(CompartmentList):
         return f"{self.base_name}_seed_{seed_number}"
 
     def set_result_file_name(self, seed_basename):
+        """
+        Sets the result file name using the output folder path and a given seed basename
+        """
         self.result_file = str(self.out_folder / f"results_{seed_basename}")
 
     def pack_grid(
