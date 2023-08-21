@@ -2200,7 +2200,6 @@ class Analysis:
         seed_index,
         seed_list,
         bounding_box,
-        packing_basename,
         center_distance_dict=None,
         pairwise_distance_dict=None,
         ingredient_position_dict=None,
@@ -2215,6 +2214,7 @@ class Analysis:
         """
         Packs one seed of a recipe and returns the recipe object
         """
+        seed_basename = self.env.add_seed_number_to_base_name(seed_index)
         seed = seed_list[seed_index]
         # Clear
         if self.afviewer:
@@ -2510,7 +2510,6 @@ class Analysis:
                     seed_index=seed_index,
                     seed_list=seed_list,
                     bounding_box=bounding_box,
-                    packing_basename=packing_basename,
                     center_distance_dict=center_distance_dict,
                     pairwise_distance_dict=pairwise_distance_dict,
                     ingredient_position_dict=ingredient_position_dict,
