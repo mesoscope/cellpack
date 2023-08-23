@@ -50,7 +50,7 @@ import json
 
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
-from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
+from cellpack.autopack.DBRecipeHandler import DBHandler
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
 
@@ -393,7 +393,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
             recipe_id = file_path.split("/")[-1]
             db = FirebaseHandler()
             db_doc, _ = db.get_doc_by_id(collection="recipes", id=recipe_id)
-            db_handler = DBRecipeHandler(db)
+            db_handler = DBHandler(db)
             downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
             return downloaded_recipe_data, database_name
         else:
