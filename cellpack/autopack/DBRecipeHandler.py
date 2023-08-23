@@ -359,7 +359,7 @@ class DBHandler(object):
             and len(item) > 0
             and isinstance(item[0], (list, tuple))
         )
-    
+
     @staticmethod
     def is_db_dict(item):
         if isinstance(item, dict) and len(item) > 0:
@@ -384,9 +384,7 @@ class DBHandler(object):
                 unpacked_value = vars(value)
                 modified_data[key] = unpacked_value
                 if isinstance(unpacked_value, dict):
-                    modified_data[key] = DBHandler.prep_data_for_db(
-                        unpacked_value
-                    )
+                    modified_data[key] = DBHandler.prep_data_for_db(unpacked_value)
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
                 modified_data[key] = DBHandler.prep_data_for_db(value)
@@ -559,13 +557,15 @@ class DBHandler(object):
                     for comp_name, reference in compositions.items():
                         ref_link = reference["inherit"]
                         comp_doc = CompositionDoc(
-                                comp_name,
-                                object_key=None,
-                                count=None,
-                                regions={},
-                                molarity=None,
-                            )
-                        composition_data, _ = comp_doc.get_reference_data(ref_link, self.db)
+                            comp_name,
+                            object_key=None,
+                            count=None,
+                            regions={},
+                            molarity=None,
+                        )
+                        composition_data, _ = comp_doc.get_reference_data(
+                            ref_link, self.db
+                        )
                         comp_doc.resolve_db_regions(composition_data, self.db)
                         compositions[comp_name] = composition_data
                     prep_data[key] = compositions
