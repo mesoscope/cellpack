@@ -368,6 +368,9 @@ class DBHandler(object):
                     return True
         return False
 
+    def collect_docs_by_id(self, collection, id):
+        return self.db.get_doc_by_id(collection, id)
+
     @staticmethod
     def prep_data_for_db(data):
         """

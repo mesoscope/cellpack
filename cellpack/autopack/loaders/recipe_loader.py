@@ -26,10 +26,11 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path, save_converted_recipe=False):
+    def __init__(self, input_file_path, db_handler=None, save_converted_recipe=False):
         _, file_extension = os.path.splitext(input_file_path)
         self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
+        self.db_handler = db_handler
         self.file_extension = file_extension
         self.ingredient_list = []
         self.compartment_list = []
@@ -251,7 +252,9 @@ class RecipeLoader(object):
         return recipe_data
 
     def _read(self):
-        new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
+        new_values, database_name = autopack.load_file(
+            self.file_path, self.db_handler, cache="recipes"
+        )
         if database_name == "firebase":
             objects, gradients, composition = RecipeLoader._collect_and_sort_data(
                 new_values["composition"]
