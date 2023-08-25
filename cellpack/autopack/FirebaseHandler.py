@@ -113,7 +113,9 @@ class FirebaseHandler(object):
             print(f"successfully uploaded to path: {doc_ref.path}")
             return doc_ref
         else:
-            print(f"ERROR, already data at this path:{collection}/{id}")
+            print(
+                f"ERROR: {doc_ref.path} already exists. If uploading new data, provide a unique recipe name."
+            )
             return
 
     def upload_doc(self, collection, data):
