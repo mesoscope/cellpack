@@ -389,7 +389,7 @@ class Environment(CompartmentList):
 
     def set_partners_ingredient(self, ingr):
         if ingr.partners is not None:
-            for partner in ingr.partners.all_partners:
+            for partner in ingr.partners:
                 partner_ingr = self.getIngrFromName(partner.name)
                 partner.set_ingredient(partner_ingr)
         if ingr.type == "Grow":
