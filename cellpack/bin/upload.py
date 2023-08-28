@@ -23,7 +23,7 @@ def upload(
     if db_id == DATABASE_IDS.FIREBASE:
         # fetch the service key json file
         db_handler = FirebaseHandler()
-        recipe_loader = RecipeLoader(recipe_path, db_handler)
+        recipe_loader = RecipeLoader(recipe_path)
         recipe_full_data = recipe_loader.recipe_data
         recipe_meta_data = recipe_loader.get_only_recipe_metadata()
         recipe_db_handler = DBHandler(db_handler)

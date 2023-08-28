@@ -1,3 +1,4 @@
+from enum import Enum
 import fire
 from os import path
 import logging
@@ -12,6 +13,8 @@ from cellpack.autopack.Environment import Environment
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
+from cellpack.autopack.FirebaseHandler import FirebaseHandler
+from cellpack.autopack.DBRecipeHandler import DBHandler
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -20,18 +23,29 @@ log = logging.getLogger()
 ###############################################################################
 
 
-def pack(recipe, config_path=None, analysis_config_path=None):
+class DATABASE_IDS(Enum):
+    FIREBASE = "firebase"
+    GITHUB = "github"
+
+
+def pack(
+    recipe, config_path=None, analysis_config_path=None, db_id=DATABASE_IDS.FIREBASE
+):
     """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
+    :param db_id: DATABASE_IDS enum string argument, database id
 
     :return: void
     """
+    if db_id == DATABASE_IDS.FIREBASE:
+        db = FirebaseHandler()
+        db_handler = DBHandler(db)
     packing_config_data = ConfigLoader(config_path).config
     recipe_data = RecipeLoader(
-        recipe, packing_config_data["save_converted_recipe"]
+        recipe, db_handler, packing_config_data["save_converted_recipe"]
     ).recipe_data
     analysis_config_data = {}
     if analysis_config_path is not None:
