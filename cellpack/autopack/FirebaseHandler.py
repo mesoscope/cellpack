@@ -23,7 +23,6 @@ class FirebaseHandler(object):
     @staticmethod
     def write_creds_path():
         path = ast.literal_eval(input("provide path to firebase credentials: "))
-        print(path)
         data = read_json_file(path)
         if data is None:
             raise ValueError("The path to your credentials doesn't exist")
