@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.BaseGrid &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -86,7 +86,9 @@
 
 
 <span class="c1"># Kevin Grid point class</span>
-<div class="viewcode-block" id="gridPoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.gridPoint">[docs]</a><span class="k">class</span> <span class="nc">gridPoint</span><span class="p">:</span>
+<div class="viewcode-block" id="gridPoint">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.gridPoint">[docs]</a>
+<span class="k">class</span> <span class="nc">gridPoint</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">globalC</span><span class="p">,</span> <span class="n">isPolyhedron</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isOutside</span> <span class="o">=</span> <span class="kc">None</span>
@@ -105,7 +107,10 @@
         <span class="p">)</span>  <span class="c1"># Stores the global coordinate associated with this point</span></div>
 
 
-<div class="viewcode-block" id="BaseGrid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid">[docs]</a><span class="k">class</span> <span class="nc">BaseGrid</span><span class="p">:</span>
+
+<div class="viewcode-block" id="BaseGrid">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseGrid</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Grid class</span>
 <span class="sd">    ==========================</span>
@@ -114,7 +119,9 @@
 <span class="sd">    NOTE : thi class could be completely replace if openvdb is wrapped to python.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseGrid.reorder_free_points"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BaseGrid.reorder_free_points">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reorder_free_points</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
         <span class="c1"># Swap the newly inside point value with the value of the last free point</span>
         <span class="c1"># Point will no longer be considered &quot;free&quot; because it will be beyond the range of</span>
@@ -140,7 +147,10 @@
         <span class="c1"># free_points[nbFreePoints:] won&#39;t necessarily be the indices of inside points</span>
         <span class="k">return</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span></div>
 
-<div class="viewcode-block" id="BaseGrid.updateDistances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.updateDistances">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="BaseGrid.updateDistances">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.updateDistances">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">updateDistances</span><span class="p">(</span>
         <span class="n">insidePoints</span><span class="p">,</span>
         <span class="n">newDistPoints</span><span class="p">,</span>
@@ -171,6 +181,7 @@
                 <span class="n">distance</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span>
         <span class="c1"># self.log.debug(&quot;update distance loop %d&quot;, time() - t2)</span>
         <span class="k">return</span> <span class="n">nbFreePoints</span></div>
+
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span>
@@ -228,7 +239,9 @@
             <span class="c1"># use np.roll to have periodic condition</span>
             <span class="c1"># what about collision ?</span>
 
-<div class="viewcode-block" id="BaseGrid.setup"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGrid.setup">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">):</span>
         <span class="c1"># TODO : verify the gridSpacing calculation / setup after reading the recipe</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">boundingBox</span>
@@ -255,7 +268,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setupBoundaryPeriodicity</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span></div>
 
-<div class="viewcode-block" id="BaseGrid.reset"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span>
+
+<div class="viewcode-block" id="BaseGrid.reset">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># reset the  distToClosestSurf and the free_points</span>
@@ -268,13 +284,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.removeFreePoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint">[docs]</a>    <span class="k">def</span> <span class="nf">removeFreePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pti</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.removeFreePoint">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint">[docs]</a>
+    <span class="k">def</span> <span class="nf">removeFreePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pti</span><span class="p">):</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>  <span class="c1"># last one</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span> <span class="o">=</span> <span class="n">pti</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">-=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getDiagonal"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getDiagonal">[docs]</a>    <span class="k">def</span> <span class="nf">getDiagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getDiagonal">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getDiagonal">[docs]</a>
+    <span class="k">def</span> <span class="nf">getDiagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
@@ -282,7 +304,10 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">diag</span></div>
 
-<div class="viewcode-block" id="BaseGrid.slow_box_fill"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.slow_box_fill">[docs]</a>    <span class="k">def</span> <span class="nf">slow_box_fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.slow_box_fill">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.slow_box_fill">[docs]</a>
+    <span class="k">def</span> <span class="nf">slow_box_fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fill the orthogonal bounding box described by two global corners</span>
 <span class="sd">        with an array of points spaces pGridSpacing apart.:</span>
@@ -312,9 +337,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grid spacing </span><span class="si">{</span><span class="n">space</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">pointArrayRaw</span></div>
 
+
     <span class="c1"># from http://stackoverflow.com/questions/18253210/creating-a-numpy-array-of-3d-coordinates-from-three-1d-arrays</span>
 
-<div class="viewcode-block" id="BaseGrid.create_grid_point_positions"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.create_grid_point_positions">[docs]</a>    <span class="k">def</span> <span class="nf">create_grid_point_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGrid.create_grid_point_positions">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.create_grid_point_positions">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_grid_point_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fill the orthogonal bounding box described by two global corners</span>
 <span class="sd">        with an array of points spaces pGridSpacing apart. Optimized version using</span>
@@ -355,13 +383,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getClosestGridPoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestGridPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestGridPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getClosestGridPoint">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestGridPoint">[docs]</a>
+    <span class="k">def</span> <span class="nf">getClosestGridPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">distance</span><span class="p">,</span> <span class="n">nb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">pt3d</span><span class="p">)</span>  <span class="c1"># len of ingr posed so far</span>
         <span class="k">return</span> <span class="n">distance</span><span class="p">,</span> <span class="n">nb</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getClosestFreeGridPoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestFreeGridPoint</span><span class="p">(</span>
+
+<div class="viewcode-block" id="BaseGrid.getClosestFreeGridPoint">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint">[docs]</a>
+    <span class="k">def</span> <span class="nf">getClosestFreeGridPoint</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">compId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">updateTree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ball</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mf">0.0</span>
     <span class="p">):</span>
         <span class="n">free_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>
@@ -413,7 +447,10 @@
             <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_free</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">pt3d</span><span class="p">)</span>  <span class="c1"># len of ingr posed so far</span>
             <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">arr</span></div>
 
-<div class="viewcode-block" id="BaseGrid.cartesian"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.cartesian">[docs]</a>    <span class="k">def</span> <span class="nf">cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrays</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.cartesian">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.cartesian">[docs]</a>
+    <span class="k">def</span> <span class="nf">cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrays</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        #http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays</span>
 <span class="sd">        Generate a cartesian product of input arrays.</span>
@@ -464,7 +501,10 @@
                 <span class="n">out</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">m</span> <span class="p">:</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getPointFrom3D"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D">[docs]</a>    <span class="k">def</span> <span class="nf">getPointFrom3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getPointFrom3D">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPointFrom3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get point number from 3d coordinates</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -486,7 +526,10 @@
         <span class="n">k</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">NZ</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">round</span><span class="p">((</span><span class="n">z</span> <span class="o">-</span> <span class="n">OZ</span><span class="p">)</span> <span class="o">*</span> <span class="n">spacing1</span><span class="p">)))</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">NX</span> <span class="o">*</span> <span class="n">NY</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">NX</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getIJK"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getIJK">[docs]</a>    <span class="k">def</span> <span class="nf">getIJK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getIJK">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getIJK">[docs]</a>
+    <span class="k">def</span> <span class="nf">getIJK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get i,j,k (3d) indices from u (1d)</span>
 <span class="sd">        only work for grid point, not compartments points</span>
@@ -495,7 +538,10 @@
             <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="BaseGrid.setupBoundaryPeriodicity"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity">[docs]</a>    <span class="k">def</span> <span class="nf">setupBoundaryPeriodicity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.setupBoundaryPeriodicity">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity">[docs]</a>
+    <span class="k">def</span> <span class="nf">setupBoundaryPeriodicity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># we create a dictionary for the adjacent cell of the current grid.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sizeXYZ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -508,7 +554,10 @@
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizeXYZ</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getPositionPeridocity"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPositionPeridocity">[docs]</a>    <span class="k">def</span> <span class="nf">getPositionPeridocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">jitter</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getPositionPeridocity">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPositionPeridocity">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPositionPeridocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">jitter</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
         <span class="n">tr</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">biasedPeriodicity</span><span class="p">:</span>
             <span class="n">biased</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">autopack</span><span class="o">.</span><span class="n">biasedPeriodicity</span><span class="p">)</span>
@@ -600,7 +649,10 @@
                 <span class="n">tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt3d</span> <span class="o">+</span> <span class="n">corner</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">tr</span></div>
 
-<div class="viewcode-block" id="BaseGrid.is_point_inside_bb"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.is_point_inside_bb">[docs]</a>    <span class="k">def</span> <span class="nf">is_point_inside_bb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.is_point_inside_bb">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.is_point_inside_bb">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_point_inside_bb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the given 3d points is inside the grid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -630,7 +682,10 @@
                     <span class="k">return</span> <span class="kc">False</span>
             <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getCenter"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getCenter">[docs]</a>    <span class="k">def</span> <span class="nf">getCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getCenter">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getCenter">[docs]</a>
+    <span class="k">def</span> <span class="nf">getCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the center of the grid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -640,7 +695,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getRadius"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getRadius">[docs]</a>    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getRadius">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getRadius">[docs]</a>
+    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the radius the grid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -648,14 +706,20 @@
         <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getPointsInSphere"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInSphere">[docs]</a>    <span class="k">def</span> <span class="nf">getPointsInSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getPointsInSphere">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInSphere">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPointsInSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="c1"># add surface points</span>
         <span class="n">ptIndices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>  <span class="c1"># , n_jobs=-1)</span>
         <span class="k">return</span> <span class="n">ptIndices</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getPointsInCubeFillBB"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCubeFillBB">[docs]</a>    <span class="k">def</span> <span class="nf">getPointsInCubeFillBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">addSP</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getPointsInCubeFillBB">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCubeFillBB">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPointsInCubeFillBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">addSP</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return all grid points indices inside the given bounding box.</span>
 <span class="sd">        NOTE : need to fix with grid build with numpy arrange</span>
@@ -716,7 +780,10 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">ptIndices</span></div>
 
-<div class="viewcode-block" id="BaseGrid.test_points_in_bb"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.test_points_in_bb">[docs]</a>    <span class="k">def</span> <span class="nf">test_points_in_bb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.test_points_in_bb">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.test_points_in_bb">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_points_in_bb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
         <span class="c1"># given a bounding box bb, is point pt inside it</span>
         <span class="n">origin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">corner</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -729,7 +796,10 @@
             <span class="n">inside</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">inside</span></div>
 
-<div class="viewcode-block" id="BaseGrid.getPointsInCube"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCube">[docs]</a>    <span class="k">def</span> <span class="nf">getPointsInCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">addSP</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.getPointsInCube">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCube">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPointsInCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">addSP</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return all grid points indicesinside the given bounding box.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -768,7 +838,10 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">ptIndices</span></div>
 
-<div class="viewcode-block" id="BaseGrid.computeGridNumberOfPoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeGridNumberOfPoint">[docs]</a>    <span class="k">def</span> <span class="nf">computeGridNumberOfPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.computeGridNumberOfPoint">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeGridNumberOfPoint">[docs]</a>
+    <span class="k">def</span> <span class="nf">computeGridNumberOfPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the grid size : total number of point and number of point per axes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -784,19 +857,28 @@
         <span class="c1">#        nz = nz if (nz == 1) else nz-1</span>
         <span class="k">return</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.set_surfPtsBht"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtsBht">[docs]</a>    <span class="k">def</span> <span class="nf">set_surfPtsBht</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verts</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.set_surfPtsBht">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtsBht">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_surfPtsBht</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verts</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfPtsBht</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">verts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">surfPtsBht</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbSurfacePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.set_surfPtscht"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht">[docs]</a>    <span class="k">def</span> <span class="nf">set_surfPtscht</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verts</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.set_surfPtscht">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_surfPtscht</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verts</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfPtsBht</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">verts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">surfPtsBht</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbSurfacePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGrid.computeExteriorVolume"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume">[docs]</a>    <span class="k">def</span> <span class="nf">computeExteriorVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.computeExteriorVolume">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume">[docs]</a>
+    <span class="k">def</span> <span class="nf">computeExteriorVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># compute exterior volume, totalVolume without compartments volume</span>
         <span class="n">unitVol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">totalVolume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span> <span class="o">*</span> <span class="n">unitVol</span>
@@ -809,7 +891,10 @@
                 <span class="n">totalVolume</span> <span class="o">-=</span> <span class="n">o</span><span class="o">.</span><span class="n">interiorVolume</span>
         <span class="k">return</span> <span class="n">totalVolume</span></div>
 
-<div class="viewcode-block" id="BaseGrid.computeVolume"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeVolume">[docs]</a>    <span class="k">def</span> <span class="nf">computeVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGrid.computeVolume">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeVolume">[docs]</a>
+    <span class="k">def</span> <span class="nf">computeVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># compute exterior volume, totalVolume without compartments volume</span>
         <span class="n">unitVol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">totalVolume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span> <span class="o">*</span> <span class="n">unitVol</span>
@@ -818,19 +903,29 @@
             <span class="n">totalVolume</span> <span class="o">=</span> <span class="n">V</span> <span class="o">*</span> <span class="n">unitVol</span>
         <span class="k">return</span> <span class="n">totalVolume</span></div>
 
+
     <span class="c1"># ==============================================================================</span>
 
     <span class="c1"># TO DO File IO</span>
     <span class="c1"># ==============================================================================</span>
-<div class="viewcode-block" id="BaseGrid.save"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGrid.save">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="BaseGrid.restore"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="BaseGrid.restore">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.restore">[docs]</a>
+    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</div>
+
 
 
 <span class="c1"># don&#39;t forget to use spatial.distance.cdist</span>
-<div class="viewcode-block" id="HaltonGrid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid">[docs]</a><span class="k">class</span> <span class="nc">HaltonGrid</span><span class="p">(</span><span class="n">BaseGrid</span><span class="p">):</span>
+<div class="viewcode-block" id="HaltonGrid">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid">[docs]</a>
+<span class="k">class</span> <span class="nc">HaltonGrid</span><span class="p">(</span><span class="n">BaseGrid</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span> <span class="n">space</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">BaseGrid</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="n">setup</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">haltonseq</span> <span class="o">=</span> <span class="n">cHaltonSequence3</span><span class="p">()</span>
@@ -839,7 +934,9 @@
         <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="p">)</span>
 
-<div class="viewcode-block" id="HaltonGrid.getPointFrom3D"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getPointFrom3D">[docs]</a>    <span class="k">def</span> <span class="nf">getPointFrom3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">):</span>
+<div class="viewcode-block" id="HaltonGrid.getPointFrom3D">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getPointFrom3D">[docs]</a>
+    <span class="k">def</span> <span class="nf">getPointFrom3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get point number from 3d coordinates</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -848,14 +945,20 @@
         <span class="n">nb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">pt3d</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># len of ingr posed so far</span>
         <span class="k">return</span> <span class="n">nb</span></div>
 
-<div class="viewcode-block" id="HaltonGrid.getScale"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getScale">[docs]</a>    <span class="k">def</span> <span class="nf">getScale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HaltonGrid.getScale">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getScale">[docs]</a>
+    <span class="k">def</span> <span class="nf">getScale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="n">t_xyz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">scale_xyz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">t_xyz</span>
         <span class="k">return</span> <span class="n">scale_xyz</span><span class="p">,</span> <span class="n">t_xyz</span></div>
 
-<div class="viewcode-block" id="HaltonGrid.getNBgridPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getNBgridPoints">[docs]</a>    <span class="k">def</span> <span class="nf">getNBgridPoints</span><span class="p">(</span>
+
+<div class="viewcode-block" id="HaltonGrid.getNBgridPoints">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getNBgridPoints">[docs]</a>
+    <span class="k">def</span> <span class="nf">getNBgridPoints</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -865,7 +968,10 @@
         <span class="n">lz</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">lx</span><span class="p">,</span> <span class="n">ly</span><span class="p">,</span> <span class="n">lz</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="HaltonGrid.create3DPointLookup"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup">[docs]</a>    <span class="k">def</span> <span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HaltonGrid.create3DPointLookup">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup">[docs]</a>
+    <span class="k">def</span> <span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># we overwrite here by using the halton sequence dimension 5 to get</span>
         <span class="c1"># the coordinate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">haltonseq</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
@@ -886,7 +992,9 @@
                     <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="c1"># scale the value from the halton(0...1) to grid bounding box</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">pointArrayRaw</span> <span class="o">*</span> <span class="n">scale_xyz</span> <span class="o">+</span> <span class="n">t_xyz</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -927,7 +1035,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.ray &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -77,37 +77,54 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
 
 
-<div class="viewcode-block" id="vdiff"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vdiff">[docs]</a><span class="k">def</span> <span class="nf">vdiff</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<div class="viewcode-block" id="vdiff">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vdiff">[docs]</a>
+<span class="k">def</span> <span class="nf">vdiff</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
     <span class="c1"># returns p1 - p2</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z1</span> <span class="o">-</span> <span class="n">z2</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="vcross"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vcross">[docs]</a><span class="k">def</span> <span class="nf">vcross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="vcross">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vcross">[docs]</a>
+<span class="k">def</span> <span class="nf">vcross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">z2</span> <span class="o">*</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">y1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dot"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.dot">[docs]</a><span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="dot">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.dot">[docs]</a>
+<span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="vnorm"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vnorm">[docs]</a><span class="k">def</span> <span class="nf">vnorm</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="vnorm">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vnorm">[docs]</a>
+<span class="k">def</span> <span class="nf">vnorm</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z1</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="vlen"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vlen">[docs]</a><span class="k">def</span> <span class="nf">vlen</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="vlen">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vlen">[docs]</a>
+<span class="k">def</span> <span class="nf">vlen</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ray_intersect_polygon"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polygon">[docs]</a><span class="k">def</span> <span class="nf">ray_intersect_polygon</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ray_intersect_polygon">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polygon">[docs]</a>
+<span class="k">def</span> <span class="nf">ray_intersect_polygon</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span>
     <span class="n">pRayEndPos</span><span class="p">,</span>
     <span class="n">pQuadranglePointPositions</span><span class="p">,</span>
@@ -218,7 +235,10 @@
     <span class="k">return</span> <span class="n">vBackface</span></div>
 
 
-<div class="viewcode-block" id="ray_intersect_polyhedron"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polyhedron">[docs]</a><span class="k">def</span> <span class="nf">ray_intersect_polyhedron</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ray_intersect_polyhedron">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polyhedron">[docs]</a>
+<span class="k">def</span> <span class="nf">ray_intersect_polyhedron</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span> <span class="n">pRayEndPos</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">pTruncateToSegment</span>
 <span class="p">):</span>
     <span class="c1"># This function returns TRUE if a ray intersects a triangle.</span>
@@ -338,7 +358,10 @@
         <span class="k">return</span> <span class="n">vHitCount</span></div>
 
 
-<div class="viewcode-block" id="f_ray_intersect_polyhedron"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_ray_intersect_polyhedron">[docs]</a><span class="k">def</span> <span class="nf">f_ray_intersect_polyhedron</span><span class="p">(</span>
+
+<div class="viewcode-block" id="f_ray_intersect_polyhedron">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_ray_intersect_polyhedron">[docs]</a>
+<span class="k">def</span> <span class="nf">f_ray_intersect_polyhedron</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span> <span class="n">pRayEndPos</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">pTruncateToSegment</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function returns TRUE if a ray intersects a triangle.</span>
@@ -458,10 +481,13 @@
     <span class="k">return</span> <span class="n">vHitCount</span><span class="p">,</span> <span class="n">vBackfaceFinal</span></div>
 
 
+
 <span class="c1"># makeGrid removed because redundant implementation.</span>
 
 
-<div class="viewcode-block" id="makeMarchingCube"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.makeMarchingCube">[docs]</a><span class="k">def</span> <span class="nf">makeMarchingCube</span><span class="p">(</span><span class="n">gridSpacing</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<div class="viewcode-block" id="makeMarchingCube">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.makeMarchingCube">[docs]</a>
+<span class="k">def</span> <span class="nf">makeMarchingCube</span><span class="p">(</span><span class="n">gridSpacing</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a numpy array that represents the precomputed distances to each point</span>
 <span class="sd">    for the cube of points surrounding our center point.</span>
@@ -500,24 +526,31 @@
     <span class="k">return</span> <span class="n">cube</span><span class="p">,</span> <span class="n">distX</span><span class="p">,</span> <span class="n">distY</span><span class="p">,</span> <span class="n">distZ</span></div>
 
 
+
 <span class="c1"># getPointFrom3D needs to be imported from Grid.py</span>
 <span class="c1"># Syntax: getPointFrom3D(self, pt3d)</span>
 <span class="c1"># from Grid import getPointFrom3D</span>
 
 
-<div class="viewcode-block" id="findPointsCenter"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.findPointsCenter">[docs]</a><span class="k">def</span> <span class="nf">findPointsCenter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="findPointsCenter">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.findPointsCenter">[docs]</a>
+<span class="k">def</span> <span class="nf">findPointsCenter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="c1"># Average down the column, such that we&#39;re averaging across all measurements in one dimension</span>
     <span class="n">center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">center</span></div>
 
 
+
 <span class="c1"># vcross, vlen removed because already imported.</span>
 
 
-<div class="viewcode-block" id="f_dot_product"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_dot_product">[docs]</a><span class="k">def</span> <span class="nf">f_dot_product</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
+<div class="viewcode-block" id="f_dot_product">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_dot_product">[docs]</a>
+<span class="k">def</span> <span class="nf">f_dot_product</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the dot product of two 3D vectors.&quot;&quot;&quot;</span>
     <span class="n">dottedVectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vector1</span><span class="p">))]</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dottedVectors</span><span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -558,7 +591,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.interface_objects.representations &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -44,7 +44,9 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
-<div class="viewcode-block" id="Representations"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations">[docs]</a><span class="k">class</span> <span class="nc">Representations</span><span class="p">:</span>
+<div class="viewcode-block" id="Representations">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations">[docs]</a>
+<span class="k">class</span> <span class="nc">Representations</span><span class="p">:</span>
     <span class="n">DATABASE</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">packing</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -128,10 +130,15 @@
             <span class="n">radii</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]]</span>
         <span class="k">return</span> <span class="n">positions</span><span class="p">,</span> <span class="n">radii</span>
 
-<div class="viewcode-block" id="Representations.has_pdb"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.has_pdb">[docs]</a>    <span class="k">def</span> <span class="nf">has_pdb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Representations.has_pdb">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.has_pdb">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_pdb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="Representations.get_pdb_path"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_pdb_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_pdb_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_pdb_path">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_pdb_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_pdb_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;path&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DATABASE</span><span class="si">}</span><span class="s2">/other/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">atomic</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -139,16 +146,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Representations.has_mesh"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.has_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">has_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.has_mesh">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.has_mesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="Representations.get_mesh_name"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_mesh_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_mesh_name">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mesh_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_mesh</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Representations.get_mesh_path"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_mesh_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_mesh_path">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mesh_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_mesh</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -156,24 +172,39 @@
                 <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DATABASE</span><span class="si">}</span><span class="s2">/geometries/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
-<div class="viewcode-block" id="Representations.get_mesh_format"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_format">[docs]</a>    <span class="k">def</span> <span class="nf">get_mesh_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_mesh_format">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_format">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mesh_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_mesh</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">[</span><span class="s2">&quot;format&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Representations.set_active"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.set_active">[docs]</a>    <span class="k">def</span> <span class="nf">set_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;atomic&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.set_active">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.set_active">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;atomic&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="nb">type</span></div>
 
-<div class="viewcode-block" id="Representations.get_active"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_active">[docs]</a>    <span class="k">def</span> <span class="nf">get_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_active">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_active">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span></div>
 
-<div class="viewcode-block" id="Representations.get_active_data"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_active_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_active_data">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_active_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_active_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{}</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Representations.get_adjusted_position"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_adjusted_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_adjusted_position">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_adjusted_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
         <span class="n">active_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_data</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;transform&quot;</span> <span class="ow">in</span> <span class="n">active_data</span> <span class="ow">and</span> <span class="s2">&quot;translate&quot;</span> <span class="ow">in</span> <span class="n">active_data</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">]:</span>
             <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">active_data</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">][</span><span class="s2">&quot;translate&quot;</span><span class="p">])</span>
@@ -185,27 +216,42 @@
         <span class="n">adj_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">rot_mat</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">position</span> <span class="o">-</span> <span class="n">adj_offset</span></div>
 
-<div class="viewcode-block" id="Representations.set_sphere_positions"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions">[docs]</a>    <span class="k">def</span> <span class="nf">set_sphere_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.set_sphere_positions">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_sphere_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">positions</span><span class="p">,</span> <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_spheres</span><span class="p">()</span>
         <span class="n">packing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing</span>
         <span class="n">packing</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">radii</span>
         <span class="n">packing</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">positions</span></div>
 
-<div class="viewcode-block" id="Representations.get_radii"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_radii">[docs]</a>    <span class="k">def</span> <span class="nf">get_radii</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_radii">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_radii">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_radii</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;radii&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected to have radii&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Representations.get_positions"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_positions">[docs]</a>    <span class="k">def</span> <span class="nf">get_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_positions">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_positions">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;positions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;expected to have positions&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Representations.get_deepest_level"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_deepest_level">[docs]</a>    <span class="k">def</span> <span class="nf">get_deepest_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_deepest_level">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_deepest_level">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_deepest_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_radii</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">radii</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="Representations.get_min_max_radius"><a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius">[docs]</a>    <span class="k">def</span> <span class="nf">get_min_max_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Representations.get_min_max_radius">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_min_max_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_radii</span><span class="p">()</span>
         <span class="n">r_max_level_zero</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
@@ -213,7 +259,9 @@
         <span class="n">r_max</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">delta</span> <span class="o">*</span> <span class="n">delta</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
         <span class="n">r_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">r_max</span><span class="p">,</span> <span class="n">r_max_level_zero</span><span class="p">)</span>
         <span class="n">r_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">radii</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">r_min</span><span class="p">,</span> <span class="n">r_max</span></div></div>
+        <span class="k">return</span> <span class="n">r_min</span><span class="p">,</span> <span class="n">r_max</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -254,7 +302,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

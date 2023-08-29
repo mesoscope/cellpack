@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>cellpack.autopack.interface_objects package &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="_static/documentation_options.js?v=baaebd52"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -47,321 +47,321 @@
           <div class="body" role="main">
             
   <section id="cellpack-autopack-interface-objects-package">
-<h1>cellpack.autopack.interface_objects package<a class="headerlink" href="#cellpack-autopack-interface-objects-package" title="Permalink to this heading">¶</a></h1>
+<h1>cellpack.autopack.interface_objects package<a class="headerlink" href="#cellpack-autopack-interface-objects-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-cellpack.autopack.interface_objects.default_values">
-<span id="cellpack-autopack-interface-objects-default-values-module"></span><h2>cellpack.autopack.interface_objects.default_values module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.default_values" title="Permalink to this heading">¶</a></h2>
+<span id="cellpack-autopack-interface-objects-default-values-module"></span><h2>cellpack.autopack.interface_objects.default_values module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.default_values" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-cellpack.autopack.interface_objects.gradient_data">
-<span id="cellpack-autopack-interface-objects-gradient-data-module"></span><h2>cellpack.autopack.interface_objects.gradient_data module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.gradient_data" title="Permalink to this heading">¶</a></h2>
+<span id="cellpack-autopack-interface-objects-gradient-data-module"></span><h2>cellpack.autopack.interface_objects.gradient_data module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.gradient_data" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">GradientData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">GradientData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Takes in gradient dictionary from the recipe file to create a
 GradientData instance</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.default_values">
-<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'invert':</span> <span class="pre">False,</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear',</span> <span class="pre">'weight_mode_settings':</span> <span class="pre">{}}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'invert':</span> <span class="pre">False,</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear',</span> <span class="pre">'weight_mode_settings':</span> <span class="pre">{}}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties">
-<span class="sig-name descname"><span class="pre">set_mode_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.set_mode_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_mode_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.set_mode_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data">
-<span class="sig-name descname"><span class="pre">validate_gradient_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_gradient_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate_gradient_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_gradient_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings">
-<span class="sig-name descname"><span class="pre">validate_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings">
-<span class="sig-name descname"><span class="pre">validate_weight_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_weight_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate_weight_mode_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_mode_settings_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_weight_mode_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">GradientModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">GradientModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
 <p>All available gradient modes</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.RADIAL">
-<span class="sig-name descname"><span class="pre">RADIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radial'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.RADIAL" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">RADIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radial'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.RADIAL" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.SURFACE">
-<span class="sig-name descname"><span class="pre">SURFACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'surface'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.SURFACE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SURFACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'surface'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.SURFACE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.VECTOR">
-<span class="sig-name descname"><span class="pre">VECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vector'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.VECTOR" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">VECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'vector'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.VECTOR" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.X">
-<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.X" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'X'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.X" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.Y">
-<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Y'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Y" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Y'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Y" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.Z">
-<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Z'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Z" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Z'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Z" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">ModeOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#ModeOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">ModeOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#ModeOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
 <p>All available options for individual modes</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.center">
-<span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'center'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.center" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'center'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.center" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.direction">
-<span class="sig-name descname"><span class="pre">direction</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'direction'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.direction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">direction</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'direction'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.direction" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.gblob">
-<span class="sig-name descname"><span class="pre">gblob</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gblob'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.gblob" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gblob</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gblob'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.gblob" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.object">
-<span class="sig-name descname"><span class="pre">object</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.object" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">object</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.object" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.radius">
-<span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radius'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.radius" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'radius'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.radius" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.ModeOptions.scale_distance_between">
-<span class="sig-name descname"><span class="pre">scale_distance_between</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scale_distance_between'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.scale_distance_between" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">scale_distance_between</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'scale_distance_between'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions.scale_distance_between" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">PickModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#PickModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">PickModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#PickModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
 <p>All available pick modes</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.BINARY">
-<span class="sig-name descname"><span class="pre">BINARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'binary'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.BINARY" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">BINARY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'binary'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.BINARY" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.LINEAR">
-<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.LINEAR" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.LINEAR" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.MAX">
-<span class="sig-name descname"><span class="pre">MAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'max'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MAX" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'max'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MAX" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.MIN">
-<span class="sig-name descname"><span class="pre">MIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'min'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MIN" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'min'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.MIN" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.REG">
-<span class="sig-name descname"><span class="pre">REG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reg'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.REG" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">REG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reg'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.REG" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.RND">
-<span class="sig-name descname"><span class="pre">RND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rnd'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.RND" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">RND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rnd'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.RND" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.PickModes.SUB">
-<span class="sig-name descname"><span class="pre">SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sub'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.SUB" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sub'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.PickModes.SUB" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModeOptions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModeOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModeOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModeOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModeOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
 <p>All available options for individual weight modes</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.decay_length">
-<span class="sig-name descname"><span class="pre">decay_length</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'decay_length'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.decay_length" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">decay_length</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'decay_length'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.decay_length" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.power">
-<span class="sig-name descname"><span class="pre">power</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'power'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.power" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">power</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'power'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions.power" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">WeightModes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#WeightModes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
 <p>All available weight modes</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE">
-<span class="sig-name descname"><span class="pre">CUBE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cube'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">CUBE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cube'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.CUBE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.EXPONENTIAL">
-<span class="sig-name descname"><span class="pre">EXPONENTIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'exponential'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.EXPONENTIAL" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">EXPONENTIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'exponential'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.EXPONENTIAL" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR">
-<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'linear'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.LINEAR" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.POWER">
-<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'power'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.POWER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">POWER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'power'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.POWER" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE">
-<span class="sig-name descname"><span class="pre">SQUARE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'square'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SQUARE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'square'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.WeightModes.SQUARE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-cellpack.autopack.interface_objects.ingredient_types">
-<span id="cellpack-autopack-interface-objects-ingredient-types-module"></span><h2>cellpack.autopack.interface_objects.ingredient_types module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.ingredient_types" title="Permalink to this heading">¶</a></h2>
+<span id="cellpack-autopack-interface-objects-ingredient-types-module"></span><h2>cellpack.autopack.interface_objects.ingredient_types module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.ingredient_types" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.ingredient_types.</span></span><span class="sig-name descname"><span class="pre">INGREDIENT_TYPE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/ingredient_types.html#INGREDIENT_TYPE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.ingredient_types.</span></span><span class="sig-name descname"><span class="pre">INGREDIENT_TYPE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/ingredient_types.html#INGREDIENT_TYPE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
 <p>An enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.GROW">
-<span class="sig-name descname"><span class="pre">GROW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grow'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.GROW" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">GROW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grow'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.GROW" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MESH">
-<span class="sig-name descname"><span class="pre">MESH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mesh'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MESH" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MESH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mesh'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MESH" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_CYLINDER">
-<span class="sig-name descname"><span class="pre">MULTI_CYLINDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'multi_cylinder'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_CYLINDER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MULTI_CYLINDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'multi_cylinder'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_CYLINDER" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_SPHERE">
-<span class="sig-name descname"><span class="pre">MULTI_SPHERE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'multi_sphere'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_SPHERE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MULTI_SPHERE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'multi_sphere'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_SPHERE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CUBE">
-<span class="sig-name descname"><span class="pre">SINGLE_CUBE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_cube'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CUBE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SINGLE_CUBE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_cube'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CUBE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CYLINDER">
-<span class="sig-name descname"><span class="pre">SINGLE_CYLINDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_cylinder'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CYLINDER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SINGLE_CYLINDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_cylinder'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CYLINDER" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_SPHERE">
-<span class="sig-name descname"><span class="pre">SINGLE_SPHERE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_sphere'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_SPHERE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SINGLE_SPHERE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'single_sphere'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_SPHERE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-cellpack.autopack.interface_objects.meta_enum">
-<span id="cellpack-autopack-interface-objects-meta-enum-module"></span><h2>cellpack.autopack.interface_objects.meta_enum module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.meta_enum" title="Permalink to this heading">¶</a></h2>
+<span id="cellpack-autopack-interface-objects-meta-enum-module"></span><h2>cellpack.autopack.interface_objects.meta_enum module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.meta_enum" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.meta_enum.MetaEnum">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.meta_enum.</span></span><span class="sig-name descname"><span class="pre">MetaEnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/meta_enum.html#MetaEnum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.meta_enum.</span></span><span class="sig-name descname"><span class="pre">MetaEnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/meta_enum.html#MetaEnum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>An enumeration.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.meta_enum.MetaEnum.is_member">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/meta_enum.html#MetaEnum.is_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum.is_member" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/meta_enum.html#MetaEnum.is_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum.is_member" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.meta_enum.MetaEnum.values">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/meta_enum.html#MetaEnum.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum.values" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/meta_enum.html#MetaEnum.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum.values" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-cellpack.autopack.interface_objects.partners">
-<span id="cellpack-autopack-interface-objects-partners-module"></span><h2>cellpack.autopack.interface_objects.partners module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.partners" title="Permalink to this heading">¶</a></h2>
+<span id="cellpack-autopack-interface-objects-partners-module"></span><h2>cellpack.autopack.interface_objects.partners module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.partners" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.partners.</span></span><span class="sig-name descname"><span class="pre">Partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binding_probability</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.partners.</span></span><span class="sig-name descname"><span class="pre">Partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binding_probability</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner.distanceFunction">
-<span class="sig-name descname"><span class="pre">distanceFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.distanceFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.distanceFunction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distanceFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.distanceFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.distanceFunction" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner.get_point">
-<span class="sig-name descname"><span class="pre">get_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.get_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.get_point" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.get_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.get_point" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partner.set_ingredient">
-<span class="sig-name descname"><span class="pre">set_ingredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.set_ingredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.set_ingredient" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_ingredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partner.set_ingredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partner.set_ingredient" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.partners.</span></span><span class="sig-name descname"><span class="pre">Partners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">partners</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.partners.</span></span><span class="sig-name descname"><span class="pre">Partners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">partners</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <section id="this-object-holds-the-partner-data">
-<h3>This object holds the partner data<a class="headerlink" href="#this-object-holds-the-partner-data" title="Permalink to this heading">¶</a></h3>
+<h3>This object holds the partner data<a class="headerlink" href="#this-object-holds-the-partner-data" title="Link to this heading">¶</a></h3>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners.add_partner">
-<span class="sig-name descname"><span class="pre">add_partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_binding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.add_partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.add_partner" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability_binding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.add_partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.add_partner" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name">
-<span class="sig-name descname"><span class="pre">get_partner_by_ingr_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.get_partner_by_ingr_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_partner_by_ingr_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.get_partner_by_ingr_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.partners.Partners.is_partner">
-<span class="sig-name descname"><span class="pre">is_partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_ingredient_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.is_partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.is_partner" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_partner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_ingredient_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/partners.html#Partners.is_partner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.partners.Partners.is_partner" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -369,94 +369,94 @@ GradientData instance</p>
 
 </section>
 <section id="module-cellpack.autopack.interface_objects.representations">
-<span id="cellpack-autopack-interface-objects-representations-module"></span><h2>cellpack.autopack.interface_objects.representations module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.representations" title="Permalink to this heading">¶</a></h2>
+<span id="cellpack-autopack-interface-objects-representations-module"></span><h2>cellpack.autopack.interface_objects.representations module<a class="headerlink" href="#module-cellpack.autopack.interface_objects.representations" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.representations.</span></span><span class="sig-name descname"><span class="pre">Representations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.representations.</span></span><span class="sig-name descname"><span class="pre">Representations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <section id="this-object-holds-the-different-representation-types-for-an-ingredient">
-<h3>This object holds the different representation types for an ingredient<a class="headerlink" href="#this-object-holds-the-different-representation-types-for-an-ingredient" title="Permalink to this heading">¶</a></h3>
+<h3>This object holds the different representation types for an ingredient<a class="headerlink" href="#this-object-holds-the-different-representation-types-for-an-ingredient" title="Link to this heading">¶</a></h3>
 <p>mesh : OBJ file info
 atomic : PDB or ciff file info
 packing: Sphere tree file or sphere tree data</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.DATABASE">
-<span class="sig-name descname"><span class="pre">DATABASE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.DATABASE" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">DATABASE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.DATABASE" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_active">
-<span class="sig-name descname"><span class="pre">get_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_active" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_active</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_active" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_active_data">
-<span class="sig-name descname"><span class="pre">get_active_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_active_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_active_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_active_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_active_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_active_data" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position">
-<span class="sig-name descname"><span class="pre">get_adjusted_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_adjusted_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_adjusted_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_adjusted_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_deepest_level">
-<span class="sig-name descname"><span class="pre">get_deepest_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_deepest_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_deepest_level" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_deepest_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_deepest_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_deepest_level" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_mesh_format">
-<span class="sig-name descname"><span class="pre">get_mesh_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_mesh_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_format" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_mesh_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_mesh_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_format" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_mesh_name">
-<span class="sig-name descname"><span class="pre">get_mesh_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_mesh_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_mesh_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_mesh_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_mesh_path">
-<span class="sig-name descname"><span class="pre">get_mesh_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_mesh_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_mesh_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_mesh_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_mesh_path" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius">
-<span class="sig-name descname"><span class="pre">get_min_max_radius</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_min_max_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_min_max_radius</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_min_max_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_pdb_path">
-<span class="sig-name descname"><span class="pre">get_pdb_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_pdb_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_pdb_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_pdb_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_pdb_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_pdb_path" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_positions">
-<span class="sig-name descname"><span class="pre">get_positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_positions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_positions" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.get_radii">
-<span class="sig-name descname"><span class="pre">get_radii</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_radii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_radii" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_radii</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.get_radii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.get_radii" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.has_mesh">
-<span class="sig-name descname"><span class="pre">has_mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.has_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.has_mesh" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">has_mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.has_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.has_mesh" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.has_pdb">
-<span class="sig-name descname"><span class="pre">has_pdb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.has_pdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.has_pdb" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">has_pdb</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.has_pdb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.has_pdb" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.set_active">
-<span class="sig-name descname"><span class="pre">set_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'atomic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.set_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.set_active" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'atomic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.set_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.set_active" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions">
-<span class="sig-name descname"><span class="pre">set_sphere_positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.set_sphere_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_sphere_positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/representations.html#Representations.set_sphere_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -464,7 +464,7 @@ packing: Sphere tree file or sphere tree data</p>
 
 </section>
 <section id="module-cellpack.autopack.interface_objects">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.interface_objects" title="Permalink to this heading">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.interface_objects" title="Link to this heading">¶</a></h2>
 <p>Interface classes for cellpack. These are to establish data structures.</p>
 </section>
 </section>
@@ -653,7 +653,7 @@ packing: Sphere tree file or sphere tree data</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

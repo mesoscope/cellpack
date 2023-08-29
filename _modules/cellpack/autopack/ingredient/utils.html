@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.ingredient.utils &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -46,20 +46,31 @@
 
 
 <span class="c1"># should use transform.py instead</span>
-<div class="viewcode-block" id="getNormedVectorOnes"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVectorOnes">[docs]</a><span class="k">def</span> <span class="nf">getNormedVectorOnes</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="getNormedVectorOnes">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVectorOnes">[docs]</a>
+<span class="k">def</span> <span class="nf">getNormedVectorOnes</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="getNormedVectorU"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVectorU">[docs]</a><span class="k">def</span> <span class="nf">getNormedVectorU</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+
+<div class="viewcode-block" id="getNormedVectorU">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVectorU">[docs]</a>
+<span class="k">def</span> <span class="nf">getNormedVectorU</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="getNormedVector"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVector">[docs]</a><span class="k">def</span> <span class="nf">getNormedVector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+
+<div class="viewcode-block" id="getNormedVector">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVector">[docs]</a>
+<span class="k">def</span> <span class="nf">getNormedVector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="getDihedral"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getDihedral">[docs]</a><span class="k">def</span> <span class="nf">getDihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+
+<div class="viewcode-block" id="getDihedral">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getDihedral">[docs]</a>
+<span class="k">def</span> <span class="nf">getDihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
     <span class="n">v1</span> <span class="o">=</span> <span class="n">getNormedVector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">getNormedVector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
     <span class="n">v3</span> <span class="o">=</span> <span class="n">getNormedVector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
@@ -68,7 +79,10 @@
     <span class="k">return</span> <span class="n">angle_between_vectors</span><span class="p">(</span><span class="n">v1v2</span><span class="p">,</span> <span class="n">v2v3</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rotax"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.rotax">[docs]</a><span class="k">def</span> <span class="nf">rotax</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="rotax">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.rotax">[docs]</a>
+<span class="k">def</span> <span class="nf">rotax</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build 4x4 matrix of clockwise rotation about axis a--&gt;b</span>
 <span class="sd">    by angle tau (radians).</span>
@@ -135,7 +149,10 @@
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rotVectToVect"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.rotVectToVect">[docs]</a><span class="k">def</span> <span class="nf">rotVectToVect</span><span class="p">(</span><span class="n">vect1</span><span class="p">,</span> <span class="n">vect2</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="rotVectToVect">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.rotVectToVect">[docs]</a>
+<span class="k">def</span> <span class="nf">rotVectToVect</span><span class="p">(</span><span class="n">vect1</span><span class="p">,</span> <span class="n">vect2</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;returns a 4x4 transformation that will align vect1 with vect2</span>
 <span class="sd">    vect1 and vect2 can be any vector (non-normalized)&quot;&quot;&quot;</span>
     <span class="n">v1x</span><span class="p">,</span> <span class="n">v1y</span><span class="p">,</span> <span class="n">v1z</span> <span class="o">=</span> <span class="n">vect1</span>
@@ -216,7 +233,10 @@
     <span class="k">return</span> <span class="n">rot</span></div>
 
 
-<div class="viewcode-block" id="ApplyMatrix"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.ApplyMatrix">[docs]</a><span class="k">def</span> <span class="nf">ApplyMatrix</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ApplyMatrix">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.ApplyMatrix">[docs]</a>
+<span class="k">def</span> <span class="nf">ApplyMatrix</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply the 4x4 transformation matrix to the given list of 3d points.</span>
 
@@ -236,15 +256,21 @@
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mat</span><span class="p">))[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="bullet_checkCollision_mp"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.bullet_checkCollision_mp">[docs]</a><span class="k">def</span> <span class="nf">bullet_checkCollision_mp</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">):</span>
+
+<div class="viewcode-block" id="bullet_checkCollision_mp">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.bullet_checkCollision_mp">[docs]</a>
+<span class="k">def</span> <span class="nf">bullet_checkCollision_mp</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">):</span>
     <span class="c1">#    world =</span>
     <span class="c1">#    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.type},)</span>
     <span class="c1">#    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.type},)</span>
     <span class="k">return</span> <span class="n">world</span><span class="o">.</span><span class="n">contactTestPair</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span><span class="o">.</span><span class="n">getNumContacts</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
 
+
 <span class="c1"># TODO : move somewhere in a more apropriate place ?</span>
-<div class="viewcode-block" id="pandaMatrice"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.pandaMatrice">[docs]</a><span class="k">def</span> <span class="nf">pandaMatrice</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
+<div class="viewcode-block" id="pandaMatrice">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.pandaMatrice">[docs]</a>
+<span class="k">def</span> <span class="nf">pandaMatrice</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">16</span><span class="p">,))</span>
@@ -270,7 +296,10 @@
     <span class="k">return</span> <span class="n">pMat</span></div>
 
 
-<div class="viewcode-block" id="get_reflected_point"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.get_reflected_point">[docs]</a><span class="k">def</span> <span class="nf">get_reflected_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_reflected_point">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.get_reflected_point">[docs]</a>
+<span class="k">def</span> <span class="nf">get_reflected_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># returns the reflection of a point across a bounding box</span>
     <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span>
@@ -295,6 +324,7 @@
         <span class="n">ref_inds_e</span> <span class="o">=</span> <span class="n">dist_e</span> <span class="o">&lt;</span> <span class="mi">0</span>
 
     <span class="k">return</span> <span class="n">new_position</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -335,7 +365,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

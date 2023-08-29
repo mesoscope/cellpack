@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.loaders.migrate_v1_to_v2 &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -59,7 +59,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="get_representations"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.get_representations">[docs]</a><span class="k">def</span> <span class="nf">get_representations</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
+<div class="viewcode-block" id="get_representations">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.get_representations">[docs]</a>
+<span class="k">def</span> <span class="nf">get_representations</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
     <span class="n">representations</span> <span class="o">=</span> <span class="n">default_recipe_values</span><span class="p">[</span><span class="s2">&quot;representations&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;sphereFile&quot;</span> <span class="ow">in</span> <span class="n">old_ingredient</span> <span class="ow">and</span> <span class="n">old_ingredient</span><span class="p">[</span><span class="s2">&quot;sphereFile&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">representations</span><span class="p">[</span><span class="s2">&quot;packing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">create_file_info_object_from_full_path</span><span class="p">(</span>
@@ -102,7 +104,10 @@
     <span class="k">return</span> <span class="n">representations</span></div>
 
 
-<div class="viewcode-block" id="convert_rotation_range"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.convert_rotation_range">[docs]</a><span class="k">def</span> <span class="nf">convert_rotation_range</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
+
+<div class="viewcode-block" id="convert_rotation_range">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.convert_rotation_range">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_rotation_range</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
     <span class="n">range_min</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">old_ingredient</span><span class="p">[</span><span class="s2">&quot;orientBiasRotRangeMin&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;orientBiasRotRangeMin&quot;</span> <span class="ow">in</span> <span class="n">old_ingredient</span>
@@ -116,7 +121,10 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">range_min</span><span class="p">,</span> <span class="n">range_max</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="migrate_ingredient"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.migrate_ingredient">[docs]</a><span class="k">def</span> <span class="nf">migrate_ingredient</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
+
+<div class="viewcode-block" id="migrate_ingredient">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.migrate_ingredient">[docs]</a>
+<span class="k">def</span> <span class="nf">migrate_ingredient</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
     <span class="n">new_ingredient</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">v1_to_v2_name_map</span><span class="p">:</span>
@@ -139,7 +147,10 @@
     <span class="k">return</span> <span class="n">new_ingredient</span></div>
 
 
-<div class="viewcode-block" id="check_required_attributes"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.check_required_attributes">[docs]</a><span class="k">def</span> <span class="nf">check_required_attributes</span><span class="p">(</span><span class="n">old_ingredient_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_required_attributes">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.check_required_attributes">[docs]</a>
+<span class="k">def</span> <span class="nf">check_required_attributes</span><span class="p">(</span><span class="n">old_ingredient_data</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;Type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">old_ingredient_data</span><span class="p">:</span>
         <span class="n">old_ingredient_data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SingleSphere&quot;</span>
     <span class="n">ingr_type</span> <span class="o">=</span> <span class="n">old_ingredient_data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
@@ -149,7 +160,10 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr_type</span><span class="si">}</span><span class="s2"> data needs </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="split_ingredient_data"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.split_ingredient_data">[docs]</a><span class="k">def</span> <span class="nf">split_ingredient_data</span><span class="p">(</span><span class="n">object_key</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="split_ingredient_data">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.split_ingredient_data">[docs]</a>
+<span class="k">def</span> <span class="nf">split_ingredient_data</span><span class="p">(</span><span class="n">object_key</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">):</span>
     <span class="n">composition_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="n">object_key</span><span class="p">}</span>
     <span class="n">object_info</span> <span class="o">=</span> <span class="n">ingredient_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">attributes_move_to_composition</span><span class="p">:</span>
@@ -159,7 +173,10 @@
     <span class="k">return</span> <span class="n">object_info</span><span class="p">,</span> <span class="n">composition_info</span></div>
 
 
-<div class="viewcode-block" id="get_and_store_v2_object"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.get_and_store_v2_object">[docs]</a><span class="k">def</span> <span class="nf">get_and_store_v2_object</span><span class="p">(</span><span class="n">ingredient_key</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">,</span> <span class="n">region_list</span><span class="p">,</span> <span class="n">objects_dict</span><span class="p">):</span>
+
+<div class="viewcode-block" id="get_and_store_v2_object">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.get_and_store_v2_object">[docs]</a>
+<span class="k">def</span> <span class="nf">get_and_store_v2_object</span><span class="p">(</span><span class="n">ingredient_key</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">,</span> <span class="n">region_list</span><span class="p">,</span> <span class="n">objects_dict</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;include&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">:</span>
         <span class="n">ingredient_data</span> <span class="o">=</span> <span class="n">load_file</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">],</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">)</span>
     <span class="n">check_required_attributes</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">)</span>
@@ -177,7 +194,10 @@
     <span class="n">objects_dict</span><span class="p">[</span><span class="n">ingredient_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_info</span></div>
 
 
-<div class="viewcode-block" id="convert"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.convert">[docs]</a><span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">old_recipe</span><span class="p">):</span>
+
+<div class="viewcode-block" id="convert">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v1_to_v2.convert">[docs]</a>
+<span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">old_recipe</span><span class="p">):</span>
     <span class="n">new_recipe</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
@@ -252,6 +272,7 @@
     <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">objects_dict</span>
     <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">composition</span>
     <span class="k">return</span> <span class="n">new_recipe</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -292,7 +313,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

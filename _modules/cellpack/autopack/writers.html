@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.writers &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -49,16 +49,38 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span> <span class="nn">cellpack</span> <span class="kn">import</span> <span class="n">autopack</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient.grow</span> <span class="kn">import</span> <span class="n">ActinIngredient</span><span class="p">,</span> <span class="n">GrowIngredient</span>
+<span class="kn">import</span> <span class="nn">cellpack.autopack.transformation</span> <span class="k">as</span> <span class="nn">tr</span>
 
 
-<div class="viewcode-block" id="IOingredientTool"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool">[docs]</a><span class="k">class</span> <span class="nc">IOingredientTool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="updatePositionsRadii">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.updatePositionsRadii">[docs]</a>
+<span class="k">def</span> <span class="nf">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">):</span>
+    <span class="n">toupdate</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;positions&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="s2">&quot;positions&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nLOD</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nLOD</span><span class="p">):</span>
+            <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;coords&quot;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()}</span>
+            <span class="p">)</span>
+            <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;radii&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">toupdate</span></div>
+
+
+
+<div class="viewcode-block" id="IOingredientTool">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool">[docs]</a>
+<span class="k">class</span> <span class="nc">IOingredientTool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="c1"># parser that can return an ingredient</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IOingredientTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_quaternion</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="IOingredientTool.write"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="IOingredientTool.write">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool.write">[docs]</a>
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ingr_format</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
             <span class="n">ingdic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingrJsonNode</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">)</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
@@ -74,21 +96,92 @@
             <span class="n">ingrnode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingrPythonNode</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="NumpyArrayEncoder"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.NumpyArrayEncoder">[docs]</a><span class="k">class</span> <span class="nc">NumpyArrayEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-<div class="viewcode-block" id="NumpyArrayEncoder.default"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.NumpyArrayEncoder.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="IOingredientTool.ingrJsonNode">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool.ingrJsonNode">[docs]</a>
+    <span class="k">def</span> <span class="nf">ingrJsonNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># force position instead of sphereFile</span>
+        <span class="n">ingdic</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwds</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">KWDS</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwds</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+            <span class="c1">#            if hasattr(v,&quot;tolist&quot;):</span>
+            <span class="c1">#                v=v.tolist()</span>
+            <span class="c1">#            ingdic[k] = v</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ingdic</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">Writer</span><span class="o">.</span><span class="n">setValueToJsonNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
+        <span class="c1"># if sphereTree file present should not use the pos-radii keyword</span>
+        <span class="c1"># if ingr.sphereFile is not None and not result:</span>
+        <span class="c1"># remove the position and radii key</span>
+        <span class="c1">#    ingdic.pop(&quot;positions&quot;, None)</span>
+        <span class="c1">#    ingdic.pop(&quot;radii&quot;, None)</span>
+        <span class="c1"># update the positions and radii to new format</span>
+        <span class="n">toupdate</span> <span class="o">=</span> <span class="n">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+        <span class="n">ingdic</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">toupdate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;transform&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">:</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">offset</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">][</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">offset</span>
+
+        <span class="c1"># reslt ?s</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">ingdic</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+                <span class="c1"># position</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;tolist&quot;</span><span class="p">):</span>
+                    <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="c1"># rotation</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;tolist&quot;</span><span class="p">):</span>
+                    <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">R</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># this will not work with cellvIEW?</span>
+                <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+                    <span class="n">R</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                    <span class="p">)</span>  <span class="c1"># this will not work with cellvIEW?</span>
+                <span class="c1"># transpose ?</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_quaternion</span><span class="p">:</span>
+                    <span class="n">R</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_from_matrix</span><span class="p">(</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">ingdic</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">R</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">GrowIngredient</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">ActinIngredient</span><span class="p">):</span>
+                <span class="n">ingdic</span><span class="p">[</span><span class="s2">&quot;nbCurve&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbCurve</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">nbCurve</span><span class="p">):</span>
+                    <span class="n">lp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">listePtLinear</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">ingr</span><span class="o">.</span><span class="n">listePtLinear</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                    <span class="n">ingdic</span><span class="p">[</span><span class="s2">&quot;curve&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">listePtLinear</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="c1">#            res=numpy.array(ingdic[&quot;results&quot;]).transpose()</span>
+                <span class="c1">#            ingdic[&quot;results&quot;]=res.tolist()</span>
+        <span class="n">ingdic</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
+        <span class="k">return</span> <span class="n">ingdic</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="NumpyArrayEncoder">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.NumpyArrayEncoder">[docs]</a>
+<span class="k">class</span> <span class="nc">NumpyArrayEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
+<div class="viewcode-block" id="NumpyArrayEncoder.default">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.NumpyArrayEncoder.default">[docs]</a>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="Writer"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer">[docs]</a><span class="k">class</span> <span class="nc">Writer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Writer">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer">[docs]</a>
+<span class="k">class</span> <span class="nc">Writer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;simularium&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
 
-<div class="viewcode-block" id="Writer.setValueToJsonNode"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.setValueToJsonNode">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Writer.setValueToJsonNode">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.setValueToJsonNode">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">setValueToJsonNode</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span>
         <span class="n">vdic</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="n">vdic</span><span class="p">[</span><span class="n">attrname</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -118,9 +211,10 @@
         <span class="n">vdic</span><span class="p">[</span><span class="n">attrname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">vdic</span></div>
 
-<div class="viewcode-block" id="Writer.save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_as_simularium">[docs]</a>    <span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">result_file_path</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span>
-    <span class="p">):</span>
+
+<div class="viewcode-block" id="Writer.save_as_simularium">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_as_simularium">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">):</span>
         <span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
         <span class="n">grid_positions</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">show_grid_spheres</span> <span class="k">else</span> <span class="kc">None</span>
@@ -143,15 +237,14 @@
                 <span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">add_grid_data_to_scene</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gradient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-weights&quot;</span><span class="p">,</span> <span class="n">grid_positions</span><span class="p">,</span> <span class="n">gradient</span><span class="o">.</span><span class="n">weight</span>
                 <span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">result_file</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span><span class="p">)</span></div>
 
-        <span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_file_path</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span>
-        <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Writer.save_Mixed_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_Mixed_asJson">[docs]</a>    <span class="k">def</span> <span class="nf">save_Mixed_asJson</span><span class="p">(</span>
+<div class="viewcode-block" id="Writer.save_Mixed_asJson">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save_Mixed_asJson">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_Mixed_asJson</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
-        <span class="n">setupfile</span><span class="p">,</span>
         <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -167,14 +260,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">io_ingr</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
         <span class="n">io_ingr</span><span class="o">.</span><span class="n">use_quaternion</span> <span class="o">=</span> <span class="n">quaternion</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span> <span class="o">=</span> <span class="n">setupfile</span>  <span class="c1"># +&quot;.json&quot;provide the server?</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">env</span><span class="o">.</span><span class="n">result_file</span><span class="si">}</span><span class="s2">.json&quot;</span>
         <span class="c1"># the output path for this recipes files</span>
-        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
-            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">file_name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span><span class="n">file_name</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
+            <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">env</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
         <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
@@ -183,8 +274,6 @@
         <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span><span class="p">:</span>
             <span class="c1"># this was the used path at loading time</span>
             <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;paths&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span>
-        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;setupfile&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span>
         <span class="k">if</span> <span class="n">packing_options</span><span class="p">:</span>
             <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">:</span>
@@ -331,7 +420,7 @@
                         <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span>
                             <span class="s2">&quot;ingredients&quot;</span>
                         <span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">setupfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
             <span class="k">if</span> <span class="n">indent</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
                     <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span>
@@ -345,7 +434,10 @@
                     <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyArrayEncoder</span>
                 <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span></div>
 
-<div class="viewcode-block" id="Writer.return_object_value"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.return_object_value">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="Writer.return_object_value">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.return_object_value">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">return_object_value</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
@@ -356,10 +448,12 @@
                 <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
-<div class="viewcode-block" id="Writer.save"><a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
+
+<div class="viewcode-block" id="Writer.save">
+<a class="viewcode-back" href="../../../cellpack.autopack.writers.html#cellpack.autopack.writers.Writer.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
-        <span class="n">setupfile</span><span class="p">,</span>
         <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -374,7 +468,6 @@
         <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_Mixed_asJson</span><span class="p">(</span>
                 <span class="n">env</span><span class="p">,</span>
-                <span class="n">setupfile</span><span class="p">,</span>
                 <span class="n">useXref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">,</span>
                 <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
@@ -385,9 +478,11 @@
                 <span class="n">transpose</span><span class="o">=</span><span class="n">transpose</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">output_format</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,python)&quot;</span><span class="p">)</span></div></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">output_format</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,python)&quot;</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -428,7 +523,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

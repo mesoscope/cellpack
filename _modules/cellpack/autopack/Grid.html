@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.Grid &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -43,7 +43,9 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 
-<div class="viewcode-block" id="Grid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid">[docs]</a><span class="k">class</span> <span class="nc">Grid</span><span class="p">(</span><span class="n">BaseGrid</span><span class="p">):</span>
+<div class="viewcode-block" id="Grid">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid">[docs]</a>
+<span class="k">class</span> <span class="nc">Grid</span><span class="p">(</span><span class="n">BaseGrid</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Grid class</span>
 <span class="sd">    ==========================</span>
@@ -65,7 +67,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Grid.reset"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Grid.reset">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.reset">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># reset the  distToClosestSurf and the free_points</span>
         <span class="c1"># boundingBox shoud be the same otherwise why keeping the grid</span>
 
@@ -77,7 +81,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="Grid.create3DPointLookup"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.create3DPointLookup">[docs]</a>    <span class="k">def</span> <span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Grid.create3DPointLookup">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.create3DPointLookup">[docs]</a>
+    <span class="k">def</span> <span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fill the orthogonal bounding box described by two global corners</span>
 <span class="sd">        with an array of points spaces pGridSpacing apart.:</span>
@@ -105,21 +112,32 @@
                     <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">pointArrayRaw</span></div>
 
-<div class="viewcode-block" id="Grid.getIJK"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.getIJK">[docs]</a>    <span class="k">def</span> <span class="nf">getIJK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Grid.getIJK">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.getIJK">[docs]</a>
+    <span class="k">def</span> <span class="nf">getIJK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get i,j,k (3d) indices from u (1d)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span></div>
+
         <span class="c1"># ==============================================================================</span>
 
     <span class="c1"># TO DO File IO</span>
     <span class="c1"># ==============================================================================</span>
-<div class="viewcode-block" id="Grid.save"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Grid.save">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Grid.restore"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="Grid.restore">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.restore">[docs]</a>
+    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -160,7 +178,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

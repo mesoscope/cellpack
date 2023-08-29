@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.loaders.config_loader &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -49,21 +49,29 @@
 <span class="n">encoder</span><span class="o">.</span><span class="n">FLOAT_REPR</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;.8g&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Place_Methods"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Place_Methods">[docs]</a><span class="k">class</span> <span class="nc">Place_Methods</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="Place_Methods">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Place_Methods">[docs]</a>
+<span class="k">class</span> <span class="nc">Place_Methods</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
     <span class="n">JITTER</span> <span class="o">=</span> <span class="s2">&quot;jitter&quot;</span>
     <span class="n">SPHERES_SST</span> <span class="o">=</span> <span class="s2">&quot;spheresSST&quot;</span>
     <span class="n">PANDA_BULLET</span> <span class="o">=</span> <span class="s2">&quot;pandaBullet&quot;</span>
     <span class="n">PANDA_BULLET_RELAX</span> <span class="o">=</span> <span class="s2">&quot;pandaBulletRelax&quot;</span></div>
 
 
-<div class="viewcode-block" id="Inner_Grid_Methods"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Inner_Grid_Methods">[docs]</a><span class="k">class</span> <span class="nc">Inner_Grid_Methods</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Inner_Grid_Methods">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Inner_Grid_Methods">[docs]</a>
+<span class="k">class</span> <span class="nc">Inner_Grid_Methods</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
     <span class="c1"># Working inner grid methods</span>
     <span class="n">RAYTRACE</span> <span class="o">=</span> <span class="s2">&quot;raytrace&quot;</span>
     <span class="n">SCANLINE</span> <span class="o">=</span> <span class="s2">&quot;scanline&quot;</span>
     <span class="n">TRIMESH</span> <span class="o">=</span> <span class="s2">&quot;trimesh&quot;</span></div>
 
 
-<div class="viewcode-block" id="ConfigLoader"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.ConfigLoader">[docs]</a><span class="k">class</span> <span class="nc">ConfigLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ConfigLoader">
+<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.ConfigLoader">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">default_values</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;simularium&quot;</span><span class="p">,</span>
         <span class="s2">&quot;load_from_grid_file&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -146,6 +154,7 @@
             <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigLoader</span><span class="o">.</span><span class="n">_migrate_version</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">ConfigLoader</span><span class="o">.</span><span class="n">_test_types</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -186,7 +195,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

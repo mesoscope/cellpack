@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.Graphics &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -102,7 +102,9 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="AutopackViewer"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer">[docs]</a><span class="k">class</span> <span class="nc">AutopackViewer</span><span class="p">:</span>
+<div class="viewcode-block" id="AutopackViewer">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer">[docs]</a>
+<span class="k">class</span> <span class="nc">AutopackViewer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    the base class for viewing/displaying autopack result in a specified viewer</span>
 <span class="sd">    ie DejaVu, Cinema4D, Maya or Blender (which are supported hostApp by ePMV)</span>
@@ -197,7 +199,9 @@
             <span class="p">},</span>
         <span class="p">}</span>
 
-<div class="viewcode-block" id="AutopackViewer.callFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.callFunction">[docs]</a>    <span class="k">def</span> <span class="nf">callFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.callFunction">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.callFunction">[docs]</a>
+    <span class="k">def</span> <span class="nf">callFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timer</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeFunction</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -207,7 +211,10 @@
                 <span class="n">res</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.timeFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.timeFunction">[docs]</a>    <span class="k">def</span> <span class="nf">timeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.timeFunction">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.timeFunction">[docs]</a>
+    <span class="k">def</span> <span class="nf">timeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measure the time for performing the provided function.</span>
 
@@ -229,7 +236,10 @@
         <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;time &quot;</span> <span class="o">+</span> <span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.SetHistoVol"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.SetHistoVol">[docs]</a>    <span class="k">def</span> <span class="nf">SetHistoVol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">histo</span><span class="p">,</span> <span class="n">pad</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.SetHistoVol">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.SetHistoVol">[docs]</a>
+    <span class="k">def</span> <span class="nf">SetHistoVol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">histo</span><span class="p">,</span> <span class="n">pad</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Define the current histo volume.</span>
 
@@ -272,7 +282,10 @@
         <span class="k">if</span> <span class="n">display</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displayEnv</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.addMasterIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addMasterIngr">[docs]</a>    <span class="k">def</span> <span class="nf">addMasterIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.addMasterIngr">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addMasterIngr">[docs]</a>
+    <span class="k">def</span> <span class="nf">addMasterIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a empty master/parent geometry for a ingredient</span>
 
@@ -289,7 +302,10 @@
         <span class="n">gi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkCreateEmpty</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span> <span class="o">=</span> <span class="n">gi</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.prepareMaster"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareMaster">[docs]</a>    <span class="k">def</span> <span class="nf">prepareMaster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.prepareMaster">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareMaster">[docs]</a>
+    <span class="k">def</span> <span class="nf">prepareMaster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create all empty master/parent geometry for the cytoplasm and</span>
 <span class="sd">        all ingredient. If not in DejaVu prepare the meshes use for instanced</span>
@@ -362,7 +378,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_PreviousOrga&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prevIngrOrga</span>
         <span class="p">)</span>  <span class="c1"># g</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayEnv"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayEnv">[docs]</a>    <span class="k">def</span> <span class="nf">displayEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayEnv">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayEnv">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        display histo volume bounding box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -377,7 +396,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">histoBox</span> <span class="o">=</span> <span class="n">b</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">reParent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">histoBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayFillBox"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFillBox">[docs]</a>    <span class="k">def</span> <span class="nf">displayFillBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayFillBox">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFillBox">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayFillBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        display the box used for compute the grid and fill</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -385,7 +407,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fbb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="s2">&quot;fillBox&quot;</span><span class="p">,</span> <span class="n">cornerPoints</span><span class="o">=</span><span class="n">bb</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># maybe /10.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fbb</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayCompartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartment">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayCompartment">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartment">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display geometry for an compartment.</span>
 
@@ -451,9 +476,12 @@
             <span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">orga</span><span class="o">.</span><span class="n">representation</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">op</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">reParent</span><span class="p">(</span><span class="n">orga</span><span class="o">.</span><span class="n">representation</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span></div>
+
                 <span class="c1">#        orga.ref_obj = name</span>
 
-<div class="viewcode-block" id="AutopackViewer.createOrganelMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createOrganelMesh">[docs]</a>    <span class="k">def</span> <span class="nf">createOrganelMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.createOrganelMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createOrganelMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">createOrganelMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">is_orthogonal_bounding_box</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Mesh&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;maya&quot;</span><span class="p">:</span>
@@ -477,29 +505,44 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">updateMesh</span><span class="p">(</span><span class="n">tet</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">orga</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">orga</span><span class="o">.</span><span class="n">faces</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.toggleOrganelMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMesh">[docs]</a>    <span class="k">def</span> <span class="nf">toggleOrganelMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.toggleOrganelMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">toggleOrganelMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">organame</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Mesh&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.toggleOrganelMatr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMatr">[docs]</a>    <span class="k">def</span> <span class="nf">toggleOrganelMatr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.toggleOrganelMatr">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMatr">[docs]</a>
+    <span class="k">def</span> <span class="nf">toggleOrganelMatr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">organame</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Matrix&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.toggleOrganelSurf"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelSurf">[docs]</a>    <span class="k">def</span> <span class="nf">toggleOrganelSurf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.toggleOrganelSurf">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelSurf">[docs]</a>
+    <span class="k">def</span> <span class="nf">toggleOrganelSurf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="n">display</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">organame</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Surface&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayCompartments"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartments">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayCompartments">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartments">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayCompartments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display geometry for all compartments defined for the envume.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displayCompartment</span><span class="p">(</span><span class="n">orga</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayPreFill"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPreFill">[docs]</a>    <span class="k">def</span> <span class="nf">displayPreFill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayPreFill">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPreFill">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayPreFill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function once a env and his compartments are defined.</span>
 <span class="sd">        displayPreFill will prepare all master, and will create the geometry for</span>
@@ -526,6 +569,7 @@
                 <span class="n">clipstart</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clipend</span><span class="o">=</span><span class="n">diag</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>  <span class="c1"># shader=&quot;glsl&quot;,</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#########VIEWPORT SET#######&quot;</span><span class="p">)</span></div>
+
         <span class="c1">#        elif self.ViewerType == &#39;dejavu&#39;:</span>
         <span class="c1">#            self.vi.viewer.Reset_cb()</span>
         <span class="c1">#            self.vi.viewer.Normalize_cb()</span>
@@ -540,8 +584,11 @@
         <span class="c1">#            #we can probably setup here the overall quality in the viewport</span>
         <span class="c1">#            pass</span>
 
-<div class="viewcode-block" id="AutopackViewer.colorPT"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorPT">[docs]</a>    <span class="k">def</span> <span class="nf">colorPT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.colorPT">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorPT">[docs]</a>
+    <span class="k">def</span> <span class="nf">colorPT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="k">pass</span></div>
+
 
     <span class="c1">#        pt = self.vi.getObject(name)</span>
     <span class="c1">#        from DejaVu.colorTool import Map, RGBRamp</span>
@@ -552,7 +599,9 @@
     <span class="c1">#        colors = Map(v, ramp)</span>
     <span class="c1">#        self.vi.changeColor(pt,colors)</span>
 
-<div class="viewcode-block" id="AutopackViewer.prepareDynamic"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareDynamic">[docs]</a>    <span class="k">def</span> <span class="nf">prepareDynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.prepareDynamic">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareDynamic">[docs]</a>
+    <span class="k">def</span> <span class="nf">prepareDynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># create two empty for static and moving object</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">movingMesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;movingMesh&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">movingMesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -566,7 +615,10 @@
         <span class="c1">#            self.vi.addObjectToScene(None,self.staticMesh)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setRigidBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">staticMesh</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">dynamicOptions</span><span class="p">[</span><span class="s2">&quot;static&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayFill"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFill">[docs]</a>    <span class="k">def</span> <span class="nf">displayFill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayFill">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFill">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayFill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function once a Box have been filled. displayFill will display</span>
 <span class="sd">        all placed ingredients in the Box, and affiliated them according if they are</span>
@@ -623,7 +675,10 @@
             <span class="c1"># change the viewportshadr</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setViewport</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayPoints">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPoints">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function to display a pointCloud. By default, theses points</span>
 <span class="sd">        are not visible in the viewport.</span>
@@ -672,7 +727,10 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">labDistg</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayCompartmentPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentPoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartmentPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayCompartmentPoints">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentPoints">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayCompartmentPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this function to display grid pointCloud for an compartment</span>
 
@@ -728,19 +786,28 @@
                 <span class="n">colors</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayCompartmentsPoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsPoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartmentsPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayCompartmentsPoints">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsPoints">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayCompartmentsPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display grid points for all compartments defined for the envume.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displayCompartmentPoints</span><span class="p">(</span><span class="n">orga</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.hideIngrPrimitive"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.hideIngrPrimitive">[docs]</a>    <span class="k">def</span> <span class="nf">hideIngrPrimitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.hideIngrPrimitive">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.hideIngrPrimitive">[docs]</a>
+    <span class="k">def</span> <span class="nf">hideIngrPrimitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="n">pname</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_SPH&quot;</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">pname</span><span class="p">)</span>  <span class="c1"># or ingr.mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.showIngrPrimitive"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.showIngrPrimitive">[docs]</a>    <span class="k">def</span> <span class="nf">showIngrPrimitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.showIngrPrimitive">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.showIngrPrimitive">[docs]</a>
+    <span class="k">def</span> <span class="nf">showIngrPrimitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="s2">&quot;isph&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">isph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buildIngrPrimitive</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -748,7 +815,10 @@
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">pname</span><span class="p">)</span>  <span class="c1"># or ingr.mesh</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.buildIngrPrimitive"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.buildIngrPrimitive">[docs]</a>    <span class="k">def</span> <span class="nf">buildIngrPrimitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.buildIngrPrimitive">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.buildIngrPrimitive">[docs]</a>
+    <span class="k">def</span> <span class="nf">buildIngrPrimitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span><span class="o">.</span><span class="n">compartment</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Spheres_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">==</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
@@ -805,10 +875,13 @@
                         <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
                         <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span></div>
+
                 <span class="c1">#        else : #cylinder or growingredient#if ingrmodel_type==&#39;Spheres&#39;:</span>
                 <span class="c1">#            pass</span>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngrSpheres"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrSpheres">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrSpheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.displayIngrSpheres">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrSpheres">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngrSpheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span><span class="o">.</span><span class="n">compartment</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
@@ -859,7 +932,10 @@
                             <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngrCylinders"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrCylinders">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrCylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayIngrCylinders">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrCylinders">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngrCylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="c1"># dont do it for a snake ingredient...</span>
         <span class="c1"># just use the realtime capbility</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">GrowIngredient</span><span class="p">):</span>
@@ -967,7 +1043,10 @@
                     <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngrGrows"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrows">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrGrows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayIngrGrows">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrows">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngrGrows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
@@ -994,7 +1073,10 @@
                     <span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrGrow</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngrGrow"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrow">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrGrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayIngrGrow">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrow">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngrGrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;displayIngrGrow&quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbCurve</span><span class="p">)</span>
         <span class="c1"># how to restore / store gro ingedient</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span><span class="o">.</span><span class="n">compartment</span>
@@ -1040,11 +1122,14 @@
                     <span class="n">extruder</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">extrudeSpline</span><span class="p">(</span>
                         <span class="n">snake</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">circle</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span>
                     <span class="p">)</span>  <span class="c1"># shoud use the radius for a circle ?</span></div>
+
                     <span class="c1"># reparent ?</span>
                     <span class="c1"># should wereparent the extruder</span>
                     <span class="c1"># what about primitive display self.doSpheres</span>
 
-<div class="viewcode-block" id="AutopackViewer.delIngredientGrow"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.delIngredientGrow">[docs]</a>    <span class="k">def</span> <span class="nf">delIngredientGrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.delIngredientGrow">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.delIngredientGrow">[docs]</a>
+    <span class="k">def</span> <span class="nf">delIngredientGrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;delIngrGrow&quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbCurve</span><span class="p">)</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span><span class="o">.</span><span class="n">compartment</span>
         <span class="c1">#        o = ingr.recipe().organelle()</span>
@@ -1073,7 +1158,10 @@
                 <span class="k">if</span> <span class="n">extruder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">extruder</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.prepareIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">prepareIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.prepareIngredient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareIngredient">[docs]</a>
+    <span class="k">def</span> <span class="nf">prepareIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># cyto ingr</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
@@ -1090,7 +1178,10 @@
             <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngredients</span><span class="p">(</span><span class="n">ri</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipes</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayIngredients">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngredients">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipes</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recipes</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># mes_3d?</span>
                 <span class="c1"># try get it</span>
@@ -1101,7 +1192,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">mesh_3d</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">mesh</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.createIngrMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createIngrMesh">[docs]</a>    <span class="k">def</span> <span class="nf">createIngrMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.createIngrMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createIngrMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">createIngrMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span><span class="o">.</span><span class="n">compartment</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">mesh</span>
         <span class="c1"># START New section added by Graham on July 16, 2012 replaces section below</span>
@@ -1162,14 +1256,20 @@
             <span class="n">ingr</span><span class="o">.</span><span class="n">mesh_3d</span> <span class="o">=</span> <span class="n">parent</span>  <span class="c1"># polygon[0] is this will work in other host</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;after build&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngrMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrMesh">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayIngrMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngrMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrices</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="n">matrices</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">createIngrMesh</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">mesh_3d</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">mesh</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.printOneIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printOneIngr">[docs]</a>    <span class="k">def</span> <span class="nf">printOneIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.printOneIngr">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printOneIngr">[docs]</a>
+    <span class="k">def</span> <span class="nf">printOneIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span>
             <span class="s2">&quot;one ingredient:&quot;</span><span class="p">,</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -1180,7 +1280,10 @@
             <span class="n">ingr</span><span class="o">.</span><span class="n">max_jitter</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.printIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">printIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.printIngredients">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printIngredients">[docs]</a>
+    <span class="k">def</span> <span class="nf">printIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
             <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">printOneIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span> <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">]</span>
@@ -1192,7 +1295,10 @@
             <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">printOneIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span> <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.collectResult"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.collectResult">[docs]</a>    <span class="k">def</span> <span class="nf">collectResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.collectResult">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.collectResult">[docs]</a>
+    <span class="k">def</span> <span class="nf">collectResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
         <span class="n">verts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">deepest_level</span>
@@ -1215,7 +1321,10 @@
             <span class="n">mat</span><span class="p">[</span><span class="mi">3</span><span class="p">][:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span>
         <span class="k">return</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.replaceIngrMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.replaceIngrMesh">[docs]</a>    <span class="k">def</span> <span class="nf">replaceIngrMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">newMesh</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.replaceIngrMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.replaceIngrMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">replaceIngrMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">newMesh</span><span class="p">):</span>
         <span class="n">polygon</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">mesh_3d</span>
         <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>  <span class="c1"># should be an empty or locator</span>
         <span class="n">childs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
@@ -1236,7 +1345,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ingredient</span><span class="p">]</span> <span class="o">=</span> <span class="n">newMesh</span>  <span class="c1"># permit to toggle the display</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setLayers</span><span class="p">(</span><span class="n">newMesh</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayIngrResults"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrResults">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">doSphere</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doMesh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayIngrResults">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrResults">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayIngrResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">doSphere</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doMesh</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the result for the given ingr after filling</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1302,7 +1414,10 @@
                     <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
                 <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayInstancesIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayInstancesIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">displayInstancesIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">matrices</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayInstancesIngredient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayInstancesIngredient">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayInstancesIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">matrices</span><span class="p">):</span>
         <span class="c1">#        geom = ingredient.mesh</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
             <span class="n">polygon</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">mesh_3d</span>
@@ -1331,7 +1446,10 @@
                     <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
                 <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayCytoplasmIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCytoplasmIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">displayCytoplasmIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayCytoplasmIngredients">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCytoplasmIngredients">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayCytoplasmIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">verts</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">exteriorRecipe</span>
@@ -1439,7 +1557,10 @@
                                 <span class="p">)</span>
                 <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayCompartmentsIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">displayCompartmentsIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayCompartmentsIngredients">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsIngredients">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayCompartmentsIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># display compartment ingredients</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="c1"># Sphere and Cylinders</span>
@@ -1616,7 +1737,10 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">mesh</span>
                     <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.appendIngrInstance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.appendIngrInstance">[docs]</a>    <span class="k">def</span> <span class="nf">appendIngrInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.appendIngrInstance">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.appendIngrInstance">[docs]</a>
+    <span class="k">def</span> <span class="nf">appendIngrInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">sel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getCurrentSelection</span><span class="p">()</span>
         <span class="c1"># should have a parent and take all children or take all selection</span>
@@ -1649,7 +1773,10 @@
         <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">orga</span><span class="o">.</span><span class="n">molecules</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayFreePoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFreePoints">[docs]</a>    <span class="k">def</span> <span class="nf">displayFreePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vDebug</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayFreePoints">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFreePoints">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayFreePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vDebug</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="c1"># display grid points with positive distances left</span>
         <span class="n">vertsFreePts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">vertsAll</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Graham debugTrashLine</span>
@@ -1785,7 +1912,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">unUspts</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">Uspts</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.dspMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.dspMesh">[docs]</a>    <span class="k">def</span> <span class="nf">dspMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.dspMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.dspMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">dspMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
         <span class="c1"># specific to C4D</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">GetDown</span><span class="p">()():</span>
@@ -1796,7 +1926,10 @@
                 <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;mesh&quot;</span><span class="p">:</span>
                     <span class="n">c</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.undspMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.undspMesh">[docs]</a>    <span class="k">def</span> <span class="nf">undspMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.undspMesh">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.undspMesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">undspMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">GetDown</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Meshs&quot;</span><span class="p">:</span>
@@ -1806,7 +1939,10 @@
                 <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;mesh&quot;</span><span class="p">:</span>
                     <span class="n">c</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.dspSph"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.dspSph">[docs]</a>    <span class="k">def</span> <span class="nf">dspSph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.dspSph">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.dspSph">[docs]</a>
+    <span class="k">def</span> <span class="nf">dspSph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">GetDown</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;spheres&quot;</span><span class="p">:</span>
@@ -1816,7 +1952,10 @@
                 <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;spheres&quot;</span><span class="p">:</span>
                     <span class="n">ch</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.undspSph"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.undspSph">[docs]</a>    <span class="k">def</span> <span class="nf">undspSph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.undspSph">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.undspSph">[docs]</a>
+    <span class="k">def</span> <span class="nf">undspSph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">!=</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">geom</span><span class="o">.</span><span class="n">GetDown</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;spheres&quot;</span><span class="p">:</span>
@@ -1826,7 +1965,10 @@
                 <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;spheres&quot;</span><span class="p">:</span>
                     <span class="n">ch</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.showHide"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.showHide">[docs]</a>    <span class="k">def</span> <span class="nf">showHide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.showHide">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.showHide">[docs]</a>
+    <span class="k">def</span> <span class="nf">showHide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
@@ -1843,17 +1985,23 @@
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="n">master</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span>
                     <span class="n">func</span><span class="p">(</span><span class="n">master</span><span class="p">)</span></div>
+
                     <span class="c1"># ==============================================================================</span>
                 <span class="c1"># custom filling</span>
                 <span class="c1"># ==============================================================================</span>
 
-<div class="viewcode-block" id="AutopackViewer.checkCreateEmpty"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkCreateEmpty">[docs]</a>    <span class="k">def</span> <span class="nf">checkCreateEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.checkCreateEmpty">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkCreateEmpty">[docs]</a>
+    <span class="k">def</span> <span class="nf">checkCreateEmpty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">empty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">empty</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">empty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">newEmpty</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">empty</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.createTemplate"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createTemplate">[docs]</a>    <span class="k">def</span> <span class="nf">createTemplate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.createTemplate">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createTemplate">[docs]</a>
+    <span class="k">def</span> <span class="nf">createTemplate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prepareMaster</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayEnv</span><span class="p">()</span>
         <span class="n">setup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkCreateEmpty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Setup&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">master</span><span class="p">)</span>
@@ -1862,6 +2010,7 @@
         <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkCreateEmpty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_cytoplasm_ingredient&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">setup</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">checkCreateEmpty</span><span class="p">(</span><span class="s2">&quot;Place here your cytoplasm ingredients&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
         <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkCreateEmpty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_compartments_recipes&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">setup</span><span class="p">)</span></div>
+
         <span class="c1"># s = self.checkCreateEmpty(&#39;Setup following the template&#39;, parent=g)</span>
         <span class="c1"># r = self.checkCreateEmpty(&#39;compartmentname_recipe&#39;, parent=g)</span>
         <span class="c1"># rs = self.checkCreateEmpty(&#39;compartmentname_surface&#39;, parent=r)</span>
@@ -1869,7 +2018,9 @@
         <span class="c1"># ri = self.checkCreateEmpty(&#39;compartmentname_interior&#39;, parent=r)</span>
         <span class="c1"># ingrorga = self.checkCreateEmpty(&quot;Place here your interior ingredients&quot;, parent=ri)</span>
 
-<div class="viewcode-block" id="AutopackViewer.createTemplateCompartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createTemplateCompartment">[docs]</a>    <span class="k">def</span> <span class="nf">createTemplateCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.createTemplateCompartment">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createTemplateCompartment">[docs]</a>
+    <span class="k">def</span> <span class="nf">createTemplateCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">organame</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_compartments_recipes&quot;</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkCreateEmpty</span><span class="p">(</span><span class="n">organame</span> <span class="o">+</span> <span class="s2">&quot;_recipe&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
 
@@ -1887,7 +2038,10 @@
             <span class="s2">&quot;Place here your interior ingredients&quot;</span> <span class="o">+</span> <span class="n">organame</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">ri</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.addIngredientFromGeom"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addIngredientFromGeom">[docs]</a>    <span class="k">def</span> <span class="nf">addIngredientFromGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ingrobj</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.addIngredientFromGeom">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addIngredientFromGeom">[docs]</a>
+    <span class="k">def</span> <span class="nf">addIngredientFromGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ingrobj</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span>
             <span class="s2">&quot;######ADD&quot;</span><span class="p">,</span>
             <span class="n">ingrobj</span><span class="p">,</span>
@@ -2045,7 +2199,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">addMasterIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">ingr</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.addCompartmentFromGeom"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addCompartmentFromGeom">[docs]</a>    <span class="k">def</span> <span class="nf">addCompartmentFromGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.addCompartmentFromGeom">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addCompartmentFromGeom">[docs]</a>
+    <span class="k">def</span> <span class="nf">addCompartmentFromGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="c1"># note in blender everything is mesh</span>
         <span class="kn">from</span> <span class="nn">autopack.Compartment</span> <span class="kn">import</span> <span class="n">Compartment</span>
 
@@ -2123,6 +2280,7 @@
             <span class="n">o1</span><span class="o">.</span><span class="n">overwriteSurfacePts</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">o1</span></div>
 
+
     <span class="c1">#            h1.addCompartment(o1)</span>
     <span class="c1">#            if rSurf.has_key(name):</span>
     <span class="c1">#                if rSurf[name].ingredients:</span>
@@ -2136,7 +2294,9 @@
     <span class="c1"># ===============================================================================</span>
     <span class="c1"># color tools</span>
     <span class="c1"># ===============================================================================</span>
-<div class="viewcode-block" id="AutopackViewer.color"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.color">[docs]</a>    <span class="k">def</span> <span class="nf">color</span><span class="p">(</span>
+<div class="viewcode-block" id="AutopackViewer.color">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.color">[docs]</a>
+    <span class="k">def</span> <span class="nf">color</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;distance&quot;</span><span class="p">,</span>
         <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2197,8 +2357,11 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">changeObjColorMat</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">lcol</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">datas</span><span class="p">,</span> <span class="n">listeObjs</span></div>
 
+
     <span class="c1"># export distance ...</span>
-<div class="viewcode-block" id="AutopackViewer.colorByDistanceFrom"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorByDistanceFrom">[docs]</a>    <span class="k">def</span> <span class="nf">colorByDistanceFrom</span><span class="p">(</span>
+<div class="viewcode-block" id="AutopackViewer.colorByDistanceFrom">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorByDistanceFrom">[docs]</a>
+    <span class="k">def</span> <span class="nf">colorByDistanceFrom</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target</span><span class="p">,</span>
         <span class="n">parents</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2273,7 +2436,10 @@
             <span class="n">listeObjs</span> <span class="o">=</span> <span class="n">objects</span>
         <span class="k">return</span> <span class="n">listeObjs</span><span class="p">,</span> <span class="n">listeDistances</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.colorByOrder"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorByOrder">[docs]</a>    <span class="k">def</span> <span class="nf">colorByOrder</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AutopackViewer.colorByOrder">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorByOrder">[docs]</a>
+    <span class="k">def</span> <span class="nf">colorByOrder</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">parents</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">orders</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2352,7 +2518,10 @@
             <span class="n">listeObjs</span> <span class="o">=</span> <span class="n">objects</span>
         <span class="k">return</span> <span class="n">listeObjs</span><span class="p">,</span> <span class="n">listeOrder</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.exportIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">exportIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.exportIngredient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportIngredient">[docs]</a>
+    <span class="k">def</span> <span class="nf">exportIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="c1">#        from DejaVu.IndexedPolygons import IndexedPolygons</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">meshFile</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">meshFile</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="c1">#            if isinstance(ingr.mesh,IndexedPolygons):</span>
@@ -2367,11 +2536,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; mesh already exist: &quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">meshFile</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.exportRecipeIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportRecipeIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">exportRecipeIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.exportRecipeIngredients">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportRecipeIngredients">[docs]</a>
+    <span class="k">def</span> <span class="nf">exportRecipeIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">recipe</span><span class="p">:</span>
             <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">exportIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span> <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.exportAsIndexedMeshs"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportAsIndexedMeshs">[docs]</a>    <span class="k">def</span> <span class="nf">exportAsIndexedMeshs</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AutopackViewer.exportAsIndexedMeshs">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportAsIndexedMeshs">[docs]</a>
+    <span class="k">def</span> <span class="nf">exportAsIndexedMeshs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># compartment mesh and ingredient</span>
@@ -2392,7 +2567,10 @@
         <span class="c1"># ingredients in out recipe</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exportRecipeIngredients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">exteriorRecipe</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayParticleVolumeDistance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayParticleVolumeDistance">[docs]</a>    <span class="k">def</span> <span class="nf">displayParticleVolumeDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayParticleVolumeDistance">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayParticleVolumeDistance">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayParticleVolumeDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
         <span class="n">helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span>
         <span class="kn">import</span> <span class="nn">c4d</span>
@@ -2422,7 +2600,10 @@
             <span class="n">c4d</span><span class="o">.</span><span class="n">documents</span><span class="o">.</span><span class="n">RenderDocument</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">rd</span><span class="p">,</span> <span class="n">bmp</span><span class="p">,</span> <span class="n">c4d</span><span class="o">.</span><span class="n">RENDERFLAGS_EXTERNAL</span><span class="p">)</span>
             <span class="n">c4d</span><span class="o">.</span><span class="n">CallCommand</span><span class="p">(</span><span class="mi">12414</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayFreePointsAsPS"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFreePointsAsPS">[docs]</a>    <span class="k">def</span> <span class="nf">displayFreePointsAsPS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayFreePointsAsPS">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFreePointsAsPS">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayFreePointsAsPS</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># self.histo.freePointsAfterFill[:self.histo.nbFreePointsAfterFill]</span>
         <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span>
         <span class="n">helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span>
@@ -2439,7 +2620,10 @@
         <span class="n">life</span> <span class="o">=</span> <span class="p">[</span><span class="n">c4d</span><span class="o">.</span><span class="n">BaseTime</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)]</span> <span class="o">*</span> <span class="n">N</span>
         <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">PS</span><span class="o">.</span><span class="n">SetLife</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">life</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayLeafOctree"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayLeafOctree">[docs]</a>    <span class="k">def</span> <span class="nf">displayLeafOctree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayLeafOctree">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayLeafOctree">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayLeafOctree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">isLeafNode</span><span class="p">:</span>
@@ -2456,7 +2640,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayLeafOctree</span><span class="p">(</span><span class="s2">&quot;node&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">),</span> <span class="n">node</span><span class="p">,</span> <span class="n">ind</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">onode</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayOneNodeOctree"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOneNodeOctree">[docs]</a>    <span class="k">def</span> <span class="nf">displayOneNodeOctree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayOneNodeOctree">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOneNodeOctree">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayOneNodeOctree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">onode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">box</span><span class="p">(</span>
@@ -2477,7 +2664,10 @@
                     <span class="s2">&quot;node&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">),</span> <span class="n">node</span><span class="p">,</span> <span class="n">ind</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">onode</span>
                 <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayOctree"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOctree">[docs]</a>    <span class="k">def</span> <span class="nf">displayOctree</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayOctree">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOctree">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayOctree</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># display the octree if any</span>
@@ -2496,7 +2686,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displayOneNodeOctree</span><span class="p">(</span><span class="s2">&quot;node&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">node</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">oroot</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayOctreeLeaf"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOctreeLeaf">[docs]</a>    <span class="k">def</span> <span class="nf">displayOctreeLeaf</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayOctreeLeaf">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOctreeLeaf">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayOctreeLeaf</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># display the octree if any</span>
@@ -2515,7 +2708,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">displayLeafOctree</span><span class="p">(</span><span class="s2">&quot;node&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">node</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">oroot</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.delIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.delIngr">[docs]</a>    <span class="k">def</span> <span class="nf">delIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.delIngr">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.delIngr">[docs]</a>
+    <span class="k">def</span> <span class="nf">delIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="n">ingrname</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
         <span class="n">parentname</span> <span class="o">=</span> <span class="s2">&quot;Meshs_&quot;</span> <span class="o">+</span> <span class="n">ingrname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">parentname</span><span class="p">)</span>
@@ -2539,13 +2735,19 @@
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.clearIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearIngr">[docs]</a>    <span class="k">def</span> <span class="nf">clearIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.clearIngr">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearIngr">[docs]</a>
+    <span class="k">def</span> <span class="nf">clearIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;will clear all ingredients instances but leave base parent hierarchie intact&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delIngr</span><span class="p">)</span></div>
 
+
     <span class="c1">#        [self.delIngr(ingrname) for ingrname in self.ingredients]</span>
 
-<div class="viewcode-block" id="AutopackViewer.clearRecipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearRecipe">[docs]</a>    <span class="k">def</span> <span class="nf">clearRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="AutopackViewer.clearRecipe">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearRecipe">[docs]</a>
+    <span class="k">def</span> <span class="nf">clearRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;will clear everything related to self.recipe&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">instance_dupliFace</span><span class="p">:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
@@ -2554,13 +2756,19 @@
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.clearAll"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearAll">[docs]</a>    <span class="k">def</span> <span class="nf">clearAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.clearAll">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearAll">[docs]</a>
+    <span class="k">def</span> <span class="nf">clearAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
         <span class="c1"># shoud remove everything</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clearRecipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
         <span class="c1"># reset the fill</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clearFill</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.clearFill"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearFill">[docs]</a>    <span class="k">def</span> <span class="nf">clearFill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.clearFill">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearFill">[docs]</a>
+    <span class="k">def</span> <span class="nf">clearFill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
         <span class="c1"># should ony reset the fill</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="c1">#        if self.histo.ingr_result is not None :</span>
@@ -2585,7 +2793,10 @@
             <span class="n">point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
             <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">point</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayRoot"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayRoot">[docs]</a>    <span class="k">def</span> <span class="nf">displayRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayRoot">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayRoot">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">box</span><span class="p">(</span>
             <span class="s2">&quot;octreeroot&quot;</span><span class="p">,</span>
             <span class="n">center</span><span class="o">=</span><span class="n">root</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
@@ -2593,7 +2804,10 @@
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">objects</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displaysubnode"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displaysubnode">[docs]</a>    <span class="k">def</span> <span class="nf">displaysubnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentnode</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displaysubnode">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displaysubnode">[docs]</a>
+    <span class="k">def</span> <span class="nf">displaysubnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentnode</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">parentnode</span><span class="o">.</span><span class="n">hasSubnodes</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">parentnode</span><span class="o">.</span><span class="n">hasSubdivided</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">for</span> <span class="n">subnode</span> <span class="ow">in</span> <span class="n">parentnode</span><span class="o">.</span><span class="n">subnodes</span><span class="p">:</span>
@@ -2607,7 +2821,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">displaysubnode</span><span class="p">(</span><span class="n">subnode</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayGradient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayGradient">[docs]</a>    <span class="k">def</span> <span class="nf">displayGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayGradient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayGradient">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the given gradient as sphere at each grid position with radius = weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2632,7 +2849,10 @@
             <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.displayDistance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayDistance">[docs]</a>    <span class="k">def</span> <span class="nf">displayDistance</span><span class="p">(</span>
+
+<div class="viewcode-block" id="AutopackViewer.displayDistance">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayDistance">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayDistance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ramp_color1</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
         <span class="n">ramp_color2</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
@@ -2667,7 +2887,10 @@
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;distances&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.checkIngrSpheres"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrSpheres">[docs]</a>    <span class="k">def</span> <span class="nf">checkIngrSpheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.checkIngrSpheres">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrSpheres">[docs]</a>
+    <span class="k">def</span> <span class="nf">checkIngrSpheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;SpheresRep_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -2684,7 +2907,10 @@
                 <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AutopackViewer.checkIngrPartnerProperties"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrPartnerProperties">[docs]</a>    <span class="k">def</span> <span class="nf">checkIngrPartnerProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AutopackViewer.checkIngrPartnerProperties">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrPartnerProperties">[docs]</a>
+    <span class="k">def</span> <span class="nf">checkIngrPartnerProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="n">partners</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">getPartnersName</span><span class="p">()</span>
         <span class="n">allSph</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">alternate</span> <span class="ow">in</span> <span class="n">partners</span><span class="p">:</span>
@@ -2697,12 +2923,17 @@
             <span class="n">allSph</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">pta</span><span class="p">,</span> <span class="n">ptb</span><span class="p">,</span> <span class="n">ptc</span><span class="p">,</span> <span class="n">ptd</span><span class="p">,</span> <span class="n">pte</span><span class="p">,</span> <span class="n">ptf</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sph</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">allSph</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">sph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="s2">&quot;sph&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">pos</span><span class="o">=</span><span class="n">sph</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">8.0</span><span class="p">)</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="s2">&quot;sph&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">pos</span><span class="o">=</span><span class="n">sph</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">8.0</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ColladaExporter"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.ColladaExporter">[docs]</a><span class="k">class</span> <span class="nc">ColladaExporter</span><span class="p">:</span>
+
+<div class="viewcode-block" id="ColladaExporter">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.ColladaExporter">[docs]</a>
+<span class="k">class</span> <span class="nc">ColladaExporter</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span></div>
+
         <span class="c1"># expot from the host, then correct the instance system.</span>
 </pre></div>
 
@@ -2744,7 +2975,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.upy.colors &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -357,7 +357,9 @@
 <span class="n">darkgrey</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.663</span><span class="p">,</span> <span class="mf">0.663</span><span class="p">,</span> <span class="mf">0.663</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="RedWhiteBlueRamp"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.RedWhiteBlueRamp">[docs]</a><span class="k">def</span> <span class="nf">RedWhiteBlueRamp</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+<div class="viewcode-block" id="RedWhiteBlueRamp">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.RedWhiteBlueRamp">[docs]</a>
+<span class="k">def</span> <span class="nf">RedWhiteBlueRamp</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
     <span class="n">ramp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
     <span class="n">mid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">incr</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
@@ -370,7 +372,10 @@
     <span class="k">return</span> <span class="n">ramp</span></div>
 
 
-<div class="viewcode-block" id="getRamp"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.getRamp">[docs]</a><span class="k">def</span> <span class="nf">getRamp</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+
+<div class="viewcode-block" id="getRamp">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.getRamp">[docs]</a>
+<span class="k">def</span> <span class="nf">getRamp</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">ramp</span> <span class="o">=</span> <span class="n">TwoColorRamp</span><span class="p">(</span><span class="n">col1</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">col2</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
@@ -380,7 +385,10 @@
     <span class="k">return</span> <span class="n">ramp</span></div>
 
 
-<div class="viewcode-block" id="TwoColorRamp"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.TwoColorRamp">[docs]</a><span class="k">def</span> <span class="nf">TwoColorRamp</span><span class="p">(</span><span class="n">col1</span><span class="o">=</span><span class="n">red</span><span class="p">,</span> <span class="n">col2</span><span class="o">=</span><span class="n">white</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TwoColorRamp">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.TwoColorRamp">[docs]</a>
+<span class="k">def</span> <span class="nf">TwoColorRamp</span><span class="p">(</span><span class="n">col1</span><span class="o">=</span><span class="n">red</span><span class="p">,</span> <span class="n">col2</span><span class="o">=</span><span class="n">white</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="k">if</span> <span class="n">alpha</span><span class="p">:</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
@@ -394,7 +402,10 @@
     <span class="k">return</span> <span class="n">ramp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ThreeColorRamp"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.ThreeColorRamp">[docs]</a><span class="k">def</span> <span class="nf">ThreeColorRamp</span><span class="p">(</span><span class="n">col1</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span> <span class="n">col2</span><span class="o">=</span><span class="n">white</span><span class="p">,</span> <span class="n">col3</span><span class="o">=</span><span class="n">red</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ThreeColorRamp">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.ThreeColorRamp">[docs]</a>
+<span class="k">def</span> <span class="nf">ThreeColorRamp</span><span class="p">(</span><span class="n">col1</span><span class="o">=</span><span class="n">blue</span><span class="p">,</span> <span class="n">col2</span><span class="o">=</span><span class="n">white</span><span class="p">,</span> <span class="n">col3</span><span class="o">=</span><span class="n">red</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="k">if</span> <span class="n">alpha</span><span class="p">:</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
@@ -411,12 +422,18 @@
     <span class="k">return</span> <span class="n">ramp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="hexToRgb"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.hexToRgb">[docs]</a><span class="k">def</span> <span class="nf">hexToRgb</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+
+<div class="viewcode-block" id="hexToRgb">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.hexToRgb">[docs]</a>
+<span class="k">def</span> <span class="nf">hexToRgb</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
     <span class="n">split</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">split</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="map_colors"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.map_colors">[docs]</a><span class="k">def</span> <span class="nf">map_colors</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">colorMap</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="map_colors">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.map_colors">[docs]</a>
+<span class="k">def</span> <span class="nf">map_colors</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">colorMap</span><span class="p">,</span> <span class="n">mini</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get colors corresponding to values in a colormap&quot;&quot;&quot;</span>
 
     <span class="n">values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
@@ -449,7 +466,10 @@
     <span class="k">return</span> <span class="n">col</span></div>
 
 
-<div class="viewcode-block" id="create_divergent_color_map_with_scaled_values"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.create_divergent_color_map_with_scaled_values">[docs]</a><span class="k">def</span> <span class="nf">create_divergent_color_map_with_scaled_values</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">,</span> <span class="n">color_list</span><span class="p">):</span>
+
+<div class="viewcode-block" id="create_divergent_color_map_with_scaled_values">
+<a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.colors.create_divergent_color_map_with_scaled_values">[docs]</a>
+<span class="k">def</span> <span class="nf">create_divergent_color_map_with_scaled_values</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">,</span> <span class="n">color_list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Use case: you want a divergent scale centered at 0, but with drastically different</span>
 <span class="sd">    negative scale and positive scale. Ie, min number is -20, and max is 2000.</span>
@@ -490,6 +510,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">color_map</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">zero_point</span><span class="p">,</span> <span class="n">color_list</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
     <span class="k">return</span> <span class="n">color_map</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -531,7 +552,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

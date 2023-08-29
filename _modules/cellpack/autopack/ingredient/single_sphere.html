@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.ingredient.single_sphere &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -51,7 +51,9 @@
 <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
 
 
-<div class="viewcode-block" id="SingleSphereIngr"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr">[docs]</a><span class="k">class</span> <span class="nc">SingleSphereIngr</span><span class="p">(</span><span class="n">Ingredient</span><span class="p">):</span>
+<div class="viewcode-block" id="SingleSphereIngr">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr">[docs]</a>
+<span class="k">class</span> <span class="nc">SingleSphereIngr</span><span class="p">(</span><span class="n">Ingredient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This Ingredient is represented by a single sphere</span>
 <span class="sd">    and either a single radius, or a list of radii and offset vectors</span>
@@ -136,7 +138,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span> <span class="o">=</span> <span class="n">radius</span>
 
-<div class="viewcode-block" id="SingleSphereIngr.collision_jitter"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collision_jitter">[docs]</a>    <span class="k">def</span> <span class="nf">collision_jitter</span><span class="p">(</span>
+<div class="viewcode-block" id="SingleSphereIngr.collision_jitter">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collision_jitter">[docs]</a>
+    <span class="k">def</span> <span class="nf">collision_jitter</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">jtrans</span><span class="p">,</span>
         <span class="n">rotMat</span><span class="p">,</span>
@@ -203,7 +207,10 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.collides_with_compartment">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collides_with_compartment">[docs]</a>
+    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">jtrans</span><span class="p">,</span>
@@ -221,7 +228,10 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.get_signed_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.get_signed_distance">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">packing_location</span><span class="p">,</span>
         <span class="n">grid_point_location</span><span class="p">,</span>
@@ -234,7 +244,10 @@
         <span class="n">signed_distance_to_surface</span> <span class="o">=</span> <span class="n">distance_to_packing_location</span> <span class="o">-</span> <span class="n">radius</span>
         <span class="k">return</span> <span class="n">signed_distance_to_surface</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.get_new_distance_values"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_new_distance_values</span><span class="p">(</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.get_new_distance_values">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_new_distance_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">):</span>
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
@@ -262,7 +275,10 @@
                     <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
         <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.add_rb_node"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.add_rb_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_rb_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worldNP</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.add_rb_node">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.add_rb_node">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_rb_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worldNP</span><span class="p">):</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="n">BulletSphereShape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">)</span>
         <span class="n">inodenp</span> <span class="o">=</span> <span class="n">worldNP</span><span class="o">.</span><span class="n">attachNewNode</span><span class="p">(</span><span class="n">BulletRigidBodyNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setMass</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
@@ -273,7 +289,10 @@
         <span class="c1">#        spherenp.setPos(-2, 0, 4)</span>
         <span class="k">return</span> <span class="n">inodenp</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.add_rb_node_ode"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.add_rb_node_ode">[docs]</a>    <span class="k">def</span> <span class="nf">add_rb_node_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">pMat</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.add_rb_node_ode">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.add_rb_node_ode">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_rb_node_ode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">pMat</span><span class="p">):</span>
         <span class="n">body</span> <span class="o">=</span> <span class="n">OdeBody</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
         <span class="n">M</span> <span class="o">=</span> <span class="n">OdeMass</span><span class="p">()</span>
         <span class="n">M</span><span class="o">.</span><span class="n">setSphereTotal</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">)</span>
@@ -285,7 +304,10 @@
         <span class="n">geom</span><span class="o">.</span><span class="n">setBody</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">geom</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.initialize_mesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.initialize_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.initialize_mesh">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.initialize_mesh">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_basic&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
@@ -293,7 +315,10 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.create_circular_mask"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_circular_mask">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.create_circular_mask">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_circular_mask">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_circular_mask</span><span class="p">(</span>
         <span class="n">x_width</span><span class="p">,</span> <span class="n">y_width</span><span class="p">,</span> <span class="n">z_width</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
@@ -328,7 +353,10 @@
         <span class="n">mask</span> <span class="o">=</span> <span class="n">dist_from_center</span> <span class="o">&lt;=</span> <span class="n">radius</span>
         <span class="k">return</span> <span class="n">mask</span></div>
 
-<div class="viewcode-block" id="SingleSphereIngr.create_voxelization"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_voxelization">[docs]</a>    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.create_voxelization">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_voxelization">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">bounding_box</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -344,7 +372,9 @@
         <span class="p">)</span>
         <span class="n">image_data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
 
-        <span class="k">return</span> <span class="n">image_data</span></div></div>
+        <span class="k">return</span> <span class="n">image_data</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -385,7 +415,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

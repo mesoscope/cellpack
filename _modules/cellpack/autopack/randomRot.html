@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.randomRot &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -131,21 +131,34 @@
 <span class="n">_EPS</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mf">4.0</span>
 
 
-<div class="viewcode-block" id="RandomRot"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot">[docs]</a><span class="k">class</span> <span class="nc">RandomRot</span><span class="p">:</span>
+<div class="viewcode-block" id="RandomRot">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot">[docs]</a>
+<span class="k">class</span> <span class="nc">RandomRot</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seedTable</span> <span class="o">=</span> <span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RandomRot.getOld"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.getOld">[docs]</a>    <span class="k">def</span> <span class="nf">getOld</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RandomRot.getOld">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.getOld">[docs]</a>
+    <span class="k">def</span> <span class="nf">getOld</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbRot</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="p">[</span><span class="n">n</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="RandomRot.setSeed"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.setSeed">[docs]</a>    <span class="k">def</span> <span class="nf">setSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RandomRot.setSeed">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.setSeed">[docs]</a>
+    <span class="k">def</span> <span class="nf">setSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seedTable</span> <span class="o">=</span> <span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RandomRot.get"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RandomRot.get">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.get">[docs]</a>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_rotation_matrix</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="RandomRot.random_quaternion"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_quaternion">[docs]</a>    <span class="k">def</span> <span class="nf">random_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RandomRot.random_quaternion">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_quaternion">[docs]</a>
+    <span class="k">def</span> <span class="nf">random_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return uniform random unit quaternion.</span>
 
 <span class="sd">        rand: array like or None</span>
@@ -179,7 +192,10 @@
             <span class="p">]</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RandomRot.quaternion_matrix"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.quaternion_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quaternion</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RandomRot.quaternion_matrix">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.quaternion_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quaternion</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return homogeneous rotation matrix from quaternion.</span>
 
 <span class="sd">        &gt;&gt;&gt; M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])</span>
@@ -208,7 +224,10 @@
             <span class="p">]</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RandomRot.random_rotation_matrix"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">random_rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="RandomRot.random_rotation_matrix">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">random_rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return uniform random rotation matrix.</span>
 
 <span class="sd">        rand: array like</span>
@@ -220,7 +239,9 @@
 <span class="sd">        True</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_quaternion</span><span class="p">(</span><span class="n">rand</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_quaternion</span><span class="p">(</span><span class="n">rand</span><span class="p">))</span></div>
+</div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -266,7 +287,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>

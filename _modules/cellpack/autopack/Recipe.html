@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cellpack.autopack.Recipe &#8212; cellPack 1.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=89b800e6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=514cf933" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=98d46b1a"></script>
+    <script src="../../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -83,7 +83,9 @@
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span><span class="p">,</span> <span class="n">seed</span>
 
 
-<div class="viewcode-block" id="Recipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe">[docs]</a><span class="k">class</span> <span class="nc">Recipe</span><span class="p">:</span>
+<div class="viewcode-block" id="Recipe">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe">[docs]</a>
+<span class="k">class</span> <span class="nc">Recipe</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    a recipe provides ingredients that are each defining a protein identity</span>
 <span class="sd">    along with radius and molarity for this protein.</span>
@@ -99,7 +101,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
-<div class="viewcode-block" id="Recipe.is_key"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.is_key">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Recipe.is_key">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.is_key">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_key</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="n">composition_dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function to find if data in composition list</span>
@@ -115,7 +119,10 @@
             <span class="n">composition_info</span> <span class="o">=</span> <span class="n">key_or_dict</span>
         <span class="k">return</span> <span class="n">is_key</span><span class="p">,</span> <span class="n">composition_info</span></div>
 
-<div class="viewcode-block" id="Recipe.resolve_composition"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resolve_composition">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="Recipe.resolve_composition">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resolve_composition">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resolve_composition</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">):</span>
         <span class="n">composition_dict</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span>
         <span class="c1"># keys in reference_dict are downstream objects,</span>
@@ -149,7 +156,10 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">root</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">compartment_keys</span><span class="p">,</span> <span class="n">reference_dict</span><span class="p">,</span> <span class="n">referenced_objects</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Recipe.delIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.delIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">delIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Recipe.delIngredient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.delIngredient">[docs]</a>
+    <span class="k">def</span> <span class="nf">delIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;remove the given ingredient from the recipe&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="n">ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
@@ -157,7 +167,10 @@
         <span class="k">if</span> <span class="n">ingr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Recipe.addIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.addIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">addIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Recipe.addIngredient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.addIngredient">[docs]</a>
+    <span class="k">def</span> <span class="nf">addIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;add the given ingredient from the recipe&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
@@ -172,7 +185,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;add ingredient </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Recipe.setCount"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.setCount">[docs]</a>    <span class="k">def</span> <span class="nf">setCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  <span class="c1"># area=False,</span>
+
+<div class="viewcode-block" id="Recipe.setCount">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.setCount">[docs]</a>
+    <span class="k">def</span> <span class="nf">setCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  <span class="c1"># area=False,</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;set the count of n of molecule for every ingredients</span>
 <span class="sd">        in the recipe, and push them in te activeIngredient list</span>
 <span class="sd">        David and Graham independently worked out and corrected the molarity calculation for Å as shown in the following lines</span>
@@ -247,14 +263,20 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">activeIngredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Recipe.resetIngrs"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngrs">[docs]</a>    <span class="k">def</span> <span class="nf">resetIngrs</span><span class="p">(</span>
+
+<div class="viewcode-block" id="Recipe.resetIngrs">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngrs">[docs]</a>
+    <span class="k">def</span> <span class="nf">resetIngrs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;reset the states of all recipe ingredients&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Recipe.getMinMaxProteinSize"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize">[docs]</a>    <span class="k">def</span> <span class="nf">getMinMaxProteinSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Recipe.getMinMaxProteinSize">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize">[docs]</a>
+    <span class="k">def</span> <span class="nf">getMinMaxProteinSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the mini and maxi radius from all recipe ingredients&quot;&quot;&quot;</span>
         <span class="n">mini</span> <span class="o">=</span> <span class="mf">9999999.0</span>
         <span class="n">maxi</span> <span class="o">=</span> <span class="mi">0</span>
@@ -268,19 +290,27 @@
                 <span class="n">mini</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">min_radius</span>
         <span class="k">return</span> <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span></div>
 
-<div class="viewcode-block" id="Recipe.sort"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.sort">[docs]</a>    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Recipe.sort">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.sort">[docs]</a>
+    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;sort the ingredients using the min Radius&quot;&quot;&quot;</span>
         <span class="c1"># sort tuples in molecule list according to radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">min_radius</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Recipe.printFillInfo"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.printFillInfo">[docs]</a>    <span class="k">def</span> <span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Recipe.printFillInfo">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.printFillInfo">[docs]</a>
+    <span class="k">def</span> <span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;print the states of all recipe ingredients&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="n">indent</span>
                 <span class="o">+</span> <span class="s2">&quot;ingr: </span><span class="si">%s</span><span class="s2"> target: </span><span class="si">%3d</span><span class="s2"> placed </span><span class="si">%3d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span>
                 <span class="o">%</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="p">)</span></div></div>
+            <span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -321,7 +351,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
     </div>
   </body>
 </html>
