@@ -2,10 +2,11 @@
 # standardmodule
 import os
 import webbrowser
+from pathlib import Path
+
 import matplotlib
 import numpy as np
 import trimesh
-from pathlib import Path
 from botocore.exceptions import NoCredentialsError
 
 from simulariumio import (

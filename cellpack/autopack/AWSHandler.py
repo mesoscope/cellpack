@@ -1,7 +1,8 @@
 import logging
+from pathlib import Path
+
 import boto3
 from botocore.exceptions import ClientError
-from pathlib import Path
 
 
 class AWSHandler(object):
