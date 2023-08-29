@@ -1340,7 +1340,6 @@ class simulariumHelper(hostHelper.Helper):
         )
         TrajectoryConverter(converted_data).save(file_name, False)
         return file_name
-    
 
     def raycast(self, **kw):
         intersect = False
@@ -1383,7 +1382,7 @@ class simulariumHelper(hostHelper.Helper):
         file_name = handler.upload_file(file_path)
         url = handler.create_presigned_url(file_name)
         return url
-    
+
     @staticmethod
     def open_in_simularium(aws_url):
         webbrowser.open_new_tab(
