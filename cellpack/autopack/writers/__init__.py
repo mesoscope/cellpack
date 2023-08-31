@@ -9,6 +9,21 @@ import numpy
 from collections import OrderedDict
 
 from cellpack import autopack
+from cellpack.autopack.ingredient.grow import ActinIngredient, GrowIngredient
+import cellpack.autopack.transformation as tr
+
+
+def updatePositionsRadii(ingr):
+    toupdate = {"positions": []}
+    toupdate["radii"] = []
+    if getattr(ingr, "positions", None) is not None:
+        nLOD = len(ingr.positions)
+        for i in range(nLOD):
+            toupdate["positions"].append(
+                {"coords": numpy.array(ingr.positions[i]).flatten().tolist()}
+            )
+            toupdate["radii"].append({"radii": ingr.radii[i]})
+    return toupdate
 
 
 class IOingredientTool(object):
@@ -35,6 +50,62 @@ class IOingredientTool(object):
             f = open(filename + ".py", "w")
             f.write(ingrnode)
             f.close()
+
+    def ingrJsonNode(self, ingr, result=False, kwds=None, transpose=False):
+        # force position instead of sphereFile
+        ingdic = OrderedDict()
+        if kwds is None:
+            kwds = ingr.KWDS
+        for k in kwds:
+            v = getattr(ingr, str(k))
+            #            if hasattr(v,"tolist"):
+            #                v=v.tolist()
+            #            ingdic[k] = v
+            if v is not None:
+                ingdic.update(Writer.setValueToJsonNode(v, str(k)))
+        # if sphereTree file present should not use the pos-radii keyword
+        # if ingr.sphereFile is not None and not result:
+        # remove the position and radii key
+        #    ingdic.pop("positions", None)
+        #    ingdic.pop("radii", None)
+        # update the positions and radii to new format
+        toupdate = updatePositionsRadii(ingr)
+        ingdic.update(toupdate)
+        if numpy.sum(ingr.offset) != 0.0:
+            if "transform" not in ingr.source:
+                ingr.source["transform"] = {"offset": ingr.offset}
+            else:
+                ingr.source["transform"]["offset"] = ingr.offset
+
+        # reslt ?s
+        if result:
+            ingdic["results"] = []
+            for r in ingr.results:
+                # position
+                if hasattr(r[0], "tolist"):
+                    r[0] = r[0].tolist()
+                # rotation
+                if hasattr(r[1], "tolist"):
+                    r[1] = r[1].tolist()
+                R = numpy.array(r[1]).tolist()  # this will not work with cellvIEW?
+                if transpose:
+                    R = (
+                        numpy.array(r[1]).transpose().tolist()
+                    )  # this will not work with cellvIEW?
+                # transpose ?
+                if self.use_quaternion:
+                    R = tr.quaternion_from_matrix(R).tolist()
+                ingdic["results"].append([r[0], R])
+            if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
+                ingdic["nbCurve"] = ingr.nbCurve
+                for i in range(ingr.nbCurve):
+                    lp = numpy.array(ingr.listePtLinear[i])
+                    ingr.listePtLinear[i] = lp.tolist()
+                    ingdic["curve" + str(i)] = ingr.listePtLinear[i]
+                #            res=numpy.array(ingdic["results"]).transpose()
+                #            ingdic["results"]=res.tolist()
+        ingdic["name"] = ingr.composition_name
+        return ingdic
 
 
 class NumpyArrayEncoder(json.JSONEncoder):
@@ -78,9 +149,7 @@ class Writer(object):
         vdic[attrname] = value
         return vdic
 
-    def save_as_simularium(
-        self, env, result_file_path, all_ingr_as_array, compartments
-    ):
+    def save_as_simularium(self, env, all_ingr_as_array, compartments):
         env.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
@@ -103,15 +172,11 @@ class Writer(object):
                 env.helper.add_grid_data_to_scene(
                     f"{gradient.name}-weights", grid_positions, gradient.weight
                 )
-
-        env.helper.writeToFile(
-            f"{result_file_path}_results", env.boundingBox, env.name, env.version
-        )
+        env.helper.writeToFile(env.result_file, env.boundingBox, env.name, env.version)
 
     def save_Mixed_asJson(
         self,
         env,
-        setupfile,
         useXref=True,
         kwds=None,
         result=False,
@@ -127,14 +192,12 @@ class Writer(object):
         """
         io_ingr = IOingredientTool(env=env)
         io_ingr.use_quaternion = quaternion
-        env.setupfile = setupfile  # +".json"provide the server?
+        file_name = f"{env.result_file}.json"
         # the output path for this recipes files
-        if env.setupfile.find("http") != -1 or env.setupfile.find("ftp") != -1:
-            pathout = os.path.dirname(
-                os.path.abspath(autopack.retrieveFile(env.setupfile))
-            )
+        if file_name.find("http") != -1 or file_name.find("ftp") != -1:
+            pathout = os.path.dirname(os.path.abspath(autopack.retrieveFile(file_name)))
         else:
-            pathout = os.path.dirname(os.path.abspath(env.setupfile))
+            pathout = os.path.dirname(os.path.abspath(file_name))
         if env.version is None:
             env.version = "1.0"
         env.jsondic = OrderedDict(
@@ -143,8 +206,6 @@ class Writer(object):
         if env.custom_paths:
             # this was the used path at loading time
             env.jsondic["recipe"]["paths"] = env.custom_paths
-        if result:
-            env.jsondic["recipe"]["setupfile"] = env.setupfile
         if packing_options:
             env.jsondic["options"] = {}
             for k in env.OPTIONS:
@@ -291,7 +352,7 @@ class Writer(object):
                         env.jsondic["compartments"][str(o.name)]["interior"][
                             "ingredients"
                         ][ingr.composition_name]["name"] = ingr.composition_name
-        with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
+        with open(file_name, "w") as fp:  # doesnt work with symbol link ?
             if indent:
                 json.dump(
                     env.jsondic,
@@ -319,7 +380,6 @@ class Writer(object):
     def save(
         self,
         env,
-        setupfile,
         kwds=None,
         result=False,
         grid=False,
@@ -334,7 +394,6 @@ class Writer(object):
         if output_format == "json":
             self.save_Mixed_asJson(
                 env,
-                setupfile,
                 useXref=False,
                 kwds=kwds,
                 result=result,
@@ -345,6 +404,6 @@ class Writer(object):
                 transpose=transpose,
             )
         elif output_format == "simularium":
-            self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
+            self.save_as_simularium(env, all_ingr_as_array, compartments)
         else:
             print("format output " + output_format + " not recognized (json,python)")
