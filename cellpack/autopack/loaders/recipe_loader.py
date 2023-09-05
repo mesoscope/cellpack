@@ -17,6 +17,7 @@ from cellpack.autopack.interface_objects import (
 )
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert as convert_v1_to_v2
 from cellpack.autopack.loaders.migrate_v2_to_v2_1 import convert as convert_v2_to_v2_1
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 CURRENT_VERSION = "2.1"
@@ -166,100 +167,15 @@ class RecipeLoader(object):
                 f"{old_recipe['format_version']} is not a format version we support"
             )
 
-    @staticmethod
-    def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
-        try:
-            grad_name = obj_data["gradient"]["name"]
-            obj_name = obj_data["name"]
-        except KeyError as e:
-            print(f"Missing keys in object: {e}")
-            return obj_dict, grad_dict
-
-        grad_dict[grad_name] = obj_data["gradient"]
-        obj_dict[obj_name]["gradient"] = grad_name
-        return obj_dict, grad_dict
-
-    @staticmethod
-    def _is_obj(comp_or_obj):
-        # if the top level of a downloaded comp doesn't have the key `name`, it's an obj
-        # TODO: true for all cases? better approaches?
-        return not comp_or_obj.get("name") and "object" in comp_or_obj
-
-    @staticmethod
-    def _collect_and_sort_data(comp_data):
-        """
-        Collect all object and gradient info from the downloaded firebase composition data
-        Return autopack object data dict and gradient data dict with name as key
-        Return restructured composition dict with "composition" as key
-        """
-        objects = {}
-        gradients = {}
-        composition = {}
-        for comp_name, comp_value in comp_data.items():
-            composition[comp_name] = {}
-            if "count" in comp_value and comp_value["count"] is not None:
-                composition[comp_name]["count"] = comp_value["count"]
-            if "object" in comp_value and comp_value["object"] is not None:
-                composition[comp_name]["object"] = comp_value["object"]["name"]
-                object_copy = copy.deepcopy(comp_value["object"])
-                objects[object_copy["name"]] = object_copy
-                if "gradient" in object_copy and isinstance(
-                    object_copy["gradient"], dict
-                ):
-                    objects, gradients = RecipeLoader._get_grad_and_obj(
-                        object_copy, objects, gradients
-                    )
-            if "regions" in comp_value and comp_value["regions"] is not None:
-                for region_name in comp_value["regions"]:
-                    composition[comp_name].setdefault("regions", {})[region_name] = []
-                    for region_item in comp_value["regions"][region_name]:
-                        if RecipeLoader._is_obj(region_item):
-                            composition[comp_name]["regions"][region_name].append(
-                                {
-                                    "object": region_item["object"].get("name"),
-                                    "count": region_item.get("count"),
-                                }
-                            )
-                            object_copy = copy.deepcopy(region_item["object"])
-                            objects[object_copy["name"]] = object_copy
-                            if "gradient" in object_copy and isinstance(
-                                object_copy["gradient"], dict
-                            ):
-                                objects, gradients = RecipeLoader._get_grad_and_obj(
-                                    object_copy, objects, gradients
-                                )
-                        else:
-                            composition[comp_name]["regions"][region_name].append(
-                                region_item["name"]
-                            )
-        return objects, gradients, composition
-
-    @staticmethod
-    def _compile_recipe_from_firebase(db_recipe_data, obj_dict, grad_dict, comp_dict):
-        """
-        Compile recipe data from firebase recipe data into a ready-to-pack structure
-        """
-        recipe_data = {
-            **{
-                k: db_recipe_data[k]
-                for k in ["format_version", "version", "name", "bounding_box"]
-            },
-            "objects": obj_dict,
-            "composition": comp_dict,
-        }
-        if grad_dict:
-            recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
-        return recipe_data
-
     def _read(self):
         new_values, database_name = autopack.load_file(
             self.file_path, self.db_handler, cache="recipes"
         )
         if database_name == "firebase":
-            objects, gradients, composition = RecipeLoader._collect_and_sort_data(
+            objects, gradients, composition = DBRecipeLoader._collect_and_sort_data(
                 new_values["composition"]
             )
-            new_values = RecipeLoader._compile_recipe_from_firebase(
+            new_values = DBRecipeLoader._compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )
         recipe_data = RecipeLoader.default_values.copy()

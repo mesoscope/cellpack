@@ -14,7 +14,7 @@ from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
-from cellpack.autopack.DBRecipeHandler import DBHandler
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -42,7 +42,7 @@ def pack(
     """
     if db_id == DATABASE_IDS.FIREBASE:
         db = FirebaseHandler()
-        db_handler = DBHandler(db)
+        db_handler = DBRecipeLoader(db)
     packing_config_data = ConfigLoader(config_path).config
     recipe_data = RecipeLoader(
         recipe, db_handler, packing_config_data["save_converted_recipe"]

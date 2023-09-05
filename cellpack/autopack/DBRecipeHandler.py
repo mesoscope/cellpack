@@ -21,6 +21,28 @@ class DataDoc(object):
     def is_key(string_or_dict):
         return not isinstance(string_or_dict, dict)
 
+    @staticmethod
+    def is_nested_list(item):
+        return (
+            isinstance(item, list)
+            and len(item) > 0
+            and isinstance(item[0], (list, tuple))
+        )
+
+    @staticmethod
+    def is_db_dict(item):
+        if isinstance(item, dict) and len(item) > 0:
+            for key, value in item.items():
+                if key.isdigit() and isinstance(value, list):
+                    return True
+        return False
+
+    @staticmethod
+    def is_obj(comp_or_obj):
+        # in resolved DB data, if the top level of a downloaded comp doesn't have the key `name`, it's an obj
+        # TODO: true for all cases? better approaches?
+        return not comp_or_obj.get("name") and "object" in comp_or_obj
+
 
 class CompositionDoc(DataDoc):
     """
@@ -124,7 +146,7 @@ class CompositionDoc(DataDoc):
         Recursively resolves the regions of a composition from local data.
         Restructure the local data to match the db data.
         """
-        unpack_recipe_data = DBHandler.prep_data_for_db(recipe_data)
+        unpack_recipe_data = DBUploader.prep_data_for_db(recipe_data)
         prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
         # `gradients` is a list, convert it to dict for easy access and replace
         CompositionDoc.gradient_list_to_dict(prep_recipe_data)
@@ -321,7 +343,7 @@ class ObjectDoc(DataDoc):
                 # if there is repr in the obj doc from db
                 full_doc_data = ObjectDoc.convert_representation(doc, db)
                 # unpack objects to dicts in local data for comparison
-                local_data = DBHandler.prep_data_for_db(self.as_dict())
+                local_data = DBUploader.prep_data_for_db(self.as_dict())
                 difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
                 if not difference:
                     return doc, db.doc_id(doc)
@@ -337,7 +359,7 @@ class GradientDoc(DataDoc):
         docs = db.get_doc_by_name("gradients", grad_name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                local_data = DBHandler.prep_data_for_db(db.doc_to_dict(doc))
+                local_data = DBUploader.prep_data_for_db(db.doc_to_dict(doc))
                 db_data = db.doc_to_dict(doc)
                 difference = DeepDiff(db_data, local_data, ignore_order=True)
                 if not difference:
@@ -345,31 +367,16 @@ class GradientDoc(DataDoc):
         return None, None
 
 
-class DBHandler(object):
+class DBUploader(object):
+    """
+    Handles the uploading of data to the database.
+    """
+
     def __init__(self, db_handler):
         self.db = db_handler
         self.objects_to_path_map = {}
         self.comp_to_path_map = {}
         self.grad_to_path_map = {}
-
-    @staticmethod
-    def is_nested_list(item):
-        return (
-            isinstance(item, list)
-            and len(item) > 0
-            and isinstance(item[0], (list, tuple))
-        )
-
-    @staticmethod
-    def is_db_dict(item):
-        if isinstance(item, dict) and len(item) > 0:
-            for key, value in item.items():
-                if key.isdigit() and isinstance(value, list):
-                    return True
-        return False
-
-    def collect_docs_by_id(self, collection, id):
-        return self.db.get_doc_by_id(collection, id)
 
     @staticmethod
     def prep_data_for_db(data):
@@ -379,18 +386,18 @@ class DBHandler(object):
         modified_data = {}
         for key, value in data.items():
             # convert 2d array to dict
-            if DBHandler.is_nested_list(value):
+            if DataDoc.is_nested_list(value):
                 flatten_dict = dict(zip([str(i) for i in range(len(value))], value))
-                modified_data[key] = DBHandler.prep_data_for_db(flatten_dict)
+                modified_data[key] = DBUploader.prep_data_for_db(flatten_dict)
             # If the value is an object, we want to convert it to dict
             elif isinstance(value, object) and "__dict__" in dir(value):
                 unpacked_value = vars(value)
                 modified_data[key] = unpacked_value
                 if isinstance(unpacked_value, dict):
-                    modified_data[key] = DBHandler.prep_data_for_db(unpacked_value)
+                    modified_data[key] = DBUploader.prep_data_for_db(unpacked_value)
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
-                modified_data[key] = DBHandler.prep_data_for_db(value)
+                modified_data[key] = DBUploader.prep_data_for_db(value)
             else:
                 modified_data[key] = value
         return modified_data
@@ -400,7 +407,7 @@ class DBHandler(object):
         If should_write is true, upload the data to the database
         """
         # check if we need to convert part of the data(2d arrays and objs to dict)
-        modified_data = DBHandler.prep_data_for_db(data)
+        modified_data = DBUploader.prep_data_for_db(data)
         if id is None:
             name = modified_data["name"]
             doc = self.db.upload_doc(collection, modified_data)
@@ -491,7 +498,7 @@ class DBHandler(object):
                 references_to_update[comp_name].update({"comp_id": doc_id})
         return references_to_update
 
-    def get_recipe_id(self, recipe_data):
+    def _get_recipe_id(self, recipe_data):
         """
         We use customized recipe id to declare recipe's name and version
         """
@@ -535,15 +542,24 @@ class DBHandler(object):
         """
         After all other collections are checked or uploaded, upload the recipe with references into db
         """
-        recipe_id = self.get_recipe_id(recipe_data)
+        recipe_id = self._get_recipe_id(recipe_data)
         # if the recipe is already exists in db, just return
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
         if recipe:
             print(f"{recipe_id} is already in firestore")
             return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
-        key = self.get_recipe_id(recipe_to_save)
+        key = self._get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
+
+
+class DBRecipeLoader(object):
+    """
+    Handles the logic for downloading and parsing the recipe data from the database.
+    """
+
+    def __init__(self, db_handler):
+        self.db = db_handler
 
     def prep_db_doc_for_download(self, db_doc):
         """
@@ -552,7 +568,7 @@ class DBHandler(object):
         prep_data = {}
         if isinstance(db_doc, dict):
             for key, value in db_doc.items():
-                if self.is_db_dict(value):
+                if DataDoc.is_db_dict(value):
                     unpack_dict = [value[str(i)] for i in range(len(value))]
                     prep_data[key] = unpack_dict
                 elif key == "composition":
@@ -575,3 +591,85 @@ class DBHandler(object):
                 else:
                     prep_data[key] = value
         return prep_data
+
+    def collect_docs_by_id(self, collection, id):
+        return self.db.get_doc_by_id(collection, id)
+
+    @staticmethod
+    def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
+        try:
+            grad_name = obj_data["gradient"]["name"]
+            obj_name = obj_data["name"]
+        except KeyError as e:
+            print(f"Missing keys in object: {e}")
+            return obj_dict, grad_dict
+
+        grad_dict[grad_name] = obj_data["gradient"]
+        obj_dict[obj_name]["gradient"] = grad_name
+        return obj_dict, grad_dict
+
+    @staticmethod
+    def _collect_and_sort_data(comp_data):
+        """
+        Collect all object and gradient info from the downloaded composition data
+        Return autopack object data dict and gradient data dict with name as key
+        Return restructured composition dict with "composition" as key
+        """
+        objects = {}
+        gradients = {}
+        composition = {}
+        for comp_name, comp_value in comp_data.items():
+            composition[comp_name] = {}
+            if "count" in comp_value and comp_value["count"] is not None:
+                composition[comp_name]["count"] = comp_value["count"]
+            if "object" in comp_value and comp_value["object"] is not None:
+                composition[comp_name]["object"] = comp_value["object"]["name"]
+                object_copy = copy.deepcopy(comp_value["object"])
+                objects[object_copy["name"]] = object_copy
+                if "gradient" in object_copy and isinstance(
+                    object_copy["gradient"], dict
+                ):
+                    objects, gradients = DBRecipeLoader._get_grad_and_obj(
+                        object_copy, objects, gradients
+                    )
+            if "regions" in comp_value and comp_value["regions"] is not None:
+                for region_name in comp_value["regions"]:
+                    composition[comp_name].setdefault("regions", {})[region_name] = []
+                    for region_item in comp_value["regions"][region_name]:
+                        if DataDoc.is_obj(region_item):
+                            composition[comp_name]["regions"][region_name].append(
+                                {
+                                    "object": region_item["object"].get("name"),
+                                    "count": region_item.get("count"),
+                                }
+                            )
+                            object_copy = copy.deepcopy(region_item["object"])
+                            objects[object_copy["name"]] = object_copy
+                            if "gradient" in object_copy and isinstance(
+                                object_copy["gradient"], dict
+                            ):
+                                objects, gradients = DBRecipeLoader._get_grad_and_obj(
+                                    object_copy, objects, gradients
+                                )
+                        else:
+                            composition[comp_name]["regions"][region_name].append(
+                                region_item["name"]
+                            )
+        return objects, gradients, composition
+
+    @staticmethod
+    def _compile_db_recipe_data(db_recipe_data, obj_dict, grad_dict, comp_dict):
+        """
+        Compile recipe data from db recipe data into a ready-to-pack structure
+        """
+        recipe_data = {
+            **{
+                k: db_recipe_data[k]
+                for k in ["format_version", "version", "name", "bounding_box"]
+            },
+            "objects": obj_dict,
+            "composition": comp_dict,
+        }
+        if grad_dict:
+            recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
+        return recipe_data
