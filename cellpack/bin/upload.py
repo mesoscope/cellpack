@@ -1,14 +1,9 @@
-from enum import Enum
 import fire
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader
 
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
-
-
-class DATABASE_IDS(Enum):
-    FIREBASE = "firebase"
-    GITHUB = "github"
 
 
 def upload(

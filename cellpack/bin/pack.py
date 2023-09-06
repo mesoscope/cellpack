@@ -1,4 +1,3 @@
-from enum import Enum
 import fire
 from os import path
 import logging
@@ -15,17 +14,13 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
-
-
-class DATABASE_IDS(Enum):
-    FIREBASE = "firebase"
-    GITHUB = "github"
 
 
 def pack(
