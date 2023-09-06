@@ -167,7 +167,7 @@ def test_get_grad_and_obj():
 
 @pytest.fixture
 def sort_data_from_composition():
-    return DBRecipeLoader._collect_and_sort_data(
+    return DBRecipeLoader.collect_and_sort_data(
         downloaded_data_from_firebase["composition"]
     )
 
@@ -186,7 +186,7 @@ def test_collect_and_sort_data(sort_data_from_composition):
 
 def test_compile_db_recipe_data(sort_data_from_composition):
     objects, gradients, composition = sort_data_from_composition
-    compiled_recipe = DBRecipeLoader._compile_db_recipe_data(
+    compiled_recipe = DBRecipeLoader.compile_db_recipe_data(
         downloaded_data_from_firebase, objects, gradients, composition
     )
     assert compiled_recipe == compiled_firebase_recipe_example

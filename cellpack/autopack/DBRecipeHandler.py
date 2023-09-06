@@ -609,7 +609,7 @@ class DBRecipeLoader(object):
         return obj_dict, grad_dict
 
     @staticmethod
-    def _collect_and_sort_data(comp_data):
+    def collect_and_sort_data(comp_data):
         """
         Collect all object and gradient info from the downloaded composition data
         Return autopack object data dict and gradient data dict with name as key
@@ -658,7 +658,7 @@ class DBRecipeLoader(object):
         return objects, gradients, composition
 
     @staticmethod
-    def _compile_db_recipe_data(db_recipe_data, obj_dict, grad_dict, comp_dict):
+    def compile_db_recipe_data(db_recipe_data, obj_dict, grad_dict, comp_dict):
         """
         Compile recipe data from db recipe data into a ready-to-pack structure
         """

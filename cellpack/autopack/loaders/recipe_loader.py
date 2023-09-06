@@ -169,10 +169,10 @@ class RecipeLoader(object):
     def _read(self):
         new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
         if database_name == "firebase":
-            objects, gradients, composition = DBRecipeLoader._collect_and_sort_data(
+            objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
                 new_values["composition"]
             )
-            new_values = DBRecipeLoader._compile_db_recipe_data(
+            new_values = DBRecipeLoader.compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )
         recipe_data = RecipeLoader.default_values.copy()
