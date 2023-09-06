@@ -1381,8 +1381,6 @@ class simulariumHelper(hostHelper.Helper):
             region_name="us-west-2",
         )
         url = handler.save_file(file_path)
-        if url is None:
-            raise Exception("Unable to store file to S3")
         return url
 
     @staticmethod
