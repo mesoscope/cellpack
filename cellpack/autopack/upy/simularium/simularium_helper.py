@@ -1380,8 +1380,9 @@ class simulariumHelper(hostHelper.Helper):
             sub_folder_name="simularium/",
             region_name="us-west-2",
         )
-        file_name = handler.upload_file(file_path)
-        url = handler.create_presigned_url(file_name)
+        url = handler.save_file(file_path)
+        if url is None:
+            raise Exception("Unable to store file to S3")
         return url
 
     @staticmethod
