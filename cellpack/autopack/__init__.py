@@ -196,7 +196,6 @@ if doit:
                 autopackdir = pref_path["autopackdir"]
 
 
-
 REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
