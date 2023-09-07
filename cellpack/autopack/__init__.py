@@ -49,8 +49,8 @@ import ssl
 import json
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
-from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
 
@@ -196,18 +196,15 @@ if doit:
                 autopackdir = pref_path["autopackdir"]
 
 
-class DATABASE_NAME(MetaEnum):
-    GITHUB = "github:"
-    FIREBASE = "firebase:"
-
 
 REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
-    DATABASE_NAME.GITHUB: autoPACKserver,
-    DATABASE_NAME.FIREBASE: None,
+    f"{DATABASE_IDS.GITHUB}:": autoPACKserver,
+    f"{DATABASE_IDS.FIREBASE}:": None,
 }
+
 
 global CURRENT_RECIPE_PATH
 CURRENT_RECIPE_PATH = appdata
@@ -284,7 +281,7 @@ def is_remote_path(file_path):
     """
     @param file_path: str
     """
-    for ele in DATABASE_NAME:
+    for ele in DATABASE_IDS.with_colon():
         if ele in file_path:
             return True
 
