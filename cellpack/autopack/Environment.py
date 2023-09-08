@@ -71,12 +71,14 @@ from cellpack.autopack.loaders.utils import create_output_dir
 from cellpack.autopack.utils import (
     cmp_to_key,
     expand_object_using_key,
+    get_value_from_distribution,
+    get_max_value_from_distribution,
+    get_min_value_from_distribution,
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
     load_object_from_pickle,
 )
-from cellpack.autopack.interface_objects import INGREDIENT_TYPE
 from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
@@ -622,7 +624,7 @@ class Environment(CompartmentList):
                 vRotationString = ""
                 result = []
                 matCount = 0
-                for pos, rot, ingr, ptInd in o.molecules:
+                for pos, rot, ingr, _, _ in o.molecules:
                     # BEGIN: newer code from Theis version added July 5, 2012
                     if hasattr(self, "afviewer"):
                         mat = rot.copy()
@@ -1463,7 +1465,7 @@ class Environment(CompartmentList):
         """
         Unused
         """
-        jtrans, rotMatj, ingr, ptInd = mingrs
+        jtrans, rotMatj, ingr, ptInd, _ = mingrs
         centT = ingr.transformPoints(jtrans, rotMatj, ingr.positions[-1])
         insidePoints = {}
         newDistPoints = {}
@@ -1791,13 +1793,19 @@ class Environment(CompartmentList):
         if compNum == 0:  # cytoplasm -> use cyto and all surfaces
             for ingr1 in self.activeIngr:
                 if ingr1.compNum >= 0:
-                    r = ingr1.encapsulating_radius
+                    if hasattr(ingr1, "max_radius"):
+                        r = ingr1.max_radius
+                    else:
+                        r = ingr1.encapsulating_radius
                     if r > mr:
                         mr = r
         else:
             for ingr1 in self.activeIngr:
                 if ingr1.compNum == compNum or ingr1.compNum == -compNum:
-                    r = ingr1.encapsulating_radius
+                    if hasattr(ingr1, "max_radius"):
+                        r = ingr1.max_radius
+                    else:
+                        r = ingr1.encapsulating_radius
                     if r > mr:
                         mr = r
         return mr
@@ -1977,7 +1985,7 @@ class Environment(CompartmentList):
             self.afviewer.vi.resetProgressBar()
         ingredients = {}
         all_ingr_as_array = self.molecules
-        for pos, rot, ingr, ptInd in self.molecules:
+        for pos, rot, ingr, ptInd, _ in self.molecules:
             if ingr.name not in ingredients:
                 ingredients[ingr.name] = [ingr, [], [], []]
             mat = rot.copy()
@@ -1986,7 +1994,7 @@ class Environment(CompartmentList):
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
         for compartment in self.compartments:
-            for pos, rot, ingr, ptInd in compartment.molecules:
+            for pos, rot, ingr, ptInd, _ in compartment.molecules:
                 if ingr.name not in ingredients:
                     ingredients[ingr.name] = [ingr, [], [], []]
                 mat = rot.copy()
@@ -2018,38 +2026,6 @@ class Environment(CompartmentList):
         expected_min_distance = self.smallestProteinSize * 2
         return min_distance < expected_min_distance + 0.001
 
-    @staticmethod
-    def get_value_from_distribution(distribution_options, return_int=False):
-        """
-        Returns a value from the distribution options
-        """
-        if distribution_options.get("distribution") == "uniform":
-            if return_int:
-                return int(
-                    numpy.random.randint(
-                        distribution_options.get("min", 0),
-                        distribution_options.get("max", 1),
-                    )
-                )
-            else:
-                return numpy.random.uniform(
-                    distribution_options.get("min", 0),
-                    distribution_options.get("max", 1),
-                )
-        if distribution_options.get("distribution") == "normal":
-            value = numpy.random.normal(
-                distribution_options.get("mean", 0), distribution_options.get("std", 1)
-            )
-        elif distribution_options.get("distribution") == "list":
-            value = numpy.random.choice(distribution_options.get("list_values", None))
-        else:
-            value = None
-
-        if return_int:
-            value = int(numpy.rint(value))
-
-        return value
-
     def update_variable_ingredient_attributes(self, allIngredients):
         """
         updates variable attributes for all ingredients based on input options
@@ -2057,7 +2033,7 @@ class Environment(CompartmentList):
         for ingr in allIngredients:
             if hasattr(ingr, "count_options") and ingr.count_options is not None:
 
-                count = self.get_value_from_distribution(
+                count = get_value_from_distribution(
                     distribution_options=ingr.count_options
                 )
                 if count is not None:
@@ -2065,13 +2041,17 @@ class Environment(CompartmentList):
                     ingr.left_to_place = count
 
             if hasattr(ingr, "size_options") and ingr.size_options is not None:
-                if ingr.type == INGREDIENT_TYPE.SINGLE_SPHERE:
-                    radius = self.get_value_from_distribution(
-                        distribution_options=ingr.size_options
-                    )
-                    if radius is not None:
-                        ingr.radius = radius
-                        ingr.encapsulating_radius = radius
+                max_radius = get_max_value_from_distribution(
+                    distribution_options=ingr.size_options
+                )
+                if max_radius is not None:
+                    ingr.max_radius = max_radius
+
+                min_radius = get_min_value_from_distribution(
+                    distribution_options=ingr.size_options
+                )
+                if min_radius is not None:
+                    ingr.min_radius = min_radius
 
     def pack_grid(
         self,
@@ -2451,10 +2431,12 @@ class Environment(CompartmentList):
         if len(ingr.results):
             for elem in ingr.results:
                 if ingr.compNum == 0:
-                    self.molecules.append([elem[0], numpy.array(elem[1]), ingr, 0])
+                    self.molecules.append(
+                        [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
+                    )
                 else:
                     ingr.recipe.compartment.molecules.append(
-                        [elem[0], numpy.array(elem[1]), ingr, 0]
+                        [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
                     )
 
     def restore(self, result, orgaresult, freePoint, tree=False):
@@ -2534,15 +2516,15 @@ class Environment(CompartmentList):
         # pickle.dump(self.molecules, rfile)
         # OR
         result = []
-        for pos, rot, ingr, ptInd in self.molecules:
-            result.append([pos, rot, ingr.name, ingr.compNum, ptInd])
+        for pos, rot, ingr, ptInd, radius in self.molecules:
+            result.append([pos, rot, ingr.name, ingr.compNum, ptInd, radius])
         pickle.dump(result, rfile)
         rfile.close()
         for i, orga in enumerate(self.compartments):
             orfile = open(resultfilename + "_organelle_" + str(i), "wb")
             result = []
-            for pos, rot, ingr, ptInd in orga.molecules:
-                result.append([pos, rot, ingr.name, ingr.compNum, ptInd])
+            for pos, rot, ingr, ptInd, radius in orga.molecules:
+                result.append([pos, rot, ingr.name, ingr.compNum, ptInd, radius])
             pickle.dump(result, orfile)
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
@@ -2646,13 +2628,13 @@ class Environment(CompartmentList):
             ingr.results = []
 
         self.loopThroughIngr(cb)
-        for pos, rot, ingr, ptInd in self.molecules:
+        for pos, rot, ingr, ptInd, _ in self.molecules:
             if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
             else:
                 ingr.results.append([pos, rot])
         for i, orga in enumerate(self.compartments):
-            for pos, rot, ingr, ptInd in orga.molecules:
+            for pos, rot, ingr, ptInd, _ in orga.molecules:
                 if isinstance(ingr, GrowIngredient) or isinstance(
                     ingr, ActinIngredient
                 ):
@@ -2879,9 +2861,9 @@ class Environment(CompartmentList):
         # OR
         line = ""
         line += "<recipe include = " + self.setupfile + ">\n"
-        for pos, rot, ingr, ptInd in self.molecules:
+        for pos, rot, ingr, ptInd, radius in self.molecules:
             line += self.dropOneIngr(
-                pos, rot, ingr.name, ingr.compNum, ptInd, rad=ingr.encapsulating_radius
+                pos, rot, ingr.name, ingr.compNum, ptInd, rad=radius
             )
             # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
         rfile.write(line)
@@ -2891,14 +2873,14 @@ class Environment(CompartmentList):
         for i, orga in enumerate(self.compartments):
             orfile = open(resultfilename + "_organelle_" + str(i) + ".txt", "w")
             line = ""
-            for pos, rot, ingr, ptInd in orga.molecules:
+            for pos, rot, ingr, ptInd, radius in orga.molecules:
                 line += self.dropOneIngr(
                     pos,
                     rot,
                     ingr.name,
                     ingr.compNum,
                     ptInd,
-                    rad=ingr.encapsulating_radius,
+                    rad=radius,
                 )
             orfile.write(line)
             #            pickle.dump(orga.molecules, orfile)
@@ -3434,7 +3416,7 @@ class Environment(CompartmentList):
             The updated image data.
         """
         channel_colors = []
-        for pos, rot, ingr, _ in self.molecules:
+        for pos, rot, ingr, _, _ in self.molecules:
             if ingr.name not in image_data:
                 image_data[ingr.name] = numpy.zeros(image_size, dtype=numpy.uint8)
                 if ingr.color is not None:

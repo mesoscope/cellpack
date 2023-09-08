@@ -52,6 +52,7 @@ class SingleSphereIngr(Ingredient):
         resolution_dictionary=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
+        size_options=None,
         use_orient_bias=False,
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
@@ -83,6 +84,7 @@ class SingleSphereIngr(Ingredient):
             representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
+            size_options=size_options,
             use_rotation_axis=use_rotation_axis,
             weight=weight,
         )

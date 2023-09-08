@@ -54,6 +54,9 @@ from random import uniform, gauss, random
 from time import time
 import math
 
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
+from cellpack.autopack.utils import get_value_from_distribution
+
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
@@ -177,6 +180,7 @@ class Ingredient(Agent):
         "resolution_dictionary",
         "rotation_axis",
         "rotation_range",
+        "size_options",
         "type",
         "use_orient_bias",
         "use_rotation_axis",
@@ -215,6 +219,7 @@ class Ingredient(Agent):
         resolution_dictionary=None,
         rotation_axis=None,
         rotation_range=6.2831,
+        size_options=None,
         use_orient_bias=False,
         use_rotation_axis=False,
         weight=0.2,
@@ -239,6 +244,7 @@ class Ingredient(Agent):
         self.molarity = molarity
         self.count = count
         self.count_options = count_options
+        self.size_options = size_options
         self.priority = priority
         self.log.info(
             "priority %d,  self.priority %r",
@@ -1674,7 +1680,7 @@ class Ingredient(Agent):
         self.nbPts = self.nbPts + len(new_inside_points)
         # self.update_distances(new_inside_points, new_dist_values)
         compartment.molecules.append(
-            [dropped_position, dropped_rotation, self, grid_point_index]
+            [dropped_position, dropped_rotation, self, grid_point_index, self.radius]
         )
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
@@ -1694,6 +1700,17 @@ class Ingredient(Agent):
         self.rejectionCounter = 0
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
+    def update_ingredient_size(self):
+        # update the size of the ingredient based on input options
+        if hasattr(self, "size_options") and self.size_options is not None:
+            if self.type == INGREDIENT_TYPE.SINGLE_SPHERE:
+                radius = get_value_from_distribution(
+                    distribution_options=self.size_options
+                )
+                if radius is not None:
+                    self.radius = radius
+                    self.encapsulating_radius = radius
+
     def attempt_to_pack_at_grid_location(
         self,
         env,
@@ -1706,6 +1723,7 @@ class Ingredient(Agent):
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
+        self.update_ingredient_size()
         dpad = self.min_radius + max_radius + jitter
         self.vi = autopack.helper
         self.env = env  # NOTE: do we need to store the env on the ingredient?

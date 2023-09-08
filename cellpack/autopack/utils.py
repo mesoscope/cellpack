@@ -181,3 +181,79 @@ def load_object_from_pickle(pickle_file_object):
     except Exception as e:
         raise ValueError(f"Error loading saved object: {e}")
     return output_object
+
+
+def get_min_value_from_distribution(distribution_options, return_int=False):
+    """
+    Returns a low bound on the value from a distribution
+    """
+    value = None
+    if distribution_options.get("distribution") == "uniform":
+        value = distribution_options.get("min", 1)
+
+    if distribution_options.get("distribution") == "normal":
+        value = distribution_options.get("mean", 0) - 2 * distribution_options.get(
+            "std", 1
+        )
+
+    if distribution_options.get("distribution") == "list":
+        value = numpy.nanmin(distribution_options.get("list_values", None))
+
+    if return_int and value is not None:
+        value = int(numpy.rint(value))
+
+    return value
+
+
+def get_max_value_from_distribution(distribution_options, return_int=False):
+    """
+    Returns a high bound on the value from a distribution
+    """
+    value = None
+    if distribution_options.get("distribution") == "uniform":
+        value = distribution_options.get("max", 1)
+
+    if distribution_options.get("distribution") == "normal":
+        value = distribution_options.get("mean", 0) + 2 * distribution_options.get(
+            "std", 1
+        )
+
+    if distribution_options.get("distribution") == "list":
+        value = numpy.nanmax(distribution_options.get("list_values", None))
+
+    if return_int and value is not None:
+        value = int(numpy.rint(value))
+
+    return value
+
+
+def get_value_from_distribution(distribution_options, return_int=False):
+    """
+    Returns a value from the distribution options
+    """
+    if distribution_options.get("distribution") == "uniform":
+        if return_int:
+            return int(
+                numpy.random.randint(
+                    distribution_options.get("min", 0),
+                    distribution_options.get("max", 1),
+                )
+            )
+        else:
+            return numpy.random.uniform(
+                distribution_options.get("min", 0),
+                distribution_options.get("max", 1),
+            )
+    if distribution_options.get("distribution") == "normal":
+        value = numpy.random.normal(
+            distribution_options.get("mean", 0), distribution_options.get("std", 1)
+        )
+    elif distribution_options.get("distribution") == "list":
+        value = numpy.random.choice(distribution_options.get("list_values", None))
+    else:
+        value = None
+
+    if return_int:
+        value = int(numpy.rint(value))
+
+    return value

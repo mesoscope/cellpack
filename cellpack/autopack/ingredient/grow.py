@@ -1211,7 +1211,13 @@ class GrowIngredient(MultiCylindersIngr):
                         # self.update_data_tree(jtrans1,rotMatj1,pt1=newPt,pt2=newPts[1])
                         self.partners[alternate].ingr.update_data_tree(jtrans, rotMatj)
                         self.compartment.molecules.append(
-                            [jtrans, rotMatj, self.partners[alternate].ingr, 0]
+                            [
+                                jtrans,
+                                rotMatj,
+                                self.partners[alternate].ingr,
+                                0,
+                                self.partners[alternate].ingr.radius,
+                            ]
                         )  # transpose ?
                         newv, d1 = self.vi.measure_distance(pt2, newPt, vec=True)
                         # v,d2 = self.vi.measure_distance(newPt,newPts[1],vec=True)
@@ -1830,7 +1836,7 @@ class GrowIngredient(MultiCylindersIngr):
         for i in range(len(self.results)):
             jtrans, rotMatj = self.results[-i]
             dist, ptInd = env.grid.getClosestGridPoint(jtrans)
-            compartment.molecules.append([jtrans, rotMatj, self, ptInd])
+            compartment.molecules.append([jtrans, rotMatj, self, ptInd, self.radius])
             # reset the result ?
         self.results = []
         #        print ("After :",listePtLinear)

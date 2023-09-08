@@ -59,7 +59,7 @@ class PlotlyAnalysis:
         )
 
     def add_ingredient_positions(self, env):
-        for pos, rot, ingr, ptInd in env.molecules:
+        for pos, rot, ingr, ptInd, radius in env.molecules:
             if hasattr(ingr, "positions") and len(ingr.positions) > 1:
                 for level in range(len(ingr.positions)):
                     for i in range(len(ingr.positions[level])):
@@ -74,7 +74,7 @@ class PlotlyAnalysis:
                         )
             else:
                 if ingr.model_type == "Spheres":
-                    self.add_circle(ingr.encapsulating_radius, pos, ingr.color)
+                    self.add_circle(radius, pos, ingr.color)
                 elif ingr.model_type == "Cube":
                     self.add_square(ingr.radii, pos, rot, ingr.color)
                 elif ingr.model_type == "Cylinders":

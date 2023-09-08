@@ -1212,7 +1212,7 @@ class AutopackViewer:
         # retrieve the result from the molecules array of the recipes
         res = [
             self.collectResult(ingr, pos, rot)
-            for pos, rot, ingr, ptInd in o.molecules
+            for pos, rot, ingr, ptInd, _ in o.molecules
             if ingr == ingredient
         ]
 
@@ -1302,7 +1302,7 @@ class AutopackViewer:
         else:
             return
         if self.doSpheres:
-            for pos, rot, ingr, ptInd in self.histo.molecules:
+            for pos, rot, ingr, ptInd, _ in self.histo.molecules:
                 level = ingr.deepest_level
                 px = ingr.transformPoints(pos, rot, ingr.positions[level])
                 if ingr.model_type == "Spheres":
@@ -1333,7 +1333,7 @@ class AutopackViewer:
         if r:
             meshGeoms = {}  # self.meshGeoms#{}
             inds = {}
-            for pos, rot, ingr, ptInd in self.histo.molecules:
+            for pos, rot, ingr, ptInd, _ in self.histo.molecules:
                 if ingr.mesh:  # display mesh
                     mat = rot.copy()
                     mat[:3, 3] = pos
@@ -1416,7 +1416,7 @@ class AutopackViewer:
                     for ingr in ri.ingredients:
                         verts[ingr] = []
                         radii[ingr] = []
-                for pos, rot, ingr, ptInd in orga.molecules:
+                for pos, rot, ingr, ptInd, _ in orga.molecules:
                     level = ingr.deepest_level
                     px = ingr.transformPoints(pos, rot, ingr.positions[level])
                     if ingr.model_type == "Spheres":
@@ -1460,7 +1460,7 @@ class AutopackViewer:
             #                for ingr in ri.ingredients:
             #                    if ingr.mesh: # display mesh
             #                        self.displayIngrMesh(matrices,ingr)
-            for pos, rot, ingr, ptInd in orga.molecules:
+            for pos, rot, ingr, ptInd, _ in orga.molecules:
                 if ingr.mesh:  # display mesh
                     mat = rot.copy()
                     mat[:3, 3] = pos
@@ -1599,13 +1599,13 @@ class AutopackViewer:
                     rotMatj = self.helper.getMatRotation(ch)
                     jtrans = self.helper.ToVec(self.helper.getTranslation(ch))
                     ptId = self.histo.getPointFrom3D(jtrans, bb, spacing, nb)
-                    res.append([jtrans, rotMatj, ingr, ptId])
+                    res.append([jtrans, rotMatj, ingr, ptId, ingr.radius])
                 # need to handle the PtID none
             else:
                 rotMatj = self.helper.getMatRotation(o)
                 jtrans = self.helper.ToVec(self.helper.getTranslation(o))
                 ptId = self.histo.getPointFrom3D(jtrans, bb, spacing, nb)
-                res.append([jtrans, rotMatj, ingr, ptId])
+                res.append([jtrans, rotMatj, ingr, ptId, ingr.radius])
         ingr.counter = 0
         orga.molecules.extend(res)
 
@@ -2301,7 +2301,7 @@ class AutopackViewer:
             else:
                 # for each mol get the order and color the poly
                 inds = {}
-                for pos, rot, ingr, ptInd in self.histo.molecules:
+                for pos, rot, ingr, ptInd, _ in self.histo.molecules:
                     if ingr not in inds:
                         inds[ingr] = [ptInd]
                     else:

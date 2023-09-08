@@ -455,7 +455,7 @@ class simulariumHelper(hostHelper.Helper):
     ):
         self.time = 0
         instance_number = 0
-        for position, rotation, ingredient, ptInd in objects:
+        for position, rotation, ingredient, ptInd, radius in objects:
             ingr_name = ingredient.name
             sub_points = None
             if self.is_fiber(ingredient.type):
@@ -474,7 +474,7 @@ class simulariumHelper(hostHelper.Helper):
                     color=simulariumHelper.format_rgb_color(ingredient.color),
                 )
 
-            radius = ingredient.encapsulating_radius if ingredient is not None else 10
+            radius = radius if radius is not None else 10
             adj_pos = ingredient.representations.get_adjusted_position(
                 position, rotation
             )
