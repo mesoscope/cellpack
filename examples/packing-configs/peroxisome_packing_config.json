@@ -14,5 +14,6 @@
     "spacing": 2.5,
     "use_periodicity": false,
     "show_sphere_trees": false,
-    "load_from_grid_file": true
+    "load_from_grid_file": true,
+    "upload_results": false
 }
