@@ -167,10 +167,16 @@ class Writer(object):
         if grid_positions is not None and len(env.gradients):
             for _, gradient in env.gradients.items():
                 env.helper.add_grid_data_to_scene(
-                    f"{gradient.name}-distances", grid_positions, gradient.distances
+                    f"{gradient.name}-distances",
+                    grid_positions,
+                    gradient.distances,
+                    env.grid.gridSpacing / 4,
                 )
                 env.helper.add_grid_data_to_scene(
-                    f"{gradient.name}-weights", grid_positions, gradient.weight
+                    f"{gradient.name}-weights",
+                    grid_positions,
+                    gradient.weight,
+                    env.grid.gridSpacing / 4,
                 )
         env.helper.writeToFile(env.result_file, env.boundingBox, env.name, env.version)
 
