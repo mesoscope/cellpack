@@ -333,10 +333,13 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_grid_data_to_scene(self, incoming_name, positions, values):
+    def add_grid_data_to_scene(self, incoming_name, positions, values, radius=0.5):
         colormap = matplotlib.cm.Reds(values)
+        inds = np.argsort(values)
+        values = values[inds]
+        positions = positions[inds]
         for index, value in enumerate(values):
-            name = f"{incoming_name}#{value}"
+            name = f"{incoming_name}#{value:.3f}"
             self.display_data[name] = DisplayData(
                 name=name,
                 display_type=DISPLAY_TYPE.SPHERE,
@@ -348,7 +351,7 @@ class simulariumHelper(hostHelper.Helper):
                 name,
                 None,
                 f"{incoming_name}-{index}",
-                0.5,
+                radius,
                 point_pos,
                 np.identity(4),
                 None,
