@@ -1984,25 +1984,28 @@ class Environment(CompartmentList):
             self.afviewer.vi.progressBar(label="Filling Complete")
             self.afviewer.vi.resetProgressBar()
         ingredients = {}
+
         all_ingr_as_array = self.molecules
-        for pos, rot, ingr, ptInd, _ in self.molecules:
+        for pos, rot, ingr, ptInd, radius in self.molecules:
             if ingr.name not in ingredients:
-                ingredients[ingr.name] = [ingr, [], [], []]
+                ingredients[ingr.name] = [ingr, [], [], [], []]
             mat = rot.copy()
             mat[:3, 3] = pos
             ingredients[ingr.name][1].append(pos)
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
+            ingredients[ingr.name][4].append(radius)
         for compartment in self.compartments:
-            for pos, rot, ingr, ptInd, _ in compartment.molecules:
+            for pos, rot, ingr, ptInd, radius in compartment.molecules:
                 if ingr.name not in ingredients:
-                    ingredients[ingr.name] = [ingr, [], [], []]
+                    ingredients[ingr.name] = [ingr, [], [], [], []]
                 mat = rot.copy()
                 mat[:3, 3] = pos
                 ingredients[ingr.name][1].append(pos)
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
-                all_ingr_as_array.append([pos, rot, ingr, ptInd])
+                ingredients[ingr.name][4].append(radius)
+                all_ingr_as_array.append([pos, rot, ingr, ptInd, radius])
         self.ingr_result = ingredients
         return all_ingr_as_array
 
