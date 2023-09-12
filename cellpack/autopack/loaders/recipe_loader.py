@@ -166,7 +166,7 @@ class RecipeLoader(object):
                 f"{old_recipe['format_version']} is not a format version we support"
             )
 
-    def _read(self):
+    def _read(self, resolve_inheritance=True):
         new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
         if database_name == "firebase":
             objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
@@ -185,9 +185,10 @@ class RecipeLoader(object):
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
-            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
-                recipe_data["objects"]
-            )
+            if resolve_inheritance:
+                recipe_data["objects"] = RecipeLoader.resolve_inheritance(
+                    recipe_data["objects"]
+                )
             for _, obj in recipe_data["objects"].items():
                 reps = obj["representations"] if "representations" in obj else {}
                 obj["representations"] = Representations(
