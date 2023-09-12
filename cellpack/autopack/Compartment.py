@@ -1324,9 +1324,9 @@ class Compartment(CompartmentList):
         )
         self.log.info(f"GOT POINTS IN SPHERE {len(points_in_encap_sphere)}")
 
-        # point_compartment_ids = compartment_ids[points_in_encap_sphere]
-        # point_ids_to_assign = points_in_encap_sphere[numpy.abs(point_compartment_ids) < number]
-        point_ids_to_assign = points_in_encap_sphere
+        point_compartment_ids = compartment_ids[points_in_encap_sphere]
+        # largest compartments need to be created first for this to work
+        point_ids_to_assign = points_in_encap_sphere[numpy.abs(point_compartment_ids) < number]
         point_positions = numpy.float16(master_grid_positions[point_ids_to_assign])
 
         # check surface points
