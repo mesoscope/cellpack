@@ -1,0 +1,87 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0",
+    "name": "test_variable_size",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            100,
+            100,
+            1
+        ]
+    ],
+    "objects": {
+        "base": {
+            "jitter_attempts": 10,
+            "orient_bias_range": [
+                -3.1415927,
+                3.1415927
+            ],
+            "rotation_range": 6.2831,
+            "cutoff_boundary": 0,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "packing_mode": "random",
+            "principal_vector": [
+                0,
+                0,
+                1
+            ],
+            "rejection_threshold": 50,
+            "place_method": "spheresSST",
+            "cutoff_surface": 42,
+            "rotation_axis": [
+                0,
+                0,
+                1
+            ],
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "sphere_25": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "radius": 25,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere_25",
+            "count": 10,
+            "size_options": {
+                "distribution": "uniform",
+                "min": 5,
+                "max": 30
+            }
+        }
+    }
+}

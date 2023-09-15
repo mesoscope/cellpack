@@ -6,7 +6,7 @@
     "ordered_packing": false,
     "out": "cellpack/tests/outputs/",
     "overwrite_place_method": true,
-    "number_of_packings": 10,
+    "number_of_packings": 2,
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": false,
