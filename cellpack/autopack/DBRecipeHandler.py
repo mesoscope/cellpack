@@ -336,6 +336,12 @@ class ObjectDoc(DataDoc):
                 ] = ObjectDoc.convert_positions_in_representation(position_value)
         return convert_doc
 
+    @staticmethod
+    def _object_contains_grad_or_inherit(obj_data):
+        return (
+            "gradient" in obj_data and isinstance(obj_data["gradient"], dict)
+        ) or "inherit" in obj_data
+
     def should_write(self, db):
         docs = db.get_doc_by_name("objects", self.name)
         if docs and len(docs) >= 1:
@@ -612,15 +618,16 @@ class DBRecipeLoader(object):
 
     @staticmethod
     def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
-        try:
+        obj_name = obj_data["name"]
+        if "gradient" in obj_data:
             grad_name = obj_data["gradient"]["name"]
-            obj_name = obj_data["name"]
-        except KeyError as e:
-            print(f"Missing keys in object: {e}")
-            return obj_dict, grad_dict
-
-        grad_dict[grad_name] = obj_data["gradient"]
-        obj_dict[obj_name]["gradient"] = grad_name
+            grad_dict[grad_name] = obj_data["gradient"]
+            obj_dict[obj_name]["gradient"] = grad_name
+        if "inherit" in obj_data:
+            inherited_from = obj_data["inherit"]["name"]
+            inherited_obj_data = obj_data["inherit"]
+            obj_dict[obj_name]["inherit"] = inherited_from
+            obj_dict[inherited_from] = inherited_obj_data
         return obj_dict, grad_dict
 
     @staticmethod
@@ -641,9 +648,7 @@ class DBRecipeLoader(object):
                 composition[comp_name]["object"] = comp_value["object"]["name"]
                 object_copy = copy.deepcopy(comp_value["object"])
                 objects[object_copy["name"]] = object_copy
-                if "gradient" in object_copy and isinstance(
-                    object_copy["gradient"], dict
-                ):
+                if ObjectDoc._object_contains_grad_or_inherit(object_copy):
                     objects, gradients = DBRecipeLoader._get_grad_and_obj(
                         object_copy, objects, gradients
                     )
@@ -660,9 +665,7 @@ class DBRecipeLoader(object):
                             )
                             object_copy = copy.deepcopy(region_item["object"])
                             objects[object_copy["name"]] = object_copy
-                            if "gradient" in object_copy and isinstance(
-                                object_copy["gradient"], dict
-                            ):
+                            if ObjectDoc._object_contains_grad_or_inherit(object_copy):
                                 objects, gradients = DBRecipeLoader._get_grad_and_obj(
                                     object_copy, objects, gradients
                                 )
