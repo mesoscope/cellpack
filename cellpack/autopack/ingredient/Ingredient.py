@@ -1581,7 +1581,7 @@ class Ingredient(Agent):
             return to_return
 
     def update_data_tree(
-        self, jtrans, rotMatj, ptInd=0, pt1=None, pt2=None, updateTree=True
+        self, jtrans, rotMatj, radius, ptInd=0, pt1=None, pt2=None, updateTree=True
     ):
         # self.env.static.append(rbnode)
         # self.env.moving = None
@@ -1698,7 +1698,7 @@ class Ingredient(Agent):
         self.counter += 1
         self.completion = float(self.counter) / float(self.left_to_place)
         self.rejectionCounter = 0
-        self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
+        self.update_data_tree(dropped_position, dropped_rotation, grid_point_index, dropped_radius)
 
     def update_ingredient_size(self):
         # update the size of the ingredient based on input options
@@ -1723,7 +1723,10 @@ class Ingredient(Agent):
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
+        print("before update", self.radius, self.min_radius, self.max_radius, self.encapsulating_radius)
         self.update_ingredient_size()
+        print("after update", self.radius, self.min_radius, self.max_radius, self.encapsulating_radius)
+
         dpad = self.min_radius + max_radius + jitter
         self.vi = autopack.helper
         self.env = env  # NOTE: do we need to store the env on the ingredient?
