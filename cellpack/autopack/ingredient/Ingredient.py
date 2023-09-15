@@ -1277,16 +1277,13 @@ class Ingredient(Agent):
         return mingrs
 
     def getIngredientsInTree(self, closest_ingredients):
-        if len(self.env.rIngr):
-            ingrs = [self.env.rIngr[i] for i in closest_ingredients["indices"]]
-            return [
-                numpy.array(self.env.rTrans)[closest_ingredients["indices"]],
-                numpy.array(self.env.rRot)[closest_ingredients["indices"]],
-                ingrs,
-                closest_ingredients["distances"],
-            ]
-        else:
-            return []
+        ingredients = []
+        if len(self.env.packed_objects):
+            nearby_packed_objects = [self.env.packed_objects[i] for i in closest_ingredients["indices"]]
+            for obj in nearby_packed_objects:
+                ingr = self.env.get_ingredient_by_name(obj.name)
+                ingredients.append([obj, ingr])
+        return ingredients
 
     def get_partners(self, jtrans, rotMat, organelle, afvi):
         env = self.env
@@ -1298,15 +1295,17 @@ class Ingredient(Agent):
                 env, jtrans, rotMat, organelle, afvi
             )
         else:
+            ## NOTE: started re-formatting this, but near to get distances as well
+            ## and make sure the data is all correct 
             near_by_ingredients = self.getIngredientsInTree(closest_ingredients)
         placed_partners = []
-        if not len(near_by_ingredients) or not len(near_by_ingredients[2]):
+        if not len(near_by_ingredients):
             self.log.info("no close ingredient found")
             return [], []
         else:
             self.log.info("nb close ingredient %s", self.name)
-        for i in range(len(near_by_ingredients[2])):
-            packed_ingredient = near_by_ingredients[2][i]
+        for i in range(len(near_by_ingredients)):
+            packed_ingredient = near_by_ingredients[i][1]
             distance = (near_by_ingredients[3][i],)
             if self.packing_mode == "closePartner":
                 if self.partners.is_partner(packed_ingredient.name):
@@ -1559,19 +1558,19 @@ class Ingredient(Agent):
         env = self.env
         numpy.zeros(env.totalNbIngr).astype("i")
         nb = 0
-        if not len(env.rTrans):
+        number_packed = len(env.packed_objects)
+        if not number_packed:
             return to_return
         if env.close_ingr_bhtree is not None:
             # request kdtree
             nb = []
             self.log.info("finding partners")
-            if len(env.rTrans) >= 1:
-                #                    nb = histoVol.close_ingr_bhtree.query_ball_point(point,cutoff)
-                #                else :#use the general query, how many we want
+
+            if number_packed >= 1:
                 distance, nb = env.close_ingr_bhtree.query(
-                    point, len(env.rTrans), distance_upper_bound=cutoff
+                    point, number_packed, distance_upper_bound=cutoff
                 )  # len of ingr posed so far
-                if len(env.rTrans) == 1:
+                if number_packed == 1:
                     distance = [distance]
                     nb = [nb]
                 to_return["indices"] = nb

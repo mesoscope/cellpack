@@ -204,7 +204,6 @@ class Environment(CompartmentList):
             None  # Oct 20, 2012 Graham wonders if this is part of the problem
         )
         self.freePointMask = None
-        self.ingr_result = {}
 
         self.randomRot = RandomRot()  # the class used to generate random rotation
         self.activeIngr = []
@@ -390,36 +389,16 @@ class Environment(CompartmentList):
     def set_partners_ingredient(self, ingr):
         if ingr.partners is not None:
             for partner in ingr.partners.all_partners:
-                partner_ingr = self.getIngrFromName(partner.name)
+                partner_ingr = self.get_ingredient_by_name(partner.name)
                 partner.set_ingredient(partner_ingr)
         if ingr.type == "Grow":
             # TODO: I don't think this code is needed,
             # but I haven't dug into it enough to delete it all yet
             ingr.prepare_alternates()
 
-    def get_positions_for_ingredient(self, ingredient_name):
-        return numpy.array(
-            [
-                self.molecules[i][0]
-                for i in range(len(self.molecules))
-                if self.molecules[i][2].name == ingredient_name
-            ]
-        )
-
-    def get_rotations_for_ingredient(self, ingredient_name):
-        return numpy.array(
-            [
-                self.molecules[i][1]
-                for i in range(len(self.molecules))
-                if self.molecules[i][2].name == ingredient_name
-            ]
-        )
-
-    def get_all_positions(self):
-        return numpy.array([self.molecules[i][0] for i in range(len(self.molecules))])
 
     def get_all_distances(self, position=None):
-        positions = self.get_all_positions()
+        positions = self.packed_objects.get_positions()
         if len(positions) == 0:
             return numpy.array([])
         elif position is not None:
@@ -429,7 +408,7 @@ class Environment(CompartmentList):
 
     def get_distances(self, ingredient_name, center):
 
-        ingredient_positions = self.get_positions_for_ingredient(ingredient_name)
+        ingredient_positions = self.packed_objects.get_positions_for_ingredient(ingredient_name)
 
         if len(ingredient_positions):
             distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
@@ -447,7 +426,7 @@ class Environment(CompartmentList):
         )
 
     def get_ingredient_angles(self, ingredient_name, center, ingredient_positions):
-        ingredient_rotation = self.get_rotations_for_ingredient(
+        ingredient_rotation = self.packed_objects.get_rotations_for_ingredient(
             ingredient_name=ingredient_name,
         )
         ingredient_position_vector = numpy.array(ingredient_positions) - numpy.array(
@@ -507,8 +486,8 @@ class Environment(CompartmentList):
         """
         Returns pairwise distances between ingredients of different types
         """
-        ingr_pos_1 = self.get_positions_for_ingredient(ingredient_name=ingr1name)
-        ingr_pos_2 = self.get_positions_for_ingredient(ingredient_name=ingr2name)
+        ingr_pos_1 = self.packed_objects.get_positions_for_ingredient(ingredient_name=ingr1name)
+        ingr_pos_2 = self.packed_objects.get_positions_for_ingredient(ingredient_name=ingr2name)
         return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
 
     def save_result(
@@ -535,7 +514,6 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         if save_result_as_file:
             self.store()
-            self.store_asTxt()
         Writer(format=self.format_output).save(
             self,
             self.result_file,
@@ -545,183 +523,6 @@ class Environment(CompartmentList):
             all_ingr_as_array=all_ingr_as_array,
             compartments=self.compartments,
         )
-
-        self.log.info("time to save result file %d", time() - t0)
-        if vAnalysis == 1:
-            # START Analysis Tools: Graham added back this big chunk of code
-            # for analysis tools and graphic on 5/16/12
-            # Needs to be cleaned up into a function and proper uPy code
-            # totalVolume = self.grid.gridVolume*unitVol
-            unitVol = self.grid.gridSpacing**3
-            wrkDirRes = self.result_file + "_analyze_"
-            for o in self.compartments:  # only for compartment ?
-                # totalVolume -= o.surfaceVolume
-                # totalVolume -= o.interiorVolume
-                innerPointNum = len(o.insidePoints) - 1
-                self.log.info("  .  .  .  . ")
-                self.log.info("for compartment o = %s", o.name)
-                self.log.info("inner Point Count = %d", innerPointNum)
-                self.log.info("inner Volume = %s", o.interiorVolume)
-                self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
-                usedPts = 0
-                unUsedPts = 0
-                vDistanceString = ""
-                insidepointindce = numpy.nonzero(
-                    numpy.equal(self.grid.compartment_ids, -o.number)
-                )[0]
-                for i in insidepointindce:  # xrange(innerPointNum):
-                    #                        pt = o.insidePoints[i] #fpts[i]
-                    #                        print (pt,type(pt))
-                    # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                    d = self.distancesAfterFill[i]
-                    vDistanceString += str(d) + "\n"
-                    if d <= 0:  # >self.smallestProteinSize-0.001:
-                        usedPts += 1
-                    else:
-                        unUsedPts += 1
-                filename = (
-                    wrkDirRes
-                    + "vResultMatrix1"
-                    + o.name
-                    + "_Testid"
-                    + str(vTestid)
-                    + "_Seed"
-                    + str(seedNum)
-                    + "_dists.txt"
-                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                #            filename = wrkDirRes+"/vDistances1.txt"
-                f = open(filename, "w")
-                f.write(vDistanceString)
-                f.close()
-
-                # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
-                # if resultfilename == None:
-                # resultfilename = self.result_file
-                resultfilenameT = (
-                    wrkDirRes
-                    + "vResultMatrix1"
-                    + o.name
-                    + "_Testid"
-                    + str(vTestid)
-                    + "_Seed"
-                    + str(seedNum)
-                    + "_Trans.txt"
-                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                resultfilenameR = (
-                    wrkDirRes
-                    + "vResultMatrix1"
-                    + o.name
-                    + "_Testid"
-                    + str(vTestid)
-                    + "_Seed"
-                    + str(seedNum)
-                    + "_Rot.txt"
-                )
-                vTranslationString = ""
-                vRotationString = ""
-                result = []
-                matCount = 0
-                for pos, rot, ingr, _, _ in o.molecules:
-                    # BEGIN: newer code from Theis version added July 5, 2012
-                    if hasattr(self, "afviewer"):
-                        mat = rot.copy()
-                        mat[:3, 3] = pos
-
-                        # r = R.from_matrix(mat).as_euler("xyz", degrees=False)
-                        r = euler_from_matrix(mat, "rxyz")
-                        h1 = math.degrees(math.pi + r[0])
-                        p1 = math.degrees(r[1])
-                        b1 = math.degrees(-math.pi + r[2])
-                        self.log.info("rot from matrix = %r %r %r %r", r, h1, p1, b1)
-                        # END: newer code from Theis version added July 5, 2012
-                    result.append([pos, rot])
-                    pt3d = result[matCount][0]
-                    (
-                        x,
-                        y,
-                        z,
-                    ) = pt3d
-
-                    vTranslationString += (
-                        str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
-                    )
-                    # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
-                    vRotationString += (
-                        str(h1)
-                        + ",\t"
-                        + str(p1)
-                        + ",\t"
-                        + str(b1)
-                        + ",\t"
-                        + ingr.name
-                        + "\n"
-                    )
-                    matCount += 1
-
-                rfile = open(resultfilenameT, "w")
-                rfile.write(vTranslationString)
-                rfile.close()
-
-                rfile = open(resultfilenameR, "w")
-                rfile.write(vRotationString)
-                rfile.close()
-                self.log.info("len(result) = %d", len(result))
-                self.log.info("len(self.molecules) = %d", len(self.molecules))
-                # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-                # and we have a separate translation vector in the results and molecules arrays.
-                #  Get rid of the translation vector and move it to the rotation matrix to save space...
-                # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-                self.log.info(
-                    "*************************************************** vDistance String Should be on"
-                )
-                self.log.info("unitVolume2 = %d", unitVol)
-                self.log.info("Number of Points Unused = %d", unUsedPts)
-                self.log.info("Number of Points Used   = %d", usedPts)
-                self.log.info("Volume Used   = %d", usedPts * unitVol)
-                self.log.info("Volume Unused = %d", unUsedPts * unitVol)
-                self.log.info("vTestid = %d", vTestid)
-                self.log.info("self.grid.nbGridPoints = %r", self.grid.nbGridPoints)
-                self.log.info("self.gridVolume = %d", self.grid.gridVolume)
-
-        self.log.info("self.compartments In Environment = %d", len(self.compartments))
-        if self.compartments == []:
-            unitVol = self.grid.gridSpacing**3
-            innerPointNum = len(free_points)
-            self.log.info("  .  .  .  . ")
-            self.log.info("inner Point Count = %d", innerPointNum)
-            self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
-            usedPts = 0
-            unUsedPts = 0
-            # fpts = self.freePointsAfterFill
-            vDistanceString = ""
-            for i in range(innerPointNum):
-                pt = free_points[i]  # fpts[i]
-                # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                d = self.distancesAfterFill[pt]
-                vDistanceString += str(d) + "\n"
-                if d <= 0:  # >self.smallestProteinSize-0.001:
-                    usedPts += 1
-                else:
-                    unUsedPts += 1
-            # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-            # and we have a separate translation vector in the results and molecules arrays.
-            # Get rid of the translation vector and move it to the rotation matrix to save space...
-            # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-
-            self.log.info("unitVolume2 = %d", unitVol)
-            self.log.info("Number of Points Unused = %d", unUsedPts)
-            self.log.info("Number of Points Used   = %d", usedPts)
-            self.log.info("Volume Used   = %d", usedPts * unitVol)
-            self.log.info("Volume Unused = %d", unUsedPts * unitVol)
-            self.log.info("vTestid = %s", vTestid)
-            self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
-            self.log.info("self.gridVolume = %d", self.grid.gridVolume)
-            self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
-
-            #    END Analysis Tools: Graham added back this big chunk of code
-            #  for analysis tools and graphic on 5/16/12
-            #  Needs to be cleaned up into a function and proper uPy code
-        self.log.info("time to save end %d", time() - t0)
 
     def loadResult(
         self, resultfilename=None, restore_grid=True, backward=False, transpose=True
@@ -1264,7 +1065,7 @@ class Environment(CompartmentList):
                 #                    return ingr
         return None
 
-    def getIngrFromName(self, name, compNum=None):
+    def get_ingredient_by_name(self, name, compNum=None):
         """
         Given an ingredient name and optionally the compartment number, retrieve the ingredient object instance
         """
@@ -1431,17 +1232,18 @@ class Environment(CompartmentList):
 
         distance = self.grid.distToClosestSurf  # [:]
         nbFreePoints = nbPoints  # -1
-        for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )
-            nbFreePoints = self.onePrevIngredient(
-                i, mingrs, distance, nbFreePoints, self.molecules
-            )
-        for organelle in self.compartments:
-            for i, mingrs in enumerate(
-                organelle.molecules
-            ):  # ( jtrans, rotMatj, self, ptInd )
-                nbFreePoints = self.onePrevIngredient(
-                    i, mingrs, distance, nbFreePoints, organelle.molecules
-                )
+        # TODO: refactor this to work with new placed_objects data structure
+        # for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )
+        #     nbFreePoints = self.onePrevIngredient(
+        #         i, mingrs, distance, nbFreePoints, self.molecules
+        #     )
+        # for organelle in self.compartments:
+        #     for i, mingrs in enumerate(
+        #         organelle.molecules
+        #     ):  # ( jtrans, rotMatj, self, ptInd )
+        #         nbFreePoints = self.onePrevIngredient(
+        #             i, mingrs, distance, nbFreePoints, organelle.molecules
+        #         )
         self.grid.nbFreePoints = nbFreePoints
 
         if self.use_gradient and len(self.gradients) and rebuild:
@@ -1648,15 +1450,13 @@ class Environment(CompartmentList):
         self.jitterLength = 0.0
         r = self.exteriorRecipe
         self.resetIngrRecip(r)
-        self.molecules = []
+        self.packed_objects = PackedObjects()
         for orga in self.compartments:
             orga.reset()
             rs = orga.surfaceRecipe
             self.resetIngrRecip(rs)
             ri = orga.innerRecipe
             self.resetIngrRecip(ri)
-            orga.molecules = []
-        self.ingr_result = {}
         if self.world is not None:
             # need to clear all node
             #            nodes = self.rb_panda[:]
@@ -1668,11 +1468,6 @@ class Environment(CompartmentList):
             del self.octree
             self.octree = None
             # the reset doesnt touch the grid...
-
-        self.rTrans = []
-        self.rIngr = []
-        self.rRot = []
-        self.result = []
         # rapid node ?
 
     def resetIngrRecip(self, recip):
@@ -1713,9 +1508,6 @@ class Environment(CompartmentList):
         """Return all remaining active ingredients"""
         allIngredients = []
         recipe = self.exteriorRecipe
-        if recipe is not None:
-            if not hasattr(recipe, "molecules"):
-                recipe.molecules = []
         if recipe:
             for ingr in recipe.ingredients:
                 ingr.counter = 0  # counter of placed molecules
@@ -1726,8 +1518,6 @@ class Environment(CompartmentList):
                     ingr.completion = 1.0
 
         for compartment in self.compartments:
-            if not hasattr(compartment, "molecules"):
-                compartment.molecules = []
             recipe = compartment.surfaceRecipe
             if recipe:
                 for ingr in recipe.ingredients:
@@ -2419,12 +2209,14 @@ class Environment(CompartmentList):
         # orgaresult is [[pos,rot,ingr.name,ingr.compNum,ptInd],[pos,rot,ingr.name,ingr.compNum,ptInd]...]
         # after restore we can build the grid and fill!
         # ingredient based dictionary
+        # TODO: refactor with new packed_objects 
+
         ingredients = {}
         molecules = []
         for elem in result:
             pos, rot, name, compNum, ptInd = elem
             # needto check the name if it got the comp rule
-            ingr = self.getIngrFromName(name, compNum)
+            ingr = self.get_ingredient_by_name(name, compNum)
             if ingr is not None:
                 molecules.append([pos, numpy.array(rot), ingr, ptInd])
                 if name not in ingredients:
@@ -2434,11 +2226,7 @@ class Environment(CompartmentList):
                 ingredients[name][1].append(pos)
                 ingredients[name][2].append(numpy.array(rot))
                 ingredients[name][3].append(numpy.array(mat))
-                self.rTrans.append(numpy.array(pos).flatten())
-                self.rRot.append(numpy.array(rot))  # rotMatj
-                self.rIngr.append(ingr)
                 ingr.results.append([pos, rot])
-        self.molecules = molecules
         if self.exteriorRecipe:
             self.exteriorRecipe.molecules = molecules
         if len(orgaresult) == len(self.compartments):
@@ -2446,7 +2234,7 @@ class Environment(CompartmentList):
                 molecules = []
                 for elem in orgaresult[i]:
                     pos, rot, name, compNum, ptInd = elem
-                    ingr = self.getIngrFromName(name, compNum)
+                    ingr = self.get_ingredient_by_name(name, compNum)
                     if ingr is not None:
                         molecules.append([pos, numpy.array(rot), ingr, ptInd])
                         if name not in ingredients:
@@ -2456,14 +2244,11 @@ class Environment(CompartmentList):
                         ingredients[name][1].append(pos)
                         ingredients[name][2].append(numpy.array(rot))
                         ingredients[name][3].append(numpy.array(mat))
-                        self.rTrans.append(numpy.array(pos).flatten())
-                        self.rRot.append(numpy.array(rot))  # rotMatj
-                        self.rIngr.append(ingr)
                         ingr.results.append([pos, rot])
                 o.molecules = molecules
         # consider that one filling have occured
-        if len(self.rTrans) and tree:
-            self.close_ingr_bhtree = spatial.cKDTree(self.rTrans, leafsize=10)
+        if len(self.packed_objects) and tree:
+            self.close_ingr_bhtree = spatial.cKDTree(self.packed_objects.get_positions(), leafsize=10)
         self.cFill = self.nFill
         self.ingr_result = ingredients
         if len(freePoint):
@@ -2486,23 +2271,10 @@ class Environment(CompartmentList):
         if resultfilename is None:
             resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
-        rfile = open(resultfilename, "wb")
-        result = []
-        for pos, rot, ingr, ptInd, radius in self.molecules:
-            result.append([pos, rot, ingr.name, ingr.compNum, ptInd, radius])
-        pickle.dump(result, rfile)
-        rfile.close()
-        for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "_organelle_" + str(i), "wb")
-            result = []
-            for pos, rot, ingr, ptInd, radius in orga.molecules:
-                result.append([pos, rot, ingr.name, ingr.compNum, ptInd, radius])
-            pickle.dump(result, orfile)
-            #            pickle.dump(orga.molecules, orfile)
-            orfile.close()
-        rfile = open(resultfilename + "_free_points", "wb")
-        pickle.dump(self.grid.free_points, rfile)
-        rfile.close()
+        with open(resultfilename, "wb") as rfile:
+            pickle.dump(self.packed_objects, rfile)
+        with open(resultfilename + "_free_points", "wb") as rfile:
+            pickle.dump(self.grid.free_points, rfile)
 
     @classmethod
     def dropOneIngr(self, pos, rot, ingrname, ingrcompNum, ptInd, rad=1.0):
@@ -2594,25 +2366,19 @@ class Environment(CompartmentList):
         except:  # noqa: E722
             pass
         return result, orgaresult, freePoint
+    
 
     def collectResultPerIngredient(self):
         def cb(ingr):
             ingr.results = []
 
         self.loopThroughIngr(cb)
-        for pos, rot, ingr, ptInd, _ in self.molecules:
+        for obj in self.packed_objects:
+            ingr = self.get_ingredient_by_name(obj.name)
             if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
             else:
-                ingr.results.append([pos, rot])
-        for i, orga in enumerate(self.compartments):
-            for pos, rot, ingr, ptInd, _ in orga.molecules:
-                if isinstance(ingr, GrowIngredient) or isinstance(
-                    ingr, ActinIngredient
-                ):
-                    pass  # already store
-                else:
-                    ingr.results.append([pos, rot])
+                ingr.results.append([obj.position, obj.rotation])
 
     def load_asJson(self, resultfilename=None):
         if resultfilename is None:
@@ -2824,42 +2590,6 @@ class Environment(CompartmentList):
                 )  # ,indent=4, separators=(',', ': ')
         print("ok dump", resultfilename)
 
-    def store_asTxt(self, resultfilename=None):
-        if resultfilename is None:
-            resultfilename = self.result_file
-        resultfilename = autopack.fixOnePath(resultfilename)
-        rfile = open(resultfilename + ".txt", "w")  # doesnt work with symbol link ?
-        # pickle.dump(self.molecules, rfile)
-        # OR
-        line = ""
-        line += "<recipe include = " + self.setupfile + ">\n"
-        for pos, rot, ingr, ptInd, radius in self.molecules:
-            line += self.dropOneIngr(
-                pos, rot, ingr.name, ingr.compNum, ptInd, rad=radius
-            )
-            # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
-        rfile.write(line)
-        # write the curve point
-
-        rfile.close()
-        for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "_organelle_" + str(i) + ".txt", "w")
-            line = ""
-            for pos, rot, ingr, ptInd, radius in orga.molecules:
-                line += self.dropOneIngr(
-                    pos,
-                    rot,
-                    ingr.name,
-                    ingr.compNum,
-                    ptInd,
-                    rad=radius,
-                )
-            orfile.write(line)
-            #            pickle.dump(orga.molecules, orfile)
-            orfile.close()
-        #        rfile = open(resultfilename+"free_points", 'w')
-        #        pickle.dump(self.free_points, rfile)
-        #        rfile.close()
 
     @classmethod
     def convertPickleToText(self, resultfilename=None, norga=0):
@@ -3332,17 +3062,6 @@ class Environment(CompartmentList):
 
     #         Animate
     # ==============================================================================
-    def readTraj(self, filename):
-        self.collectResultPerIngredient()
-        lenIngrInstance = len(self.molecules)
-        for orga in self.compartments:
-            lenIngrInstance += len(orga.molecules)
-        fileName, fileExtension = os.path.splitext(filename)
-        if fileExtension == ".dcd":
-            self.traj = dcdTrajectory(filename, lenIngrInstance)
-        elif fileExtension == ".molb":
-            self.traj = molbTrajectory(filename, lenIngrInstance)
-        self.traj.completeMapping(self)
 
     def linkTraj(self):
         # link the traj usin upy for creating a new synchronized calleback?
@@ -3387,45 +3106,32 @@ class Environment(CompartmentList):
             The updated image data.
         """
         channel_colors = []
-        for pos, rot, ingr, _, _ in self.molecules:
-            if ingr.name not in image_data:
-                image_data[ingr.name] = numpy.zeros(image_size, dtype=numpy.uint8)
-                if ingr.color is not None:
-                    color = ingr.color
-                    if all([x <= 1 for x in ingr.color]):
-                        color = [int(col * 255) for col in ingr.color]
-                    channel_colors.append(color)
+        for obj in self.packed_objects:
 
-            image_data[ingr.name] = ingr.create_voxelization(
-                image_data=image_data[ingr.name],
+            if obj.name not in image_data:
+                image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
+                if obj.color is not None:
+                    color = obj.color
+                    if all([x <= 1 for x in obj.color]):
+                        color = [int(col * 255) for col in obj.color]
+                    channel_colors.append(color)    
+            if obj.is_compartment:
+                obj_instance = self.get_compartment_object_by_name(obj.name)
+                mesh_store = self.mesh_store
+                
+            else: 
+                obj_instance = self.get_ingredient_class(obj.ingredient_type)
+                mesh_store = None
+
+            image_data[obj.name] = obj_instance.create_voxelization(
+                image_data=image_data[obj.name],
                 bounding_box=self.boundingBox,
                 voxel_size=voxel_size,
                 image_size=image_size,
-                position=pos,
-                rotation=rot,
-            )
-
-        for compartment in self.compartments:
-            if compartment.name not in image_data:
-                image_data[compartment.name] = numpy.zeros(
-                    image_size, dtype=numpy.uint8
-                )
-                if hasattr(compartment, "color") and compartment.color is not None:
-                    color = compartment.color
-                    if all([x <= 1 for x in compartment.color]):
-                        color = [int(col * 255) for col in compartment.color]
-                    channel_colors.append(color)
-                else:
-                    channel_colors.append([0, 255, 0])
-
-            image_data[compartment.name] = compartment.create_voxelization(
-                image_data=image_data[compartment.name],
-                bounding_box=self.boundingBox,
-                voxel_size=voxel_size,
-                image_size=image_size,
-                position=compartment.position,
-                mesh_store=self.mesh_store,
-                hollow=hollow,
+                position=obj.position,
+                rotation=obj.rotation,
+                hollow=hollow, 
+                mesh_store=mesh_store
             )
 
         return image_data, channel_colors

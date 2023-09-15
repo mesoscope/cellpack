@@ -1,3 +1,5 @@
+import numpy
+
 class PackedObjects(object):
     def __init__(self):
         # packed_object has 
@@ -9,6 +11,8 @@ class PackedObjects(object):
             # pt_index
             # compartment_id: id
             # is_compartment (boolean)
+            # color
+            # ingredient_type
         self.packed_objects = []
 
     def add_object(self, new_object):
@@ -28,4 +32,20 @@ class PackedObjects(object):
                 positions.append(obj.position)
         return positions
     
+    def get_positions_for_ingredient(self, ingredient_name):
+        return numpy.array(
+            [
+                self.packed_objects[i].position
+                for i in range(len(self.packed_objects))
+                if self.packed_objects[i].name == ingredient_name
+            ]
+        )
     
+    def get_rotations_for_ingredient(self, ingredient_name):
+        return numpy.array(
+            [
+                self.packed_objects[i].rotation
+                for i in range(len(self.packed_objects))
+                if self.packed_objects[i].name == ingredient_name
+            ]
+        )

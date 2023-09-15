@@ -170,7 +170,7 @@ class Analysis:
         objects : list of object or list of points
         """
         # get distance from object to the target.
-        # all object are in h.molecules and orga.molecules
+        # all object are in env.placed_objects
         # get options
 
         if type(target) == list or type(target) == tuple:
@@ -447,23 +447,6 @@ class Analysis:
                 area = bbox[0][1] ** 2
         return area
 
-    def getAxeValue(self, ingrname, axe=0):
-        ingredient_positions = [
-            self.env.molecules[i][0][axe]
-            for i in range(len(self.env.molecules))
-            if self.env.molecules[i][2].name == ingrname
-        ]
-        return ingredient_positions
-
-    def getAxesValues(self, positions):
-        pp = numpy.array(positions).transpose()
-        if len(positions) == 0:
-            return 1, 1, 1
-        px = pp[0]
-        py = pp[1]
-        pz = pp[2]
-        return px, py, pz
-
     def getVolumeShell(self, bbox, radii, center):
         # rectangle_circle_area
         volumes = []
@@ -473,9 +456,6 @@ class Analysis:
             r2 = radii[i + 1]
             v1 = self.g.calc_volume(r1, box_size0 / 2.0)
             v2 = self.g.calc_volume(r2, box_size0 / 2.0)
-            #            if v1 == 0 or v2 == 0 :
-            #                volumes.append((4./3.)*numpy.pi*(numpy.power(r2,3)-numpy.power(r1, 3)))
-            #            else :
             volumes.append(v2 - v1)
         return volumes
 
@@ -1774,7 +1754,7 @@ class Analysis:
         t2 = time()
         run_time = t2 - t1
         print(f"time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
-        print(f"num placed: {len(self.env.molecules)}")
+        print(f"num placed: {len(self.env.placed_objects)}")
         if show_plotly_plot:
             min_bound, max_bound = self.env.get_bounding_box_limits()
             width = max_bound - min_bound
@@ -1787,7 +1767,7 @@ class Analysis:
                 range=[min_bound[1] - 0.2 * width[1], max_bound[1] + 0.2 * width[1]]
             )
             self.plotly.update_title(
-                f"{self.env.place_method} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
+                f"{self.env.place_method} took {str(round(t2 - t1, 2))}s, packed {len(self.env.placed_objects)}"
             )
             self.plotly.make_grid_heatmap(self.env)
             self.plotly.add_ingredient_positions(self.env)
@@ -1874,29 +1854,6 @@ class Analysis:
             plt.savefig("plot" + ingr + ".png")
             plt.close()  # closes the current figure
         return ingrpos
-
-    #        res=plotOneResult(None,filename="results_seed_8.json")
-
-    def plot_one_result_3D(self, filename, width=1000.0):
-        plt.close("all")  # closes the current figure
-        pos = []
-        s = []
-        c = []
-        for i in range(len(self.env.molecules)):
-            m = self.env.molecules[i]
-            pos.append(numpy.array(m[0]).tolist())
-            s.append(m[2].encapsulating_radius ** 2)
-            c.append(m[2].color)
-        fig = plt.figure()
-        ax = fig.gca(projection="3d")
-        x, y, z = numpy.array(pos).transpose()
-        ax.scatter(x, y, z, s=s, c=c)
-        ax.legend()
-        ax.set_xlim3d(0, width)
-        ax.set_ylim3d(0, width)
-        ax.set_zlim3d(0, width)
-        plt.savefig(filename)
-        return x, y, z, s, c
 
     def set_ingredient_color(self, ingr):
         """

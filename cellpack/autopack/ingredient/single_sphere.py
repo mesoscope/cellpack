@@ -98,6 +98,25 @@ class SingleSphereIngr(Ingredient):
         self.encapsulating_radius = radius
         self.min_radius = radius
 
+    @staticmethod
+    def create_voxelization(
+        self, image_data, bounding_box, voxel_size, image_size, position, rotation, radius, hollow=None, mesh_store=None,
+    ):
+        """
+        Creates a voxelization for the sphere
+        """
+        relative_position = position - bounding_box[0]
+        voxelized_position = (relative_position / voxel_size).astype(int)
+        mask = self.create_circular_mask(
+            *image_size,
+            center=voxelized_position,
+            radius=radius,
+            voxel_size=voxel_size
+        )
+        image_data[mask] = 255
+
+        return image_data
+    
     def collision_jitter(
         self,
         jtrans,
@@ -290,20 +309,4 @@ class SingleSphereIngr(Ingredient):
         mask = dist_from_center <= radius
         return mask
 
-    def create_voxelization(
-        self, image_data, bounding_box, voxel_size, image_size, position, rotation
-    ):
-        """
-        Creates a voxelization for the sphere
-        """
-        relative_position = position - bounding_box[0]
-        voxelized_position = (relative_position / voxel_size).astype(int)
-        mask = self.create_circular_mask(
-            *image_size,
-            center=voxelized_position,
-            radius=self.radius,
-            voxel_size=voxel_size
-        )
-        image_data[mask] = 255
 
-        return image_data
