@@ -332,7 +332,7 @@ class simulariumHelper(hostHelper.Helper):
 
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
-    
+
     @staticmethod
     def remove_nans(positions, values):
         naninds = np.isnan(values)
