@@ -1766,8 +1766,11 @@ class Environment(CompartmentList):
 
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile("./realtime", self.boundingBox)
-
-        return self.placed_objects
+        results = []
+        for obj in self.packed_objects.get():
+            ingredient = self.get_ingredient_by_name(obj.name)
+            results.append([ingredient, obj])
+        return results
 
     def check_new_placement(self, new_position):
         distances = self.get_all_distances(new_position)
@@ -2158,7 +2161,7 @@ class Environment(CompartmentList):
                     nbFreePoints,
                 )
                 stime = time()
-                self.log.info(f"placed {len(self.placed_objects)}")
+                self.log.info(f"placed {len(self.packed_objects)}")
                 if self.saveResult:
                     self.save_result(
                         free_points,
@@ -2247,7 +2250,7 @@ class Environment(CompartmentList):
                         ingr.results.append([pos, rot])
                 o.molecules = molecules
         # consider that one filling have occured
-        if len(self.packed_objects) and tree:
+        if len(self.packed_objects.get()) and tree:
             self.close_ingr_bhtree = spatial.cKDTree(self.packed_objects.get_positions(), leafsize=10)
         self.cFill = self.nFill
         self.ingr_result = ingredients
@@ -2272,7 +2275,7 @@ class Environment(CompartmentList):
             resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
         with open(resultfilename, "wb") as rfile:
-            pickle.dump(self.packed_objects, rfile)
+            pickle.dump(self.packed_objects.get(), rfile)
         with open(resultfilename + "_free_points", "wb") as rfile:
             pickle.dump(self.grid.free_points, rfile)
 
@@ -2373,7 +2376,7 @@ class Environment(CompartmentList):
             ingr.results = []
 
         self.loopThroughIngr(cb)
-        for obj in self.packed_objects:
+        for obj in self.packed_objects.get():
             ingr = self.get_ingredient_by_name(obj.name)
             if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
@@ -3106,7 +3109,7 @@ class Environment(CompartmentList):
             The updated image data.
         """
         channel_colors = []
-        for obj in self.packed_objects:
+        for obj in self.packed_objects.get():
 
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)

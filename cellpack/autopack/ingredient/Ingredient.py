@@ -55,6 +55,7 @@ from time import time
 import math
 
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
+from cellpack.autopack.interface_objects.packed_objects import PackedObject
 from cellpack.autopack.utils import get_value_from_distribution
 
 from .utils import (
@@ -1278,11 +1279,17 @@ class Ingredient(Agent):
 
     def getIngredientsInTree(self, closest_ingredients):
         ingredients = []
-        if len(self.env.packed_objects):
-            nearby_packed_objects = [self.env.packed_objects[i] for i in closest_ingredients["indices"]]
+        import ipdb
+
+        ipdb.set_trace()
+        packed_objects = self.env.pack_objects.get()
+        if len(packed_objects):
+            nearby_packed_objects = [
+                packed_objects[i] for i in closest_ingredients["indices"]
+            ]
             for obj in nearby_packed_objects:
                 ingr = self.env.get_ingredient_by_name(obj.name)
-                ingredients.append([obj, ingr])
+                ingredients.append([obj, ingr, closest_ingredients["distances"]])
         return ingredients
 
     def get_partners(self, jtrans, rotMat, organelle, afvi):
@@ -1295,8 +1302,8 @@ class Ingredient(Agent):
                 env, jtrans, rotMat, organelle, afvi
             )
         else:
-            ## NOTE: started re-formatting this, but near to get distances as well
-            ## and make sure the data is all correct 
+            ## NOTE: started re-formatting this, but need to get distances as well
+            ## and make sure the data is all correct
             near_by_ingredients = self.getIngredientsInTree(closest_ingredients)
         placed_partners = []
         if not len(near_by_ingredients):
@@ -1358,11 +1365,12 @@ class Ingredient(Agent):
         return self.transformPoints(pos, rot, positions_to_adjust)
 
     def check_against_one_packed_ingr(self, index, level, search_tree):
-        overlapped_ingr = self.env.rIngr[index]
+        packed_ingredient = self.env.packed_objects.get()[index]
+        overlapped_ingr = self.env.get_ingredient_by_name(packed_ingredient.name)
         positions_of_packed_ingr_spheres = self.get_new_pos(
-            self.env.rIngr[index],
-            self.env.rTrans[index],
-            self.env.rRot[index],
+            overlapped_ingr,
+            packed_ingredient.position,
+            packed_ingredient.rotation,
             overlapped_ingr.positions[level],
         )
         # check distances between the spheres at this level in the ingr we are packing
@@ -1381,12 +1389,13 @@ class Ingredient(Agent):
     def np_check_collision(self, packing_location, rotation):
         has_collision = False
         # no ingredients packed yet
-        if not len(self.env.rTrans):
+        packed_objects = self.env.packed_objects.get()
+        if not len(packed_objects):
             return has_collision
         else:
             if self.env.close_ingr_bhtree is None:
                 self.env.close_ingr_bhtree = spatial.cKDTree(
-                    self.env.rTrans, leafsize=10
+                    self.env.packed_objects.get_positions(), leafsize=10
                 )
         # starting at level 0, check encapsulating radii
         level = 0
@@ -1394,10 +1403,8 @@ class Ingredient(Agent):
         (
             distances_from_packing_location_to_all_ingr,
             ingr_indexes,
-        ) = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
-        radii_of_placed_ingr = numpy.array(
-            [ing.encapsulating_radius for ing in self.env.rIngr]
-        )[ingr_indexes]
+        ) = self.env.close_ingr_bhtree.query(packing_location, len(packed_objects))
+        radii_of_placed_ingr = numpy.array(self.env.packed_objects.get_encapsulating_radii())[ingr_indexes]
         overlap_distance = distances_from_packing_location_to_all_ingr - (
             self.encapsulating_radius + radii_of_placed_ingr
         )
@@ -1666,6 +1673,20 @@ class Ingredient(Agent):
             self.log.info("PREMATURE ENDING of ingredient %s", self.name)
             self.completion = 1.0
 
+    def store_packed_object(self, position, rotation, index):
+        packed_object = PackedObject(
+                        name=self.name,
+                        position=position,
+                        rotation=rotation,
+                        radius=self.radius,
+                        encapsulating_radius=self.encapsulating_radius,
+                        pt_index=index,
+                        compartment_id=self.compNum,
+                        ingredient_type=self.type,
+                        color=self.color,
+                    )
+        self.env.packed_objects.add(packed_object)
+
     def place(
         self,
         env,
@@ -1678,9 +1699,9 @@ class Ingredient(Agent):
     ):
         self.nbPts = self.nbPts + len(new_inside_points)
         # self.update_distances(new_inside_points, new_dist_values)
-        compartment.molecules.append(
-            [dropped_position, dropped_rotation, self, grid_point_index, self.radius]
-        )
+        # compartment.molecules.append(
+        #     [dropped_position, dropped_rotation, self, grid_point_index, self.radius]
+        # )
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
         env.nb_ingredient += 1
@@ -1697,7 +1718,9 @@ class Ingredient(Agent):
         self.counter += 1
         self.completion = float(self.counter) / float(self.left_to_place)
         self.rejectionCounter = 0
-        self.update_data_tree(dropped_position, dropped_rotation, grid_point_index, dropped_radius)
+        # self.update_data_tree(
+        #     dropped_position, dropped_rotation, grid_point_index, dropped_radius
+        # )
 
     def update_ingredient_size(self):
         # update the size of the ingredient based on input options
@@ -1722,9 +1745,21 @@ class Ingredient(Agent):
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
-        print("before update", self.radius, self.min_radius, self.max_radius, self.encapsulating_radius)
+        print(
+            "before update",
+            self.radius,
+            self.min_radius,
+            self.max_radius,
+            self.encapsulating_radius,
+        )
         self.update_ingredient_size()
-        print("after update", self.radius, self.min_radius, self.max_radius, self.encapsulating_radius)
+        print(
+            "after update",
+            self.radius,
+            self.min_radius,
+            self.max_radius,
+            self.encapsulating_radius,
+        )
 
         dpad = self.min_radius + max_radius + jitter
         self.vi = autopack.helper
@@ -2658,15 +2693,11 @@ class Ingredient(Agent):
             #     )
             #     collision_results.extend([collision])
             if True not in collision_results:
-                # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
                 self.env.static.append(rbnode)
                 self.env.moving = None
 
                 for pt in pts_to_check:
-                    self.env.rTrans.append(pt)
-                    self.env.rRot.append(packing_rotation)
-                    self.env.rIngr.append(self)
-                    self.env.result.append([pt, packing_rotation, self, ptInd])
+                    self.store_packed_object(pt, packing_rotation, ptInd)
                     new_inside_pts, new_dist_points = self.get_new_distance_values(
                         pt,
                         packing_rotation,
@@ -2682,10 +2713,10 @@ class Ingredient(Agent):
                         new_dist_points, newDistPoints
                     )
                 # rebuild kdtree
-                if len(self.env.rTrans) >= 1:
+                if len(self.env.packed_objects.get()) >= 1:
                     del self.env.close_ingr_bhtree
                     self.env.close_ingr_bhtree = spatial.cKDTree(
-                        self.env.rTrans, leafsize=10
+                        self.env.packed_objects.get_positions(), leafsize=10
                     )
 
                 success = True

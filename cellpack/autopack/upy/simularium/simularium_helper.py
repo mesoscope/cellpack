@@ -455,10 +455,11 @@ class simulariumHelper(hostHelper.Helper):
     ):
         self.time = 0
         instance_number = 0
-        for position, rotation, ingredient, ptInd, radius in objects:
-            ingr_name = ingredient.name
+        for ingredient, packed_object in objects:
+            ingr_name = packed_object.name
             sub_points = None
-            if self.is_fiber(ingredient.type):
+            radius = packed_object.radius
+            if self.is_fiber(packed_object.ingredient_type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately
@@ -467,43 +468,44 @@ class simulariumHelper(hostHelper.Helper):
                 sub_points = ingredient.listePtLinear
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
-                self.display_data[ingredient.name] = DisplayData(
+                self.display_data[packed_object.name] = DisplayData(
                     name=ingr_name,
                     display_type=display_type,
                     url=url,
-                    color=simulariumHelper.format_rgb_color(ingredient.color),
+                    color=simulariumHelper.format_rgb_color(packed_object.color),
                 )
 
             radius = radius if radius is not None else 10
             adj_pos = ingredient.representations.get_adjusted_position(
-                position, rotation
+                packed_object.position, packed_object.rotation
             )
 
             self.add_instance(
                 ingr_name,
                 ingredient,
-                f"{ingr_name}-{ptInd}-{instance_number}",
+                f"{ingr_name}-{packed_object.pt_index}-{instance_number}",
                 radius,
                 adj_pos,
-                rotation,
+                packed_object.rotation,
                 sub_points,
             )
             instance_number += 1
+
             if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
                     for level in range(len(ingredient.positions)):
                         for i in range(len(ingredient.positions[level])):
                             pos = ingredient.apply_rotation(
-                                rotation, ingredient.positions[level][i], position
+                                packed_object.rotation, ingredient.positions[level][i], packed_object.position
                             )
 
                             self.add_instance(
                                 f"{ingredient.name}-spheres",
                                 ingredient,
-                                f"{ingredient.name}-{ptInd}-{i}",
+                                f"{ingredient.name}-{packed_object.pt_index}-{i}",
                                 ingredient.radii[level][i],
                                 pos,
-                                rotation,
+                                packed_object.rotation,
                                 None,
                             )
 
