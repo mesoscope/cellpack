@@ -1649,11 +1649,13 @@ class Ingredient(Agent):
                         ingredient=self
                     )
         self.env.packed_objects.add(packed_object)
+        if self.compNum != 0:
+            compartment = self.get_compartment(self.env)
+            compartment.packed_objects.add(packed_object)
 
     def place(
         self,
         env,
-        compartment,
         dropped_position,
         dropped_rotation,
         grid_point_index,
@@ -1661,9 +1663,7 @@ class Ingredient(Agent):
         new_dist_values,
     ):
         self.nbPts = self.nbPts + len(new_inside_points)
-        compartment.packed_objects.add(PackedObject(
-            dropped_position, dropped_rotation, self.get_radius(), grid_point_index, self
-        ))
+
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
         env.nb_ingredient += 1
@@ -1865,7 +1865,7 @@ class Ingredient(Agent):
                     current_visual_instance, jtrans, rotMatj
                 )
             self.place(
-                env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
+                env, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
             )
         else:
             if is_realtime:
