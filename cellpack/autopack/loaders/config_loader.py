@@ -35,7 +35,7 @@ class ConfigLoader(object):
         "out": "out/",
         "overwrite_place_method": False,
         "parallel": False,
-        "place_method": "jitter",
+        "place_method": "spheresSST",
         "randomness_seed": None,
         "save_analyze_result": False,
         "save_converted_recipe": False,

@@ -1,32 +1,26 @@
 import numpy
 
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-
-
 class PackedObject:
     def __init__(
         self,
-        name,
         position,
         rotation,
         radius,
-        encapsulating_radius,
         pt_index,
-        compartment_id,
-        ingredient_type: INGREDIENT_TYPE,
-        color,
-        is_compartment=False,
+        ingredient=None,
+        is_compartment=False
     ) -> None:
-        self.name = name
+        self.name = ingredient.name
         self.position = position
         self.rotation = rotation
         self.radius = radius
-        self.encapsulating_radius = encapsulating_radius
+        self.encapsulating_radius = ingredient.encapsulating_radius
         self.pt_index = pt_index
-        self.compartment_id = compartment_id
+        self.compartment_id = ingredient.compNum
         self.is_compartment = is_compartment
-        self.ingredient_type = ingredient_type
-        self.color = color
+        self.ingredient_type = ingredient.type
+        self.color = ingredient.color
+        self.ingredient = ingredient
 
 class PackedObjects:
     def __init__(self):

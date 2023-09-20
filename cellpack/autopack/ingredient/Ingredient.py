@@ -56,7 +56,7 @@ import math
 
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.interface_objects.packed_objects import PackedObject
-from cellpack.autopack.utils import get_value_from_distribution
+from cellpack.autopack.utils import get_distance, get_value_from_distribution
 
 from .utils import (
     ApplyMatrix,
@@ -1218,24 +1218,19 @@ class Ingredient(Agent):
         return self.get_new_distance_values(
             jtrans, rotMatj, gridPointsCoords, distance, dpad
         )
-        # return self.get_new_distance_values(
-        #    grid, gridPointsCoords, dpad, distance, centT, jtrans, rotMatj, dpad
-        # )
 
-    def getIngredientsInBox(self, histoVol, jtrans, rotMat, compartment, afvi):
-        if histoVol.windowsSize_overwrite:
-            rad = histoVol.windowsSize
+    def getIngredientsInBox(self, env, jtrans, rotMat, compartment):
+        if env.windowsSize_overwrite:
+            radius = env.windowsSize
         else:
-            #            rad = self.min_radius*2.0# + histoVol.largestProteinSize + \
-            # histoVol.smallestProteinSize + histoVol.windowsSize
-            rad = (
+            radius = (
                 self.min_radius
-                + histoVol.largestProteinSize
-                + histoVol.smallestProteinSize
-                + histoVol.windowsSize
+                + env.largestProteinSize
+                + env.smallestProteinSize
+                + env.windowsSize
             )
         x, y, z = jtrans
-        bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
+        bb = ([x - radius, y - radius, z - radius], [x + radius, y + radius, z + radius])
         if self.model_type == "Cylinders":
             cent1T = self.transformPoints(
                 jtrans, rotMat, self.positions[self.deepest_level]
@@ -1261,7 +1256,7 @@ class Ingredient(Agent):
                     if bb[0][i] > maxBB[i]:
                         maxBB[i] = bb[0][i]
             bb = [minBB, maxBB]
-        if histoVol.runTimeDisplay > 1:
+        if env.runTimeDisplay > 1:
             box = self.vi.getObject("partBox")
             if box is None:
                 box = self.vi.Box("partBox", cornerPoints=bb, visible=1)
@@ -1270,19 +1265,20 @@ class Ingredient(Agent):
                 self.vi.updateBox(box, cornerPoints=bb)
                 self.vi.update()
                 #            sleep(1.0)
-        pointsInCube = histoVol.grid.getPointsInCube(bb, jtrans, rad)
+        pointsInCube = env.grid.getPointsInCube(bb, jtrans, radius)
         # should we got all ingre from all recipes?
         # can use the kdtree for it...
         # maybe just add the surface if its not already the surface
-        mingrs = [m for m in compartment.molecules if m[3] in pointsInCube]
-        return mingrs
+        ingredients = []
+        for obj in compartment.packed_objects.get():
+            ingr = self.env.get_ingredient_by_name(obj.name)
+            ingredients.append([obj, ingr, get_distance(obj.position, jtrans)])
+
+        return ingredients
 
     def getIngredientsInTree(self, closest_ingredients):
         ingredients = []
-        import ipdb
-
-        ipdb.set_trace()
-        packed_objects = self.env.pack_objects.get()
+        packed_objects = self.env.packed_objects.get()
         if len(packed_objects):
             nearby_packed_objects = [
                 packed_objects[i] for i in closest_ingredients["indices"]
@@ -1313,7 +1309,7 @@ class Ingredient(Agent):
             self.log.info("nb close ingredient %s", self.name)
         for i in range(len(near_by_ingredients)):
             packed_ingredient = near_by_ingredients[i][1]
-            distance = (near_by_ingredients[3][i],)
+            distance = near_by_ingredients[i][2]
             if self.packing_mode == "closePartner":
                 if self.partners.is_partner(packed_ingredient.name):
                     placed_partners.append(
@@ -1381,7 +1377,7 @@ class Ingredient(Agent):
         )
         # return index of sph1 closest to pos of packed ingr
         cradii = numpy.array(self.radii[level])[ind]
-        oradii = numpy.array(self.env.rIngr[index].radii[level])
+        oradii = numpy.array(self.env.packed_objects.get()[index].ingredient.radii[level])
         sumradii = numpy.add(cradii.transpose(), oradii).transpose()
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
         return len(numpy.nonzero(sD < 0.0)[0]) != 0
@@ -1565,7 +1561,7 @@ class Ingredient(Agent):
         env = self.env
         numpy.zeros(env.totalNbIngr).astype("i")
         nb = 0
-        number_packed = len(env.packed_objects)
+        number_packed = len(env.packed_objects.get())
         if not number_packed:
             return to_return
         if env.close_ingr_bhtree is not None:
@@ -1587,40 +1583,11 @@ class Ingredient(Agent):
             return to_return
 
     def update_data_tree(
-        self, jtrans, rotMatj, radius, ptInd=0, pt1=None, pt2=None, updateTree=True
-    ):
-        # self.env.static.append(rbnode)
-        # self.env.moving = None
-        self.env.nb_ingredient += 1
-        self.env.rTrans.append(numpy.array(jtrans).flatten().tolist())
-        self.env.rRot.append(numpy.array(rotMatj))  # rotMatj
-        self.env.rIngr.append(self)
-        if pt1 is not None:
-            self.env.result.append(
-                [
-                    [
-                        numpy.array(pt1).flatten().tolist(),
-                        numpy.array(pt2).flatten().tolist(),
-                    ],
-                    rotMatj.tolist(),
-                    self,
-                    ptInd,
-                ]
+        self):
+        if len(self.env.packed_objects.get()) >= 1:
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.packed_objects.get_positions(), leafsize=10
             )
-        else:
-            self.env.result.append(
-                [
-                    numpy.array(jtrans).flatten().tolist(),
-                    numpy.array(rotMatj),
-                    self,
-                    ptInd,
-                ]
-            )
-        if updateTree:
-            if len(self.env.rTrans) >= 1:
-                self.env.close_ingr_bhtree = spatial.cKDTree(
-                    self.env.rTrans, leafsize=10
-                )
 
     def pack_at_grid_pt_location(
         self,
@@ -1675,15 +1642,11 @@ class Ingredient(Agent):
 
     def store_packed_object(self, position, rotation, index):
         packed_object = PackedObject(
-                        name=self.name,
                         position=position,
                         rotation=rotation,
-                        radius=self.radius,
-                        encapsulating_radius=self.encapsulating_radius,
+                        radius=self.get_radius(),
                         pt_index=index,
-                        compartment_id=self.compNum,
-                        ingredient_type=self.type,
-                        color=self.color,
+                        ingredient=self
                     )
         self.env.packed_objects.add(packed_object)
 
@@ -1698,10 +1661,9 @@ class Ingredient(Agent):
         new_dist_values,
     ):
         self.nbPts = self.nbPts + len(new_inside_points)
-        # self.update_distances(new_inside_points, new_dist_values)
-        # compartment.molecules.append(
-        #     [dropped_position, dropped_rotation, self, grid_point_index, self.radius]
-        # )
+        compartment.packed_objects.add(PackedObject(
+            dropped_position, dropped_rotation, self.get_radius(), grid_point_index, self
+        ))
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
         env.nb_ingredient += 1
@@ -1718,9 +1680,7 @@ class Ingredient(Agent):
         self.counter += 1
         self.completion = float(self.counter) / float(self.left_to_place)
         self.rejectionCounter = 0
-        # self.update_data_tree(
-        #     dropped_position, dropped_rotation, grid_point_index, dropped_radius
-        # )
+        self.update_data_tree()
 
     def update_ingredient_size(self):
         # update the size of the ingredient based on input options
@@ -1745,21 +1705,7 @@ class Ingredient(Agent):
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
-        print(
-            "before update",
-            self.radius,
-            self.min_radius,
-            self.max_radius,
-            self.encapsulating_radius,
-        )
         self.update_ingredient_size()
-        print(
-            "after update",
-            self.radius,
-            self.min_radius,
-            self.max_radius,
-            self.encapsulating_radius,
-        )
 
         dpad = self.min_radius + max_radius + jitter
         self.vi = autopack.helper
@@ -2698,13 +2644,14 @@ class Ingredient(Agent):
 
                 for pt in pts_to_check:
                     self.store_packed_object(pt, packing_rotation, ptInd)
-                    new_inside_pts, new_dist_points = self.get_new_distance_values(
+                    new_inside_pts, new_dist_points = self.pack_at_grid_pt_location(
+                        env,
                         pt,
                         packing_rotation,
-                        gridPointsCoords,
-                        distance,
                         dpad,
-                        self.deepest_level,
+                        distance,
+                        insidePoints,
+                        newDistPoints
                     )
                     insidePoints = self.merge_place_results(
                         new_inside_pts, insidePoints

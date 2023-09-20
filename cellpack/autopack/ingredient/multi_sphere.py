@@ -33,6 +33,7 @@ class MultiSphereIngr(Ingredient):
         offset=[0, 0, 0],
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
+        object_name=None,
         packing_mode="random",
         packing=0,
         partners=None,
@@ -60,6 +61,7 @@ class MultiSphereIngr(Ingredient):
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
+            object_name=object_name,
             offset=offset,
             orient_bias_range=orient_bias_range,
             packing_mode=packing_mode,
@@ -87,6 +89,43 @@ class MultiSphereIngr(Ingredient):
         ) = self.representations.get_min_max_radius()
         if name is None:
             name = "%s_%f" % (str(self.radii), molarity)
+
+    def get_radius(self):
+        return self.encapsulating_radius
+
+    def get_new_distance_values(
+        self,
+        packed_position,
+        packed_rotation,
+        gridPointsCoords,
+        distance,
+        dpad,
+        level,
+    ):
+        inside_points = {}
+        new_dist_points = {}
+        padded_sphere = self.radius + dpad
+        ptsInSphere = self.env.grid.getPointsInSphere(packed_position, padded_sphere)
+        delta = numpy.take(gridPointsCoords, ptsInSphere, 0) - packed_position
+        delta *= delta
+        distA = numpy.sqrt(delta.sum(1))
+        for pti in range(len(ptsInSphere)):
+            pt = ptsInSphere[pti]
+            dist = distA[pti]
+            d = dist - self.radius
+            if d <= 0:  # point is inside dropped sphere
+                if pt in inside_points:
+                    if abs(d) < abs(inside_points[pt]):
+                        inside_points[pt] = d
+                else:
+                    inside_points[pt] = d
+            elif d < distance[pt]:  # point in region of influence
+                if pt in new_dist_points:
+                    if d < new_dist_points[pt]:
+                        new_dist_points[pt] = d
+                else:
+                    new_dist_points[pt] = d
+        return inside_points, new_dist_points
 
     def collision_jitter(
         self,

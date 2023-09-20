@@ -68,6 +68,7 @@ from scipy import spatial
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
+from cellpack.autopack.interface_objects.packed_objects import PackedObjects
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -138,6 +139,7 @@ class Compartment(CompartmentList):
         self.ref_obj = None
         self.meshType = None
         self.representations = object_info["representations"]
+        self.packed_objects = PackedObjects()
         if self.representations.has_mesh():
             self.gname = self.representations.get_mesh_name()
             self.meshType = self.representations.get_mesh_format()
