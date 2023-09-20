@@ -53,7 +53,6 @@ from cellpack.autopack.interface_objects.packed_objects import PackedObjects
 from scipy import spatial
 import numpy
 import pickle
-import math
 import json
 from json import encoder
 import logging
@@ -87,7 +86,7 @@ from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
-from .transformation import euler_from_matrix, signed_angle_between_vectors
+from .transformation import signed_angle_between_vectors
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -154,9 +153,7 @@ class Environment(CompartmentList):
         # saving/pickle option
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
-        self.result_file = (
-            f"{self.out_folder}/{self.name}_{config['name']}_{self.version}"
-        )
+        self.base_name = f"{self.name}_{config['name']}_{self.version}"
         self.grid_file_out = (
             f"{self.out_folder}/{self.name}_{config['name']}_{self.version}_grid.dat"
         )
@@ -495,9 +492,7 @@ class Environment(CompartmentList):
         free_points,
         distances,
         t0,
-        vAnalysis,
         vTestid,
-        seedNum,
         all_ingr_as_array,
         save_grid_logs=False,
         save_result_as_file=False,
@@ -516,7 +511,6 @@ class Environment(CompartmentList):
             self.store()
         Writer(format=self.format_output).save(
             self,
-            self.result_file,
             kwds=["compNum"],
             result=True,
             quaternion=True,
@@ -1819,12 +1813,20 @@ class Environment(CompartmentList):
                 if min_radius is not None:
                     ingr.min_radius = min_radius
 
+    def add_seed_number_to_base_name(self, seed_number):
+        return f"{self.base_name}_seed_{seed_number}"
+
+    def set_result_file_name(self, seed_basename):
+        """
+        Sets the result file name using the output folder path and a given seed basename
+        """
+        self.result_file = str(self.out_folder / f"results_{seed_basename}")
+
     def pack_grid(
         self,
-        seedNum=14,
+        seedNum=0,
         name=None,
         vTestid=3,
-        vAnalysis=0,
         **kw,
     ):
         """
@@ -1834,6 +1836,8 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
+        seed_base_name = self.add_seed_number_to_base_name(seedNum)
+        self.set_result_file_name(seed_base_name)
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2167,9 +2171,7 @@ class Environment(CompartmentList):
                         free_points,
                         distances=distances,
                         t0=stime,
-                        vAnalysis=vAnalysis,
                         vTestid=vTestid,
-                        seedNum=seedNum,
                         all_ingr_as_array=all_ingr_as_array,
                     )
 
@@ -2186,9 +2188,7 @@ class Environment(CompartmentList):
                 free_points,
                 distances=distances,
                 t0=time(),
-                vAnalysis=vAnalysis,
                 vTestid=vTestid,
-                seedNum=seedNum,
                 all_ingr_as_array=all_ingr_as_array,
             )
 
