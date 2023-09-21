@@ -362,7 +362,7 @@ class MultiSphereIngr(Ingredient):
         for radc, posc in zip(radii, transformed_centers):
             ptsInSphere = env.grid.getPointsInSphere(posc, radc[0])  # indices
             compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
-            wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+            wrongPt = [cid for cid in compIdsSphere if cid != self.compartment_id]
             if len(wrongPt):
                 return True
         return False

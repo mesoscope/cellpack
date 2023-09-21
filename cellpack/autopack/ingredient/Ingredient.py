@@ -141,7 +141,7 @@ class Ingredient(Agent):
         of the (+) values
         - an optional principal vector used to align the ingredient
         - recipe will be a weakref to the Recipe this Ingredient belongs to
-        - compNum is the compartment number (0 for cytoplasm, positive for compartment
+        - compartment_id is the compartment number (0 for cytoplasm, positive for compartment
         surface and negative compartment interior
         - Attributes used by the filling algorithm:
         - count counts the number of placed ingredients during a fill
@@ -297,7 +297,7 @@ class Ingredient(Agent):
         self.principal_vector = principal_vector
 
         self.recipe = None  # will be set when added to a recipe
-        self.compNum = None
+        self.compartment_id = None
         self.compId_accepted = (
             []
         )  # if this list is defined, point picked outise the list are rejected
@@ -745,7 +745,7 @@ class Ingredient(Agent):
         spacing is the grid spacing
         this will jitter gauss(0., 0.3) * Ingredient.max_jitter
         """
-        if self.compNum > 0:
+        if self.compartment_id > 0:
             vx, vy, vz = v1 = self.principal_vector
             # surfacePointsNormals problem here
             v2 = normal
@@ -763,7 +763,7 @@ class Ingredient(Agent):
         dz = jz * spacing * uniform(-1.0, 1.0)
         #        d2 = dx*dx + dy*dy + dz*dz
         #        if d2 < jitter2:
-        if self.compNum > 0:  # jitter less among normal
+        if self.compartment_id > 0:  # jitter less among normal
             dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
         position[0] += dx
         position[1] += dy
@@ -835,7 +835,7 @@ class Ingredient(Agent):
     ):
         allIngrPts = []
         allIngrDist = []
-        current_comp_id = self.compNum
+        current_comp_id = self.compartment_id
         # gets min distance an object has to be away to allow packing for this object
         cuttoff = self.get_cuttoff_value(spacing)
         if self.packing_mode == "close":
@@ -990,12 +990,12 @@ class Ingredient(Agent):
     def checkDistSurface(self, point, cutoff):
         if not hasattr(self, "histoVol"):
             return False
-        if self.compNum == 0:
+        if self.compartment_id == 0:
             compartment = self.env
         else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
-        compNum = self.compNum
-        if compNum < 0:
+            compartment = self.env.compartments[abs(self.compartment_id) - 1]
+        compartment_id = self.compartment_id
+        if compartment_id < 0:
             sfpts = compartment.surfacePointsCoords
             delta = numpy.array(sfpts) - numpy.array(point)
             delta *= delta
@@ -1003,7 +1003,7 @@ class Ingredient(Agent):
             test = distA < cutoff
             if True in test:
                 return True
-        elif compNum == 0:
+        elif compartment_id == 0:
             for o in self.env.compartments:
                 sfpts = o.surfacePointsCoords
                 delta = numpy.array(sfpts) - numpy.array(point)
@@ -1016,7 +1016,7 @@ class Ingredient(Agent):
 
     def getListCompFromMask(self, cId, ptsInSphere):
         # cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]
-        current = self.compNum
+        current = self.compartment_id
         if current < 0:  # inside
             ins = [i for i, x in enumerate(cId) if x == current]
             # surf=[i for i,x in enumerate(cId) if x == -current]
@@ -1032,7 +1032,7 @@ class Ingredient(Agent):
 
     def isInGoodComp(self, pId, nbs=None):
         # cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]
-        current = self.compNum
+        current = self.compartment_id
         cId = self.env.grid.compartment_ids[pId]
         if current <= 0:  # inside
             if current != cId:
@@ -1051,7 +1051,7 @@ class Ingredient(Agent):
                 self.env.grid.compartment_ids, ptsInSphere, 0
             )  # shoud be the same ?
             if nbs is not None:
-                if self.compNum <= 0 and nbs != 0:
+                if self.compartment_id <= 0 and nbs != 0:
                     return trigger, True
             L = self.getListCompFromMask(cId, ptsInSphere)
 
@@ -1113,7 +1113,7 @@ class Ingredient(Agent):
         nearest_grid_point_compartment_id = (
             self.env.compartment_id_for_nearest_grid_point(point)
         )  # offset ?
-        compartment_ingr_belongs_in = self.compNum
+        compartment_ingr_belongs_in = self.compartment_id
         if compartment_ingr_belongs_in == 0:
             compartment = self.env
         else:
@@ -1122,7 +1122,7 @@ class Ingredient(Agent):
             compartment = self.env.compartments[abs(compartment_ingr_belongs_in) - 1]
         if compartment_ingr_belongs_in > 0:  # surface ingredient
             if self.type == "Grow":
-                # need a list of accepted compNum
+                # need a list of accepted compartment_id
                 check = False
                 if len(self.compMask):
                     check = nearest_grid_point_compartment_id in self.compMask
@@ -1151,7 +1151,7 @@ class Ingredient(Agent):
     def far_enough_from_surfaces(self, point, cutoff):
         # check if clear of all other compartment surfaces
         ingredient_compartment = self.get_compartment(self.env)
-        ingredient_compartment_id = self.compNum
+        ingredient_compartment_id = self.compartment_id
         for compartment in self.env.compartments:
             if (
                 ingredient_compartment_id > 0
@@ -1452,10 +1452,10 @@ class Ingredient(Agent):
     ):
         # move around the rbnode and return it
         # self.env.loopThroughIngr( self.env.reset_rbnode )
-        if self.compNum == 0:
+        if self.compartment_id == 0:
             organelle = self.env
         else:
-            organelle = self.env.compartments[abs(self.compNum) - 1]
+            organelle = self.env.compartments[abs(self.compartment_id) - 1]
         nodes = []
         #        a=numpy.asarray(self.env.rTrans)[close_indice["indices"]]
         #        b=numpy.array([currentpt,])
@@ -1513,7 +1513,7 @@ class Ingredient(Agent):
                 nodes.append(rbnode)
         # append organelle rb nodes
         for o in self.env.compartments:
-            if self.compNum > 0 and o.name == organelle.name:
+            if self.compartment_id > 0 and o.name == organelle.name:
                 # this i notworking for growing ingredient like hair.
                 # should had after second segments
                 if self.type != "Grow":
@@ -1533,7 +1533,7 @@ class Ingredient(Agent):
                             nodes.append(orbnode)
                         else:
                             nodes.append([orbnode, [0, 0, 0], numpy.identity(4), o])
-                            #        if self.compNum < 0 or self.compNum == 0 :
+                            #        if self.compartment_id < 0 or self.compartment_id == 0 :
                             #            for o in self.env.compartments:
                             #                if o.rbnode is not None :
                             #                    if not getInfo :
@@ -1654,7 +1654,7 @@ class Ingredient(Agent):
             ingredient=self,
         )
         self.env.packed_objects.add(packed_object)
-        if self.compNum != 0:
+        if self.compartment_id != 0:
             compartment = self.get_compartment(self.env)
             compartment.packed_objects.add(packed_object)
 
@@ -1879,7 +1879,7 @@ class Ingredient(Agent):
 
     def get_rotation(self, pt_ind, env, compartment):
         # compute rotation matrix rotMat
-        comp_num = self.compNum
+        comp_num = self.compartment_id
 
         rot_mat = numpy.identity(4)
         if comp_num > 0:
@@ -1915,7 +1915,7 @@ class Ingredient(Agent):
     def randomize_rotation(self, rotation, histovol):
         # randomize rotation about axis
         jitter_rotation = numpy.identity(4)
-        if self.compNum > 0:
+        if self.compartment_id > 0:
             jitter_rotation = self.getAxisRotation(rotation)
         else:
             if self.use_rotation_axis:
@@ -1963,7 +1963,7 @@ class Ingredient(Agent):
                 dz = jz * jitter * uniform(-1.0, 1.0)
                 d2 = dx * dx + dy * dy + dz * dz
                 if d2 < jitter_sq:
-                    if self.compNum > 0:  # jitter less among normal
+                    if self.compartment_id > 0:  # jitter less among normal
                         dx, dy, dz, _ = numpy.dot(rotation, (dx, dy, dz, 0))
                     jitter_trans = (tx + dx, ty + dy, tz + dz)
                     found = True
@@ -2306,7 +2306,7 @@ class Ingredient(Agent):
                     return targetPoint, rotMat, found
                 else:  # maybe get the ptid that can have it
                     found = True
-                    if self.compNum > 0:
+                    if self.compartment_id > 0:
                         # surface
                         d, i = organelle.OGsrfPtsBht.query(targetPoint)
                         vx, vy, vz = v1 = self.principal_vector
@@ -2357,10 +2357,10 @@ class Ingredient(Agent):
             return collision
 
     def get_compartment(self, env):
-        if self.compNum == 0:
+        if self.compartment_id == 0:
             return env
         else:
-            return env.compartments[abs(self.compNum) - 1]
+            return env.compartments[abs(self.compartment_id) - 1]
 
     def close_partner_check(self, translation, rotation, compartment, afvi, moving):
         target_point, rot_matrix, found = self.lookForNeighbours(
@@ -2657,12 +2657,6 @@ class Ingredient(Agent):
                     newDistPoints = self.merge_place_results(
                         new_dist_points, newDistPoints
                     )
-                # rebuild kdtree
-                # if len(self.env.packed_objects.get()) >= 1:
-                #     del self.env.close_ingr_bhtree
-                #     self.env.close_ingr_bhtree = spatial.cKDTree(
-                #         self.env.packed_objects.get_positions(), leafsize=10
-                #     )
 
                 success = True
                 return (

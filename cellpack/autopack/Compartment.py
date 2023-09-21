@@ -503,10 +503,10 @@ class Compartment(CompartmentList):
         self.innerRecipe.number = self.number
         recipe.compartment = self  # weakref.ref(self)
         for ingr in recipe.ingredients:
-            ingr.compNum = -self.number
+            ingr.compartment_id = -self.number
             if hasattr(ingr, "compMask"):
                 if not ingr.compMask:
-                    ingr.compMask = [ingr.compNum]
+                    ingr.compMask = [ingr.compartment_id]
 
     def setSurfaceRecipe(self, recipe):
         """set the inner recipe that define the ingredient to pack at the surface"""
@@ -516,7 +516,7 @@ class Compartment(CompartmentList):
         self.surfaceRecipe.number = self.number
         recipe.compartment = self  # weakref.ref(self)
         for ingr in recipe.ingredients:
-            ingr.compNum = self.number
+            ingr.compartment_id = self.number
 
     def getCenter(self):
         """get the center of the mesh (vertices barycenter)"""

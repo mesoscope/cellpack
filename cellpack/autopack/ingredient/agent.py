@@ -101,10 +101,10 @@ class Agent:
         partner_ingredient = near_by_ingredients[partner_index][0].ingredient
         self.log.info(f"binding to {partner_ingredient.name}")
 
-        if self.compNum > 0:
+        if self.compartment_id > 0:
             packing_position = self.env.grid.getClosestFreeGridPoint(
                 packing_position,
-                compId=self.compNum,
+                compId=self.compartment_id,
                 ball=(
                     partner_ingredient.encapsulating_radius + self.encapsulating_radius
                 ),

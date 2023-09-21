@@ -160,7 +160,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.orientation = orientation
         self.seedOnPlus = True  # The filament should continue to grow on its (+) end
         self.seedOnMinus = False  # The filamen should continue to grow on its (-) end.
-        #        if self.compNum > 0 :
+        #        if self.compartment_id > 0 :
         #            self.seedOnMinus = False
         self.vector = [0.0, 0.0, 0.0]
         self.biased = biased
@@ -601,7 +601,7 @@ class GrowIngredient(MultiCylindersIngr):
         step = histoVol.grid.gridSpacing * size
         bb = ([cx - step, cy - step, cz - step], [cx + step, cy + step, cz + step])
         pointsInCube = histoVol.grid.getPointsInCube(bb, posc, step, addSP=False)
-        o = self.env.compartments[abs(self.compNum) - 1]
+        o = self.env.compartments[abs(self.compartment_id) - 1]
         sfpts = o.surfacePointsCoords
 
         found = False
@@ -1367,8 +1367,8 @@ class GrowIngredient(MultiCylindersIngr):
 
         counter = 0
         mask = None
-        if self.walkingMode == "lattice" and self.compNum > 0:
-            o = self.env.compartments[abs(self.compNum) - 1]
+        if self.walkingMode == "lattice" and self.compartment_id > 0:
+            o = self.env.compartments[abs(self.compartment_id) - 1]
             v = o.surfacePointsCoords
             mask = numpy.ones(len(v), int)
         alternate = False
@@ -1419,7 +1419,7 @@ class GrowIngredient(MultiCylindersIngr):
                         marge=self.marge,
                         checkcollision=True,
                     )
-            if self.walkingMode == "lattice" and self.compNum > 0:
+            if self.walkingMode == "lattice" and self.compartment_id > 0:
                 secondPoint, success, mask = self.walkLatticeSurface(
                     startingPoint,
                     distance,
@@ -1611,8 +1611,8 @@ class GrowIngredient(MultiCylindersIngr):
         return insidePoints, newDistPoints, nbFreePoints, free_points
 
     def getFirstPoint(self, ptInd, seed=0):
-        if self.compNum > 0:  # surfacegrowing: first point is aling to the normal:
-            v2 = self.env.compartments[abs(self.compNum) - 1].surfacePointsNormals[
+        if self.compartment_id > 0:  # surfacegrowing: first point is aling to the normal:
+            v2 = self.env.compartments[abs(self.compartment_id) - 1].surfacePointsNormals[
                 ptInd
             ]
             secondPoint = (
@@ -1640,7 +1640,7 @@ class GrowIngredient(MultiCylindersIngr):
                 secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
             )
             closeS = False
-            if inside and self.compNum <= 0:
+            if inside and self.compartment_id <= 0:
                 # only if not surface ingredient
                 closeS = self.far_enough_from_surfaces(
                     secondPoint, cutoff=self.cutoff_surface
@@ -1662,7 +1662,7 @@ class GrowIngredient(MultiCylindersIngr):
                     inside = self.env.grid.checkPointInside(
                         secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
                     )
-                    if self.compNum <= 0:
+                    if self.compartment_id <= 0:
                         closeS = self.far_enough_from_surfaces(
                             secondPoint, cutoff=self.cutoff_surface
                         )
@@ -1722,8 +1722,8 @@ class GrowIngredient(MultiCylindersIngr):
         normal = None
 
         # jitter the first point
-        if self.compNum > 0:
-            normal = env.compartments[abs(self.compNum) - 1].surfacePointsNormals[ptInd]
+        if self.compartment_id > 0:
+            normal = env.compartments[abs(self.compartment_id) - 1].surfacePointsNormals[ptInd]
         self.startingpoint = previousPoint = startingPoint = self.jitterPosition(
             numpy.array(env.grid.masterGridPositions[ptInd]),
             env.smallestProteinSize,
@@ -1734,10 +1734,10 @@ class GrowIngredient(MultiCylindersIngr):
 
         # if u != self.uLength:
         #     self.positions2 = [[self.vector]]
-        if self.compNum == 0:
+        if self.compartment_id == 0:
             compartment = self.env
         else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compartment_id) - 1]
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)

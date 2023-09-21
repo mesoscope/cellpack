@@ -241,10 +241,10 @@ class AutopackViewer:
         @type  parent: hostObject
         @param parent: specify a parent to insert under
         """
-        if ingr.compNum == 0:
+        if ingr.compartment_id == 0:
             compartment = self.histo
         else:
-            compartment = self.histo.compartments[abs(ingr.compNum) - 1]
+            compartment = self.histo.compartments[abs(ingr.compartment_id) - 1]
         name = "%s_%s" % (ingr.name, compartment.name)
         gi = self.checkCreateEmpty(name, parent=parent)
         self.orgaToMasterGeom[ingr] = gi
@@ -1205,7 +1205,7 @@ class AutopackViewer:
             print("no ingredient provided")
             return
         o = ingredient.recipe.compartment
-        #        comp = ingredient.compNum
+        #        comp = ingredient.compartment_id
         verts = []
         radii = []
         matrices = []
@@ -1986,13 +1986,13 @@ class AutopackViewer:
         if ingr is not None:
             if recipe is None:
                 self.histo.exteriorRecipe.addIngredient(ingr)
-                ingr.compNum = 0
+                ingr.compartment_id = 0
                 g = self.vi.getObject(self.name + "_cytoplasm")
                 self.addMasterIngr(ingr, parent=g)
                 ingr.env = self.histo
             else:
                 recipe.addIngredient(ingr)
-                ingr.compNum = recipe.number
+                ingr.compartment_id = recipe.number
                 # g = self.vi.getObject("O" + o.name)
                 ingr.env = self.histo
             rep = self.vi.getObject(ingr.composition_name + "_mesh")
@@ -2002,7 +2002,7 @@ class AutopackViewer:
             ingr.meshFile = autopack.cache_geoms + os.sep + ingr.composition_name
             ingr.meshName = ingr.composition_name + "_mesh"
             ingr.saveDejaVuMesh(ingr.meshFile)
-            self.addMasterIngr(ingr, parent=self.orgaToMasterGeom[ingr.compNum])
+            self.addMasterIngr(ingr, parent=self.orgaToMasterGeom[ingr.compartment_id])
         return ingr
 
     def addCompartmentFromGeom(self, name, obj, **kw):

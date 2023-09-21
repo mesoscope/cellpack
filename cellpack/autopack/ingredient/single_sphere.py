@@ -199,8 +199,8 @@ class SingleSphereIngr(Ingredient):
         """
         ptsInSphere = env.grid.getPointsInSphere(jtrans, self.radius)  # indices
         compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
-        if self.compNum <= 0:
-            wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+        if self.compartment_id <= 0:
+            wrongPt = [cid for cid in compIdsSphere if cid != self.compartment_id]
             if len(wrongPt):
                 return True
         return False

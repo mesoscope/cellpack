@@ -509,7 +509,7 @@ class Environment(CompartmentList):
             self.store()
         Writer(format=self.format_output).save(
             self,
-            kwds=["compNum"],
+            kwds=["compartment_id"],
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
@@ -1057,11 +1057,11 @@ class Environment(CompartmentList):
                 #                    return ingr
         return None
 
-    def get_ingredient_by_name(self, name, compNum=None):
+    def get_ingredient_by_name(self, name, compartment_id=None):
         """
         Given an ingredient name and optionally the compartment number, retrieve the ingredient object instance
         """
-        if compNum is None:
+        if compartment_id is None:
             r = self.exteriorRecipe
             ingr = self.getIngrFromNameInRecipe(name, r)
             if ingr is not None:
@@ -1075,15 +1075,15 @@ class Environment(CompartmentList):
                 ingr = self.getIngrFromNameInRecipe(name, ri)
                 if ingr is not None:
                     return ingr
-        elif compNum == 0:
+        elif compartment_id == 0:
             r = self.exteriorRecipe
             ingr = self.getIngrFromNameInRecipe(name, r)
             if ingr is not None:
                 return ingr
             else:
                 return None
-        elif compNum > 0:
-            o = self.compartments[compNum - 1]
+        elif compartment_id > 0:
+            o = self.compartments[compartment_id - 1]
             rs = o.surfaceRecipe
             ingr = self.getIngrFromNameInRecipe(name, rs)
             if ingr is not None:
@@ -1091,7 +1091,7 @@ class Environment(CompartmentList):
             else:
                 return None
         else:  # <0
-            o = self.compartments[(compNum * -1) - 1]
+            o = self.compartments[(compartment_id * -1) - 1]
             ri = o.innerRecipe
             ingr = self.getIngrFromNameInRecipe(name, ri)
             if ingr is not None:
@@ -1107,7 +1107,7 @@ class Environment(CompartmentList):
         self.exteriorRecipe = recipe
         recipe.compartment = self  # weakref.ref(self)
         for ingr in recipe.ingredients:
-            ingr.compNum = 0
+            ingr.compartment_id = 0
 
     def BuildCompartmentsGrids(self):
         """
@@ -1260,7 +1260,7 @@ class Environment(CompartmentList):
         centT = ingr.transformPoints(jtrans, rotMatj, ingr.positions[-1])
         insidePoints = {}
         newDistPoints = {}
-        mr = self.get_dpad(ingr.compNum)
+        mr = self.get_dpad(ingr.compartment_id)
         spacing = self.smallestProteinSize
         jitter = ingr.getMaxJitter(spacing)
         dpad = ingr.min_radius + mr + jitter
@@ -1566,12 +1566,12 @@ class Environment(CompartmentList):
         #            print (r,n,ingr.name,len(self.activeIngr)) #Graham turned back on 5/16/12, but may be costly
         return ingr
 
-    def get_dpad(self, compNum):
+    def get_dpad(self, compartment_id):
         """Return the largest encapsulating_radius and use it for padding"""
         mr = 0.0
-        if compNum == 0:  # cytoplasm -> use cyto and all surfaces
+        if compartment_id == 0:  # cytoplasm -> use cyto and all surfaces
             for ingr1 in self.activeIngr:
-                if ingr1.compNum >= 0:
+                if ingr1.compartment_id >= 0:
                     if hasattr(ingr1, "max_radius"):
                         r = ingr1.max_radius
                     else:
@@ -1580,7 +1580,7 @@ class Environment(CompartmentList):
                         mr = r
         else:
             for ingr1 in self.activeIngr:
-                if ingr1.compNum == compNum or ingr1.compNum == -compNum:
+                if ingr1.compartment_id == compartment_id or ingr1.compartment_id == -compartment_id:
                     if hasattr(ingr1, "max_radius"):
                         r = ingr1.max_radius
                     else:
@@ -2003,20 +2003,20 @@ class Environment(CompartmentList):
                     )
                     if self.afviewer.renderDistance:
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
-            current_ingr_compartment = ingr.compNum
+            current_ingr_compartment = ingr.compartment_id
             # compute dpad which is the distance at which we need to update
             # distances after the drop is successfull
             max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
-                f"picked Ingr radius {ingr.min_radius}, compNum {current_ingr_compartment}"
+                f"picked Ingr radius {ingr.min_radius}, compartment_id {current_ingr_compartment}"
             )
 
             # find the points that can be used for this ingredient
             ##
 
-            if ingr.compNum > 0:
-                compartment = self.compartments[ingr.compNum - 1]
+            if ingr.compartment_id > 0:
+                compartment = self.compartments[ingr.compartment_id - 1]
                 surface_points = compartment.surfacePoints
                 res = [True, surface_points[int(random() * len(surface_points))]]
             else:
@@ -2159,7 +2159,7 @@ class Environment(CompartmentList):
                     nbFreePoints,
                 )
                 stime = time()
-                self.log.info(f"placed {len(self.packed_objects)}")
+                self.log.info(f"placed {len(self.packed_objects.get())}")
                 if self.saveResult:
                     self.save_result(
                         free_points,
@@ -2187,7 +2187,7 @@ class Environment(CompartmentList):
         # if len(ingr.results):
         #     for elem in ingr.results:
                 # TODO: fix this to reset ingredients from results
-                # if ingr.compNum == 0:
+                # if ingr.compartment_id == 0:
                 #     self.molecules.append(
                 #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
                 #     )
@@ -2198,8 +2198,8 @@ class Environment(CompartmentList):
 
     def restore(self, result, orgaresult, freePoint, tree=False):
         # should we used the grid ? the freePoint can be computed
-        # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
-        # orgaresult is [[pos,rot,ingr.name,ingr.compNum,ptInd],[pos,rot,ingr.name,ingr.compNum,ptInd]...]
+        # result is [pos,rot,ingr.name,ingr.compartment_id,ptInd]
+        # orgaresult is [[pos,rot,ingr.name,ingr.compartment_id,ptInd],[pos,rot,ingr.name,ingr.compartment_id,ptInd]...]
         # after restore we can build the grid and fill!
         # ingredient based dictionary
         # TODO: refactor with new packed_objects 
@@ -2207,9 +2207,9 @@ class Environment(CompartmentList):
         ingredients = {}
         molecules = []
         for elem in result:
-            pos, rot, name, compNum, ptInd = elem
+            pos, rot, name, compartment_id, ptInd = elem
             # needto check the name if it got the comp rule
-            ingr = self.get_ingredient_by_name(name, compNum)
+            ingr = self.get_ingredient_by_name(name, compartment_id)
             if ingr is not None:
                 molecules.append([pos, numpy.array(rot), ingr, ptInd])
                 if name not in ingredients:
@@ -2226,8 +2226,8 @@ class Environment(CompartmentList):
             for i, o in enumerate(self.compartments):
                 molecules = []
                 for elem in orgaresult[i]:
-                    pos, rot, name, compNum, ptInd = elem
-                    ingr = self.get_ingredient_by_name(name, compNum)
+                    pos, rot, name, compartment_id, ptInd = elem
+                    ingr = self.get_ingredient_by_name(name, compartment_id)
                     if ingr is not None:
                         molecules.append([pos, numpy.array(rot), ingr, ptInd])
                         if name not in ingredients:
@@ -2309,10 +2309,10 @@ class Environment(CompartmentList):
         return (
             ingrdic["results"],
             ingr.composition_name,
-            ingr.compNum,
+            ingr.compartment_id,
             1,
             ingr.encapsulating_radius,
-        )  # ingrdic["compNum"],1,ingrdic["encapsulating_radius"]
+        )  # ingrdic["compartment_id"],1,ingrdic["encapsulating_radius"]
 
     def load_asTxt(self, resultfilename=None):
         if resultfilename is None:
@@ -2511,7 +2511,7 @@ class Environment(CompartmentList):
 
     def dropOneIngrJson(self, ingr, rdic):
         adic = OrderedDict()  # [ingr.name]
-        adic["compNum"] = ingr.compNum
+        adic["compartment_id"] = ingr.compartment_id
         adic["encapsulating_radius"] = float(ingr.encapsulating_radius)
         adic["results"] = []
         for r in ingr.results:
@@ -2600,17 +2600,17 @@ class Environment(CompartmentList):
         rfile.close()
         rfile = open(resultfilename + ".txt", "w")
         line = ""
-        for pos, rot, ingrName, compNum, ptInd in result:
-            line += self.dropOneIngr(pos, rot, ingrName, compNum, ptInd)
-            # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
+        for pos, rot, ingrName, compartment_id, ptInd in result:
+            line += self.dropOneIngr(pos, rot, ingrName, compartment_id, ptInd)
+            # result.append([pos,rot,ingr.name,ingr.compartment_id,ptInd])
         rfile.write(line)
         rfile.close()
         for i in range(norga):
             orfile = open(resultfilename + "_organelle_" + str(i) + ".txt", "w")
             result = []
             line = ""
-            for pos, rot, ingrName, compNum, ptInd in orgaresult[i]:
-                line += self.dropOneIngr(pos, rot, ingrName, compNum, ptInd)
+            for pos, rot, ingrName, compartment_id, ptInd in orgaresult[i]:
+                line += self.dropOneIngr(pos, rot, ingrName, compartment_id, ptInd)
             orfile.write(line)
             orfile.close()
             # freepoint
@@ -3100,7 +3100,7 @@ class Environment(CompartmentList):
         """
         channel_colors = []
         for obj in self.packed_objects.get():
-
+            ingredient = obj.ingredient
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
                 if obj.color is not None:
@@ -3113,7 +3113,7 @@ class Environment(CompartmentList):
                 mesh_store = self.mesh_store
                 
             else: 
-                obj_instance = self.get_ingredient_class(obj.ingredient_type)
+                obj_instance = self.get_ingredient_class(ingredient.ingredient_type)
                 mesh_store = None
 
             image_data[obj.name] = obj_instance.create_voxelization(

@@ -16,9 +16,7 @@ class PackedObject:
         self.radius = radius
         self.encapsulating_radius = ingredient.encapsulating_radius
         self.pt_index = pt_index
-        self.compartment_id = ingredient.compNum
         self.is_compartment = is_compartment
-        self.ingredient_type = ingredient.type
         self.color = ingredient.color
         self.ingredient = ingredient
 

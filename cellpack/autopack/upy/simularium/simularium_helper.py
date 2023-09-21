@@ -460,7 +460,7 @@ class simulariumHelper(hostHelper.Helper):
             ingredient = packed_object.ingredient
             sub_points = None
             radius = packed_object.radius
-            if simulariumHelper.is_fiber(packed_object.ingredient_type):
+            if simulariumHelper.is_fiber(ingredient.type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately
@@ -473,7 +473,7 @@ class simulariumHelper(hostHelper.Helper):
                     name=ingr_name,
                     display_type=display_type,
                     url=url,
-                    color=simulariumHelper.format_rgb_color(packed_object.color),
+                    color=simulariumHelper.format_rgb_color(ingredient.color),
                 )
 
             radius = radius if radius is not None else 10
