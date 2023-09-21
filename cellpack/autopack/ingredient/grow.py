@@ -905,7 +905,7 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         liste_nodes = []
         cutoff = self.env.largestProteinSize + self.uLength
-        closesbody_indice = self.get_closest_ingredients(pt2, self.env, cutoff=cutoff)
+        closesbody_indice = self.env.get_closest_ingredients(pt2, self.env, cutoff=cutoff)
         liste_nodes = self.get_rbNodes(
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
@@ -1138,7 +1138,7 @@ class GrowIngredient(MultiCylindersIngr):
                         prev = None
                         if len(self.env.rTrans) > 2:
                             prev = self.env.rTrans[-1]
-                        closesbody_indice = self.get_closest_ingredients(
+                        closesbody_indice = self.env.get_closest_ingredients(
                             newPt, histoVol, cutoff=cutoff
                         )  # vself.radii[0][0]*2.0
                         if len(closesbody_indice) == 0:
@@ -1330,7 +1330,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.env.result.pop(len(self.env.result) - 1)
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.rTrans, leafsize=10)
+            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.packed_objects.get_positions(), leafsize=10)
 
         # also remove from the result ?
         self.results.pop(len(self.results) - 1)
@@ -1527,14 +1527,13 @@ class GrowIngredient(MultiCylindersIngr):
                     #                    self.positions2=[[cent2T],]
                     # rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{"rtype":self.type},)#cylinder
                     # histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))
-                    insidePoints, newDistPoints = self.getInsidePoints(
-                        histoVol.grid,
-                        gridPointsCoords,
-                        dpad,
-                        distance,
-                        centT=cent1T,
+                    insidePoints, newDistPoints = self.get_new_distance_values(
                         jtrans=jtrans,
                         rotMatj=rotMatj,
+                        gridPointsCoords=gridPointsCoords,
+                        distance=distance,
+                        dpad=dpad,
+                        centT=cent1T,
                     )
 
                     nbFreePoints = BaseGrid.updateDistances(
@@ -1593,14 +1592,13 @@ class GrowIngredient(MultiCylindersIngr):
         for i in range(rg):  # len(self.results)):
             jtrans, rotMatj = self.results[-i]
             cent1T = self.transformPoints(jtrans, rotMatj, self.positions[-1])
-            new_inside_pts, new_dist_points = self.getInsidePoints(
-                histoVol.grid,
-                gridPointsCoords,
-                dpad,
-                distance,
-                centT=cent1T,
+            new_inside_pts, new_dist_points = self.get_new_distance_values(
                 jtrans=jtrans,
                 rotMatj=rotMatj,
+                gridPointsCoords=gridPointsCoords,
+                distance=distance,
+                dpad=dpad,
+                centT=cent1T,
             )
             insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
             newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
@@ -1772,7 +1770,7 @@ class GrowIngredient(MultiCylindersIngr):
 
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.rTrans, leafsize=10)
+            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.packed_objects.get_positions(), leafsize=10)
 
         self.currentLength = 0.0
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]

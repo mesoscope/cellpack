@@ -1099,6 +1099,42 @@ class Environment(CompartmentList):
             else:
                 return None
 
+    def get_ingredients_in_tree(self, closest_ingredients):
+        ingredients = []
+        packed_objects = self.packed_objects.get()
+        if len(packed_objects):
+            nearby_packed_objects = [
+                packed_objects[i] for i in closest_ingredients["indices"]
+            ]
+            for obj in nearby_packed_objects:
+                ingredients.append([obj, closest_ingredients["distances"]])
+        return ingredients
+    
+    def get_closest_ingredients(self, point, cutoff=10.0):
+        to_return = {"indices": [], "distances": []}
+        numpy.zeros(self.totalNbIngr).astype("i")
+        nb = 0
+        number_packed = len(self.packed_objects.get())
+        if not number_packed:
+            return to_return
+        if self.close_ingr_bhtree is not None:
+            # request kdtree
+            nb = []
+            self.log.info("finding partners")
+
+            if number_packed >= 1:
+                distance, nb = self.close_ingr_bhtree.query(
+                    point, number_packed, distance_upper_bound=cutoff
+                )  # len of ingr posed so far
+                if number_packed == 1:
+                    distance = [distance]
+                    nb = [nb]
+                to_return["indices"] = nb
+                to_return["distances"] = distance  # sorted by distance short -> long
+            return to_return
+        else:
+            return to_return
+        
     def setExteriorRecipe(self, recipe):
         """
         Set the exterior recipe with the given one. Create the weakref.
@@ -1264,14 +1300,13 @@ class Environment(CompartmentList):
         spacing = self.smallestProteinSize
         jitter = ingr.getMaxJitter(spacing)
         dpad = ingr.min_radius + mr + jitter
-        insidePoints, newDistPoints = ingr.getInsidePoints(
-            self.grid,
-            self.grid.masterGridPositions,
-            dpad,
-            distance,
-            centT=centT,
+        insidePoints, newDistPoints = ingr.get_new_distance_values(
             jtrans=jtrans,
             rotMatj=rotMatj,
+            gridPointsCoords=self.grid.masterGridPositions,
+            distance=distance,
+            dpad=dpad,
+            centT=centT,
         )
         # update free points
         if len(insidePoints) and self.place_method.find("panda") != -1:
@@ -1815,6 +1850,11 @@ class Environment(CompartmentList):
         Sets the result file name using the output folder path and a given seed basename
         """
         self.result_file = str(self.out_folder / f"results_{seed_basename}")
+
+    def update_after_place(self, grid_point_index):
+        self.order[grid_point_index] = self.lastrank
+        self.lastrank += 1
+        self.nb_ingredient += 1
 
     def pack_grid(
         self,
