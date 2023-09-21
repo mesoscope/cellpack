@@ -1230,7 +1230,10 @@ class Ingredient(Agent):
                 + env.windowsSize
             )
         x, y, z = jtrans
-        bb = ([x - radius, y - radius, z - radius], [x + radius, y + radius, z + radius])
+        bb = (
+            [x - radius, y - radius, z - radius],
+            [x + radius, y + radius, z + radius],
+        )
         if self.model_type == "Cylinders":
             cent1T = self.transformPoints(
                 jtrans, rotMat, self.positions[self.deepest_level]
@@ -1271,8 +1274,7 @@ class Ingredient(Agent):
         # maybe just add the surface if its not already the surface
         ingredients = []
         for obj in compartment.packed_objects.get():
-            ingr = self.env.get_ingredient_by_name(obj.name)
-            ingredients.append([obj, ingr, get_distance(obj.position, jtrans)])
+            ingredients.append([obj, get_distance(obj.position, jtrans)])
 
         return ingredients
 
@@ -1284,8 +1286,7 @@ class Ingredient(Agent):
                 packed_objects[i] for i in closest_ingredients["indices"]
             ]
             for obj in nearby_packed_objects:
-                ingr = self.env.get_ingredient_by_name(obj.name)
-                ingredients.append([obj, ingr, closest_ingredients["distances"]])
+                ingredients.append([obj, closest_ingredients["distances"]])
         return ingredients
 
     def get_partners(self, jtrans, rotMat, organelle, afvi):
@@ -1295,11 +1296,9 @@ class Ingredient(Agent):
         )
         if not len(closest_ingredients["indices"]):
             near_by_ingredients = self.getIngredientsInBox(
-                env, jtrans, rotMat, organelle, afvi
+                env, jtrans, rotMat, organelle
             )
         else:
-            ## NOTE: started re-formatting this, but need to get distances as well
-            ## and make sure the data is all correct
             near_by_ingredients = self.getIngredientsInTree(closest_ingredients)
         placed_partners = []
         if not len(near_by_ingredients):
@@ -1308,8 +1307,8 @@ class Ingredient(Agent):
         else:
             self.log.info("nb close ingredient %s", self.name)
         for i in range(len(near_by_ingredients)):
-            packed_ingredient = near_by_ingredients[i][1]
-            distance = near_by_ingredients[i][2]
+            packed_ingredient = near_by_ingredients[i][0].ingredient
+            distance = near_by_ingredients[i][1]
             if self.packing_mode == "closePartner":
                 if self.partners.is_partner(packed_ingredient.name):
                     placed_partners.append(
@@ -1377,7 +1376,9 @@ class Ingredient(Agent):
         )
         # return index of sph1 closest to pos of packed ingr
         cradii = numpy.array(self.radii[level])[ind]
-        oradii = numpy.array(self.env.packed_objects.get()[index].ingredient.radii[level])
+        oradii = numpy.array(
+            self.env.packed_objects.get()[index].ingredient.radii[level]
+        )
         sumradii = numpy.add(cradii.transpose(), oradii).transpose()
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
         return len(numpy.nonzero(sD < 0.0)[0]) != 0
@@ -1400,7 +1401,9 @@ class Ingredient(Agent):
             distances_from_packing_location_to_all_ingr,
             ingr_indexes,
         ) = self.env.close_ingr_bhtree.query(packing_location, len(packed_objects))
-        radii_of_placed_ingr = numpy.array(self.env.packed_objects.get_encapsulating_radii())[ingr_indexes]
+        radii_of_placed_ingr = numpy.array(
+            self.env.packed_objects.get_encapsulating_radii()
+        )[ingr_indexes]
         overlap_distance = distances_from_packing_location_to_all_ingr - (
             self.encapsulating_radius + radii_of_placed_ingr
         )
@@ -1582,8 +1585,7 @@ class Ingredient(Agent):
         else:
             return to_return
 
-    def update_data_tree(
-        self):
+    def update_data_tree(self):
         if len(self.env.packed_objects.get()) >= 1:
             self.env.close_ingr_bhtree = spatial.cKDTree(
                 self.env.packed_objects.get_positions(), leafsize=10
@@ -1598,9 +1600,12 @@ class Ingredient(Agent):
         grid_point_distances,
         inside_points,
         new_dist_points,
+        pt_index
     ):
+
         packing_location = jtrans
         radius_of_area_to_check = self.encapsulating_radius + dpad
+        self.store_packed_object(packing_location, rotation_matrix, pt_index)
 
         bounding_points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -1642,12 +1647,12 @@ class Ingredient(Agent):
 
     def store_packed_object(self, position, rotation, index):
         packed_object = PackedObject(
-                        position=position,
-                        rotation=rotation,
-                        radius=self.get_radius(),
-                        pt_index=index,
-                        ingredient=self
-                    )
+            position=position,
+            rotation=rotation,
+            radius=self.get_radius(),
+            pt_index=index,
+            ingredient=self,
+        )
         self.env.packed_objects.add(packed_object)
         if self.compNum != 0:
             compartment = self.get_compartment(self.env)
@@ -1772,13 +1777,12 @@ class Ingredient(Agent):
                     newDistPoints,
                 ) = self.jitter_place(
                     env,
-                    compartment,
                     target_grid_point_position,
                     rotation_matrix,
                     current_visual_instance,
                     grid_point_distances,
                     dpad,
-                    env.afviewer,
+                    ptInd,
                 )
             elif self.place_method == "spheresSST":
                 (
@@ -1858,15 +1862,14 @@ class Ingredient(Agent):
                 grid_point_distances,
                 insidePoints,
                 newDistPoints,
+                ptInd
             )
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(
                     current_visual_instance, jtrans, rotMatj
                 )
-            self.place(
-                env, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
-            )
+            self.place(env, jtrans, rotMatj, ptInd, insidePoints, newDistPoints)
         else:
             if is_realtime:
                 self.remove_from_realtime_display(current_visual_instance)
@@ -1922,7 +1925,6 @@ class Ingredient(Agent):
                     # set use_rotation_axis = 1 and set rotation_axis = 0, 0, 0 for that ingredient
                 elif self.use_orient_bias and self.packing_mode == "gradient":
                     jitter_rotation = self.getBiasedRotation(rotation, weight=None)
-                # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
                     # should we align to this rotation_axis ?
                     jitter_rotation = self.env.helper.rotation_matrix(
@@ -2183,13 +2185,12 @@ class Ingredient(Agent):
     def jitter_place(
         self,
         env,
-        compartment,
         targeted_master_grid_point,
         rot_mat,
         moving,
         distance,
         dpad,
-        afvi,
+        pt_index,
     ):
         """
         Check if the given grid point is available for packing using the jitter collision detection
@@ -2272,6 +2273,8 @@ class Ingredient(Agent):
                     len(insidePoints),
                     len(newDistPoints),
                 )
+                for pt in points_to_check:
+                    self.store_packed_object(pt, packing_rotation, pt_index)
                 return (
                     True,
                     packing_location,
@@ -2499,10 +2502,6 @@ class Ingredient(Agent):
                 self.env.moving = None
 
                 for pt in points_to_check:
-                    self.env.rTrans.append(pt)
-                    self.env.rRot.append(packing_rotation)
-                    self.env.rIngr.append(self)
-                    self.env.result.append([pt, packing_rotation, self, ptInd])
 
                     self.pack_at_grid_pt_location(
                         env,
@@ -2512,14 +2511,15 @@ class Ingredient(Agent):
                         distance,
                         inside_points,
                         new_dist_points,
+                        ptInd
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 
                 # rebuild kdtree
-                if len(self.env.rTrans) >= 1:
-                    self.env.close_ingr_bhtree = spatial.cKDTree(
-                        self.env.rTrans, leafsize=10
-                    )
+                # if len(self.env.rTrans) >= 1:
+                #     self.env.close_ingr_bhtree = spatial.cKDTree(
+                #         self.env.rTrans, leafsize=10
+                #     )
                 if self.packing_mode[-4:] == "tile":
                     self.tilling.dropTile(
                         self.tilling.idc,
@@ -2561,8 +2561,6 @@ class Ingredient(Agent):
         """
         env.setupPanda()
         is_realtime = moving is not None
-
-        gridPointsCoords = env.grid.masterGridPositions
 
         targetPoint = target_grid_point_position
 
@@ -2643,7 +2641,6 @@ class Ingredient(Agent):
                 self.env.moving = None
 
                 for pt in pts_to_check:
-                    self.store_packed_object(pt, packing_rotation, ptInd)
                     new_inside_pts, new_dist_points = self.pack_at_grid_pt_location(
                         env,
                         pt,
@@ -2651,7 +2648,8 @@ class Ingredient(Agent):
                         dpad,
                         distance,
                         insidePoints,
-                        newDistPoints
+                        newDistPoints,
+                        ptInd
                     )
                     insidePoints = self.merge_place_results(
                         new_inside_pts, insidePoints
@@ -2660,11 +2658,11 @@ class Ingredient(Agent):
                         new_dist_points, newDistPoints
                     )
                 # rebuild kdtree
-                if len(self.env.packed_objects.get()) >= 1:
-                    del self.env.close_ingr_bhtree
-                    self.env.close_ingr_bhtree = spatial.cKDTree(
-                        self.env.packed_objects.get_positions(), leafsize=10
-                    )
+                # if len(self.env.packed_objects.get()) >= 1:
+                #     del self.env.close_ingr_bhtree
+                #     self.env.close_ingr_bhtree = spatial.cKDTree(
+                #         self.env.packed_objects.get_positions(), leafsize=10
+                #     )
 
                 success = True
                 return (

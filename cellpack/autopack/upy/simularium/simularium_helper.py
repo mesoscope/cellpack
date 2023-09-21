@@ -455,11 +455,12 @@ class simulariumHelper(hostHelper.Helper):
     ):
         self.time = 0
         instance_number = 0
-        for ingredient, packed_object in objects:
+        for packed_object in objects:
             ingr_name = packed_object.name
+            ingredient = packed_object.ingredient
             sub_points = None
             radius = packed_object.radius
-            if self.is_fiber(packed_object.ingredient_type):
+            if simulariumHelper.is_fiber(packed_object.ingredient_type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately

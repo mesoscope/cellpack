@@ -87,7 +87,6 @@ class Agent:
     ):
         # near_by_ingredient is [
         #   PackedObject
-        #   ingredient[],
         #   distance[]
         # ]
         # placed_partners is (index,placed_partner_ingredient,distance_from_current_point)
@@ -99,7 +98,7 @@ class Agent:
             return None
         partner_index = placed_partners[i][0]  # i,part,dist
         partner = placed_partners[i][1]
-        partner_ingredient = near_by_ingredients[partner_index][1]
+        partner_ingredient = near_by_ingredients[partner_index][0].ingredient
         self.log.info(f"binding to {partner_ingredient.name}")
 
         if self.compNum > 0:

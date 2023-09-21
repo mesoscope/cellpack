@@ -294,6 +294,7 @@ class MultiSphereIngr(Ingredient):
         grid_point_distances,
         inside_points,
         new_dist_points,
+        pt_index
     ):
         level = self.deepest_level
         centers = self.positions[level]
@@ -302,6 +303,7 @@ class MultiSphereIngr(Ingredient):
             jtrans, rotation_matrix, centers
         )  # centers)
         grid_points_coords = env.grid.masterGridPositions
+        self.store_packed_object(jtrans, rotation_matrix, pt_index)
         for radius_of_sphere_in_tree, pos_of_sphere in zip(radii, transformed_centers):
             radius_of_area_to_check = (
                 radius_of_sphere_in_tree + dpad

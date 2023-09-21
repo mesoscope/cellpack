@@ -491,8 +491,6 @@ class Environment(CompartmentList):
         self,
         free_points,
         distances,
-        t0,
-        vTestid,
         all_ingr_as_array,
         save_grid_logs=False,
         save_result_as_file=False,
@@ -1760,11 +1758,7 @@ class Environment(CompartmentList):
 
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile("./realtime", self.boundingBox)
-        results = []
-        for obj in self.packed_objects.get():
-            ingredient = self.get_ingredient_by_name(obj.name)
-            results.append([ingredient, obj])
-        return results
+        return self.packed_objects.get()
 
     def check_new_placement(self, new_position):
         distances = self.get_all_distances(new_position)
@@ -2170,8 +2164,6 @@ class Environment(CompartmentList):
                     self.save_result(
                         free_points,
                         distances=distances,
-                        t0=stime,
-                        vTestid=vTestid,
                         all_ingr_as_array=all_ingr_as_array,
                     )
 
@@ -2187,8 +2179,6 @@ class Environment(CompartmentList):
             self.save_result(
                 free_points,
                 distances=distances,
-                t0=time(),
-                vTestid=vTestid,
                 all_ingr_as_array=all_ingr_as_array,
             )
 
@@ -2377,7 +2367,7 @@ class Environment(CompartmentList):
 
         self.loopThroughIngr(cb)
         for obj in self.packed_objects.get():
-            ingr = self.get_ingredient_by_name(obj.name)
+            ingr = obj.ingredient
             if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
             else:
