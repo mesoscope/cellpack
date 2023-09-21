@@ -9,8 +9,8 @@
             0
         ],
         [
-            100,
-            100,
+            500,
+            500,
             1
         ]
     ],
@@ -64,23 +64,46 @@
                 1,
                 0
             ]
+        },
+        "sphere_40": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.1,
+                0.5,
+                0.5
+            ],
+            "radius": 40,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
         }
     },
     "composition": {
         "space": {
             "regions": {
                 "interior": [
-                    "A"
+                    "A", "B"
                 ]
             }
         },
         "A": {
             "object": "sphere_25",
-            "count": 10,
+            "count": 200,
             "size_options": {
                 "distribution": "uniform",
-                "min": 5,
-                "max": 30
+                "min": 20,
+                "max": 25
+            }
+        },
+        "B": {
+            "object": "sphere_40",
+            "count": 200,
+            "size_options": {
+                "distribution": "list",
+                "list_values": [35, 40, 41]
             }
         }
     }
