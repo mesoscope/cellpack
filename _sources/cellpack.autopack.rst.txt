@@ -16,6 +16,14 @@ Subpackages
 Submodules
 ----------
 
+cellpack.autopack.AWSHandler module
+-----------------------------------
+
+.. automodule:: cellpack.autopack.AWSHandler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.Analysis module
 ---------------------------------
 

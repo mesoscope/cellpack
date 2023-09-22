@@ -131,6 +131,38 @@ branch.</p></li>
 each set of changes to <code class="docutils literal notranslate"><span class="pre">main</span></code> atomic and as a side effect naturally encourages small
 well defined PR’s.</p></li>
 </ol>
+<section id="introduction-to-remote-databases">
+<h3>Introduction to Remote Databases<a class="headerlink" href="#introduction-to-remote-databases" title="Link to this heading">¶</a></h3>
+</section>
+</section>
+<section id="aws-s3">
+<h2>AWS S3<a class="headerlink" href="#aws-s3" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Pre-requisites</p>
+<ul class="simple">
+<li><p>Obtain an AWS account for AICS. Please contact the IT team or the code owner.</p></li>
+<li><p>Generate an <code class="docutils literal notranslate"><span class="pre">aws_access_key_id</span></code> and <code class="docutils literal notranslate"><span class="pre">aws_secret_access_key</span></code> in your AWS account.</p></li>
+</ul>
+</li>
+<li><p>Step-by-step Guide</p>
+<ul class="simple">
+<li><p>Download and install the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">AWS CLI</a></p></li>
+<li><p>Configure AWS CLI by running <code class="docutils literal notranslate"><span class="pre">aws</span> <span class="pre">configure</span></code>, then enter your credentials as prompted.</p></li>
+<li><p>Ensure that Boto3, the AWS SDK for Python is installed and included in the requirements section of <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="firebase-firestore">
+<h2>Firebase Firestore<a class="headerlink" href="#firebase-firestore" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Step-by-step Guide</p>
+<ul class="simple">
+<li><p>Create a Firebase project in test mode with your google account, select <code class="docutils literal notranslate"><span class="pre">firebase_admin</span></code> as the SDK. <a class="reference external" href="https://firebase.google.com/docs/firestore">Firebase Firestore tutorial</a></p></li>
+<li><p>Generate a new private key by navigating to “Project settings”&gt;”Service account” in the project’s dashboard.</p></li>
+</ul>
+</li>
+</ol>
 <p><strong>MIT license</strong></p>
 </section>
 </section>
@@ -163,7 +195,12 @@ well defined PR’s.</p></li>
 <li><a class="reference internal" href="#development">Development</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#contributing-cheat-sheet">Contributing cheat sheet</a></li>
+<li><a class="reference internal" href="#contributing-cheat-sheet">Contributing cheat sheet</a><ul>
+<li><a class="reference internal" href="#introduction-to-remote-databases">Introduction to Remote Databases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#aws-s3">AWS S3</a></li>
+<li><a class="reference internal" href="#firebase-firestore">Firebase Firestore</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -214,7 +251,7 @@ well defined PR’s.</p></li>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
