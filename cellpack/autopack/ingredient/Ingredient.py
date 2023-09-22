@@ -593,117 +593,20 @@ class Ingredient(Agent):
             self.log.info("retrieve %s %r", geomname, mesh)
             return mesh
         # identify extension
-        file_name, file_extension = mesh_store.get_mesh_filepath_and_extension(filename)
-        if file_extension.lower() == ".fbx":
-            # use the host helper if any to read
-            if helper is not None:  # neeed the helper
-                helper.read(filename)
-
-        elif file_extension == ".dae":
-            self.log.info("read dae withHelper", filename, helper, autopack.helper)
-            # use the host helper if any to read
-            return None
-            if helper is None:
-                # need to get the mesh directly. Only possible if dae or dejavu format
-                # get the dejavu heper but without the View, and in nogui mode
-                h = simulariumHelper(vi="nogui")
-                dgeoms = h.read(filename)
-                # v,vn,f = dgeoms.values()[0]["mesh"]
-                self.vertices, self.vnormals, self.faces = helper.combineDaeMeshData(
-                    dgeoms.values()
-                )
-                self.vnormals = (
-                    []
-                )  # helper.normal_array(self.vertices,numpy.array(self.faces))
-                geom = h.createsNmesh(geomname, self.vertices, None, self.faces)[0]
-                return geom
-            else:  # if helper is not None:#neeed the helper
-                if helper.host == "dejavu" and helper.nogui:
-                    dgeoms = helper.read(filename)
-                    v, vn, f = list(dgeoms.values())[0]["mesh"]
-                    self.log.info("vertices nb is %d", len(v))
-                    self.vertices, self.vnormals, self.faces = (
-                        v,
-                        vn,
-                        f,
-                    )  # helper.combineDaeMeshData(dgeoms.values())
-                    self.vnormals = (
-                        []
-                    )  # helper.normal_array(self.vertices,numpy.array(self.faces))
-                    geom = helper.createsNmesh(
-                        geomname, self.vertices, self.vnormals, self.faces
-                    )[0]
-                    return geom
-                else:
-                    if helper.host != "dejavu":
-                        if collada is not None:
-                            # need to get the mesh directly. Only possible if dae or dejavu format
-                            # get the dejavu heper but without the View, and in nogui mode
-                            h = simulariumHelper(vi="nogui")
-                            dgeoms = h.read_mesh_file(filename)
-                            # should combine both
-                            self.vertices, vnormals, self.faces = h.combineDaeMeshData(
-                                dgeoms.values()
-                            )  # dgeoms.values()[0]["mesh"]
-                            self.vnormals = helper.normal_array(
-                                self.vertices, numpy.array(self.faces)
-                            )
-                helper.read(filename)
-                geom = helper.getObject(geomname)
-                if geom is None:
-                    geom = helper.getObject(self.pdb.split(".")[0])
-                    # rename it
-                    if geom is None:
-                        return None
-                # rotate ?
-                if helper.host == "3dsmax":  # or helper.host.find("blender") != -1:
-                    helper.resetTransformation(
-                        geom
-                    )  # remove rotation and scale from importing??maybe not?
-                if helper.host.find("blender") != -1:
-                    helper.resetTransformation(geom)
-                # if self.coordsystem == "left" :
-                #                        mA = helper.rotation_matrix(-math.pi/2.0,[1.0,0.0,0.0])
-                #                        mB = helper.rotation_matrix(math.pi/2.0,[0.0,0.0,1.0])
-                #                        m=matrix(mA)*matrix(mB)
-                #                        helper.setObjectMatrix(geom,matrice=m)
-                #                if helper.host != "c4d"  and helper.host != "dejavu" and self.coordsystem == "left" and helper.host != "softimage" and helper.host.find("blender") == -1:
-                # what about softimage
-                # need to rotate the transform that carry the shape, maya ? or not ?
-                #                    helper.rotateObj(geom,[0.0,-math.pi/2.0,0.0])#wayfront as well euler angle
-                # swicth the axe?
-                #                    oldv = self.principal_vector[:]
-                #                    self.principal_vector = [oldv[2],oldv[1],oldv[0]]
-                if helper.host == "softimage" and self.coordsystem == "left":
-                    helper.rotateObj(
-                        geom, [0.0, -math.pi / 2.0, 0.0], primitive=True
-                    )  # need to rotate the primitive
-                if helper.host == "c4d" and self.coordsystem == "right":
-                    helper.resetTransformation(geom)
-                    helper.rotateObj(
-                        geom, [0.0, math.pi / 2.0, math.pi / 2.0], primitive=True
-                    )
-                p = helper.getObject("autopackHider")
-                if p is None:
-                    p = helper.newEmpty("autopackHider")
-                    if helper.host.find("blender") == -1:
-                        helper.toggleDisplay(p, False)
-                helper.reParent(geom, p)
-                return geom
-            return None
-        else:  # host specific file
-            if helper is not None:  # neeed the helper
-                helper.read(
-                    filename
-                )  # doesnt get the regular file ? conver state to object
-                geom = helper.getObject(geomname)
-                p = helper.getObject("autopackHider")
-                if p is None:
-                    p = helper.newEmpty("autopackHider")
-                    if helper.host.find("blender") == -1:
-                        helper.toggleDisplay(p, False)
-                helper.reParent(geom, p)
-                return geom
+        import ipdb; ipdb.set_trace()
+        file_path = mesh_store.get_mesh_filepath(filename)
+        if helper is not None:  # neeed the helper
+            helper.read(
+                file_path
+            )  # doesnt get the regular file ? conver state to object
+            geom = helper.getObject(geomname)
+            p = helper.getObject("autopackHider")
+            if p is None:
+                p = helper.newEmpty("autopackHider")
+                if helper.host.find("blender") == -1:
+                    helper.toggleDisplay(p, False)
+            helper.reParent(geom, p)
+            return geom
             return None
 
     def buildMesh(self, mesh_store):

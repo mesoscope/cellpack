@@ -4,18 +4,18 @@
     "name": "test_mesh_image",
     "bounding_box": [
         [
-            -4,
-            -4,
-            -4
+            -40,
+            -40,
+            0
         ],
         [
-            4,
-            4,
-            4
+            40,
+            40,
+            1
         ]
     ],
     "objects": {
-        "sphere_mesh": {
+        "bacteria": {
             "type": "mesh",
             "color": [
                 1,
@@ -24,8 +24,8 @@
             ],
             "representations": {
                 "mesh": {
-                    "path": "cellpack/tests/geometry",
-                    "name": "sphere.obj",
+                    "path": "https://www.dropbox.com/scl/fi/7a9detc394zja2hkl0ut2/Bacteria_Rad25_1_4.obj?rlkey=uk6mi2l84oow3a0vr5o4455t2&dl=0",
+                    "name": "Bacteria_Rad25_1_4.obj",
                     "format": "obj"
                 }
             }
@@ -49,7 +49,7 @@
             }
         },
         "sphere_mesh": {
-            "object": "sphere_mesh",
+            "object": "bacteria",
             "count": 1,
             "regions": {
                 "interior": [

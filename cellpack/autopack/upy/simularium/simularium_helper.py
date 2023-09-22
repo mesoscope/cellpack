@@ -364,7 +364,7 @@ class simulariumHelper(hostHelper.Helper):
         url = ""
         radius = compartment.encapsulating_radius
         if compartment.type == "mesh":
-            _, extension = os.path.splitext(compartment.path)
+            _, extension = os.path.splitext(compartment.gname)
             if extension == ".obj":
                 display_type = DISPLAY_TYPE.OBJ
                 url = (

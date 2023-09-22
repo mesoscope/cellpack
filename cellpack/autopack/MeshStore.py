@@ -103,31 +103,25 @@ class MeshStore:
             return [A[0] / norm, A[1] / norm, A[2] / norm]
 
     @staticmethod
-    def get_mesh_filepath_and_extension(filename):
-        name = filename.split("/")[-1]
-        fileName, fileExtension = os.path.splitext(name)
-        if fileExtension == "":
-            tmpFileName1 = autopack.get_local_file_location(
-                filename + ".indpolface", cache="geometries"
-            )
-            filename = os.path.splitext(tmpFileName1)[0]
+    def get_mesh_filepath(file_name, file_path_or_url):
+        _, file_extension = os.path.splitext(file_name)
+        if file_extension == "":
+            raise ValueError(f"missing file extension for mesh: {file_name}, {file_path_or_url}")
         else:
-            filename = autopack.get_local_file_location(filename, cache="geometries")
-        if filename is None:
+            local_file_location = autopack.get_local_file_location(file_path_or_url, cache="geometries", file_name_to_save_as=file_name)
+        if local_file_location is None:
             return None
-        if not os.path.isfile(filename) and fileExtension != "":
+        if not os.path.isfile(local_file_location) and file_extension != "":
             return None
-        file_name, file_extension = os.path.splitext(filename)
-        return file_name, file_extension
+        return local_file_location
 
     def add_mesh_to_scene(self, mesh, name):
         self.scene.add_geometry(mesh, geom_name=name)
 
-    def read_mesh_file(self, filename):
-        file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(filename)
-        data = trimesh.exchange.load.load(
-            f"{file_name}{file_extension}"
-        )  # , ignore=[collada.DaeUnsupportedError,
+    def read_mesh_file(self, mesh_name, file_path_or_url):
+        local_file_location = MeshStore.get_mesh_filepath(mesh_name, file_path_or_url)
+        import ipdb; ipdb.set_trace()
+        data = trimesh.exchange.load.load(local_file_location)  
         if type(data) == trimesh.base.Trimesh:
             return data
         for key in data.geometry:
@@ -325,7 +319,7 @@ class MeshStore:
     def get_mesh(self, mesh_name, file_path=None):
         geometry = self.get_object(mesh_name)
         if geometry is None and file_path is not None:
-            geometry = self.read_mesh_file(file_path)
+            geometry = self.read_mesh_file(mesh_name, file_path_or_url=file_path)
             self.add_mesh_to_scene(geometry, mesh_name)
         return geometry
 

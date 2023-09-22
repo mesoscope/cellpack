@@ -308,7 +308,7 @@ def get_cache_location(name, cache, destination):
 
 
 def get_local_file_location(
-    input_file_location, destination="", cache="geometries", force=False
+    input_file_location, destination="", cache="geometries", force=False, file_name_to_save_as=None
 ):
     """
     Options:
@@ -329,12 +329,15 @@ def get_local_file_location(
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
-
-        name = url.split("/")[-1]  # the recipe name
+        if file_name_to_save_as is not None:
+            name = file_name_to_save_as
+        else:
+            name = url.split("/")[-1]  # the recipe name
         local_file_path = get_cache_location(name, cache, destination)
         # check if the file is already downloaded
         # if not, OR force==True, download file
         if not os.path.isfile(local_file_path) or force:
+            print("download", url, local_file_path)
             download_file(url, local_file_path, reporthook)
         log.info(f"autopack downloaded and stored file: {local_file_path}")
         return local_file_path

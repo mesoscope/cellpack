@@ -15,7 +15,13 @@ class Representations:
         atomic : PDB or ciff file info
         packing: Sphere tree file or sphere tree data
         """
+        # name
+        # path 
+        # format
+
+        # ? url
         self.mesh = mesh
+
         self.atomic = atomic
         self.packing = packing
         self.active = None
@@ -68,6 +74,17 @@ class Representations:
             children.append(ch)
         # we ignore the hierarchy for now
         return centers, radii
+    
+    @staticmethod
+    def _check_and_fix_dropbox_url(url):
+        if "dropbox" in url:
+            if "rlkey" not in url:
+                raise ValueError(f"missing rlkey in {url} dropbox download link, use 'Copy Dropbox link' to get the full url")
+            elif "dl=0" in url:
+                return url.replace("dl=0", "dl=1")
+            else: 
+                return f"{url}&dl=1"
+        return url
 
     def _get_spheres(self):
         if "path" in self.packing:
@@ -114,7 +131,10 @@ class Representations:
         else:
             if self.mesh["path"] == "default":
                 return f"{self.DATABASE}/geometries/{self.mesh['name']}"
-            return f"{self.mesh['path']}/{self.mesh['name']}"
+            complete_path = f"{self.mesh['path']}/{self.mesh['name']}"
+            if autopack.is_full_url(self.mesh['path']):
+                complete_path = Representations._check_and_fix_dropbox_url(self.mesh['path'])
+            return complete_path
 
     def get_mesh_format(self):
         if not self.has_mesh():
