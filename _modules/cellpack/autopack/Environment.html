@@ -1373,7 +1373,6 @@
             <span class="p">)</span>  <span class="c1"># return inside and surface point</span>
             <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">)</span>
             <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_on_compartment_surfaces</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="n">aInteriorGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="n">aSurfaceGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;I&#39;m out of the loop and have build my grid with inside points&quot;</span><span class="p">)</span>
@@ -1501,7 +1500,9 @@
                         <span class="n">gradient</span><span class="o">.</span><span class="n">mode_settings</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">],</span> <span class="s2">&quot;surface_distances&quot;</span>
                     <span class="p">):</span>
                         <span class="n">gradient</span><span class="o">.</span><span class="n">mode_settings</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_surface_distances</span><span class="p">(</span>
-                            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
+                            <span class="bp">self</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span>
+                            <span class="n">gradient</span><span class="o">.</span><span class="n">mode_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scale_to_next_surface&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
                         <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">build_weight_map</span><span class="p">(</span>
                     <span class="n">boundingBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>

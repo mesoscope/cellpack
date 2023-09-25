@@ -1229,7 +1229,9 @@
 
 <div class="viewcode-block" id="Compartment.set_surface_distances">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.set_surface_distances">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_surface_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_surface_distances</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">,</span> <span class="n">calc_distance_between_surfaces</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
         <span class="n">surface_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">)</span>
         <span class="n">surface_ids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">surface_mask</span><span class="p">)</span>
         <span class="n">surface_positions</span> <span class="o">=</span> <span class="n">master_grid_positions</span><span class="p">[</span><span class="n">surface_ids</span><span class="p">]</span>
@@ -1246,7 +1248,11 @@
         <span class="n">all_surface_distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
         <span class="n">all_surface_distances</span><span class="p">[</span><span class="n">grid_pt_indexes</span><span class="p">]</span> <span class="o">=</span> <span class="n">surface_distances</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">parent_id</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">calc_distance_between_surfaces</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">parent_id</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">):</span>
             <span class="n">grid_pts_between_surfaces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span>
                 <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="o">-</span><span class="n">parent_id</span>
             <span class="p">)</span>
@@ -1483,7 +1489,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GOT POINTS IN SPHERE </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">points_in_encap_sphere</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">point_compartment_ids</span> <span class="o">=</span> <span class="n">compartment_ids</span><span class="p">[</span><span class="n">points_in_encap_sphere</span><span class="p">]</span>
-        <span class="n">point_ids_to_assign</span> <span class="o">=</span> <span class="n">points_in_encap_sphere</span><span class="p">[</span><span class="n">point_compartment_ids</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># largest compartments need to be created first for this to work</span>
+        <span class="n">point_ids_to_assign</span> <span class="o">=</span> <span class="n">points_in_encap_sphere</span><span class="p">[</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">point_compartment_ids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">number</span>
+        <span class="p">]</span>
         <span class="n">point_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float16</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="p">[</span><span class="n">point_ids_to_assign</span><span class="p">])</span>
 
         <span class="c1"># check surface points</span>
