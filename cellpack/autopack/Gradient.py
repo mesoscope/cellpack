@@ -117,8 +117,8 @@ class Gradient:
         """
         Scale values between 0 and 1
         """
-        max_value = max(values)
-        min_value = min(values)
+        max_value = numpy.nanmax(values)
+        min_value = numpy.nanmin(values)
         return (values - min_value) / (max_value - min_value)
 
     def pickPoint(self, listPts):
@@ -175,10 +175,7 @@ class Gradient:
                 "object"
             ].scaled_distance_to_next_surface
         else:
-            self.distances = (
-                self.mode_settings["object"].surface_distances
-                / self.mode_settings["object"].max_distance
-            )
+            self.distances = self.mode_settings["object"].surface_distances
         self.set_weights_by_mode()
 
     def build_directional_weight_map(self, bb, master_grid_positions):

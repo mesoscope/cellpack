@@ -338,10 +338,33 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_grid_data_to_scene(self, incoming_name, positions, values):
+    @staticmethod
+    def remove_nans(positions, values):
+        naninds = np.isnan(values)
+        values = values[~naninds]
+        positions = positions[~naninds]
+        return positions, values
+
+    @staticmethod
+    def sort_values(positions, values):
+        inds = np.argsort(values)
+        values = values[inds]
+        positions = positions[inds]
+        return positions, values
+
+    def add_grid_data_to_scene(self, incoming_name, positions, values, radius=0.5):
+
+        positions, values = self.remove_nans(positions, values)
+        if len(values) == 0:
+            print("no values to display")
+            return
+
+        positions, values = self.sort_values(positions, values)
+
         colormap = matplotlib.cm.Reds(values)
+
         for index, value in enumerate(values):
-            name = f"{incoming_name}#{value}"
+            name = f"{incoming_name}#{value:.3f}"
             self.display_data[name] = DisplayData(
                 name=name,
                 display_type=DISPLAY_TYPE.SPHERE,
@@ -353,7 +376,7 @@ class simulariumHelper(hostHelper.Helper):
                 name,
                 None,
                 f"{incoming_name}-{index}",
-                0.5,
+                radius,
                 point_pos,
                 np.identity(4),
                 None,
@@ -457,6 +480,7 @@ class simulariumHelper(hostHelper.Helper):
         grid_point_positions=None,
         grid_point_compartment_ids=None,
         show_sphere_trees=False,
+        grid_pt_radius=0.5,
     ):
         self.time = 0
         instance_number = 0
@@ -533,7 +557,7 @@ class simulariumHelper(hostHelper.Helper):
                         name,
                         None,
                         f"{name}-{index}",
-                        0.5,
+                        grid_pt_radius,
                         point_pos,
                         np.identity(4),
                         None,

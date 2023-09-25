@@ -155,7 +155,11 @@ class Writer(object):
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
         env.helper.init_scene_with_objects(
-            all_ingr_as_array, grid_positions, compartment_ids, env.show_sphere_trees
+            objects=all_ingr_as_array,
+            grid_point_positions=grid_positions,
+            grid_point_compartment_ids=compartment_ids,
+            show_sphere_trees=env.show_sphere_trees,
+            grid_pt_radius=env.grid.gridSpacing / 4,
         )
 
         if compartments is not None:
@@ -167,10 +171,16 @@ class Writer(object):
         if grid_positions is not None and len(env.gradients):
             for _, gradient in env.gradients.items():
                 env.helper.add_grid_data_to_scene(
-                    f"{gradient.name}-distances", grid_positions, gradient.distances
+                    f"{gradient.name}-distances",
+                    grid_positions,
+                    gradient.distances,
+                    env.grid.gridSpacing / 4,
                 )
                 env.helper.add_grid_data_to_scene(
-                    f"{gradient.name}-weights", grid_positions, gradient.weight
+                    f"{gradient.name}-weights",
+                    grid_positions,
+                    gradient.weight,
+                    env.grid.gridSpacing / 4,
                 )
         file_name = env.helper.writeToFile(
             env.result_file, env.boundingBox, env.name, env.version

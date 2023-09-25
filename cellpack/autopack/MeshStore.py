@@ -4,7 +4,7 @@ import numpy
 import trimesh
 from cellpack import autopack
 
-CHUNK_SIZE = 100000
+CHUNK_SIZE = 50000
 
 
 class MeshStore:
@@ -261,6 +261,7 @@ class MeshStore:
 
     def contains_points_mesh(self, geomname, points):
         mesh = self.get_object(geomname)
+        inside = numpy.full(len(points), False)
         if mesh is not None:
             if len(points) <= CHUNK_SIZE:
                 return mesh.contains(points)  # TODO: check for memory leak
@@ -273,7 +274,7 @@ class MeshStore:
                     else:
                         inside = numpy.append(inside, mesh.contains(chunk))
                 return inside
-        return numpy.full(len(points), False)
+        return inside
 
     def get_smallest_radius(self, geomname, center):
         mesh = self.get_object(geomname)
