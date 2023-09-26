@@ -29,6 +29,8 @@ def pack(recipe, config_path=None, analysis_config_path=None):
 
     :return: void
     """
+    log.info(f"Running in {__file__}")
+
     packing_config_data = ConfigLoader(config_path).config
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"]
