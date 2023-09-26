@@ -618,16 +618,17 @@ class DBRecipeLoader(object):
 
     @staticmethod
     def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
+        """
+        Collect gradient and inherited object data from the downloaded object data
+        return object data dict and gradient data dict with name as key
+        """
         obj_name = obj_data["name"]
-        if "gradient" in obj_data:
-            grad_name = obj_data["gradient"]["name"]
-            grad_dict[grad_name] = obj_data["gradient"]
-            obj_dict[obj_name]["gradient"] = grad_name
-        if "inherit" in obj_data:
-            inherited_from = obj_data["inherit"]["name"]
-            inherited_obj_data = obj_data["inherit"]
-            obj_dict[obj_name]["inherit"] = inherited_from
-            obj_dict[inherited_from] = inherited_obj_data
+        for key, target_dict in CompositionDoc.KEY_TO_DICT_MAPPING.items():
+            if key in obj_data:
+                item_name = obj_data[key]["name"]
+                target_dict = grad_dict if key == "gradient" else obj_dict
+                target_dict[item_name] = obj_data[key]
+                obj_dict[obj_name][key] = item_name
         return obj_dict, grad_dict
 
     @staticmethod
