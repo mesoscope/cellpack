@@ -212,8 +212,6 @@ class Gradient:
                 "CHECK CALCULATED DISTANCES",
                 f"Max: {max(self.scaled_distances)}, Min: {min(self.scaled_distances)}",
             )
-        if self.invert:
-            self.scaled_distances = 1.0 - self.scaled_distances
         if self.weight_mode == "linear":
             self.weight = 1.0 - self.scaled_distances
         elif self.weight_mode == "square":
@@ -232,6 +230,9 @@ class Gradient:
         self.weight = self.get_normalized_values(self.weight)
 
         self.weight[numpy.isnan(self.weight)] = 0
+
+        if self.invert:
+            self.weight = 1.0 - self.weight
 
         # TODO: talk to Ludo about calculating gaussian weights
 
