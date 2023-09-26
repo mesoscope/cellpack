@@ -1194,7 +1194,6 @@ class Environment(CompartmentList):
             )  # return inside and surface point
             aInteriorGrids.append(points_inside_compartments)
             aSurfaceGrids.append(points_on_compartment_surfaces)
-
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
         self.log.info("I'm out of the loop and have build my grid with inside points")
@@ -1310,7 +1309,9 @@ class Environment(CompartmentList):
                         gradient.mode_settings["object"], "surface_distances"
                     ):
                         gradient.mode_settings["object"].set_surface_distances(
-                            self, self.grid.masterGridPositions
+                            self,
+                            self.grid.masterGridPositions,
+                            gradient.mode_settings.get("scale_to_next_surface", False),
                         )
                 self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
