@@ -18,7 +18,8 @@
     "show_sphere_trees": false,
     "image_export_options": {
         "hollow": false,
-        "voxel_size": [1,1,1],
+        "voxel_size": [1, 1, 1],
         "projection_axis": "z"
-    }
+    },
+    "upload_results": false
 }
