@@ -250,7 +250,10 @@
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span>
             <span class="n">env</span><span class="o">.</span><span class="n">result_file</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span>
         <span class="p">)</span>
-        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">post_and_open_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;upload_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;number_of_packings&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="p">):</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">post_and_open_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Writer.save_Mixed_asJson">
