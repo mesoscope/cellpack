@@ -43,6 +43,7 @@ class ConfigLoader(object):
         "show_sphere_trees": False,
         "show_progress_bar": False,
         "spacing": None,
+        "upload_results": False,
         "use_periodicity": False,
         "version": 1.0,
     }
