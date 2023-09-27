@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # standardmodule
 import os
+import webbrowser
+from pathlib import Path
+
 import matplotlib
 import numpy as np
 import trimesh
+from botocore.exceptions import NoCredentialsError
 
 from simulariumio import (
     TrajectoryConverter,
@@ -19,6 +23,7 @@ from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
+from cellpack.autopack.AWSHandler import AWSHandler
 import collada
 
 
@@ -333,10 +338,33 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_grid_data_to_scene(self, incoming_name, positions, values):
+    @staticmethod
+    def remove_nans(positions, values):
+        naninds = np.isnan(values)
+        values = values[~naninds]
+        positions = positions[~naninds]
+        return positions, values
+
+    @staticmethod
+    def sort_values(positions, values):
+        inds = np.argsort(values)
+        values = values[inds]
+        positions = positions[inds]
+        return positions, values
+
+    def add_grid_data_to_scene(self, incoming_name, positions, values, radius=0.5):
+
+        positions, values = self.remove_nans(positions, values)
+        if len(values) == 0:
+            print("no values to display")
+            return
+
+        positions, values = self.sort_values(positions, values)
+
         colormap = matplotlib.cm.Reds(values)
+
         for index, value in enumerate(values):
-            name = f"{incoming_name}#{value}"
+            name = f"{incoming_name}#{value:.3f}"
             self.display_data[name] = DisplayData(
                 name=name,
                 display_type=DISPLAY_TYPE.SPHERE,
@@ -348,7 +376,7 @@ class simulariumHelper(hostHelper.Helper):
                 name,
                 None,
                 f"{incoming_name}-{index}",
-                0.5,
+                radius,
                 point_pos,
                 np.identity(4),
                 None,
@@ -452,6 +480,7 @@ class simulariumHelper(hostHelper.Helper):
         grid_point_positions=None,
         grid_point_compartment_ids=None,
         show_sphere_trees=False,
+        grid_pt_radius=0.5,
     ):
         self.time = 0
         instance_number = 0
@@ -528,7 +557,7 @@ class simulariumHelper(hostHelper.Helper):
                         name,
                         None,
                         f"{name}-{index}",
-                        0.5,
+                        grid_pt_radius,
                         point_pos,
                         np.identity(4),
                         None,
@@ -1335,6 +1364,7 @@ class simulariumHelper(hostHelper.Helper):
             spatial_units=UnitData("nm"),  # nanometers
         )
         TrajectoryConverter(converted_data).save(file_name, False)
+        return file_name
 
     def raycast(self, **kw):
         intersect = False
@@ -1348,3 +1378,37 @@ class simulariumHelper(hostHelper.Helper):
 
     def raycast_test(self, obj, start, end, length, **kw):
         return
+
+    def post_and_open_file(self, file_name):
+        simularium_file = Path(f"{file_name}.simularium")
+        url = None
+        try:
+            url = simulariumHelper.store_results_to_s3(simularium_file)
+        except Exception as e:
+            aws_readme_url = "https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3"
+            if isinstance(e, NoCredentialsError):
+                print(
+                    f"need to configure your aws account, find instructions here: {aws_readme_url}"
+                )
+            else:
+                print(
+                    f"An error occurred while storing the file {simularium_file} to S3: {e}"
+                )
+        if url is not None:
+            simulariumHelper.open_in_simularium(url)
+
+    @staticmethod
+    def store_results_to_s3(file_path):
+        handler = AWSHandler(
+            bucket_name="cellpack-results",
+            sub_folder_name="simularium/",
+            region_name="us-west-2",
+        )
+        url = handler.save_file(file_path)
+        return url
+
+    @staticmethod
+    def open_in_simularium(aws_url):
+        webbrowser.open_new_tab(
+            f"https://simularium.allencell.org/viewer?trajUrl={aws_url}"
+        )
