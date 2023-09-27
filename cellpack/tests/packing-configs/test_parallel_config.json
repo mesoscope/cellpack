@@ -14,5 +14,6 @@
     "number_of_packings": 5,
     "spacing":  null,
     "use_periodicity": false,
-    "show_sphere_trees": true
+    "show_sphere_trees": true,
+    "upload_results": false
 }

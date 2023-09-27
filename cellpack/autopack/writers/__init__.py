@@ -185,7 +185,11 @@ class Writer(object):
         file_name = env.helper.writeToFile(
             env.result_file, env.boundingBox, env.name, env.version
         )
-        autopack.helper.post_and_open_file(file_name)
+        if env.config_data.get(
+            "upload_results", env.config_data.get("number_of_packings", 1) <= 1
+        ):
+            autopack.helper.post_and_open_file(file_name)
+
 
     def save_Mixed_asJson(
         self,
