@@ -9,7 +9,7 @@ DEFAULT_GRADIENT_MODE_SETTINGS = {
     "pick_mode": "linear",
     "description": "Linear gradient in the X direction",
     "reversed": False,  # is the direction of the vector reversed?
-    "invert": False, # is the gradient inverted? (this does weights = 1 - weights)
+    "invert": False,  # is the gradient inverted? (this does weights = 1 - weights)
     "mode_settings": {},
     "weight_mode_settings": {},
 }
