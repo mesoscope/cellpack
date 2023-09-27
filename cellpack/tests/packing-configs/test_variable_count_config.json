@@ -13,5 +13,6 @@
     "spacing": null,
     "parallel": false,
     "use_periodicity": false,
-    "show_sphere_trees": true
+    "show_sphere_trees": true,
+    "upload_results": false
 }
