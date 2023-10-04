@@ -42,6 +42,14 @@ class FirebaseHandler(object):
             creds = FirebaseHandler.write_creds_path()
         return creds["firebase"]
 
+    @staticmethod
+    def get_username():
+        creds = read_json_file("./.creds")
+        try:
+            return creds["username"]
+        except KeyError:
+            raise ValueError("No username found in .creds file")
+
     def db_name(self):
         return self.name
 
@@ -58,12 +66,22 @@ class FirebaseHandler(object):
         return doc.path
 
     @staticmethod
+    def create_timestamp():
+        return firestore.SERVER_TIMESTAMP
+
+    @staticmethod
     def get_collection_id_from_path(path):
         # path example = firebase:composition/uid_1
         components = path.split(":")[1].split("/")
         collection = components[0]
         id = components[1]
         return collection, id
+
+    def update_doc(self, collection, id, data):
+        doc_ref = self.db.collection(collection).document(id)
+        doc_ref.update(data)
+        print(f"successfully updated to path: {doc_ref.path}")
+        return doc_ref
 
     @staticmethod
     def update_reference_on_doc(doc_ref, index, new_item_ref):
