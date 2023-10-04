@@ -4,6 +4,8 @@ from deepdiff import DeepDiff
 
 from cellpack.autopack.utils import deep_merge
 
+from google.cloud.exceptions import NotFound
+
 
 class DataDoc(object):
     def __init__(
@@ -573,6 +575,28 @@ class DBUploader(object):
         key = self._get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
 
+    def upload_result_metadata(self, file_name, url):
+        """
+        Upload the metadata of the result file to the database.
+        """
+        if self.db:
+            username = self.db.get_username()
+            timestamp = self.db.create_timestamp()
+            self.update_or_create_metadata(
+                "results",
+                file_name,
+                {"user": username, "timestamp": timestamp, "url": url.split("?")[0]},
+            )
+
+    def update_or_create_metadata(self, collection, id, data):
+        """
+        If the input id exists, update the metadata. If not, create a new file.
+        """
+        try:
+            self.db.update_doc(collection, id, data)
+        except NotFound:
+            self.db.set_doc(collection, id, data)
+
 
 class DBRecipeLoader(object):
     """
@@ -581,6 +605,7 @@ class DBRecipeLoader(object):
 
     def __init__(self, db_handler):
         self.db = db_handler
+        print("DBRecipeLoader initialized", self.db)
 
     def prep_db_doc_for_download(self, db_doc):
         """

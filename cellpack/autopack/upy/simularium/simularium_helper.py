@@ -24,6 +24,9 @@ from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
 from cellpack.autopack.AWSHandler import AWSHandler
+from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.FirebaseHandler import FirebaseHandler
+
 import collada
 
 
@@ -1383,7 +1386,7 @@ class simulariumHelper(hostHelper.Helper):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         try:
-            url = simulariumHelper.store_results_to_s3(simularium_file)
+            _, url = simulariumHelper.store_results_to_s3(simularium_file)
         except Exception as e:
             aws_readme_url = "https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3"
             if isinstance(e, NoCredentialsError):
@@ -1404,8 +1407,12 @@ class simulariumHelper(hostHelper.Helper):
             sub_folder_name="simularium/",
             region_name="us-west-2",
         )
-        url = handler.save_file(file_path)
-        return url
+        file_name, url = handler.save_file(file_path)
+        # TODO: initate FirebaseHandler somewhere else
+        # handle remote recipes that have already initialzied FirebaseHandler
+        db_handler = DBUploader(FirebaseHandler())
+        db_handler.upload_result_metadata(file_name, url)
+        return file_name, url
 
     @staticmethod
     def open_in_simularium(aws_url):

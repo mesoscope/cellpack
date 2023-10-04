@@ -82,4 +82,4 @@ class AWSHandler(object):
         """
         file_name = self.upload_file(file_path)
         if file_name:
-            return self.create_presigned_url(file_name)
+            return file_name, self.create_presigned_url(file_name)
