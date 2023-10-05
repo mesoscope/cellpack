@@ -48,7 +48,6 @@ from collections import OrderedDict
 import ssl
 import json
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
-from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
@@ -203,7 +202,6 @@ REPLACE_PATH = {
     f"{DATABASE_IDS.GITHUB}:": autoPACKserver,
     f"{DATABASE_IDS.FIREBASE}:": None,
 }
-
 
 global CURRENT_RECIPE_PATH
 CURRENT_RECIPE_PATH = appdata
@@ -386,7 +384,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         database_name, file_path = convert_db_shortname_to_url(filename)
         # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-nucleus_cube -c examples/packing-configs/peroxisome_packing_config.json`
         if database_name == "firebase":
-            db = FirebaseHandler()
+            db = DATABASE_IDS.handlers().get(database_name)
             db_handler = DBRecipeLoader(db)
             recipe_id = file_path.split("/")[-1]
             db_doc, _ = db_handler.collect_docs_by_id(
