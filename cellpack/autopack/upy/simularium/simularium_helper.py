@@ -25,7 +25,7 @@ from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 from cellpack.autopack.upy import hostHelper
 from cellpack.autopack.AWSHandler import AWSHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader
-from cellpack.autopack.FirebaseHandler import FirebaseHandler
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 import collada
 
@@ -1412,11 +1412,13 @@ class simulariumHelper(hostHelper.Helper):
             region_name="us-west-2",
         )
         file_name, url = handler.save_file(file_path)
-        # TODO: initate FirebaseHandler somewhere else
-        # handle remote recipes that have already initialzied FirebaseHandler
-        db_handler = DBUploader(FirebaseHandler())
-        db_handler.upload_result_metadata(file_name, url)
+        simulariumHelper.store_metadata(file_name, url, db="firebase")
         return file_name, url
+
+    @staticmethod
+    def store_metadata(file_name, url, db=None):
+        db_handler = DBUploader(DATABASE_IDS.handlers().get(db))
+        db_handler.upload_result_metadata(file_name, url)
 
     @staticmethod
     def open_in_simularium(aws_url):

@@ -595,7 +595,6 @@ class DBRecipeLoader(object):
 
     def __init__(self, db_handler):
         self.db = db_handler
-        print("DBRecipeLoader initialized", self.db)
 
     def prep_db_doc_for_download(self, db_doc):
         """
