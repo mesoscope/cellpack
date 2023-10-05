@@ -13,7 +13,9 @@ class FirebaseHandler(object):
     def __init__(self):
         cred_path = FirebaseHandler.get_creds()
         login = credentials.Certificate(cred_path)
-        firebase_admin.initialize_app(login)
+        # check if firebase is already initialized
+        if not firebase_admin._apps.get(firebase_admin._DEFAULT_APP_NAME):
+            firebase_admin.initialize_app(login)
         self.db = firestore.client()
         self.name = "firebase"
 
