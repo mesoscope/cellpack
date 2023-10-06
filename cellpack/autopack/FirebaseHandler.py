@@ -10,13 +10,20 @@ class FirebaseHandler(object):
     Retrieve data and perform common tasks when working with firebase.
     """
 
+    # use class attributes to maintain a consistent state across all instances
+    _initialized = False
+    _db = None
+
     def __init__(self):
-        cred_path = FirebaseHandler.get_creds()
-        login = credentials.Certificate(cred_path)
         # check if firebase is already initialized
-        if not firebase_admin._apps.get(firebase_admin._DEFAULT_APP_NAME):
+        if not FirebaseHandler._initialized:
+            cred_path = FirebaseHandler.get_creds()
+            login = credentials.Certificate(cred_path)
             firebase_admin.initialize_app(login)
-        self.db = firestore.client()
+            FirebaseHandler._initialized = True
+            FirebaseHandler._db = firestore.client()
+
+        self.db = FirebaseHandler._db
         self.name = "firebase"
 
     # common utility methods
