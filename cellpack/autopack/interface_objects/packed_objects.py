@@ -1,5 +1,6 @@
 import numpy
 
+
 class PackedObject:
     def __init__(
         self,
@@ -8,7 +9,7 @@ class PackedObject:
         radius,
         pt_index,
         ingredient=None,
-        is_compartment=False
+        is_compartment=False,
     ) -> None:
         self.name = ingredient.name
         self.position = position
@@ -19,6 +20,7 @@ class PackedObject:
         self.is_compartment = is_compartment
         self.color = ingredient.color
         self.ingredient = ingredient
+
 
 class PackedObjects:
     def __init__(self):
@@ -40,7 +42,7 @@ class PackedObjects:
             if not obj.is_compartment:
                 radii.append(obj.encapsulating_radius)
         return radii
-    
+
     def get_positions(self):
         positions = []
         for obj in self._packed_objects:

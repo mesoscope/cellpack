@@ -1183,9 +1183,7 @@ class Ingredient(Agent):
         return ingredients
 
     def get_partners(self, env, jtrans, rotMat, organelle, afvi):
-        closest_ingredients = env.get_closest_ingredients(
-            jtrans, cutoff=env.grid.diag
-        )
+        closest_ingredients = env.get_closest_ingredients(jtrans, cutoff=env.grid.diag)
         if not len(closest_ingredients["indices"]):
             near_by_ingredients = self.getIngredientsInBox(
                 env, jtrans, rotMat, organelle
@@ -1438,7 +1436,7 @@ class Ingredient(Agent):
         grid_point_distances,
         inside_points,
         new_dist_points,
-        pt_index
+        pt_index,
     ):
 
         packing_location = jtrans
@@ -1698,7 +1696,7 @@ class Ingredient(Agent):
                 grid_point_distances,
                 insidePoints,
                 newDistPoints,
-                ptInd
+                ptInd,
             )
         if success:
             if is_realtime:
@@ -1738,7 +1736,9 @@ class Ingredient(Agent):
                 elif (
                     self.use_orient_bias and self.packing_mode == "gradient"
                 ):  # you need a gradient here
-                    rot_mat = self.alignRotation(env.grid.masterGridPositions[pt_ind], env.gradients)
+                    rot_mat = self.alignRotation(
+                        env.grid.masterGridPositions[pt_ind], env.gradients
+                    )
                 else:
                     rot_mat = env.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
@@ -2198,7 +2198,9 @@ class Ingredient(Agent):
         else:
             return env.compartments[abs(self.compartment_id) - 1]
 
-    def close_partner_check(self, env, translation, rotation, compartment, afvi, moving):
+    def close_partner_check(
+        self, env, translation, rotation, compartment, afvi, moving
+    ):
         target_point, rot_matrix, found = self.lookForNeighbours(
             env,
             translation,
@@ -2346,7 +2348,7 @@ class Ingredient(Agent):
                         distance,
                         inside_points,
                         new_dist_points,
-                        ptInd
+                        ptInd,
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 
@@ -2479,7 +2481,7 @@ class Ingredient(Agent):
                         distance,
                         insidePoints,
                         newDistPoints,
-                        ptInd
+                        ptInd,
                     )
                     insidePoints = self.merge_place_results(
                         new_inside_pts, insidePoints

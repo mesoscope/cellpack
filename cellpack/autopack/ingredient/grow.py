@@ -905,7 +905,9 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         liste_nodes = []
         cutoff = self.env.largestProteinSize + self.uLength
-        closesbody_indice = self.env.get_closest_ingredients(pt2, self.env, cutoff=cutoff)
+        closesbody_indice = self.env.get_closest_ingredients(
+            pt2, self.env, cutoff=cutoff
+        )
         liste_nodes = self.get_rbNodes(
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
@@ -1330,7 +1332,9 @@ class GrowIngredient(MultiCylindersIngr):
         self.env.result.pop(len(self.env.result) - 1)
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.packed_objects.get_positions(), leafsize=10)
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.packed_objects.get_positions(), leafsize=10
+            )
 
         # also remove from the result ?
         self.results.pop(len(self.results) - 1)
@@ -1609,10 +1613,12 @@ class GrowIngredient(MultiCylindersIngr):
         return insidePoints, newDistPoints, nbFreePoints, free_points
 
     def getFirstPoint(self, ptInd, seed=0):
-        if self.compartment_id > 0:  # surfacegrowing: first point is aling to the normal:
-            v2 = self.env.compartments[abs(self.compartment_id) - 1].surfacePointsNormals[
-                ptInd
-            ]
+        if (
+            self.compartment_id > 0
+        ):  # surfacegrowing: first point is aling to the normal:
+            v2 = self.env.compartments[
+                abs(self.compartment_id) - 1
+            ].surfacePointsNormals[ptInd]
             secondPoint = (
                 numpy.array(self.startingpoint) + numpy.array(v2) * self.uLength
             )
@@ -1721,7 +1727,9 @@ class GrowIngredient(MultiCylindersIngr):
 
         # jitter the first point
         if self.compartment_id > 0:
-            normal = env.compartments[abs(self.compartment_id) - 1].surfacePointsNormals[ptInd]
+            normal = env.compartments[
+                abs(self.compartment_id) - 1
+            ].surfacePointsNormals[ptInd]
         self.startingpoint = previousPoint = startingPoint = self.jitterPosition(
             numpy.array(env.grid.masterGridPositions[ptInd]),
             env.smallestProteinSize,
@@ -1770,7 +1778,9 @@ class GrowIngredient(MultiCylindersIngr):
 
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.packed_objects.get_positions(), leafsize=10)
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.packed_objects.get_positions(), leafsize=10
+            )
 
         self.currentLength = 0.0
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
