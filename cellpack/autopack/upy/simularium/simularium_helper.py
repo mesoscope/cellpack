@@ -23,7 +23,6 @@ from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
-from cellpack.autopack.AWSHandler import AWSHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
@@ -1386,7 +1385,7 @@ class simulariumHelper(hostHelper.Helper):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         try:
-            _, url = simulariumHelper.store_results_to_s3(simularium_file)
+            _, url = simulariumHelper.store_result_file(simularium_file, storage="aws")
         except Exception as e:
             aws_readme_url = "https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3"
             if isinstance(e, NoCredentialsError):
@@ -1401,20 +1400,23 @@ class simulariumHelper(hostHelper.Helper):
             simulariumHelper.open_in_simularium(url)
 
     @staticmethod
-    def store_results_to_s3(file_path):
-        handler = AWSHandler(
-            bucket_name="cellpack-results",
-            sub_folder_name="simularium/",
-            region_name="us-west-2",
-        )
-        file_name, url = handler.save_file(file_path)
+    def store_result_file(file_path, storage=None):
+        if storage == "aws":
+            handler = DATABASE_IDS.handlers().get(storage)
+            initialized_handler = handler(
+                bucket_name="cellpack-results",
+                sub_folder_name="simularium/",
+                region_name="us-west-2",
+            )
+        file_name, url = initialized_handler.save_file(file_path)
         simulariumHelper.store_metadata(file_name, url, db="firebase")
         return file_name, url
 
     @staticmethod
     def store_metadata(file_name, url, db=None):
-        db_handler = DBUploader(DATABASE_IDS.handlers().get(db))
-        db_handler.upload_result_metadata(file_name, url)
+        if db == "firebase":
+            db_handler = DBUploader(DATABASE_IDS.handlers().get(db))
+            db_handler.upload_result_metadata(file_name, url)
 
     @staticmethod
     def open_in_simularium(aws_url):
