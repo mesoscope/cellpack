@@ -253,7 +253,7 @@ def get_value_from_distribution(distribution_options, return_int=False):
     else:
         value = None
 
-    if return_int:
+    if return_int and value is not None:
         value = int(numpy.rint(value))
 
     return value
