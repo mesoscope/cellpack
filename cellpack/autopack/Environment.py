@@ -3153,7 +3153,7 @@ class Environment(CompartmentList):
                 mesh_store = self.mesh_store
                 
             else: 
-                obj_instance = self.get_ingredient_class(ingredient.ingredient_type)
+                obj_instance = ingredient
                 mesh_store = None
 
             image_data[obj.name] = obj_instance.create_voxelization(

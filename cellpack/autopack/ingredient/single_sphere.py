@@ -99,24 +99,40 @@ class SingleSphereIngr(Ingredient):
         self.min_radius = radius
 
     @staticmethod
-    def create_voxelization(
-        self, image_data, bounding_box, voxel_size, image_size, position, rotation, radius, hollow=None, mesh_store=None,
+    def create_circular_mask(
+        x_width, y_width, z_width, center=None, radius=None, voxel_size=None
     ):
         """
-        Creates a voxelization for the sphere
+        Creates a circular mask of the given shape with the specified center
+        and radius
         """
-        relative_position = position - bounding_box[0]
-        voxelized_position = (relative_position / voxel_size).astype(int)
-        mask = self.create_circular_mask(
-            *image_size,
-            center=voxelized_position,
-            radius=radius,
-            voxel_size=voxel_size
-        )
-        image_data[mask] = 255
+        if center is None:  # use the middle of the image
+            center = (int(x_width / 2), int(y_width / 2), int(z_width / 2))
+        if (
+            radius is None
+        ):  # use the smallest distance between the center and image walls
+            radius = min(
+                center[0],
+                center[1],
+                center[2],
+                x_width - center[0],
+                y_width - center[1],
+                z_width - center[2],
+            )
 
-        return image_data
-    
+        if voxel_size is None:
+            voxel_size = numpy.array([1, 1, 1], dtype=int)
+
+        X, Y, Z = numpy.ogrid[:x_width, :y_width, :z_width]
+        dist_from_center = numpy.sqrt(
+            ((X - center[0]) * voxel_size[0]) ** 2
+            + ((Y - center[1]) * voxel_size[1]) ** 2
+            + ((Z - center[2]) * voxel_size[2]) ** 2
+        )
+
+        mask = dist_from_center <= radius
+        return mask
+
     def get_radius(self):
         return self.radius
     
@@ -277,39 +293,20 @@ class SingleSphereIngr(Ingredient):
 
             self.getData()
 
-    @staticmethod
-    def create_circular_mask(
-        x_width, y_width, z_width, center=None, radius=None, voxel_size=None
-    ):
-        """
-        Creates a circular mask of the given shape with the specified center
-        and radius
-        """
-        if center is None:  # use the middle of the image
-            center = (int(x_width / 2), int(y_width / 2), int(z_width / 2))
-        if (
-            radius is None
-        ):  # use the smallest distance between the center and image walls
-            radius = min(
-                center[0],
-                center[1],
-                center[2],
-                x_width - center[0],
-                y_width - center[1],
-                z_width - center[2],
-            )
+    def create_voxelization(
+         self, image_data, bounding_box, voxel_size, image_size, position, rotation
+     ):
+         """
+         Creates a voxelization for the sphere
+         """
+         relative_position = position - bounding_box[0]
+         voxelized_position = (relative_position / voxel_size).astype(int)
+         mask = self.create_circular_mask(
+             *image_size,
+             center=voxelized_position,
+             radius=self.radius,
+             voxel_size=voxel_size
+         )
+         image_data[mask] = 255
 
-        if voxel_size is None:
-            voxel_size = numpy.array([1, 1, 1], dtype=int)
-
-        X, Y, Z = numpy.ogrid[:x_width, :y_width, :z_width]
-        dist_from_center = numpy.sqrt(
-            ((X - center[0]) * voxel_size[0]) ** 2
-            + ((Y - center[1]) * voxel_size[1]) ** 2
-            + ((Z - center[2]) * voxel_size[2]) ** 2
-        )
-
-        mask = dist_from_center <= radius
-        return mask
-
-
+         return image_data
