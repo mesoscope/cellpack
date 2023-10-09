@@ -84,7 +84,7 @@ class DistributionTypes(MetaEnum):
 
 
 class DistributionOptions(MetaEnum):
-    "All available count options"
+    # All available distribution options
     MIN = "min"
     MAX = "max"
     MEAN = "mean"
