@@ -77,7 +77,7 @@ if helper is not None:
 
 
 class DistributionTypes(MetaEnum):
-    "All available count distributions"
+    # All available distribution types
     UNIFORM = "uniform"
     NORMAL = "normal"
     LIST = "list"
