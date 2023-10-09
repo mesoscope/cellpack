@@ -1242,13 +1242,13 @@ class Ingredient(Agent):
         return self.transformPoints(pos, rot, positions_to_adjust)
 
     def check_against_one_packed_ingr(self, index, level, search_tree):
-        packed_ingredient = self.env.packed_objects.get()[index]
-        overlapped_ingr = self.env.get_ingredient_by_name(packed_ingredient.name)
+        ingredient_instance = self.env.packed_objects.get()[index].ingredient
+        ingredient_class = ingredient_instance.ingredient
         positions_of_packed_ingr_spheres = self.get_new_pos(
-            overlapped_ingr,
-            packed_ingredient.position,
-            packed_ingredient.rotation,
-            overlapped_ingr.positions[level],
+            ingredient_class,
+            ingredient_instance.position,
+            ingredient_instance.rotation,
+            ingredient_class.positions[level],
         )
         # check distances between the spheres at this level in the ingr we are packing
         # to the spheres at this level in the ingr already placed
