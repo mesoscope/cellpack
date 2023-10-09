@@ -60,6 +60,15 @@ class ModeOptions(MetaEnum):
     scale_distance_between = "scale_distance_between"
 
 
+class InvertOptions(MetaEnum):
+    """
+    All available options for individual invert modes
+    """
+
+    weight = "weight"
+    distance = "distance"
+
+
 class WeightModeOptions(MetaEnum):
     """
     All available options for individual weight modes
@@ -118,6 +127,7 @@ class GradientData:
         self.validate_weight_mode_settings(
             gradient_data["weight_mode"], gradient_data.get("weight_mode_settings")
         )
+        self.validate_invert_settings(gradient_data["invert"])
 
     def validate_mode_settings(self, mode_name, mode_settings_dict):
         required_options = REQUIRED_MODE_OPTIONS.get(mode_name)
@@ -150,6 +160,16 @@ class GradientData:
                 raise ValueError(
                     f"Missing required weight mode setting {option} for {weight_mode_name}"
                 )
+
+    def validate_invert_settings(
+        self,
+        invert_option,
+    ):
+        if not invert_option:
+            return
+
+        if not InvertOptions.is_member(invert_option):
+            raise ValueError(f"Invalid gradient invert option: {invert_option}")
 
     def set_mode_properties(self, gradient_data):
         if not gradient_data.get("mode_settings"):
