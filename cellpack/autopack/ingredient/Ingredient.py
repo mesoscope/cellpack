@@ -1182,7 +1182,7 @@ class Ingredient(Agent):
 
         return ingredients
 
-    def get_partners(self, env, jtrans, rotMat, organelle, afvi):
+    def get_partners(self, env, jtrans, rotMat, organelle):
         closest_ingredients = env.get_closest_ingredients(jtrans, cutoff=env.grid.diag)
         if not len(closest_ingredients["indices"]):
             near_by_ingredients = self.getIngredientsInBox(
