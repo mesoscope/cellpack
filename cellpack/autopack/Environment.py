@@ -90,7 +90,6 @@ from .transformation import signed_angle_between_vectors
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
-from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
 from tqdm import tqdm
@@ -1263,7 +1262,7 @@ class Environment(CompartmentList):
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
 
-        distance = self.grid.distToClosestSurf  # [:]
+        # distance = self.grid.distToClosestSurf  # [:]
         nbFreePoints = nbPoints  # -1
         # TODO: refactor this to work with new placed_objects data structure
         # for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )

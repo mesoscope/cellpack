@@ -1172,7 +1172,7 @@ class Ingredient(Agent):
                 self.vi.updateBox(box, cornerPoints=bb)
                 self.vi.update()
                 #            sleep(1.0)
-        pointsInCube = env.grid.getPointsInCube(bb, jtrans, radius)
+        # pointsInCube = env.grid.getPointsInCube(bb, jtrans, radius)
         # should we got all ingre from all recipes?
         # can use the kdtree for it...
         # maybe just add the surface if its not already the surface
