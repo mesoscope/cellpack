@@ -355,7 +355,9 @@ class MultiCylindersIngr(Ingredient):
                 compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
                 #                print "compId",compIdsSphere
                 if self.compartment_id <= 0:
-                    wrongPt = [cid for cid in compIdsSphere if cid != self.compartment_id]
+                    wrongPt = [
+                        cid for cid in compIdsSphere if cid != self.compartment_id
+                    ]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
 

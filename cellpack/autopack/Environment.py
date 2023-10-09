@@ -90,7 +90,6 @@ from .transformation import signed_angle_between_vectors
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
-from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
 from tqdm import tqdm
@@ -393,7 +392,6 @@ class Environment(CompartmentList):
             # but I haven't dug into it enough to delete it all yet
             ingr.prepare_alternates()
 
-
     def get_all_distances(self, position=None):
         positions = self.packed_objects.get_positions()
         if len(positions) == 0:
@@ -405,7 +403,9 @@ class Environment(CompartmentList):
 
     def get_distances(self, ingredient_name, center):
 
-        ingredient_positions = self.packed_objects.get_positions_for_ingredient(ingredient_name)
+        ingredient_positions = self.packed_objects.get_positions_for_ingredient(
+            ingredient_name
+        )
 
         if len(ingredient_positions):
             distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
@@ -483,8 +483,12 @@ class Environment(CompartmentList):
         """
         Returns pairwise distances between ingredients of different types
         """
-        ingr_pos_1 = self.packed_objects.get_positions_for_ingredient(ingredient_name=ingr1name)
-        ingr_pos_2 = self.packed_objects.get_positions_for_ingredient(ingredient_name=ingr2name)
+        ingr_pos_1 = self.packed_objects.get_positions_for_ingredient(
+            ingredient_name=ingr1name
+        )
+        ingr_pos_2 = self.packed_objects.get_positions_for_ingredient(
+            ingredient_name=ingr2name
+        )
         return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
 
     def save_result(
@@ -1109,7 +1113,7 @@ class Environment(CompartmentList):
             for obj in nearby_packed_objects:
                 ingredients.append([obj, closest_ingredients["distances"]])
         return ingredients
-    
+
     def get_closest_ingredients(self, point, cutoff=10.0):
         to_return = {"indices": [], "distances": []}
         numpy.zeros(self.totalNbIngr).astype("i")
@@ -1134,7 +1138,7 @@ class Environment(CompartmentList):
             return to_return
         else:
             return to_return
-        
+
     def setExteriorRecipe(self, recipe):
         """
         Set the exterior recipe with the given one. Create the weakref.
@@ -1258,7 +1262,7 @@ class Environment(CompartmentList):
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
 
-        distance = self.grid.distToClosestSurf  # [:]
+        # distance = self.grid.distToClosestSurf  # [:]
         nbFreePoints = nbPoints  # -1
         # TODO: refactor this to work with new placed_objects data structure
         # for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )
@@ -1615,7 +1619,10 @@ class Environment(CompartmentList):
                         mr = r
         else:
             for ingr1 in self.activeIngr:
-                if ingr1.compartment_id == compartment_id or ingr1.compartment_id == -compartment_id:
+                if (
+                    ingr1.compartment_id == compartment_id
+                    or ingr1.compartment_id == -compartment_id
+                ):
                     if hasattr(ingr1, "max_radius"):
                         r = ingr1.max_radius
                     else:
@@ -2226,15 +2233,15 @@ class Environment(CompartmentList):
         pass
         # if len(ingr.results):
         #     for elem in ingr.results:
-                # TODO: fix this to reset ingredients from results
-                # if ingr.compartment_id == 0:
-                #     self.molecules.append(
-                #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
-                #     )
-                # else:
-                #     ingr.recipe.compartment.molecules.append(
-                #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
-                #     )
+        # TODO: fix this to reset ingredients from results
+        # if ingr.compartment_id == 0:
+        #     self.molecules.append(
+        #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
+        #     )
+        # else:
+        #     ingr.recipe.compartment.molecules.append(
+        #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
+        #     )
 
     def restore(self, result, orgaresult, freePoint, tree=False):
         # should we used the grid ? the freePoint can be computed
@@ -2242,7 +2249,7 @@ class Environment(CompartmentList):
         # orgaresult is [[pos,rot,ingr.name,ingr.compartment_id,ptInd],[pos,rot,ingr.name,ingr.compartment_id,ptInd]...]
         # after restore we can build the grid and fill!
         # ingredient based dictionary
-        # TODO: refactor with new packed_objects 
+        # TODO: refactor with new packed_objects
 
         ingredients = {}
         molecules = []
@@ -2281,7 +2288,9 @@ class Environment(CompartmentList):
                 o.molecules = molecules
         # consider that one filling have occured
         if len(self.packed_objects.get()) and tree:
-            self.close_ingr_bhtree = spatial.cKDTree(self.packed_objects.get_positions(), leafsize=10)
+            self.close_ingr_bhtree = spatial.cKDTree(
+                self.packed_objects.get_positions(), leafsize=10
+            )
         self.cFill = self.nFill
         self.ingr_result = ingredients
         if len(freePoint):
@@ -2399,7 +2408,6 @@ class Environment(CompartmentList):
         except:  # noqa: E722
             pass
         return result, orgaresult, freePoint
-    
 
     def collectResultPerIngredient(self):
         def cb(ingr):
@@ -2622,7 +2630,6 @@ class Environment(CompartmentList):
                     self.result_json, fp, separators=(",", ":")
                 )  # ,indent=4, separators=(',', ': ')
         print("ok dump", resultfilename)
-
 
     @classmethod
     def convertPickleToText(self, resultfilename=None, norga=0):
@@ -3140,14 +3147,14 @@ class Environment(CompartmentList):
         """
         channel_colors = []
         for obj in self.packed_objects.get():
-            ingredient = obj.ingredient
+            ingredient_object = obj.ingredient
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
                 if obj.color is not None:
                     color = obj.color
                     if all([x <= 1 for x in obj.color]):
                         color = [int(col * 255) for col in obj.color]
-                    channel_colors.append(color)    
+                    channel_colors.append(color)
             if obj.is_compartment:
                 obj_instance = self.get_compartment_object_by_name(obj.name)
                 mesh_store = self.mesh_store

@@ -135,7 +135,7 @@ class SingleSphereIngr(Ingredient):
 
     def get_radius(self):
         return self.radius
-    
+
     def collision_jitter(
         self,
         jtrans,

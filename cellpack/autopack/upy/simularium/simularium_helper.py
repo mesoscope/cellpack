@@ -497,7 +497,9 @@ class simulariumHelper(hostHelper.Helper):
                     for level in range(len(ingredient.positions)):
                         for i in range(len(ingredient.positions[level])):
                             pos = ingredient.apply_rotation(
-                                packed_object.rotation, ingredient.positions[level][i], packed_object.position
+                                packed_object.rotation,
+                                ingredient.positions[level][i],
+                                packed_object.position,
                             )
 
                             self.add_instance(

@@ -294,7 +294,7 @@ class MultiSphereIngr(Ingredient):
         grid_point_distances,
         inside_points,
         new_dist_points,
-        pt_index
+        pt_index,
     ):
         level = self.deepest_level
         centers = self.positions[level]
