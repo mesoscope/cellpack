@@ -376,7 +376,7 @@ class Ingredient(Agent):
             raise Exception("Ingredient count options must contain a distribution")
         if not DistributionTypes.is_member(distribution_options["distribution"]):
             raise Exception(
-                f"{distribution_options['distribution']} is not a valid count distribution"
+                f"{distribution_options['distribution']} is not a valid distribution"
             )
         for required_option in REQUIRED_DISTRIBUTION_OPTIONS.get(
             distribution_options["distribution"], []
