@@ -3147,7 +3147,6 @@ class Environment(CompartmentList):
         """
         channel_colors = []
         for obj in self.packed_objects.get():
-            ingredient_object = obj.ingredient
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
                 if obj.color is not None:
@@ -3158,9 +3157,8 @@ class Environment(CompartmentList):
             if obj.is_compartment:
                 obj_instance = self.get_compartment_object_by_name(obj.name)
                 mesh_store = self.mesh_store
-                
-            else: 
-                obj_instance = ingredient
+            else:
+                obj_instance = obj.ingredient
                 mesh_store = None
 
             image_data[obj.name] = obj_instance.create_voxelization(
@@ -3170,8 +3168,8 @@ class Environment(CompartmentList):
                 image_size=image_size,
                 position=obj.position,
                 rotation=obj.rotation,
-                hollow=hollow, 
-                mesh_store=mesh_store
+                hollow=hollow,
+                mesh_store=mesh_store,
             )
 
         return image_data, channel_colors
