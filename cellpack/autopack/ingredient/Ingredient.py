@@ -1852,7 +1852,7 @@ class Ingredient(Agent):
             self.update_display_rt(moving, jtrans, rotMatj)
         # 2- get the neighboring object from ptInd
         near_by_ingredients, placed_partners = self.get_partners(
-            env, jtrans, rotation_matrix, compartment, afvi
+            env, jtrans, rotation_matrix, compartment
         )
         for i, elem in enumerate(near_by_ingredients):
             ing = elem[2]
@@ -2120,9 +2120,9 @@ class Ingredient(Agent):
                 )
         return False, packing_location, packing_rotation, {}, {}
 
-    def lookForNeighbours(self, env, trans, rotMat, organelle, afvi):
+    def lookForNeighbours(self, env, trans, rotMat, organelle):
         near_by_ingredients, placed_partners = self.get_partners(
-            env, trans, rotMat, organelle, afvi
+            env, trans, rotMat, organelle
         )
         targetPoint = trans
         found = False
