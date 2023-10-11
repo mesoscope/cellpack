@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 from pathlib import Path
 
@@ -83,3 +84,38 @@ class AWSHandler(object):
         file_name = self.upload_file(file_path)
         if file_name:
             return self.create_presigned_url(file_name)
+
+    def delete_file(self, object_name):
+        """
+        Deletes a file from S3
+        """
+        object_key = self.get_aws_object_key(object_name)
+        try:
+            self.s3_client.delete_object(Bucket=self.bucket_name, Key=object_key)
+        except ClientError as e:
+            logging.error(e)
+            return False
+        return True
+
+    def delete_files(self, days_old=180):
+        """
+        Deletes a list of files that are older than the specified number of days from S3
+        """
+        # fetch the list of objects in the bucket
+        try:
+            response = self.s3_client.list_objects_v2(Bucket=self.bucket_name)
+            if "Contents" not in response:
+                return "no files to process"
+
+            for obj in response["Contents"]:
+                age_days = (
+                    datetime.now() - obj["LastModified"].replace(tzinfo=None)
+                ).days
+                if age_days > days_old:
+                    self.s3_client.delete_object(
+                        Bucket=self.bucket_name, Key=obj["Key"]
+                    )
+
+        except ClientError as e:
+            logging.error(e)
+            return False
