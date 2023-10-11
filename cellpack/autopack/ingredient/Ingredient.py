@@ -1240,7 +1240,7 @@ class Ingredient(Agent):
         return self.transformPoints(pos, rot, positions_to_adjust)
 
     def check_against_one_packed_ingr(self, index, level, search_tree):
-        ingredient_instance = self.env.packed_objects.get()[index].ingredient
+        ingredient_instance = self.env.packed_objects.get_ingredients()[index].ingredient
         ingredient_class = ingredient_instance.ingredient
         positions_of_packed_ingr_spheres = self.get_new_pos(
             ingredient_class,
@@ -1257,7 +1257,7 @@ class Ingredient(Agent):
         # return index of sph1 closest to pos of packed ingr
         cradii = numpy.array(self.radii[level])[ind]
         oradii = numpy.array(
-            self.env.packed_objects.get()[index].ingredient.radii[level]
+            self.env.packed_objects.get_ingredients()[index].ingredient.radii[level]
         )
         sumradii = numpy.add(cradii.transpose(), oradii).transpose()
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
@@ -1266,7 +1266,7 @@ class Ingredient(Agent):
     def np_check_collision(self, packing_location, rotation):
         has_collision = False
         # no ingredients packed yet
-        packed_objects = self.env.packed_objects.get()
+        packed_objects = self.env.packed_objects.get_ingredients()
         if not len(packed_objects):
             return has_collision
         else:
@@ -1422,7 +1422,7 @@ class Ingredient(Agent):
         return nodes
 
     def update_data_tree(self):
-        if len(self.env.packed_objects.get()) >= 1:
+        if len(self.env.packed_objects.get_ingredients()) >= 1:
             self.env.close_ingr_bhtree = spatial.cKDTree(
                 self.env.packed_objects.get_positions(), leafsize=10
             )

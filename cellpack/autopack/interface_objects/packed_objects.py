@@ -68,5 +68,11 @@ class PackedObjects:
             ]
         )
 
-    def get(self):
-        return self._packed_objects
+    def get_ingredients(self):
+        return [obj for obj in self._packed_objects if obj.is_compartment is False];
+
+    def get_compartment(self):        
+        return [obj for obj in self._packed_objects if obj.is_compartment is True];
+
+    def get_all(self):
+        return self._packed_objects;

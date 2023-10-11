@@ -1004,6 +1004,7 @@ class Environment(CompartmentList):
         self.nbCompartments += 1
         self.compartments.append(compartment)
 
+        compartment.store_packed_object(self)
         CompartmentList.add_compartment(parent, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
@@ -1105,7 +1106,7 @@ class Environment(CompartmentList):
 
     def get_ingredients_in_tree(self, closest_ingredients):
         ingredients = []
-        packed_objects = self.packed_objects.get()
+        packed_objects = self.packed_objects.get_ingredients()
         if len(packed_objects):
             nearby_packed_objects = [
                 packed_objects[i] for i in closest_ingredients["indices"]
@@ -1118,7 +1119,7 @@ class Environment(CompartmentList):
         to_return = {"indices": [], "distances": []}
         numpy.zeros(self.totalNbIngr).astype("i")
         nb = 0
-        number_packed = len(self.packed_objects.get())
+        number_packed = len(self.packed_objects.get_ingredients())
         if not number_packed:
             return to_return
         if self.close_ingr_bhtree is not None:
@@ -1800,7 +1801,7 @@ class Environment(CompartmentList):
 
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile("./realtime", self.boundingBox)
-        return self.packed_objects.get()
+        return self.packed_objects.get_ingredients()
 
     def check_new_placement(self, new_position):
         distances = self.get_all_distances(new_position)
@@ -2206,7 +2207,7 @@ class Environment(CompartmentList):
                     nbFreePoints,
                 )
                 stime = time()
-                self.log.info(f"placed {len(self.packed_objects.get())}")
+                self.log.info(f"placed {len(self.packed_objects.get_ingredients())}")
                 if self.saveResult:
                     self.save_result(
                         free_points,
@@ -2287,7 +2288,7 @@ class Environment(CompartmentList):
                         ingr.results.append([pos, rot])
                 o.molecules = molecules
         # consider that one filling have occured
-        if len(self.packed_objects.get()) and tree:
+        if len(self.packed_objects.get_ingredients()) and tree:
             self.close_ingr_bhtree = spatial.cKDTree(
                 self.packed_objects.get_positions(), leafsize=10
             )
@@ -2314,7 +2315,7 @@ class Environment(CompartmentList):
             resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
         with open(resultfilename, "wb") as rfile:
-            pickle.dump(self.packed_objects.get(), rfile)
+            pickle.dump(self.packed_objects.get_ingredients(), rfile)
         with open(resultfilename + "_free_points", "wb") as rfile:
             pickle.dump(self.grid.free_points, rfile)
 
@@ -2414,7 +2415,7 @@ class Environment(CompartmentList):
             ingr.results = []
 
         self.loopThroughIngr(cb)
-        for obj in self.packed_objects.get():
+        for obj in self.packed_objects.get_ingredients():
             ingr = obj.ingredient
             if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
@@ -3146,8 +3147,7 @@ class Environment(CompartmentList):
             The updated image data.
         """
         channel_colors = []
-        for obj in self.packed_objects.get():
-            ingredient_object = obj.ingredient
+        for obj in self.packed_objects.get_all():
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
                 if obj.color is not None:
@@ -3158,9 +3158,8 @@ class Environment(CompartmentList):
             if obj.is_compartment:
                 obj_instance = self.get_compartment_object_by_name(obj.name)
                 mesh_store = self.mesh_store
-                
             else: 
-                obj_instance = ingredient
+                obj_instance = obj.ingredient
                 mesh_store = None
 
             image_data[obj.name] = obj_instance.create_voxelization(

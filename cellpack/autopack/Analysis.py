@@ -1754,7 +1754,7 @@ class Analysis:
         t2 = time()
         run_time = t2 - t1
         print(f"time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
-        print(f"num placed: {len(self.env.packed_objects.get())}")
+        print(f"num placed: {len(self.env.packed_objects.get_ingredients())}")
         if show_plotly_plot:
             min_bound, max_bound = self.env.get_bounding_box_limits()
             width = max_bound - min_bound
@@ -1767,7 +1767,7 @@ class Analysis:
                 range=[min_bound[1] - 0.2 * width[1], max_bound[1] + 0.2 * width[1]]
             )
             self.plotly.update_title(
-                f"{self.env.place_method} took {str(round(t2 - t1, 2))}s, packed {len(self.env.packed_objects.get())}"
+                f"{self.env.place_method} took {str(round(t2 - t1, 2))}s, packed {len(self.env.packed_objects.get_ingredients())}"
             )
             self.plotly.make_grid_heatmap(self.env)
             self.plotly.add_ingredient_positions(self.env)
