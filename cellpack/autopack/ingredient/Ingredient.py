@@ -2206,7 +2206,6 @@ class Ingredient(Agent):
             translation,
             rotation,
             compartment,
-            afvi,
         )
         if not found and self.counter != 0:
             self.reject()
