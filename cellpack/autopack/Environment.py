@@ -3151,6 +3151,7 @@ class Environment(CompartmentList):
         channel_colors = []
 
         for obj in self.packed_objects.get_all():
+            mesh_store = None
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
                 if obj.color is not None:
@@ -3159,12 +3160,9 @@ class Environment(CompartmentList):
                         color = [int(col * 255) for col in obj.color]
                     channel_colors.append(color)
             if obj.is_compartment:
-                obj_instance = self.get_compartment_object_by_name(obj.name)
                 mesh_store = self.mesh_store
-            else: 
-                obj_instance = obj.ingredient
-                mesh_store = None
-            image_data[obj.name] = obj_instance.create_voxelization(
+
+            image_data[obj.name] = obj.ingredient.create_voxelization(
                 image_data=image_data[obj.name],
                 bounding_box=self.boundingBox,
                 voxel_size=voxel_size,
