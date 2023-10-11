@@ -294,19 +294,25 @@ class SingleSphereIngr(Ingredient):
             self.getData()
 
     def create_voxelization(
-         self, image_data, bounding_box, voxel_size, image_size, position, rotation
-     ):
-         """
-         Creates a voxelization for the sphere
-         """
-         relative_position = position - bounding_box[0]
-         voxelized_position = (relative_position / voxel_size).astype(int)
-         mask = self.create_circular_mask(
-             *image_size,
-             center=voxelized_position,
-             radius=self.radius,
-             voxel_size=voxel_size
-         )
-         image_data[mask] = 255
+        self,
+        image_data,
+        bounding_box,
+        voxel_size,
+        image_size,
+        position,
+        **kwargs,
+    ):
+        """
+        Creates a voxelization for the sphere
+        """
+        relative_position = position - bounding_box[0]
+        voxelized_position = (relative_position / voxel_size).astype(int)
+        mask = self.create_circular_mask(
+            *image_size,
+            center=voxelized_position,
+            radius=self.radius,
+            voxel_size=voxel_size,
+        )
+        image_data[mask] = 255
 
-         return image_data
+        return image_data

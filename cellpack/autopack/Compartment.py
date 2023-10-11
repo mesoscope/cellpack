@@ -3203,12 +3203,19 @@ class Compartment(CompartmentList):
         voxel_size,
         image_size,
         position,
-        mesh_store,
-        hollow=False,
+        **kwargs,
     ):
         """
         Creates a voxelization mask at the position of the compartment
         """
+        if "mesh_store" not in kwargs:
+            raise RuntimeError(
+                "mesh_store must be provided for compartment voxelization"
+            )
+
+        mesh_store = kwargs["mesh_store"]
+        hollow = kwargs.get("hollow", False)
+
         relative_position = position - bounding_box[0]
         mask = self.create_voxelized_mask(
             *image_size,

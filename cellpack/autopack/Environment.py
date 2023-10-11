@@ -3169,8 +3169,8 @@ class Environment(CompartmentList):
                 image_size=image_size,
                 position=obj.position,
                 rotation=obj.rotation,
-                hollow=hollow, 
-                mesh_store=mesh_store
+                hollow=hollow,
+                mesh_store=mesh_store,
             )
 
         return image_data, channel_colors
