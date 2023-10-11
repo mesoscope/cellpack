@@ -1003,8 +1003,6 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
         self.compartments.append(compartment)
-
-        compartment.store_packed_object(self)
         CompartmentList.add_compartment(parent, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
@@ -1918,6 +1916,10 @@ class Environment(CompartmentList):
             bb_outside = numpy.nonzero(self.freePointMask)
             self.grid.compartment_ids[bb_outside] = 99999
         compartment_ids = self.grid.compartment_ids
+
+        for compartment in self.compartments:
+            compartment.store_packed_object(self)
+
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
         spacing = self.spacing or self.smallestProteinSize
@@ -3147,6 +3149,7 @@ class Environment(CompartmentList):
             The updated image data.
         """
         channel_colors = []
+
         for obj in self.packed_objects.get_all():
             if obj.name not in image_data:
                 image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
@@ -3161,7 +3164,6 @@ class Environment(CompartmentList):
             else: 
                 obj_instance = obj.ingredient
                 mesh_store = None
-
             image_data[obj.name] = obj_instance.create_voxelization(
                 image_data=image_data[obj.name],
                 bounding_box=self.boundingBox,
