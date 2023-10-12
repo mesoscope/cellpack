@@ -68,7 +68,10 @@ from scipy import spatial
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
-from cellpack.autopack.interface_objects.packed_objects import PackedObject, PackedObjects
+from cellpack.autopack.interface_objects.packed_objects import (
+    PackedObject,
+    PackedObjects,
+)
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -265,7 +268,6 @@ class Compartment(CompartmentList):
                 self.center = center
                 self.encapsulating_radius = radius
                 self.radius = mesh_store.get_smallest_radius(self.gname, center)
-
 
     def store_packed_object(self, env):
         packed_object = PackedObject(
