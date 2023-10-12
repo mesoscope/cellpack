@@ -52,6 +52,7 @@ class CompositionDoc(DataDoc):
 
     SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
+    KEY_TO_DICT_MAPPING = {"gradient": "gradients", "inherit": "objects"}
 
     def __init__(
         self,
@@ -79,12 +80,10 @@ class CompositionDoc(DataDoc):
         return data
 
     @staticmethod
-    def get_gradient_reference(downloaded_data, db):
-        if "gradient" in downloaded_data and db.is_reference(
-            downloaded_data["gradient"]
-        ):
-            gradient_key = downloaded_data["gradient"]
-            downloaded_data["gradient"], _ = db.get_doc_by_ref(gradient_key)
+    def get_reference_in_obj(downloaded_data, db):
+        for key in CompositionDoc.KEY_TO_DICT_MAPPING:
+            if key in downloaded_data and db.is_reference(downloaded_data[key]):
+                downloaded_data[key], _ = db.get_doc_by_ref(downloaded_data[key])
 
     @staticmethod
     def get_reference_data(key_or_dict, db):
@@ -96,14 +95,14 @@ class CompositionDoc(DataDoc):
         if DataDoc.is_key(key_or_dict) and db.is_reference(key_or_dict):
             key = key_or_dict
             downloaded_data, _ = db.get_doc_by_ref(key)
-            CompositionDoc.get_gradient_reference(downloaded_data, db)
+            CompositionDoc.get_reference_in_obj(downloaded_data, db)
             return downloaded_data, None
         elif key_or_dict and isinstance(key_or_dict, dict):
             object_dict = key_or_dict
             if "object" in object_dict and db.is_reference(object_dict["object"]):
                 key = object_dict["object"]
                 downloaded_data, _ = db.get_doc_by_ref(key)
-                CompositionDoc.get_gradient_reference(downloaded_data, db)
+                CompositionDoc.get_reference_in_obj(downloaded_data, db)
                 return downloaded_data, key
         return {}, None
 
@@ -141,6 +140,15 @@ class CompositionDoc(DataDoc):
                 gradient_dict[gradient["name"]] = gradient
             prep_recipe_data["gradients"] = gradient_dict
 
+    def resolve_object_data(self, object_data, prep_recipe_data):
+        """
+        Resolve the object data from the local data.
+        """
+        for key in CompositionDoc.KEY_TO_DICT_MAPPING:
+            if key in object_data and isinstance(object_data[key], str):
+                target_dict = CompositionDoc.KEY_TO_DICT_MAPPING[key]
+                object_data[key] = prep_recipe_data[target_dict][object_data[key]]
+
     def resolve_local_regions(self, local_data, recipe_data, db):
         """
         Recursively resolves the regions of a composition from local data.
@@ -156,12 +164,7 @@ class CompositionDoc(DataDoc):
             else:
                 key_name = local_data["object"]["name"]
             local_data["object"] = prep_recipe_data["objects"][key_name]
-            if "gradient" in local_data["object"] and isinstance(
-                local_data["object"]["gradient"], str
-            ):
-                local_data["object"]["gradient"] = prep_recipe_data["gradients"][
-                    local_data["object"]["gradient"]
-                ]
+            self.resolve_object_data(local_data["object"], prep_recipe_data)
         for region_name in local_data["regions"]:
             for index, key_or_dict in enumerate(local_data["regions"][region_name]):
                 if not DataDoc.is_key(key_or_dict):
@@ -174,12 +177,9 @@ class CompositionDoc(DataDoc):
                         local_data["regions"][region_name][index][
                             "object"
                         ] = prep_recipe_data["objects"][obj_item["name"]]
-                    # replace gradient reference with gradient data
+                    # replace reference in obj with actual data
                     obj_data = local_data["regions"][region_name][index]["object"]
-                    if "gradient" in obj_data and isinstance(obj_data["gradient"], str):
-                        local_data["regions"][region_name][index]["object"][
-                            "gradient"
-                        ] = prep_recipe_data["gradients"][obj_data["gradient"]]
+                    self.resolve_object_data(obj_data, prep_recipe_data)
                 else:
                     comp_name = local_data["regions"][region_name][index]
                     prep_comp_data = prep_recipe_data["composition"][comp_name]
@@ -336,6 +336,12 @@ class ObjectDoc(DataDoc):
                 ] = ObjectDoc.convert_positions_in_representation(position_value)
         return convert_doc
 
+    @staticmethod
+    def _object_contains_grad_or_inherit(obj_data):
+        return (
+            "gradient" in obj_data and isinstance(obj_data["gradient"], dict)
+        ) or "inherit" in obj_data
+
     def should_write(self, db):
         docs = db.get_doc_by_name("objects", self.name)
         if docs and len(docs) >= 1:
@@ -377,6 +383,7 @@ class DBUploader(object):
         self.objects_to_path_map = {}
         self.comp_to_path_map = {}
         self.grad_to_path_map = {}
+        self.objects_with_inherit_key = []
 
     @staticmethod
     def prep_data_for_db(data):
@@ -435,24 +442,38 @@ class DBUploader(object):
                 _, grad_path = self.upload_data("gradients", gradient_doc.settings)
                 self.grad_to_path_map[gradient_name] = grad_path
 
+    def upload_single_object(self, obj_name, obj_data):
+        # replace gradient name with path to check if gradient exists in db
+        if "gradient" in obj_data[obj_name]:
+            grad_name = obj_data[obj_name]["gradient"]
+            obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
+        object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
+        _, doc_id = object_doc.should_write(self.db)
+        if doc_id:
+            print(f"objects/{object_doc.name} is already in firestore")
+            obj_path = self.db.create_path("objects", doc_id)
+            self.objects_to_path_map[obj_name] = obj_path
+        else:
+            _, obj_path = self.upload_data("objects", object_doc.as_dict())
+            self.objects_to_path_map[obj_name] = obj_path
+
     def upload_objects(self, objects):
+        # modify a copy of objects to avoid key error when resolving local regions
+        modify_objects = copy.deepcopy(objects)
         for obj_name in objects:
             objects[obj_name]["name"] = obj_name
-            # modify a copy of objects to avoid key error when resolving local regions
-            modify_objects = copy.deepcopy(objects)
-            # replace gradient name with path to check if gradient exists in db
-            if "gradient" in modify_objects[obj_name]:
-                grad_name = modify_objects[obj_name]["gradient"]
-                modify_objects[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
-            object_doc = ObjectDoc(name=obj_name, settings=modify_objects[obj_name])
-            _, doc_id = object_doc.should_write(self.db)
-            if doc_id:
-                print(f"objects/{object_doc.name} is already in firestore")
-                obj_path = self.db.create_path("objects", doc_id)
-                self.objects_to_path_map[obj_name] = obj_path
+            if "inherit" not in objects[obj_name]:
+                self.upload_single_object(obj_name, modify_objects)
             else:
-                _, obj_path = self.upload_data("objects", object_doc.as_dict())
-                self.objects_to_path_map[obj_name] = obj_path
+                self.objects_with_inherit_key.append(obj_name)
+
+        # upload objs having `inherit` key only after all their base objs are uploaded
+        for obj_name in self.objects_with_inherit_key:
+            inherited_from = objects[obj_name]["inherit"]
+            modify_objects[obj_name]["inherit"] = self.objects_to_path_map[
+                inherited_from
+            ]
+            self.upload_single_object(obj_name, modify_objects)
 
     def upload_compositions(self, compositions, recipe_to_save, recipe_data):
         references_to_update = {}
@@ -597,15 +618,17 @@ class DBRecipeLoader(object):
 
     @staticmethod
     def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
-        try:
-            grad_name = obj_data["gradient"]["name"]
-            obj_name = obj_data["name"]
-        except KeyError as e:
-            print(f"Missing keys in object: {e}")
-            return obj_dict, grad_dict
-
-        grad_dict[grad_name] = obj_data["gradient"]
-        obj_dict[obj_name]["gradient"] = grad_name
+        """
+        Collect gradient and inherited object data from the downloaded object data
+        return object data dict and gradient data dict with name as key
+        """
+        obj_name = obj_data["name"]
+        for key, target_dict in CompositionDoc.KEY_TO_DICT_MAPPING.items():
+            if key in obj_data:
+                item_name = obj_data[key]["name"]
+                target_dict = grad_dict if key == "gradient" else obj_dict
+                target_dict[item_name] = obj_data[key]
+                obj_dict[obj_name][key] = item_name
         return obj_dict, grad_dict
 
     @staticmethod
@@ -626,9 +649,7 @@ class DBRecipeLoader(object):
                 composition[comp_name]["object"] = comp_value["object"]["name"]
                 object_copy = copy.deepcopy(comp_value["object"])
                 objects[object_copy["name"]] = object_copy
-                if "gradient" in object_copy and isinstance(
-                    object_copy["gradient"], dict
-                ):
+                if ObjectDoc._object_contains_grad_or_inherit(object_copy):
                     objects, gradients = DBRecipeLoader._get_grad_and_obj(
                         object_copy, objects, gradients
                     )
@@ -645,9 +666,7 @@ class DBRecipeLoader(object):
                             )
                             object_copy = copy.deepcopy(region_item["object"])
                             objects[object_copy["name"]] = object_copy
-                            if "gradient" in object_copy and isinstance(
-                                object_copy["gradient"], dict
-                            ):
+                            if ObjectDoc._object_contains_grad_or_inherit(object_copy):
                                 objects, gradients = DBRecipeLoader._get_grad_and_obj(
                                     object_copy, objects, gradients
                                 )
