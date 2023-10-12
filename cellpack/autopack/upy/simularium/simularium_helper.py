@@ -491,7 +491,6 @@ class simulariumHelper(hostHelper.Helper):
                 sub_points,
             )
             instance_number += 1
-
             if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
                     for level in range(len(ingredient.positions)):
@@ -499,13 +498,13 @@ class simulariumHelper(hostHelper.Helper):
                             pos = ingredient.apply_rotation(
                                 packed_object.rotation,
                                 ingredient.positions[level][i],
-                                packed_object.position,
+                                adj_pos,
                             )
 
                             self.add_instance(
                                 f"{ingredient.name}-spheres",
                                 ingredient,
-                                f"{ingredient.name}-{packed_object.pt_index}-{i}",
+                                f"{ingredient.name}-{packed_object.pt_index}-{instance_number}-{i}",
                                 ingredient.radii[level][i],
                                 pos,
                                 packed_object.rotation,

@@ -59,12 +59,15 @@ class PlotlyAnalysis:
         )
 
     def add_ingredient_positions(self, env):
-        for pos, rot, ingr, ptInd, radius in env.molecules:
-            if hasattr(ingr, "positions") and len(ingr.positions) > 1:
+        for obj in env.packed_objects.get_ingredients():
+            ingr = obj.ingredient
+            if hasattr(ingr, "positions") and len(ingr.positions) > 1:            
+                self.add_circle(obj.radius, obj.position, obj.color)
+
                 for level in range(len(ingr.positions)):
                     for i in range(len(ingr.positions[level])):
                         position = ingr.apply_rotation(
-                            rot, ingr.positions[level][i], pos
+                            obj.rotation, ingr.positions[level][i], obj.position
                         )
                         self.add_circle(
                             ingr.radii[level][i],
@@ -74,14 +77,14 @@ class PlotlyAnalysis:
                         )
             else:
                 if ingr.model_type == "Spheres":
-                    self.add_circle(radius, pos, ingr.color)
-                elif ingr.model_type == "Cube":
-                    self.add_square(ingr.radii, pos, rot, ingr.color)
+                    self.add_circle(obj.radius, obj.position, obj.color)
+                if ingr.model_type == "Cube":
+                    self.add_square(ingr.radii,  obj.position, obj.rotation, obj.color)
                 elif ingr.model_type == "Cylinders":
                     length = ingr.length
                     width = 2 * ingr.radii[0][0]
                     side_lengths = [[width, length, 1.0]]
-                    self.add_square(side_lengths, pos, rot, ingr.color)
+                    self.add_square(side_lengths, obj.position, obj.rotation, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []

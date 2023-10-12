@@ -1240,7 +1240,7 @@ class Ingredient(Agent):
         return self.transformPoints(pos, rot, positions_to_adjust)
 
     def check_against_one_packed_ingr(self, index, level, search_tree):
-        ingredient_instance = self.env.packed_objects.get_ingredients()[index].ingredient
+        ingredient_instance = self.env.packed_objects.get_ingredients()[index]
         ingredient_class = ingredient_instance.ingredient
         positions_of_packed_ingr_spheres = self.get_new_pos(
             ingredient_class,

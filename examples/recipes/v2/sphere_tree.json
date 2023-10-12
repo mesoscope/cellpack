@@ -11,7 +11,7 @@
         [
             1000,
             1000,
-            1000
+            1
         ]
     ],
     "objects": {
@@ -32,8 +32,8 @@
             "place_method": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
-                1,
-                1,
+                0,
+                0,
                 1
             ],
             "available_regions": {
@@ -62,7 +62,7 @@
             "max_jitter": [
                 1,
                 1,
-                1
+                0
             ]
         }
     },
