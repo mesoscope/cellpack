@@ -136,10 +136,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span><span class="p">,</span> <span class="n">current_packing_position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="p">):</span>
         <span class="c1"># near_by_ingredient is [</span>
-        <span class="c1">#   ingredient pos[],</span>
-        <span class="c1">#   ingredient rot[],</span>
-        <span class="c1">#   ingredient[],</span>
-        <span class="c1">#   distance[]?</span>
+        <span class="c1">#   PackedObject</span>
+        <span class="c1">#   distance[]</span>
         <span class="c1"># ]</span>
         <span class="c1"># placed_partners is (index,placed_partner_ingredient,distance_from_current_point)</span>
         <span class="c1"># weight using the distance function</span>
@@ -150,13 +148,13 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">partner_index</span> <span class="o">=</span> <span class="n">placed_partners</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># i,part,dist</span>
         <span class="n">partner</span> <span class="o">=</span> <span class="n">placed_partners</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">partner_ingredient</span> <span class="o">=</span> <span class="n">near_by_ingredients</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">partner_index</span><span class="p">]</span>
+        <span class="n">partner_ingredient</span> <span class="o">=</span> <span class="n">near_by_ingredients</span><span class="p">[</span><span class="n">partner_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ingredient</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;binding to </span><span class="si">{</span><span class="n">partner_ingredient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">packing_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getClosestFreeGridPoint</span><span class="p">(</span>
                 <span class="n">packing_position</span><span class="p">,</span>
-                <span class="n">compId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">,</span>
+                <span class="n">compId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">,</span>
                 <span class="n">ball</span><span class="o">=</span><span class="p">(</span>
                     <span class="n">partner_ingredient</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span>
                 <span class="p">),</span>
@@ -170,7 +168,7 @@
             <span class="k">if</span> <span class="n">binding_probability</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">bind</span> <span class="o">=</span> <span class="n">chance</span> <span class="o">&lt;=</span> <span class="n">binding_probability</span>
                 <span class="k">if</span> <span class="n">bind</span><span class="p">:</span>
-                    <span class="n">partner_position</span> <span class="o">=</span> <span class="n">near_by_ingredients</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">partner_index</span><span class="p">]</span>
+                    <span class="n">partner_position</span> <span class="o">=</span> <span class="n">near_by_ingredients</span><span class="p">[</span><span class="n">partner_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
 
                     <span class="c1"># get closestFreePoint using freePoint and masterGridPosition</span>
                     <span class="c1"># if self.place_method == &quot;rigid-body&quot; or self.place_method == &quot;jitter&quot;:</span>

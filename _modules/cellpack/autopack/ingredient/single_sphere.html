@@ -94,6 +94,7 @@
         <span class="n">resolution_dictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rotation_axis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="n">rotation_range</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">size_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">use_orient_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">use_rotation_axis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
@@ -125,6 +126,7 @@
             <span class="n">representations</span><span class="o">=</span><span class="n">representations</span><span class="p">,</span>
             <span class="n">rotation_axis</span><span class="o">=</span><span class="n">rotation_axis</span><span class="p">,</span>
             <span class="n">rotation_range</span><span class="o">=</span><span class="n">rotation_range</span><span class="p">,</span>
+            <span class="n">size_options</span><span class="o">=</span><span class="n">size_options</span><span class="p">,</span>
             <span class="n">use_rotation_axis</span><span class="o">=</span><span class="n">use_rotation_axis</span><span class="p">,</span>
             <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
         <span class="p">)</span>
@@ -137,6 +139,50 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span> <span class="o">=</span> <span class="n">radius</span>
+
+<div class="viewcode-block" id="SingleSphereIngr.create_circular_mask">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_circular_mask">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_circular_mask</span><span class="p">(</span>
+        <span class="n">x_width</span><span class="p">,</span> <span class="n">y_width</span><span class="p">,</span> <span class="n">z_width</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a circular mask of the given shape with the specified center</span>
+<span class="sd">        and radius</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use the middle of the image</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">radius</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>  <span class="c1"># use the smallest distance between the center and image walls</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">x_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">y_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">z_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ogrid</span><span class="p">[:</span><span class="n">x_width</span><span class="p">,</span> <span class="p">:</span><span class="n">y_width</span><span class="p">,</span> <span class="p">:</span><span class="n">z_width</span><span class="p">]</span>
+        <span class="n">dist_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="p">((</span><span class="n">X</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">((</span><span class="n">Y</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">((</span><span class="n">Z</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">dist_from_center</span> <span class="o">&lt;=</span> <span class="n">radius</span>
+        <span class="k">return</span> <span class="n">mask</span></div>
+
+
+<div class="viewcode-block" id="SingleSphereIngr.get_radius">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_radius">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span></div>
+
 
 <div class="viewcode-block" id="SingleSphereIngr.collision_jitter">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collision_jitter">[docs]</a>
@@ -222,8 +268,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>  <span class="c1"># indices</span>
         <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
@@ -316,48 +362,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="SingleSphereIngr.create_circular_mask">
-<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_circular_mask">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_circular_mask</span><span class="p">(</span>
-        <span class="n">x_width</span><span class="p">,</span> <span class="n">y_width</span><span class="p">,</span> <span class="n">z_width</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a circular mask of the given shape with the specified center</span>
-<span class="sd">        and radius</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># use the middle of the image</span>
-            <span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="n">radius</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="p">):</span>  <span class="c1"># use the smallest distance between the center and image walls</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
-                <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="n">x_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">y_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">z_width</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-
-        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ogrid</span><span class="p">[:</span><span class="n">x_width</span><span class="p">,</span> <span class="p">:</span><span class="n">y_width</span><span class="p">,</span> <span class="p">:</span><span class="n">z_width</span><span class="p">]</span>
-        <span class="n">dist_from_center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-            <span class="p">((</span><span class="n">X</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
-            <span class="o">+</span> <span class="p">((</span><span class="n">Y</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
-            <span class="o">+</span> <span class="p">((</span><span class="n">Z</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">voxel_size</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="p">)</span>
-
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">dist_from_center</span> <span class="o">&lt;=</span> <span class="n">radius</span>
-        <span class="k">return</span> <span class="n">mask</span></div>
-
-
 <div class="viewcode-block" id="SingleSphereIngr.create_voxelization">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.create_voxelization">[docs]</a>
     <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">bounding_box</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">image_data</span><span class="p">,</span>
+        <span class="n">bounding_box</span><span class="p">,</span>
+        <span class="n">voxel_size</span><span class="p">,</span>
+        <span class="n">image_size</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a voxelization for the sphere</span>
@@ -368,7 +382,7 @@
             <span class="o">*</span><span class="n">image_size</span><span class="p">,</span>
             <span class="n">center</span><span class="o">=</span><span class="n">voxelized_position</span><span class="p">,</span>
             <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
-            <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span>
+            <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">image_data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
 

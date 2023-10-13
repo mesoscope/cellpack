@@ -36,6 +36,14 @@ cellpack.autopack.interface\_objects.meta\_enum module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.interface\_objects.packed\_objects module
+-----------------------------------------------------------
+
+.. automodule:: cellpack.autopack.interface_objects.packed_objects
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.interface\_objects.partners module
 ----------------------------------------------------
 

@@ -670,10 +670,12 @@
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">instance_number</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
-            <span class="n">ingr_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">for</span> <span class="n">packed_object</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="n">ingr_name</span> <span class="o">=</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">ingredient</span> <span class="o">=</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">ingredient</span>
             <span class="n">sub_points</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fiber</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">radius</span>
+            <span class="k">if</span> <span class="n">simulariumHelper</span><span class="o">.</span><span class="n">is_fiber</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">nbCurve</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="c1"># TODO: get sub_points accurately</span>
@@ -682,25 +684,25 @@
                 <span class="n">sub_points</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">listePtLinear</span>
             <span class="k">if</span> <span class="n">ingr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">:</span>
                 <span class="n">display_type</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_display_data</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">packed_object</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="n">ingr_name</span><span class="p">,</span>
                     <span class="n">display_type</span><span class="o">=</span><span class="n">display_type</span><span class="p">,</span>
                     <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                     <span class="n">color</span><span class="o">=</span><span class="n">simulariumHelper</span><span class="o">.</span><span class="n">format_rgb_color</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">color</span><span class="p">),</span>
                 <span class="p">)</span>
 
-            <span class="n">radius</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">10</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span> <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">10</span>
             <span class="n">adj_pos</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_adjusted_position</span><span class="p">(</span>
-                <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span>
+                <span class="n">packed_object</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">rotation</span>
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span>
                 <span class="n">ingr_name</span><span class="p">,</span>
                 <span class="n">ingredient</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptInd</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">instance_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">packed_object</span><span class="o">.</span><span class="n">pt_index</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">instance_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">radius</span><span class="p">,</span>
                 <span class="n">adj_pos</span><span class="p">,</span>
-                <span class="n">rotation</span><span class="p">,</span>
+                <span class="n">packed_object</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span>
                 <span class="n">sub_points</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">instance_number</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -709,16 +711,18 @@
                     <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">positions</span><span class="p">)):</span>
                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                             <span class="n">pos</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">apply_rotation</span><span class="p">(</span>
-                                <span class="n">rotation</span><span class="p">,</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">position</span>
+                                <span class="n">packed_object</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span>
+                                <span class="n">ingredient</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
+                                <span class="n">adj_pos</span><span class="p">,</span>
                             <span class="p">)</span>
 
                             <span class="bp">self</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span>
                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-spheres&quot;</span><span class="p">,</span>
                                 <span class="n">ingredient</span><span class="p">,</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptInd</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">packed_object</span><span class="o">.</span><span class="n">pt_index</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">instance_number</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                                 <span class="n">ingredient</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
                                 <span class="n">pos</span><span class="p">,</span>
-                                <span class="n">rotation</span><span class="p">,</span>
+                                <span class="n">packed_object</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span>
                                 <span class="kc">None</span><span class="p">,</span>
                             <span class="p">)</span>
 

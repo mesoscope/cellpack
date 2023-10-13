@@ -75,6 +75,7 @@
         <span class="n">offset</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
         <span class="n">orient_bias_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">],</span>
         <span class="n">overwrite_distance_function</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
+        <span class="n">object_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">packing_mode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
         <span class="n">packing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -102,6 +103,7 @@
             <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
             <span class="n">jitter_attempts</span><span class="o">=</span><span class="n">jitter_attempts</span><span class="p">,</span>
+            <span class="n">object_name</span><span class="o">=</span><span class="n">object_name</span><span class="p">,</span>
             <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
             <span class="n">orient_bias_range</span><span class="o">=</span><span class="n">orient_bias_range</span><span class="p">,</span>
             <span class="n">packing_mode</span><span class="o">=</span><span class="n">packing_mode</span><span class="p">,</span>
@@ -129,6 +131,49 @@
         <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_min_max_radius</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MultiSphereIngr.get_radius">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.get_radius">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span></div>
+
+
+<div class="viewcode-block" id="MultiSphereIngr.get_new_distance_values">
+<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.get_new_distance_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_new_distance_values</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">packed_position</span><span class="p">,</span>
+        <span class="n">packed_rotation</span><span class="p">,</span>
+        <span class="n">gridPointsCoords</span><span class="p">,</span>
+        <span class="n">distance</span><span class="p">,</span>
+        <span class="n">dpad</span><span class="p">,</span>
+        <span class="n">level</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">inside_points</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">new_dist_points</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">padded_sphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="n">dpad</span>
+        <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">packed_position</span><span class="p">,</span> <span class="n">padded_sphere</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">packed_position</span>
+        <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
+        <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ptsInSphere</span><span class="p">)):</span>
+            <span class="n">pt</span> <span class="o">=</span> <span class="n">ptsInSphere</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">distA</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># point is inside dropped sphere</span>
+                <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">inside_points</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">inside_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]):</span>
+                        <span class="n">inside_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">inside_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="k">elif</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>  <span class="c1"># point in region of influence</span>
+                <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">new_dist_points</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">new_dist_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>
+                        <span class="n">new_dist_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_dist_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="n">inside_points</span><span class="p">,</span> <span class="n">new_dist_points</span></div>
+
 
 <div class="viewcode-block" id="MultiSphereIngr.collision_jitter">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.collision_jitter">[docs]</a>
@@ -308,6 +353,7 @@
         <span class="n">grid_point_distances</span><span class="p">,</span>
         <span class="n">inside_points</span><span class="p">,</span>
         <span class="n">new_dist_points</span><span class="p">,</span>
+        <span class="n">pt_index</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
         <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
@@ -316,6 +362,7 @@
             <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers</span>
         <span class="p">)</span>  <span class="c1"># centers)</span>
         <span class="n">grid_points_coords</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_packed_object</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">pt_index</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">radius_of_sphere_in_tree</span><span class="p">,</span> <span class="n">pos_of_sphere</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">transformed_centers</span><span class="p">):</span>
             <span class="n">radius_of_area_to_check</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">radius_of_sphere_in_tree</span> <span class="o">+</span> <span class="n">dpad</span>
@@ -377,7 +424,7 @@
         <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">transformed_centers</span><span class="p">):</span>
             <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">posc</span><span class="p">,</span> <span class="n">radc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># indices</span>
             <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
+            <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>

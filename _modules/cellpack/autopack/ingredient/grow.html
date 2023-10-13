@@ -202,7 +202,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">orientation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seedOnPlus</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># The filament should continue to grow on its (+) end</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seedOnMinus</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># The filamen should continue to grow on its (-) end.</span>
-        <span class="c1">#        if self.compNum &gt; 0 :</span>
+        <span class="c1">#        if self.compartment_id &gt; 0 :</span>
         <span class="c1">#            self.seedOnMinus = False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">biased</span> <span class="o">=</span> <span class="n">biased</span>
@@ -687,7 +687,7 @@
         <span class="n">step</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">*</span> <span class="n">size</span>
         <span class="n">bb</span> <span class="o">=</span> <span class="p">([</span><span class="n">cx</span> <span class="o">-</span> <span class="n">step</span><span class="p">,</span> <span class="n">cy</span> <span class="o">-</span> <span class="n">step</span><span class="p">,</span> <span class="n">cz</span> <span class="o">-</span> <span class="n">step</span><span class="p">],</span> <span class="p">[</span><span class="n">cx</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="n">cz</span> <span class="o">+</span> <span class="n">step</span><span class="p">])</span>
         <span class="n">pointsInCube</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">posc</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">addSP</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">sfpts</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfacePointsCoords</span>
 
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1006,7 +1006,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
         <span class="n">liste_nodes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">largestProteinSize</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span>
-        <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span><span class="n">pt2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">)</span>
+        <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span>
+            <span class="n">pt2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span>
+        <span class="p">)</span>
         <span class="n">liste_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rbNodes</span><span class="p">(</span>
             <span class="n">closesbody_indice</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">prevpoint</span><span class="o">=</span><span class="n">pt1</span><span class="p">,</span> <span class="n">getInfo</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
@@ -1239,7 +1241,7 @@
                         <span class="n">prev</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
                             <span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                        <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span>
+                        <span class="n">closesbody_indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span>
                             <span class="n">newPt</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span>
                         <span class="p">)</span>  <span class="c1"># vself.radii[0][0]*2.0</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">closesbody_indice</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1312,7 +1314,13 @@
                         <span class="c1"># self.update_data_tree(jtrans1,rotMatj1,pt1=newPt,pt2=newPts[1])</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">ingr</span><span class="o">.</span><span class="n">update_data_tree</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                            <span class="p">[</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">ingr</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                            <span class="p">[</span>
+                                <span class="n">jtrans</span><span class="p">,</span>
+                                <span class="n">rotMatj</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">ingr</span><span class="p">,</span>
+                                <span class="mi">0</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">ingr</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                            <span class="p">]</span>
                         <span class="p">)</span>  <span class="c1"># transpose ?</span>
                         <span class="n">newv</span><span class="p">,</span> <span class="n">d1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">pt2</span><span class="p">,</span> <span class="n">newPt</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                         <span class="c1"># v,d2 = self.vi.measure_distance(newPt,newPts[1],vec=True)</span>
@@ -1437,7 +1445,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">result</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="c1"># rebuild kdtree</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_positions</span><span class="p">(),</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span>
+            <span class="p">)</span>
 
         <span class="c1"># also remove from the result ?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
@@ -1477,8 +1487,8 @@
 
         <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;lattice&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;lattice&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfacePointsCoords</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
         <span class="n">alternate</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1529,7 +1539,7 @@
                         <span class="n">marge</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">marge</span><span class="p">,</span>
                         <span class="n">checkcollision</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;lattice&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;lattice&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">secondPoint</span><span class="p">,</span> <span class="n">success</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkLatticeSurface</span><span class="p">(</span>
                     <span class="n">startingPoint</span><span class="p">,</span>
                     <span class="n">distance</span><span class="p">,</span>
@@ -1637,14 +1647,13 @@
                     <span class="c1">#                    self.positions2=[[cent2T],]</span>
                     <span class="c1"># rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{&quot;rtype&quot;:self.type},)#cylinder</span>
                     <span class="c1"># histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))</span>
-                    <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInsidePoints</span><span class="p">(</span>
-                        <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
-                        <span class="n">gridPointsCoords</span><span class="p">,</span>
-                        <span class="n">dpad</span><span class="p">,</span>
-                        <span class="n">distance</span><span class="p">,</span>
-                        <span class="n">centT</span><span class="o">=</span><span class="n">cent1T</span><span class="p">,</span>
+                    <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distance_values</span><span class="p">(</span>
                         <span class="n">jtrans</span><span class="o">=</span><span class="n">jtrans</span><span class="p">,</span>
                         <span class="n">rotMatj</span><span class="o">=</span><span class="n">rotMatj</span><span class="p">,</span>
+                        <span class="n">gridPointsCoords</span><span class="o">=</span><span class="n">gridPointsCoords</span><span class="p">,</span>
+                        <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">,</span>
+                        <span class="n">dpad</span><span class="o">=</span><span class="n">dpad</span><span class="p">,</span>
+                        <span class="n">centT</span><span class="o">=</span><span class="n">cent1T</span><span class="p">,</span>
                     <span class="p">)</span>
 
                     <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">updateDistances</span><span class="p">(</span>
@@ -1706,14 +1715,13 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rg</span><span class="p">):</span>  <span class="c1"># len(self.results)):</span>
             <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span>
             <span class="n">cent1T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">new_inside_pts</span><span class="p">,</span> <span class="n">new_dist_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInsidePoints</span><span class="p">(</span>
-                <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
-                <span class="n">gridPointsCoords</span><span class="p">,</span>
-                <span class="n">dpad</span><span class="p">,</span>
-                <span class="n">distance</span><span class="p">,</span>
-                <span class="n">centT</span><span class="o">=</span><span class="n">cent1T</span><span class="p">,</span>
+            <span class="n">new_inside_pts</span><span class="p">,</span> <span class="n">new_dist_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distance_values</span><span class="p">(</span>
                 <span class="n">jtrans</span><span class="o">=</span><span class="n">jtrans</span><span class="p">,</span>
                 <span class="n">rotMatj</span><span class="o">=</span><span class="n">rotMatj</span><span class="p">,</span>
+                <span class="n">gridPointsCoords</span><span class="o">=</span><span class="n">gridPointsCoords</span><span class="p">,</span>
+                <span class="n">distance</span><span class="o">=</span><span class="n">distance</span><span class="p">,</span>
+                <span class="n">dpad</span><span class="o">=</span><span class="n">dpad</span><span class="p">,</span>
+                <span class="n">centT</span><span class="o">=</span><span class="n">cent1T</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">insidePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_place_results</span><span class="p">(</span><span class="n">new_inside_pts</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">)</span>
             <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_place_results</span><span class="p">(</span><span class="n">new_dist_points</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">)</span>
@@ -1727,10 +1735,12 @@
 <div class="viewcode-block" id="GrowIngredient.getFirstPoint">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getFirstPoint">[docs]</a>
     <span class="k">def</span> <span class="nf">getFirstPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># surfacegrowing: first point is aling to the normal:</span>
-            <span class="n">v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">[</span>
-                <span class="n">ptInd</span>
-            <span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">):</span>  <span class="c1"># surfacegrowing: first point is aling to the normal:</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span>
+                <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span>
             <span class="n">secondPoint</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startingpoint</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span>
             <span class="p">)</span>
@@ -1756,7 +1766,7 @@
                 <span class="n">secondPoint</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
             <span class="p">)</span>
             <span class="n">closeS</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">inside</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">inside</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># only if not surface ingredient</span>
                 <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
                     <span class="n">secondPoint</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
@@ -1778,7 +1788,7 @@
                     <span class="n">inside</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span>
                         <span class="n">secondPoint</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
                     <span class="p">)</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
                             <span class="n">secondPoint</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
                         <span class="p">)</span>
@@ -1844,8 +1854,10 @@
         <span class="n">normal</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># jitter the first point</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">normal</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">normal</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span>
+                <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startingpoint</span> <span class="o">=</span> <span class="n">previousPoint</span> <span class="o">=</span> <span class="n">startingPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jitterPosition</span><span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]),</span>
             <span class="n">env</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">,</span>
@@ -1856,10 +1868,10 @@
 
         <span class="c1"># if u != self.uLength:</span>
         <span class="c1">#     self.positions2 = [[self.vector]]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compartment</span> <span class="o">=</span> <span class="n">compartment</span>
 
         <span class="n">secondPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getFirstPoint</span><span class="p">(</span><span class="n">ptInd</span><span class="p">)</span>
@@ -1894,7 +1906,9 @@
 
         <span class="c1"># rebuild kdtree</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_positions</span><span class="p">(),</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span>
+            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">currentLength</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="c1">#        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]</span>
@@ -1958,7 +1972,7 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
             <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span>
             <span class="n">dist</span><span class="p">,</span> <span class="n">ptInd</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getClosestGridPoint</span><span class="p">(</span><span class="n">jtrans</span><span class="p">)</span>
-            <span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
+            <span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">])</span>
             <span class="c1"># reset the result ?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1">#        print (&quot;After :&quot;,listePtLinear)</span>
