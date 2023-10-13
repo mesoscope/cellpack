@@ -516,7 +516,7 @@ class Environment(CompartmentList):
             kwds=["compartment_id"],
             result=True,
             quaternion=True,
-            all_ingr_as_array=all_ingr_as_array,
+            seed_to_results_map={0: all_ingr_as_array},
             compartments=self.compartments,
         )
 
@@ -2232,6 +2232,7 @@ class Environment(CompartmentList):
                 distances=distances,
                 all_ingr_as_array=all_ingr_as_array,
             )
+        return all_ingr_as_array
 
     def restore_molecules_array(self, ingr):
         pass

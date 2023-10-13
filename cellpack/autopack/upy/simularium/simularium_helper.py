@@ -481,8 +481,9 @@ class simulariumHelper(hostHelper.Helper):
         grid_point_compartment_ids=None,
         show_sphere_trees=False,
         grid_pt_radius=0.5,
+        seed=0
     ):
-        self.time = 0
+        self.increment_time()
         instance_number = 0
         for packed_object in objects:
             ingr_name = packed_object.name

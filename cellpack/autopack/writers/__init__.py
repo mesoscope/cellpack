@@ -149,23 +149,29 @@ class Writer(object):
         vdic[attrname] = value
         return vdic
 
-    def save_as_simularium(self, env, all_ingr_as_array, compartments):
+    def save_as_simularium(self, env, seed_to_results_map):
         env.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
-        env.helper.init_scene_with_objects(
-            objects=all_ingr_as_array,
-            grid_point_positions=grid_positions,
-            grid_point_compartment_ids=compartment_ids,
-            show_sphere_trees=env.show_sphere_trees,
-            grid_pt_radius=env.grid.gridSpacing / 4,
-        )
+        
+        # one packing
+        for seed, all_ingr_as_array in seed_to_results_map.items():
 
-        if compartments is not None:
-            for compartment in compartments:
-                env.helper.add_compartment_to_scene(compartment)
+            env.helper.init_scene_with_objects(
+                objects=all_ingr_as_array,
+                grid_point_positions=grid_positions,
+                grid_point_compartment_ids=compartment_ids,
+                show_sphere_trees=env.show_sphere_trees,
+                grid_pt_radius=env.grid.gridSpacing / 4,
+                seed=seed
+            )
+            # if compartments is not None:
+            #     for compartment in compartments:
+            #         env.helper.add_compartment_to_scene(compartment)
 
+
+        # Same for all packings
         # plots the distances used to calculate gradients
         # TODO: add an option to plot grid points for compartments and for gradients
         if grid_positions is not None and len(env.gradients):
@@ -182,6 +188,7 @@ class Writer(object):
                     gradient.weight,
                     env.grid.gridSpacing / 4,
                 )
+        # write to simularium format
         file_name = env.helper.writeToFile(
             env.result_file, env.boundingBox, env.name, env.version
         )
@@ -403,7 +410,7 @@ class Writer(object):
         indent=False,
         quaternion=False,
         transpose=False,
-        all_ingr_as_array=None,
+        seed_to_results_map=None,
         compartments=None,
     ):
         output_format = self.format
@@ -420,6 +427,6 @@ class Writer(object):
                 transpose=transpose,
             )
         elif output_format == "simularium":
-            self.save_as_simularium(env, all_ingr_as_array, compartments)
+            self.save_as_simularium(env, seed_to_results_map)
         else:
             print("format output " + output_format + " not recognized (json,python)")
