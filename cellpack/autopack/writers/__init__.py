@@ -156,7 +156,7 @@ class Writer(object):
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
         
         # one packing
-        for seed, all_ingr_as_array in seed_to_results_map.items():
+        for _, all_ingr_as_array in seed_to_results_map.items():
 
             env.helper.init_scene_with_objects(
                 objects=all_ingr_as_array,
@@ -164,13 +164,8 @@ class Writer(object):
                 grid_point_compartment_ids=compartment_ids,
                 show_sphere_trees=env.show_sphere_trees,
                 grid_pt_radius=env.grid.gridSpacing / 4,
-                seed=seed
             )
-            # if compartments is not None:
-            #     for compartment in compartments:
-            #         env.helper.add_compartment_to_scene(compartment)
-
-
+        
         # Same for all packings
         # plots the distances used to calculate gradients
         # TODO: add an option to plot grid points for compartments and for gradients
@@ -189,8 +184,11 @@ class Writer(object):
                     env.grid.gridSpacing / 4,
                 )
         # write to simularium format
+        result_file_name = env.result_file
+        if len(seed_to_results_map) > 1:
+            result_file_name = f"{env.result_file.split('_seed')[0]}_all"
         file_name = env.helper.writeToFile(
-            env.result_file, env.boundingBox, env.name, env.version
+            result_file_name, env.boundingBox, env.name, env.version
         )
         upload_results = env.config_data.get("upload_results", False)
         number_of_packings = env.config_data.get("number_of_packings", 1)
@@ -411,7 +409,6 @@ class Writer(object):
         quaternion=False,
         transpose=False,
         seed_to_results_map=None,
-        compartments=None,
     ):
         output_format = self.format
         if output_format == "json":

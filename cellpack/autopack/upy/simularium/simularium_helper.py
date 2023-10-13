@@ -481,11 +481,13 @@ class simulariumHelper(hostHelper.Helper):
         grid_point_compartment_ids=None,
         show_sphere_trees=False,
         grid_pt_radius=0.5,
-        seed=0
     ):
         self.increment_time()
         instance_number = 0
         for packed_object in objects:
+            if packed_object.is_compartment:
+                self.add_compartment_to_scene(packed_object.ingredient)
+                continue
             ingr_name = packed_object.name
             ingredient = packed_object.ingredient
             sub_points = None

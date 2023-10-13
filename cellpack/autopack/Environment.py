@@ -495,7 +495,7 @@ class Environment(CompartmentList):
         self,
         free_points,
         distances,
-        all_ingr_as_array,
+        all_objects,
         save_grid_logs=False,
         save_result_as_file=False,
     ):
@@ -516,8 +516,7 @@ class Environment(CompartmentList):
             kwds=["compartment_id"],
             result=True,
             quaternion=True,
-            seed_to_results_map={0: all_ingr_as_array},
-            compartments=self.compartments,
+            seed_to_results_map={0: all_objects},
         )
 
     def loadResult(
@@ -1800,7 +1799,7 @@ class Environment(CompartmentList):
 
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile("./realtime", self.boundingBox)
-        return self.packed_objects.get_ingredients()
+        return self.packed_objects.get_all()
 
     def check_new_placement(self, new_position):
         distances = self.get_all_distances(new_position)
@@ -2204,7 +2203,7 @@ class Environment(CompartmentList):
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
 
             if dump and ((time() - stime) > dump_freq):
-                all_ingr_as_array = self.prep_molecules_for_save(
+                all_objects = self.prep_molecules_for_save(
                     distances,
                     free_points,
                     nbFreePoints,
@@ -2215,14 +2214,14 @@ class Environment(CompartmentList):
                     self.save_result(
                         free_points,
                         distances=distances,
-                        all_ingr_as_array=all_ingr_as_array,
+                        all_objects=all_objects,
                     )
 
         t2 = time()
         if self.show_progress_bar:
             pbar.close()
         self.log.info("time to fill %d", t2 - t1)
-        all_ingr_as_array = self.prep_molecules_for_save(
+        all_objects = self.prep_molecules_for_save(
             distances, free_points, nbFreePoints
         )
 
@@ -2230,9 +2229,9 @@ class Environment(CompartmentList):
             self.save_result(
                 free_points,
                 distances=distances,
-                all_ingr_as_array=all_ingr_as_array,
+                all_objects=all_objects,
             )
-        return all_ingr_as_array
+        return all_objects
 
     def restore_molecules_array(self, ingr):
         pass
