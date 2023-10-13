@@ -64,7 +64,7 @@
 GradientData instance</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.default_values">
-<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'invert':</span> <span class="pre">False,</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear',</span> <span class="pre">'weight_mode_settings':</span> <span class="pre">{}}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Linear</span> <span class="pre">gradient</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">X</span> <span class="pre">direction',</span> <span class="pre">'invert':</span> <span class="pre">None,</span> <span class="pre">'mode':</span> <span class="pre">'X',</span> <span class="pre">'mode_settings':</span> <span class="pre">{},</span> <span class="pre">'pick_mode':</span> <span class="pre">'linear',</span> <span class="pre">'reversed':</span> <span class="pre">False,</span> <span class="pre">'weight_mode':</span> <span class="pre">'linear',</span> <span class="pre">'weight_mode_settings':</span> <span class="pre">{}}</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -75,6 +75,11 @@ GradientData instance</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data">
 <span class="sig-name descname"><span class="pre">validate_gradient_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_gradient_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientData.validate_invert_settings">
+<span class="sig-name descname"><span class="pre">validate_invert_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">invert_option</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#GradientData.validate_invert_settings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_invert_settings" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -122,6 +127,23 @@ GradientData instance</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.GradientModes.Z">
 <span class="sig-name descname"><span class="pre">Z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Z'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Z" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.InvertOptions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.interface_objects.gradient_data.</span></span><span class="sig-name descname"><span class="pre">InvertOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/interface_objects/gradient_data.html#InvertOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.InvertOptions" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.interface_objects.meta_enum.MetaEnum" title="cellpack.autopack.interface_objects.meta_enum.MetaEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetaEnum</span></code></a></p>
+<p>All available options for individual invert modes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.InvertOptions.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'distance'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.InvertOptions.distance" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.interface_objects.gradient_data.InvertOptions.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'weight'</span></em><a class="headerlink" href="#cellpack.autopack.interface_objects.gradient_data.InvertOptions.weight" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -487,6 +509,7 @@ packing: Sphere tree file or sphere tree data</p>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.default_values"><code class="docutils literal notranslate"><span class="pre">GradientData.default_values</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties"><code class="docutils literal notranslate"><span class="pre">GradientData.set_mode_properties()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_gradient_data()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_invert_settings"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_invert_settings()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_mode_settings()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings"><code class="docutils literal notranslate"><span class="pre">GradientData.validate_weight_mode_settings()</span></code></a></li>
 </ul>
@@ -498,6 +521,11 @@ packing: Sphere tree file or sphere tree data</p>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.X"><code class="docutils literal notranslate"><span class="pre">GradientModes.X</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Y"><code class="docutils literal notranslate"><span class="pre">GradientModes.Y</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.GradientModes.Z"><code class="docutils literal notranslate"><span class="pre">GradientModes.Z</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.InvertOptions"><code class="docutils literal notranslate"><span class="pre">InvertOptions</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.InvertOptions.distance"><code class="docutils literal notranslate"><span class="pre">InvertOptions.distance</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.InvertOptions.weight"><code class="docutils literal notranslate"><span class="pre">InvertOptions.weight</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cellpack.autopack.interface_objects.gradient_data.ModeOptions"><code class="docutils literal notranslate"><span class="pre">ModeOptions</span></code></a><ul>

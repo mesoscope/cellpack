@@ -112,6 +112,18 @@
 
 
 
+<div class="viewcode-block" id="InvertOptions">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.InvertOptions">[docs]</a>
+<span class="k">class</span> <span class="nc">InvertOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    All available options for individual invert modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">weight</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="s2">&quot;distance&quot;</span></div>
+
+
+
 <div class="viewcode-block" id="WeightModeOptions">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions">[docs]</a>
 <span class="k">class</span> <span class="nc">WeightModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
@@ -176,7 +188,8 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate_weight_mode_settings</span><span class="p">(</span>
             <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;weight_mode&quot;</span><span class="p">],</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weight_mode_settings&quot;</span><span class="p">)</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_invert_settings</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;invert&quot;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="GradientData.validate_mode_settings">
@@ -215,6 +228,19 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Missing required weight mode setting </span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">weight_mode_name</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GradientData.validate_invert_settings">
+<a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_invert_settings">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_invert_settings</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">invert_option</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">invert_option</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">InvertOptions</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">invert_option</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid gradient invert option: </span><span class="si">{</span><span class="n">invert_option</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GradientData.set_mode_properties">

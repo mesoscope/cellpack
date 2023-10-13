@@ -70,6 +70,8 @@
 
 <span class="sd">    :return: void</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running in </span><span class="si">{</span><span class="vm">__file__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
     <span class="n">packing_config_data</span> <span class="o">=</span> <span class="n">ConfigLoader</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">config</span>
     <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span>
         <span class="n">recipe</span><span class="p">,</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;save_converted_recipe&quot;</span><span class="p">]</span>
