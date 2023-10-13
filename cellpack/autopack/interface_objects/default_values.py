@@ -8,8 +8,8 @@ DEFAULT_GRADIENT_MODE_SETTINGS = {
     "weight_mode": "linear",
     "pick_mode": "linear",
     "description": "Linear gradient in the X direction",
-    "reversed": False,
-    "invert": False,
+    "reversed": False,  # is the direction of the vector reversed?
+    "invert": None,  # options: "weight", "distance"
     "mode_settings": {},
     "weight_mode_settings": {},
 }
