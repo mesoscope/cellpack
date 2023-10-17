@@ -190,7 +190,6 @@ class Writer(object):
         if upload_results or number_of_packings == 1:
             autopack.helper.post_and_open_file(file_name)
 
-
     def save_Mixed_asJson(
         self,
         env,
