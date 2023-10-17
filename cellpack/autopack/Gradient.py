@@ -207,12 +207,15 @@ class Gradient:
 
         self.scaled_distances = self.get_normalized_values(self.distances)
 
-        if (max(self.scaled_distances) > 1.0) or (min(self.scaled_distances) < 0.0):
+        if (numpy.nanmax(self.scaled_distances) > 1.0) or (
+            numpy.nanmin(self.scaled_distances) < 0.0
+        ):
             raise ValueError(
                 "CHECK CALCULATED DISTANCES",
                 f"Max: {max(self.scaled_distances)}, Min: {min(self.scaled_distances)}",
             )
-        if self.invert:
+
+        if self.invert == "distance":
             self.scaled_distances = 1.0 - self.scaled_distances
         if self.weight_mode == "linear":
             self.weight = 1.0 - self.scaled_distances
@@ -231,7 +234,16 @@ class Gradient:
         # normalize the weight
         self.weight = self.get_normalized_values(self.weight)
 
+        if (numpy.nanmax(self.weight) > 1.0) or (numpy.nanmin(self.weight) < 0.0):
+            raise ValueError(
+                "CHECK CALCULATED WEIGHTS",
+                f"Max: {max(self.weight)}, Min: {min(self.weight)}",
+            )
+
         self.weight[numpy.isnan(self.weight)] = 0
+
+        if self.invert == "weight":
+            self.weight = 1.0 - self.weight
 
         # TODO: talk to Ludo about calculating gaussian weights
 

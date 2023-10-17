@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "2.0",
-    "name": "sphere_tree",
+    "name": "test_variable_size",
     "bounding_box": [
         [
             0,
@@ -9,27 +9,34 @@
             0
         ],
         [
-            1000,
-            1000,
+            500,
+            500,
             1
         ]
     ],
     "objects": {
         "base": {
             "jitter_attempts": 10,
+            "orient_bias_range": [
+                -3.1415927,
+                3.1415927
+            ],
             "rotation_range": 6.2831,
             "cutoff_boundary": 0,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
             "perturb_axis_amplitude": 0.1,
-            "packing": {
-                "mode": "random"
-            },
+            "packing_mode": "random",
             "principal_vector": [
                 0,
                 0,
                 1
             ],
             "rejection_threshold": 50,
-            "place_method": "jitter",
+            "place_method": "spheresSST",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,
@@ -44,21 +51,29 @@
             }
         },
         "sphere_25": {
-            "type": "multi_sphere",
+            "type": "single_sphere",
             "inherit": "base",
             "color": [
                 0.5,
                 0.5,
                 0.5
             ],
-            "weight": 0.25,
-            "representations": {
-                "packing":{
-                    "path": "../../../cellpack/tests/geometry",
-                    "name": "test.sph",
-                    "format": "sph"
-                }
-            },
+            "radius": 25,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        },
+        "sphere_40": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.1,
+                0.5,
+                0.5
+            ],
+            "radius": 40,
             "max_jitter": [
                 1,
                 1,
@@ -70,13 +85,26 @@
         "space": {
             "regions": {
                 "interior": [
-                    "A"
+                    "A", "B"
                 ]
             }
         },
         "A": {
             "object": "sphere_25",
-            "count": 100
+            "count": 200,
+            "size_options": {
+                "distribution": "uniform",
+                "min": 20,
+                "max": 25
+            }
+        },
+        "B": {
+            "object": "sphere_40",
+            "count": 200,
+            "size_options": {
+                "distribution": "list",
+                "list_values": [35, 40, 41]
+            }
         }
     }
 }
