@@ -19,7 +19,7 @@ def upload(
         # fetch the service key json file
         db_handler = FirebaseHandler()
         recipe_loader = RecipeLoader(recipe_path)
-        recipe_full_data = recipe_loader.recipe_data
+        recipe_full_data = recipe_loader._read(resolve_inheritance=False)
         recipe_meta_data = recipe_loader.get_only_recipe_metadata()
         recipe_db_handler = DBUploader(db_handler)
         recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
