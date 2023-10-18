@@ -156,6 +156,8 @@ class Environment(CompartmentList):
         self.grid_file_out = (
             f"{self.out_folder}/{self.name}_{config['name']}_{self.version}_grid.dat"
         )
+        if recipe.get("grid_file_path") is not None:
+            self.grid_file_out = recipe["grid_file_path"]
 
         should_load_grid_file = (
             os.path.isfile(self.grid_file_out) and self.load_from_grid_file
