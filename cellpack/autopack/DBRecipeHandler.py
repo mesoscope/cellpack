@@ -275,6 +275,7 @@ class CompositionDoc(DataDoc):
                     # found a match, so shouldn't write
                     return False, db.doc_id(doc)
                 else:
+                    # deeply compare resolved regions data
                     self.resolve_db_regions(db_data, db)
                     self.resolve_local_regions(local_data, recipe_data, db)
                     difference = DeepDiff(
@@ -525,7 +526,7 @@ class DBUploader(object):
         """
         recipe_name = recipe_data["name"]
         recipe_version = recipe_data["version"]
-        key = f"{recipe_name}_v-{recipe_version}"
+        key = f"{recipe_name}_v_{recipe_version}"
         return key
 
     def upload_collections(self, recipe_meta_data, recipe_data):

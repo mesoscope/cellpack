@@ -125,7 +125,7 @@ def test_get_recipe_id():
         "composition": {},
     }
     recipe_doc = DBUploader(mock_db)
-    assert recipe_doc._get_recipe_id(recipe_data) == "test_v-1.0.0"
+    assert recipe_doc._get_recipe_id(recipe_data) == "test_v_1.0.0"
 
 
 def test_upload_collections():
