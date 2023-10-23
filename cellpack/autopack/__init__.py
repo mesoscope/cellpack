@@ -48,7 +48,6 @@ from collections import OrderedDict
 import ssl
 import json
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
-from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
@@ -384,9 +383,9 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
 def load_file(filename, destination="", cache="geometries", force=None):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        # command example: `pack -r firebase:recipes/peroxisomes_surface_gradient_v-nucleus_cube -c examples/packing-configs/peroxisome_packing_config.json`
+        # command example: `pack -r firebase:recipes/[FIREBASE-RECIPE-ID] -c [CONFIG-FILE-PATH]`
         if database_name == "firebase":
-            db = FirebaseHandler()
+            db = DATABASE_IDS.handlers().get(database_name)
             db_handler = DBRecipeLoader(db)
             recipe_id = file_path.split("/")[-1]
             db_doc, _ = db_handler.collect_docs_by_id(
