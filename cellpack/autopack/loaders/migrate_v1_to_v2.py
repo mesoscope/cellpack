@@ -88,13 +88,10 @@ def migrate_ingredient(old_ingredient):
         elif attribute in unused_attributes_list:
             del old_ingredient[attribute]
         elif attribute in convert_to_partners_map:
-            has_partner = True
-            if attribute == "partners_name" and old_ingredient[attribute] == []:
-                has_partner = False
-            if (has_partner) and ("partners" not in new_ingredient):
+            if "partners" not in new_ingredient:
                 partners = {}
                 new_ingredient["partners"] = partners
-                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
+            partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
     new_ingredient["orient_bias_range"] = convert_rotation_range(old_ingredient)
     new_ingredient["representations"] = get_representations(old_ingredient)
     if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:

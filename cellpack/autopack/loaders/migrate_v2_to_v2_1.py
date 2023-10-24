@@ -4,7 +4,6 @@ from ..interface_objects.gradient_data import GradientData, ModeOptions
 
 
 def convert_partners(object_data):
-    print("partners--1", object_data)
     partners_list = []
     if "names" not in object_data["partners"]:
         return partners_list
@@ -51,7 +50,6 @@ def convert(recipe_data_2_0):
         object_data = recipe_data_2_0["objects"][object_name]
         if "partners" in object_data:
             new_partner_data = convert_partners(object_data)
-            # if len(new_partner_data) > 0:
             object_data["partners"] = new_partner_data
             new_recipe["objects"][object_name]["partners"] = new_partner_data
         if "gradients" in recipe_data_2_0:

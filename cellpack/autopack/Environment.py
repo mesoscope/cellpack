@@ -385,7 +385,7 @@ class Environment(CompartmentList):
             self.afviewer.vi.progressBar(progress=progress, label=label)
 
     def set_partners_ingredient(self, ingr):
-        if ingr.partners is not None:
+        if ingr.partners is not None and ingr.partners != []:
             for partner in ingr.partners.all_partners:
                 partner_ingr = self.getIngrFromName(partner.name)
                 partner.set_ingredient(partner_ingr)
