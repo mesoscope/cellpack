@@ -185,14 +185,14 @@ class Writer(object):
                 )
         # write to simularium format
         result_file_name = env.result_file
-        if len(seed_to_results_map) > 1:
+        is_aggregate = len(seed_to_results_map) > 1 
+        if is_aggregate:
             result_file_name = f"{env.result_file.split('_seed')[0]}_all"
         file_name = env.helper.writeToFile(
             result_file_name, env.boundingBox, env.name, env.version
         )
-        upload_results = env.config_data.get("upload_results", False)
         number_of_packings = env.config_data.get("number_of_packings", 1)
-        if upload_results or number_of_packings == 1:
+        if number_of_packings == 1 or is_aggregate:
             autopack.helper.post_and_open_file(file_name)
 
     def save_Mixed_asJson(
