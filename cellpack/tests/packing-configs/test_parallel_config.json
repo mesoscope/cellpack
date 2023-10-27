@@ -9,7 +9,7 @@
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": true,
-    "parallel": false,
+    "parallel": true,
     "load_from_grid_file": false,
     "number_of_packings": 5,
     "spacing":  null,
