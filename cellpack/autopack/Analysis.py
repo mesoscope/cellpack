@@ -2429,7 +2429,6 @@ class Analysis:
                             seed_index=seed_index,
                             seed_list=seed_list,
                             bounding_box=bounding_box,
-                            packing_basename=packing_basename,
                             center_distance_dict=center_distance_dict,
                             pairwise_distance_dict=pairwise_distance_dict,
                             ingredient_position_dict=ingredient_position_dict,
