@@ -87,18 +87,25 @@ def migrate_ingredient(old_ingredient):
             new_ingredient[v1_to_v2_name_map[attribute]] = value
         elif attribute in unused_attributes_list:
             del old_ingredient[attribute]
-        elif attribute in convert_to_partners_map:
-            if "partners" not in new_ingredient:
-                partners = {}
-                new_ingredient["partners"] = partners
-            partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
+        else:
+            _covert_partners(old_ingredient, new_ingredient, attribute)
     new_ingredient["orient_bias_range"] = convert_rotation_range(old_ingredient)
     new_ingredient["representations"] = get_representations(old_ingredient)
     if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:
         new_ingredient["radius"] = old_ingredient["radii"][0][0]
-    if not new_ingredient["partners"]["names"]:
+    if "partners" in new_ingredient and not new_ingredient["partners"].get("names"):
         del new_ingredient["partners"]
     return new_ingredient
+
+
+def _covert_partners(old_ingredient, new_ingredient, attribute):
+    if attribute in convert_to_partners_map:
+        if "partners" not in new_ingredient:
+            partners = {}
+            new_ingredient["partners"] = partners
+        new_ingredient["partners"][convert_to_partners_map[attribute]] = old_ingredient[
+            attribute
+        ]
 
 
 def check_required_attributes(old_ingredient_data):

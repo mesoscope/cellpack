@@ -141,13 +141,13 @@ def test_create_packing_atomic_representation(
                 "encapsulatingRadius": 100,
                 "nbMol": 15,
                 "orientBiasRotRangeMax": 12,
+                "partners": {"names": [], "probability_binding": 0.5},
                 "proba_binding": 0.5,
                 "Type": "MultiSphere",
             },
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
-                "partners": {"probability_binding": 0.5},
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.MULTI_SPHERE,
             },
@@ -179,7 +179,6 @@ def test_create_packing_atomic_representation(
             {
                 "count": 15,
                 "orient_bias_range": [6, 12],
-                "partners": {"probability_binding": 0.5},
                 "radius": 100,
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.SINGLE_SPHERE,
@@ -228,6 +227,7 @@ old_recipe_test_data = {
                 "name": "Sphere_radius_200",
                 "orientBiasRotRangeMax": 12,
                 "sphereFile": "/fibrinogen.sph",
+                "partners": {"names": [], "probability_binding": 0.5},
             },
         }
     },
@@ -275,7 +275,6 @@ def test_get_v1_ingredient():
                     "orient_bias_range": [6, pi],
                 },
                 "C": {
-                    "partners": {"probability_binding": 0.5},
                     "orient_bias_range": [-pi, 12],
                     "radius": 10,
                     "representations": {
