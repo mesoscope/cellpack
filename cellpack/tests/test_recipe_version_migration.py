@@ -141,7 +141,7 @@ def test_create_packing_atomic_representation(
                 "encapsulatingRadius": 100,
                 "nbMol": 15,
                 "orientBiasRotRangeMax": 12,
-                "partners": {"names": [], "probability_binding": 0.5},
+                "partners_name": [],
                 "proba_binding": 0.5,
                 "Type": "MultiSphere",
             },
@@ -227,7 +227,6 @@ old_recipe_test_data = {
                 "name": "Sphere_radius_200",
                 "orientBiasRotRangeMax": 12,
                 "sphereFile": "/fibrinogen.sph",
-                "partners": {"names": [], "probability_binding": 0.5},
             },
         }
     },
