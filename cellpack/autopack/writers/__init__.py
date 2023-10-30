@@ -154,7 +154,7 @@ class Writer(object):
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
-        
+
         # one packing
         for _, all_ingr_as_array in seed_to_results_map.items():
 
@@ -165,7 +165,7 @@ class Writer(object):
                 show_sphere_trees=env.show_sphere_trees,
                 grid_pt_radius=env.grid.gridSpacing / 4,
             )
-        
+
         # Same for all packings
         # plots the distances used to calculate gradients
         # TODO: add an option to plot grid points for compartments and for gradients
@@ -185,7 +185,7 @@ class Writer(object):
                 )
         # write to simularium format
         result_file_name = env.result_file
-        is_aggregate = len(seed_to_results_map) > 1 
+        is_aggregate = len(seed_to_results_map) > 1
         if is_aggregate:
             result_file_name = f"{env.result_file.split('_seed')[0]}_all"
         file_name = env.helper.writeToFile(

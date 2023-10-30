@@ -2221,9 +2221,7 @@ class Environment(CompartmentList):
         if self.show_progress_bar:
             pbar.close()
         self.log.info("time to fill %d", t2 - t1)
-        all_objects = self.prep_molecules_for_save(
-            distances, free_points, nbFreePoints
-        )
+        all_objects = self.prep_molecules_for_save(distances, free_points, nbFreePoints)
 
         if self.saveResult:
             self.save_result(
