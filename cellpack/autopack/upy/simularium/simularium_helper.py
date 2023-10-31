@@ -1386,7 +1386,7 @@ class simulariumHelper(hostHelper.Helper):
     def raycast_test(self, obj, start, end, length, **kw):
         return
 
-    def post_and_open_file(self, file_name):
+    def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         try:
@@ -1401,7 +1401,7 @@ class simulariumHelper(hostHelper.Helper):
                 print(
                     f"An error occurred while storing the file {simularium_file} to S3: {e}"
                 )
-        if url is not None:
+        if url is not None and open_results_in_browser:
             simulariumHelper.open_in_simularium(url)
 
     @staticmethod
