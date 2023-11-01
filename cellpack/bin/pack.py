@@ -56,12 +56,20 @@ def pack(recipe, config_path=None, analysis_config_path=None):
             result_file=None,
         )
         log.info(f"saving to {env.out_folder}")
+
+        if packing_config_data["randomness_seed"] is not None:
+            seed_list = packing_config_data["randomness_seed"]
+        elif recipe_data["randomness_seed"] is not None:
+            seed_list = recipe_data["randomness_seed"]
+        else:
+            seed_list = None
+
         analyze.doloop(
             packing_config_data["number_of_packings"],
             env.boundingBox,
             plot_figures=packing_config_data.get("save_plot_figures", True),
             show_grid=packing_config_data["show_grid_plot"],
-            seed_list=packing_config_data["randomness_seed"],
+            seed_list=seed_list,
             config_name=packing_config_data["name"],
             recipe_version=recipe_data["version"],
             image_export_options=packing_config_data.get("image_export_options"),

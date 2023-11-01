@@ -1831,7 +1831,8 @@ class Environment(CompartmentList):
             if hasattr(ingr, "count_options") and ingr.count_options is not None:
 
                 count = get_value_from_distribution(
-                    distribution_options=ingr.count_options
+                    distribution_options=ingr.count_options,
+                    return_int=True,
                 )
                 if count is not None:
                     ingr.count = count
