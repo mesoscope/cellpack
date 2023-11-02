@@ -59,7 +59,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
 
         if packing_config_data["randomness_seed"] is not None:
             seed_list = packing_config_data["randomness_seed"]
-        elif recipe_data["randomness_seed"] is not None:
+        elif recipe_data.get("randomness_seed") is not None:
             seed_list = recipe_data["randomness_seed"]
         else:
             seed_list = None
