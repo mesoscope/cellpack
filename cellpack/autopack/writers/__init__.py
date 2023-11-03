@@ -149,23 +149,24 @@ class Writer(object):
         vdic[attrname] = value
         return vdic
 
-    def save_as_simularium(self, env, all_ingr_as_array, compartments):
+    def save_as_simularium(self, env, seed_to_results_map):
         env.helper.clear()
 
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
-        env.helper.init_scene_with_objects(
-            objects=all_ingr_as_array,
-            grid_point_positions=grid_positions,
-            grid_point_compartment_ids=compartment_ids,
-            show_sphere_trees=env.show_sphere_trees,
-            grid_pt_radius=env.grid.gridSpacing / 4,
-        )
 
-        if compartments is not None:
-            for compartment in compartments:
-                env.helper.add_compartment_to_scene(compartment)
+        # one packing
+        for _, all_ingr_as_array in seed_to_results_map.items():
 
+            env.helper.init_scene_with_objects(
+                objects=all_ingr_as_array,
+                grid_point_positions=grid_positions,
+                grid_point_compartment_ids=compartment_ids,
+                show_sphere_trees=env.show_sphere_trees,
+                grid_pt_radius=env.grid.gridSpacing / 4,
+            )
+
+        # Same for all packings
         # plots the distances used to calculate gradients
         # TODO: add an option to plot grid points for compartments and for gradients
         if grid_positions is not None and len(env.gradients):
@@ -182,13 +183,19 @@ class Writer(object):
                     gradient.weight,
                     env.grid.gridSpacing / 4,
                 )
+        # write to simularium format
+        result_file_name = env.result_file
+        is_aggregate = len(seed_to_results_map) > 1
+        if is_aggregate:
+            result_file_name = f"{env.result_file.split('_seed')[0]}_all"
         file_name = env.helper.writeToFile(
-            env.result_file, env.boundingBox, env.name, env.version
+            result_file_name, env.boundingBox, env.name, env.version
         )
-        upload_results = env.config_data.get("upload_results", False)
         number_of_packings = env.config_data.get("number_of_packings", 1)
-        if upload_results or number_of_packings == 1:
-            autopack.helper.post_and_open_file(file_name)
+        open_results_in_browser = env.config_data.get("open_results_in_browser", True)
+        upload_results = env.config_data.get("upload_results", True)
+        if (number_of_packings == 1 or is_aggregate) and upload_results:
+            autopack.helper.post_and_open_file(file_name, open_results_in_browser)
 
     def save_Mixed_asJson(
         self,
@@ -403,8 +410,7 @@ class Writer(object):
         indent=False,
         quaternion=False,
         transpose=False,
-        all_ingr_as_array=None,
-        compartments=None,
+        seed_to_results_map=None,
     ):
         output_format = self.format
         if output_format == "json":
@@ -420,6 +426,6 @@ class Writer(object):
                 transpose=transpose,
             )
         elif output_format == "simularium":
-            self.save_as_simularium(env, all_ingr_as_array, compartments)
+            self.save_as_simularium(env, seed_to_results_map)
         else:
             print("format output " + output_format + " not recognized (json,python)")

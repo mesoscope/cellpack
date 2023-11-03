@@ -34,6 +34,7 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
 from cellpack.autopack.utils import check_paired_key, get_paired_key
+from cellpack.autopack.writers import Writer
 from cellpack.autopack.writers.ImageWriter import ImageWriter
 import concurrent.futures
 import multiprocessing
@@ -84,7 +85,7 @@ class Analysis:
 
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
-
+        self.seed_to_results = {}
         autopack._colors = None
 
     @staticmethod
@@ -1750,7 +1751,8 @@ class Analysis:
             self.plotly.update_title(self.env.place_method)
 
         t1 = time()
-        self.env.pack_grid(seedNum=seed)
+        results = self.env.pack_grid(seedNum=seed)
+        self.seed_to_results[seed] = results
         t2 = time()
         run_time = t2 - t1
         print(f"time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
@@ -2427,7 +2429,6 @@ class Analysis:
                             seed_index=seed_index,
                             seed_list=seed_list,
                             bounding_box=bounding_box,
-                            packing_basename=packing_basename,
                             center_distance_dict=center_distance_dict,
                             pairwise_distance_dict=pairwise_distance_dict,
                             ingredient_position_dict=ingredient_position_dict,
@@ -2485,6 +2486,8 @@ class Analysis:
         self.writeJSON(ingredient_angle_file, ingredient_angle_dict)
         self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
         self.writeJSON(ingredient_key_file, ingredient_key_dict)
+
+        Writer().save_as_simularium(self.env, self.seed_to_results)
 
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict

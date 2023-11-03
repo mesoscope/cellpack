@@ -482,9 +482,12 @@ class simulariumHelper(hostHelper.Helper):
         show_sphere_trees=False,
         grid_pt_radius=0.5,
     ):
-        self.time = 0
+        self.increment_time()
         instance_number = 0
         for packed_object in objects:
+            if packed_object.is_compartment:
+                self.add_compartment_to_scene(packed_object.ingredient)
+                continue
             ingr_name = packed_object.name
             ingredient = packed_object.ingredient
             sub_points = None
@@ -1383,7 +1386,7 @@ class simulariumHelper(hostHelper.Helper):
     def raycast_test(self, obj, start, end, length, **kw):
         return
 
-    def post_and_open_file(self, file_name):
+    def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         try:
@@ -1398,7 +1401,7 @@ class simulariumHelper(hostHelper.Helper):
                 print(
                     f"An error occurred while storing the file {simularium_file} to S3: {e}"
                 )
-        if url is not None:
+        if url is not None and open_results_in_browser:
             simulariumHelper.open_in_simularium(url)
 
     @staticmethod
