@@ -16,7 +16,10 @@ def convert_partners(object_data):
         binding_probability = 1.0
         if "probability_binding" in object_data["partners"]:
             binding_probability = object_data["partners"]["probability_binding"]
-        if "probability_repelled" in object_data["partners"]:
+        if (
+            "probability_repelled" in object_data["partners"]
+            and object_data["partners"]["probability_repelled"] < 0
+        ):
             binding_probability = -object_data["partners"]["probability_repelled"]
 
         partner = {
