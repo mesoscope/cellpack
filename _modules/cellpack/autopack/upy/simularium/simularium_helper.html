@@ -668,9 +668,12 @@
         <span class="n">show_sphere_trees</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">grid_pt_radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increment_time</span><span class="p">()</span>
         <span class="n">instance_number</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">packed_object</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">is_compartment</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_compartment_to_scene</span><span class="p">(</span><span class="n">packed_object</span><span class="o">.</span><span class="n">ingredient</span><span class="p">)</span>
+                <span class="k">continue</span>
             <span class="n">ingr_name</span> <span class="o">=</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">name</span>
             <span class="n">ingredient</span> <span class="o">=</span> <span class="n">packed_object</span><span class="o">.</span><span class="n">ingredient</span>
             <span class="n">sub_points</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1761,7 +1764,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.post_and_open_file">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.post_and_open_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">post_and_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">post_and_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">open_results_in_browser</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">simularium_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.simularium&quot;</span><span class="p">)</span>
         <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1776,7 +1779,7 @@
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;An error occurred while storing the file </span><span class="si">{</span><span class="n">simularium_file</span><span class="si">}</span><span class="s2"> to S3: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
-        <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">open_results_in_browser</span><span class="p">:</span>
             <span class="n">simulariumHelper</span><span class="o">.</span><span class="n">open_in_simularium</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div>
 
 

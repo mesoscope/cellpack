@@ -575,7 +575,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">free_points</span><span class="p">,</span>
         <span class="n">distances</span><span class="p">,</span>
-        <span class="n">all_ingr_as_array</span><span class="p">,</span>
+        <span class="n">all_objects</span><span class="p">,</span>
         <span class="n">save_grid_logs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">save_result_as_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
@@ -596,8 +596,7 @@
             <span class="n">kwds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;compartment_id&quot;</span><span class="p">],</span>
             <span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">quaternion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="n">all_ingr_as_array</span><span class="p">,</span>
-            <span class="n">compartments</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">,</span>
+            <span class="n">seed_to_results_map</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">all_objects</span><span class="p">},</span>
         <span class="p">)</span></div>
 
 
@@ -2033,7 +2032,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span> <span class="ow">and</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
             <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="s2">&quot;./realtime&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_ingredients</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_all</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Environment.check_new_placement">
@@ -2458,7 +2457,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span>
 
             <span class="k">if</span> <span class="n">dump</span> <span class="ow">and</span> <span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">stime</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">dump_freq</span><span class="p">):</span>
-                <span class="n">all_ingr_as_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_molecules_for_save</span><span class="p">(</span>
+                <span class="n">all_objects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_molecules_for_save</span><span class="p">(</span>
                     <span class="n">distances</span><span class="p">,</span>
                     <span class="n">free_points</span><span class="p">,</span>
                     <span class="n">nbFreePoints</span><span class="p">,</span>
@@ -2469,23 +2468,22 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">save_result</span><span class="p">(</span>
                         <span class="n">free_points</span><span class="p">,</span>
                         <span class="n">distances</span><span class="o">=</span><span class="n">distances</span><span class="p">,</span>
-                        <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="n">all_ingr_as_array</span><span class="p">,</span>
+                        <span class="n">all_objects</span><span class="o">=</span><span class="n">all_objects</span><span class="p">,</span>
                     <span class="p">)</span>
 
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_progress_bar</span><span class="p">:</span>
             <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;time to fill </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
-        <span class="n">all_ingr_as_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_molecules_for_save</span><span class="p">(</span>
-            <span class="n">distances</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span>
-        <span class="p">)</span>
+        <span class="n">all_objects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_molecules_for_save</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_result</span><span class="p">(</span>
                 <span class="n">free_points</span><span class="p">,</span>
                 <span class="n">distances</span><span class="o">=</span><span class="n">distances</span><span class="p">,</span>
-                <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="n">all_ingr_as_array</span><span class="p">,</span>
-            <span class="p">)</span></div>
+                <span class="n">all_objects</span><span class="o">=</span><span class="n">all_objects</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">all_objects</span></div>
 
 
 <div class="viewcode-block" id="Environment.restore_molecules_array">

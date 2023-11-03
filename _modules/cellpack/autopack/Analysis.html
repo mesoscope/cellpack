@@ -74,6 +74,7 @@
 <span class="kn">from</span> <span class="nn">cellpack.autopack.upy</span> <span class="kn">import</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">col</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.upy.colors</span> <span class="kn">import</span> <span class="n">map_colors</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">check_paired_key</span><span class="p">,</span> <span class="n">get_paired_key</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.writers</span> <span class="kn">import</span> <span class="n">Writer</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.writers.ImageWriter</span> <span class="kn">import</span> <span class="n">ImageWriter</span>
 <span class="kn">import</span> <span class="nn">concurrent.futures</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
@@ -126,7 +127,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;figures&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">figures_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_to_results</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">autopack</span><span class="o">.</span><span class="n">_colors</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Analysis.get_xyz_dict_from_all_pos_dict">
@@ -1956,7 +1957,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">plotly</span><span class="o">.</span><span class="n">update_title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">place_method</span><span class="p">)</span>
 
         <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">pack_grid</span><span class="p">(</span><span class="n">seedNum</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">pack_grid</span><span class="p">(</span><span class="n">seedNum</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_to_results</span><span class="p">[</span><span class="n">seed</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="n">run_time</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time to run pack_grid for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">place_method</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -2681,7 +2683,6 @@
                             <span class="n">seed_index</span><span class="o">=</span><span class="n">seed_index</span><span class="p">,</span>
                             <span class="n">seed_list</span><span class="o">=</span><span class="n">seed_list</span><span class="p">,</span>
                             <span class="n">bounding_box</span><span class="o">=</span><span class="n">bounding_box</span><span class="p">,</span>
-                            <span class="n">packing_basename</span><span class="o">=</span><span class="n">packing_basename</span><span class="p">,</span>
                             <span class="n">center_distance_dict</span><span class="o">=</span><span class="n">center_distance_dict</span><span class="p">,</span>
                             <span class="n">pairwise_distance_dict</span><span class="o">=</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
                             <span class="n">ingredient_position_dict</span><span class="o">=</span><span class="n">ingredient_position_dict</span><span class="p">,</span>
@@ -2739,6 +2740,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_angle_file</span><span class="p">,</span> <span class="n">ingredient_angle_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_occurences_file</span><span class="p">,</span> <span class="n">ingredient_occurence_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_key_file</span><span class="p">,</span> <span class="n">ingredient_key_dict</span><span class="p">)</span>
+
+        <span class="n">Writer</span><span class="p">()</span><span class="o">.</span><span class="n">save_as_simularium</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed_to_results</span><span class="p">)</span>
 
         <span class="n">all_ingredient_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_results_from_seeds</span><span class="p">(</span>
             <span class="n">ingredient_position_dict</span>

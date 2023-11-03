@@ -87,7 +87,10 @@
     <span class="n">env</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">helper</span>
 
     <span class="n">afviewer</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;save_analyze_result&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;save_analyze_result&quot;</span><span class="p">]</span>
+        <span class="ow">or</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;number_of_packings&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="p">):</span>
         <span class="n">analyze</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span>
             <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
             <span class="n">viewer</span><span class="o">=</span><span class="n">afviewer</span><span class="p">,</span>
