@@ -36,17 +36,6 @@
 
 # Hybrid version merged from Graham's Sept 2011 and Ludo's April 2012 version on May 16, 2012
 # Updated with Sept 16, 2011 thesis versions on July 5, 2012
-
-# TODO: Describe Organelle class here at high level
-
-# TODO: Graham and Ludovic implemented a 2D density function to obtain target numbers for
-#   filling surfaces.  This should be formalized and named something other than molarity
-#   or molarity should be converted to a 2D value behind the scenes.
-# IDEA: We should offer the user an option to override molarity with a specific
-#   number, e.g., "I want to place 3 1xyz.pdb files in compartment A" rather than
-#   forcing them to calculate- "I need to place 0.00071M of 1xyz.pdb to get 3 of them
-#   in an compartment A of volume=V."
-
 # IDEAS
 
 # randomly select recipe and then randomly select free point in set of free

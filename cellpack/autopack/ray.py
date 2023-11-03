@@ -327,7 +327,6 @@ def f_ray_intersect_polyhedron(
     vHitCount = 0
 
     vEpsilon = 0.00001
-    # vBreakj = False  # TODO: figure out if this was supposed to be used
     vCollidePos = None
 
     # Walk through each polygon in a polyhedron

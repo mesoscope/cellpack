@@ -108,13 +108,6 @@ class BaseGrid:
         nbFreePoints,
         distance,
     ):
-        # self.log.info(
-        #     "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
-        # )
-        # TODO: move this to env class, ing shouldn't aware of the whole grid
-
-        # t1 = time()
-        # distChanges = {}
         for pt, dist in list(insidePoints.items()):
             try:
                 free_points, nbFreePoints = BaseGrid.reorder_free_points(
@@ -124,12 +117,9 @@ class BaseGrid:
                 print(pt, "not in freeePoints********************************")
                 pass
             distance[pt] = dist
-        # self.log.debug("update free points loop %d", time() - t1)
-        # t2 = time()
         for pt, dist in list(newDistPoints.items()):
             if pt not in insidePoints:
                 distance[pt] = dist
-        # self.log.debug("update distance loop %d", time() - t2)
         return nbFreePoints
 
     def __init__(
@@ -224,7 +214,6 @@ class BaseGrid:
         self.distToClosestSurf = (
             numpy.array(self.distToClosestSurf[:]) * 0.0
         ) + self.diag
-        # self.distToClosestSurf[:] = self.diag  # numpy.array([self.diag]*len(self.distToClosestSurf))#surface point too?
         self.free_points = list(range(len(self.free_points)))
         self.nbFreePoints = len(self.free_points)
 

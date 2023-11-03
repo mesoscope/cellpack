@@ -42,7 +42,6 @@
 # version on May 16, 2012
 # Updated with Correct Sept 25, 2011 thesis version on July 5, 2012
 
-# TODO: Describe Ingredient class here at high level
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
 import numpy
@@ -320,15 +319,6 @@ class Ingredient(Agent):
         self.verts = None
         self.rad = None
         self.rapid_model = None
-        # TODO : geometry : 3d object or procedural from PDB
-        # TODO : usekeyword resolution->options dictionary of res :
-        # TODO : {"simple":{"cms":{"parameters":{"gridres":12}},
-        # TODO :            "obj":{"parameters":{"name":"","filename":""}}
-        # TODO :            }
-        # TODO : "med":{"method":"cms","parameters":{"gridres":30}}
-        # TODO : "high":{"method":"msms","parameters":{"gridres":30}}
-        # TODO : etc...
-
         self.rejection_threshold = rejection_threshold
 
         # need to build the basic shape if one provided
