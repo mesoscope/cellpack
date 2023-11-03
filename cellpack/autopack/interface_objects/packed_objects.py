@@ -1,3 +1,4 @@
+import pickle
 import numpy
 
 
@@ -76,3 +77,12 @@ class PackedObjects:
 
     def get_all(self):
         return self._packed_objects
+
+    def save_to_file(self, path):
+        pickle.dump(self.get_ingredients(), open(path, "wb"))
+        return path
+
+    def load_from_file(self, path):
+        for obj in pickle.load(open(path, "rb")):
+            obj.ingredient.reset()
+            self.add(obj)

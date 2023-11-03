@@ -73,7 +73,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
                 recipe_data=recipe_data,
             )
     else:
-        env.buildGrid(rebuild=True)
+        env.buildGrid()
         env.pack_grid(verbose=0, usePP=False)
 
 

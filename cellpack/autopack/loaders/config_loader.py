@@ -38,6 +38,7 @@ class ConfigLoader(object):
         "parallel": False,
         "place_method": "spheresSST",
         "randomness_seed": None,
+        "restore_results": False,
         "save_analyze_result": False,
         "save_converted_recipe": False,
         "show_grid_plot": False,

@@ -43,7 +43,6 @@
 # Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012
 # with correct analysis tools
 
-# TODO: fix the save/restore grid
 """
 
 import os
@@ -147,6 +146,7 @@ class Environment(CompartmentList):
         self.spacing = config["spacing"]
         self.load_from_grid_file = config["load_from_grid_file"]
         self.show_progress_bar = config["show_progress_bar"]
+        self.restore_results = config["restore_results"]
         self.name = name
         self.version = recipe.get("version", "default")
         # saving/pickle option
@@ -505,10 +505,12 @@ class Environment(CompartmentList):
         self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
-        if not os.path.isfile(self.grid_file_out) and self.load_from_grid_file:
+        
+        if not os.path.isfile(self.grid_file_out):
             # do not overwrite if grid was loaded from file
+            import ipdb; ipdb.set_trace()
             self.grid.result_filename = self.grid_file_out
-            self.saveGridToFile(self.grid_file_out)
+            self.save_grids_to_pickle(self.grid_file_out)
         if save_grid_logs:
             self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
@@ -521,39 +523,6 @@ class Environment(CompartmentList):
             quaternion=True,
             seed_to_results_map={0: all_objects},
         )
-
-    def loadResult(
-        self, resultfilename=None, restore_grid=True, backward=False, transpose=True
-    ):
-        result = [], [], []
-        if resultfilename is None:
-            resultfilename = self.result_file
-            # check the extension of the filename none, txt or json
-        fileName, fileExtension = os.path.splitext(resultfilename)
-        if fileExtension == "":
-            try:
-                result = pickle.load(open(resultfilename, "rb"))
-            except:  # noqa: E722
-                print("can't read " + resultfilename)
-                return [], [], []
-        elif fileExtension == ".apr":
-            try:
-                result = pickle.load(open(resultfilename, "rb"))
-            except:  # noqa: E722
-                return self.load_asTxt(resultfilename=resultfilename)
-        elif fileExtension == ".txt":
-            return self.load_asTxt(resultfilename=resultfilename)
-        elif fileExtension == ".json":
-            if backward:
-                return self.load_asJson(resultfilename=resultfilename)
-            else:
-                return IOutils.load_MixedasJson(
-                    self, resultfilename=resultfilename, transpose=transpose
-                )
-        else:
-            print("can't read or recognize " + resultfilename)
-            return [], [], []
-        return result
 
     def includeIngrRecipes(self, ingrname, include):
         """
@@ -769,22 +738,6 @@ class Environment(CompartmentList):
             self.grid.distToClosestSurf = dist  # grid+organelle+surf
         self.grid.free_points = list(range(len(id)))
 
-    def saveGridToFile(self, gridFileOut):
-        """
-        Save the current grid and the compartment grid information in a file. (pickle)
-        """
-        d = os.path.dirname(gridFileOut)
-        if not os.path.exists(d):
-            print("gridfilename path problem", gridFileOut)
-            return
-        f = open(gridFileOut, "wb")  # 'w'
-        self.writeArraysToFile(f)
-
-        for compartment in self.compartments:
-            compartment.saveGridToFile(f)
-        print("SAVED GRID TO ", gridFileOut)
-        f.close()
-
     def saveGridLogsAsJson(self, gridFileOut):
         """
         Save the current grid and the compartment grid information in a file. (pickle)
@@ -833,7 +786,7 @@ class Environment(CompartmentList):
             "closestId",
         ]
 
-    def restore_grids_from_pickle(self, grid_file_path):
+    def restore_grids_from_pickle(self, grid_file_path, reset=True):
         """
         Read and setup the grid from the given filename. (pickle)
         """
@@ -863,7 +816,9 @@ class Environment(CompartmentList):
                 geom._cache.delete("triangles_tree")
 
             # reset grid
-            self.grid.reset()
+            if reset:
+                self.grid.reset()
+                
 
     def save_grids_to_pickle(self, grid_file_path):
         """
@@ -882,77 +837,6 @@ class Environment(CompartmentList):
 
             # dump mesh store
             pickle.dump(self.mesh_store, file_obj)
-
-    def restoreGridFromFile(self, gridFileName):
-        """
-        Read and setup the grid from the given filename. (pickle)
-        """
-        print(f"Loading grid from {gridFileName}")
-        aInteriorGrids = []
-        aSurfaceGrids = []
-        f = open(gridFileName, "rb")
-        self.readArraysFromFile(f)
-        for ct, compartment in enumerate(self.compartments):
-            compartment.readGridFromFile(f)
-            aInteriorGrids.append(compartment.insidePoints)
-            aSurfaceGrids.append(compartment.surfacePoints)
-            compartment.OGsrfPtsBht = spatial.cKDTree(
-                tuple(compartment.vertices), leafsize=10
-            )
-            compartment.compute_volume_and_set_count(
-                self, compartment.surfacePoints, compartment.insidePoints, areas=None
-            )
-            self.compartments[ct] = compartment
-        f.close()
-        # TODO: restore surface distances on loading from grid
-        self.grid.aInteriorGrids = aInteriorGrids
-        self.grid.aSurfaceGrids = aSurfaceGrids
-
-    def extractMeshComponent(self, obj):
-        """
-        Require host helper. Return the v,f,n of the given object
-        """
-        print("extractMeshComponent", helper.getType(obj))
-        if helper is None:
-            print("no Helper found")
-            return None, None, None
-        if helper.getType(obj) == helper.EMPTY:  # compartment master parent?
-            childs = helper.getChilds(obj)
-            for ch in childs:
-                if helper.getType(ch) == helper.EMPTY:
-                    c = helper.getChilds(ch)
-                    # should be all polygon
-                    faces = []
-                    vertices = []
-                    vnormals = []
-                    for pc in c:
-                        f, v, vn = helper.DecomposeMesh(
-                            pc, edit=False, copy=False, tri=True, transform=True
-                        )
-                        faces.extend(f)
-                        vertices.extend(v)
-                        vnormals.extend(vn)
-                    return vertices, faces, vnormals
-                elif helper.getType(ch) == helper.POLYGON:
-                    faces, vertices, vnormals = helper.DecomposeMesh(
-                        ch, edit=False, copy=False, tri=True, transform=True
-                    )
-                    return vertices, faces, vnormals
-                else:
-                    continue
-        elif helper.getType(obj) == helper.POLYGON:
-            faces, vertices, vnormals = helper.DecomposeMesh(
-                obj, edit=False, copy=False, tri=True, transform=True
-            )
-            return vertices, faces, vnormals
-        else:
-            print(
-                "extractMeshComponent",
-                helper.getType(obj),
-                helper.POLYGON,
-                helper.getType(obj) == helper.POLYGON,
-            )
-            return None, None, None
 
     def update_largest_smallest_size(self, ingr):
         if ingr.encapsulating_radius > self.largestProteinSize:
@@ -1199,7 +1083,7 @@ class Environment(CompartmentList):
         box_boundary = numpy.array(self.boundingBox)
         return numpy.linalg.norm(box_boundary[1] - box_boundary[0])
 
-    def buildGrid(self, rebuild=True):
+    def buildGrid(self):
         """
         The main build grid function. Setup the main grid and merge the
         compartment grid. The setup is de novo or using previously built grid
@@ -1217,34 +1101,34 @@ class Environment(CompartmentList):
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
 
         self.sortIngredient(reset=True)
-        if self.grid is None or self.nFill == 0:
-            self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
-            self.fillBB = boundingBox
-            self.grid = Grid(boundingBox=boundingBox, spacing=spacing)
-            nbPoints = self.grid.gridVolume
-            self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
-            if self.nFill == 0:
-                self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-                nbPoints = self.grid.gridVolume
 
-        elif self.grid is not None:
-            self.log.info("$$$$$$$$  reset the grid")
-            self.grid.reset()
-            nbPoints = len(self.grid.free_points)
-            self.log.info("$$$$$$$$  reset the grid")
+        ## restore from file options: 
+        # restore previous packing
+        if self.restore_results and self.previous_grid_file is not None:
+            # restore grid with distances and free points
+            # restore ingredients
+            self.restore_grids_from_pickle(self.previous_grid_file, reset=False)
+            self.packed_objects.load(self.result_file)
 
-        if self.previous_grid_file is not None:
+        # restore just the grid
+        elif self.previous_grid_file is not None:
             self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
                 self.restore_grids_from_pickle(self.previous_grid_file)
+    
         else:
+            self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
+            self.fillBB = boundingBox
+            self.grid = Grid(boundingBox=boundingBox, spacing=spacing)
+            self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
+            if self.nFill == 0:
+                self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
             self.build_compartment_grids()
-
-            # save grids to pickle
+            # save filename
             self.grid.filename = self.grid_file_out
             self.previous_grid_file = self.grid_file_out
-            self.save_grids_to_pickle(self.grid_file_out)
+            # self.save_grids_to_pickle(self.grid_file_out)
 
         self.exteriorVolume = self.grid.computeExteriorVolume(
             compartments=self.compartments,
@@ -1255,30 +1139,7 @@ class Environment(CompartmentList):
         r = self.exteriorRecipe
         if r:
             r.setCount(self.exteriorVolume)  # should actually use the fillBB
-
-        if not rebuild:
-            for c in self.compartments:
-                c.setCount()
-        else:
-            self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-
-        # distance = self.grid.distToClosestSurf  # [:]
-        nbFreePoints = nbPoints  # -1
-        # TODO: refactor this to work with new placed_objects data structure
-        # for i, mingrs in enumerate(self.molecules):  # ( jtrans, rotMatj, self, ptInd )
-        #     nbFreePoints = self.onePrevIngredient(
-        #         i, mingrs, distance, nbFreePoints, self.molecules
-        #     )
-        # for organelle in self.compartments:
-        #     for i, mingrs in enumerate(
-        #         organelle.molecules
-        #     ):  # ( jtrans, rotMatj, self, ptInd )
-        #         nbFreePoints = self.onePrevIngredient(
-        #             i, mingrs, distance, nbFreePoints, organelle.molecules
-        #         )
-        self.grid.nbFreePoints = nbFreePoints
-
-        if self.use_gradient and len(self.gradients) and rebuild:
+        if self.use_gradient and len(self.gradients):
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
@@ -1294,17 +1155,15 @@ class Environment(CompartmentList):
                     boundingBox, self.grid.masterGridPositions
                 )
 
-    def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
+    def restore_ingredient(self, i, ingredient, position, rotation, pt_index, distance, nbFreePoints, marray):
         """
-        Unused
         """
-        jtrans, rotMatj, ingr, ptInd, _ = mingrs
-        centT = ingr.transformPoints(jtrans, rotMatj, ingr.positions[-1])
+        centT = ingredient.transformPoints(position, rotation, ingredient.positions[-1])
         insidePoints = {}
         newDistPoints = {}
-        mr = self.get_dpad(ingr.compartment_id)
+        mr = self.get_dpad(ingredient.compartment_id)
         spacing = self.smallestProteinSize
-        jitter = ingr.getMaxJitter(spacing)
+        jitter = ingredient.getMaxJitter(spacing)
         dpad = ingr.min_radius + mr + jitter
         insidePoints, newDistPoints = ingr.get_new_distance_values(
             jtrans=jtrans,
@@ -2318,8 +2177,9 @@ class Environment(CompartmentList):
         if resultfilename is None:
             resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
-        with open(resultfilename, "wb") as rfile:
-            pickle.dump(self.packed_objects.get_ingredients(), rfile)
+        # with open(resultfilename, "wb") as rfile:
+        #     pickle.dump(self.packed_objects.get_ingredients(), rfile)
+        self.packed_objects.save_to_file(resultfilename)
         with open(resultfilename + "_free_points", "wb") as rfile:
             pickle.dump(self.grid.free_points, rfile)
 
