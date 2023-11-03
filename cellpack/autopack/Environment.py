@@ -1112,11 +1112,10 @@ class Environment(CompartmentList):
 
         # restore just the grid
         elif self.previous_grid_file is not None:
-            self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
                 self.restore_grids_from_pickle(self.previous_grid_file)
-    
+                self.grid.filename = self.previous_grid_file
         else:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
@@ -1128,7 +1127,6 @@ class Environment(CompartmentList):
             # save filename
             self.grid.filename = self.grid_file_out
             self.previous_grid_file = self.grid_file_out
-            # self.save_grids_to_pickle(self.grid_file_out)
 
         self.exteriorVolume = self.grid.computeExteriorVolume(
             compartments=self.compartments,
