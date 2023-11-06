@@ -96,6 +96,8 @@ def migrate_ingredient(old_ingredient):
     new_ingredient["representations"] = get_representations(old_ingredient)
     if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:
         new_ingredient["radius"] = old_ingredient["radii"][0][0]
+    if "partners" in new_ingredient and not new_ingredient["partners"].get("names"):
+        del new_ingredient["partners"]
     return new_ingredient
 
 
