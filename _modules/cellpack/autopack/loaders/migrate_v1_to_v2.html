@@ -144,6 +144,8 @@
     <span class="n">new_ingredient</span><span class="p">[</span><span class="s2">&quot;representations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_representations</span><span class="p">(</span><span class="n">old_ingredient</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">new_ingredient</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span><span class="p">:</span>
         <span class="n">new_ingredient</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_ingredient</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;partners&quot;</span> <span class="ow">in</span> <span class="n">new_ingredient</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">new_ingredient</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">new_ingredient</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">new_ingredient</span></div>
 
 
