@@ -15,8 +15,9 @@ algorithm to pack molecular recipes
 3. `pip install -e .[dev]`
 
 ### Run pack code
-1. example pack recipe : `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json -c examples/packing-configs/run.json`
-2. example pack from remote : `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c examples/packing-configs/run.json`
+1. example pack v1 recipe : `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json -c examples/packing-configs/run.json`
+2. example pack v2 recipe :  `pack -r examples/recipes/v2/nested.json -c examples/packing-configs/run.json`
+3. example pack from remote : `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c examples/packing-configs/run.json`
 
 ### Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer
