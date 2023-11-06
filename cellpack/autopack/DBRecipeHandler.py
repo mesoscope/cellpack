@@ -574,6 +574,19 @@ class DBUploader(object):
         key = self._get_recipe_id(recipe_to_save)
         self.upload_data("recipes", recipe_to_save, key)
 
+    def upload_result_metadata(self, file_name, url):
+        """
+        Upload the metadata of the result file to the database.
+        """
+        if self.db:
+            username = self.db.get_username()
+            timestamp = self.db.create_timestamp()
+            self.db.update_or_create(
+                "results",
+                file_name,
+                {"user": username, "timestamp": timestamp, "url": url.split("?")[0]},
+            )
+
 
 class DBRecipeLoader(object):
     """
