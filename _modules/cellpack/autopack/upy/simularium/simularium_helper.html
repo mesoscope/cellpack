@@ -1770,7 +1770,9 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">simulariumHelper</span><span class="o">.</span><span class="n">store_results_to_s3</span><span class="p">(</span><span class="n">simularium_file</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">aws_readme_url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3&quot;</span>
+            <span class="n">aws_readme_url</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3&quot;</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">NoCredentialsError</span><span class="p">):</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;need to configure your aws account, find instructions here: </span><span class="si">{</span><span class="n">aws_readme_url</span><span class="si">}</span><span class="s2">&quot;</span>
