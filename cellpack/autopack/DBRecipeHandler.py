@@ -571,8 +571,7 @@ class DBUploader(object):
             print(f"{recipe_id} is already in firestore")
             return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
-        key = self._get_recipe_id(recipe_to_save)
-        self.upload_data("recipes", recipe_to_save, key)
+        self.upload_data("recipes", recipe_to_save, recipe_id)
 
     def upload_result_metadata(self, file_name, url):
         """
