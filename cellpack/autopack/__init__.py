@@ -383,10 +383,10 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
 def load_file(filename, destination="", cache="geometries", force=None):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        # command example: `pack -r firebase:recipes/[FIREBASE-RECIPE-ID] -c [CONFIG-FILE-PATH]`
         if database_name == "firebase":
             db = DATABASE_IDS.handlers().get(database_name)
             db_handler = DBRecipeLoader(db)
+            db_handler.validate_input_recipe_path(filename)
             recipe_id = file_path.split("/")[-1]
             db_doc, _ = db_handler.collect_docs_by_id(
                 collection="recipes", id=recipe_id
