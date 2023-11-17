@@ -199,8 +199,8 @@ REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
-    f"{DATABASE_IDS.GITHUB}:": autoPACKserver,
-    f"{DATABASE_IDS.FIREBASE}:": None,
+    f"{DATABASE_IDS.GITHUB}": autoPACKserver,
+    f"{DATABASE_IDS.FIREBASE}": None,
 }
 
 
@@ -280,8 +280,14 @@ def is_remote_path(file_path):
     @param file_path: str
     """
     for ele in DATABASE_IDS.with_colon():
-        if ele in file_path:
+        if file_path.startswith(ele):
             return True
+    # raise error if it is remote path but database name is invalid
+    if ":" in file_path:
+        raise ValueError(
+            f"Invalid database name in {file_path}. Supported databases start with: {DATABASE_IDS.with_colon()}"
+        )
+    return False
 
 
 def convert_db_shortname_to_url(file_location):
@@ -289,7 +295,7 @@ def convert_db_shortname_to_url(file_location):
     @param file_path: str
     """
     database_name, file_path = file_location.split(":")
-    database_url = REPLACE_PATH[f"{database_name}:"]
+    database_url = REPLACE_PATH[f"{database_name}"]
     if database_url is not None:
         return database_name, f"{database_url}/{file_path}"
     return database_name, file_path
