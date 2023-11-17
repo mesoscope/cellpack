@@ -54,8 +54,8 @@ class FirebaseHandler(object):
             collection = components[0]
             id = components[1]
         except IndexError:
-            raise ValueError(
-                "Invalid path provided. Path example: firebase:collection/id"
+            raise IndexError(
+                "Invalid path format. Path example: firebase:collection/id"
             )
         return collection, id
 
