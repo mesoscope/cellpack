@@ -5,7 +5,7 @@ from ..interface_objects.gradient_data import GradientData, ModeOptions
 
 def convert_partners(object_data):
     partners_list = []
-    if "names" not in "partners":
+    if "names" not in object_data["partners"]:
         return partners_list
     for index, name in enumerate(object_data["partners"]["names"]):
         positions = object_data["partners"]["positions"]
@@ -16,7 +16,10 @@ def convert_partners(object_data):
         binding_probability = 1.0
         if "probability_binding" in object_data["partners"]:
             binding_probability = object_data["partners"]["probability_binding"]
-        if "probability_repelled" in object_data["partners"]:
+        if (
+            "probability_repelled" in object_data["partners"]
+            and object_data["partners"]["probability_repelled"] < 0
+        ):
             binding_probability = -object_data["partners"]["probability_repelled"]
 
         partner = {

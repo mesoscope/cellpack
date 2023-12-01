@@ -206,8 +206,8 @@ class SingleCylinderIngr(Ingredient):
 
             ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
             compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
-            if self.compNum <= 0:
-                wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+            if self.compartment_id <= 0:
+                wrongPt = [cid for cid in compIdsSphere if cid != self.compartment_id]
                 if len(wrongPt):
                     #                        print wrongPt
                     return True
@@ -355,8 +355,10 @@ class SingleCylinderIngr(Ingredient):
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
                 compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
                 #                print "compId",compIdsSphere
-                if self.compNum <= 0:
-                    wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+                if self.compartment_id <= 0:
+                    wrongPt = [
+                        cid for cid in compIdsSphere if cid != self.compartment_id
+                    ]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
 

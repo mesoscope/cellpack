@@ -22,7 +22,7 @@ from cellpack.autopack.interface_objects import GradientData
                 "pick_mode": "linear",
                 "description": "Linear gradient in the X direction",
                 "reversed": False,
-                "invert": False,
+                "invert": None,
                 "name": "gradient_name",
                 "mode_settings": {
                     "direction": [1, 0, 0],
@@ -49,7 +49,7 @@ from cellpack.autopack.interface_objects import GradientData
                 "pick_mode": "linear",
                 "description": "Square gradient in the radial direction",
                 "reversed": False,
-                "invert": False,
+                "invert": None,
                 "name": "gradient_name",
                 "mode_settings": {
                     "center": [0, 0, 0],
@@ -74,7 +74,7 @@ from cellpack.autopack.interface_objects import GradientData
                 "pick_mode": "linear",
                 "description": "Cubic gradient in the Y direction",
                 "reversed": True,
-                "invert": False,
+                "invert": None,
                 "name": "gradient_name",
                 "mode_settings": {"direction": [0, -1, 0]},
                 "weight_mode_settings": {},
@@ -101,7 +101,7 @@ from cellpack.autopack.interface_objects import GradientData
                 "description": "power law gradient from surface",
                 "pick_mode": "linear",
                 "reversed": False,
-                "invert": False,
+                "invert": None,
                 "mode_settings": {
                     "object": "object_name",
                 },

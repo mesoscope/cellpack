@@ -482,12 +482,17 @@ class simulariumHelper(hostHelper.Helper):
         show_sphere_trees=False,
         grid_pt_radius=0.5,
     ):
-        self.time = 0
+        self.increment_time()
         instance_number = 0
-        for position, rotation, ingredient, ptInd in objects:
-            ingr_name = ingredient.name
+        for packed_object in objects:
+            if packed_object.is_compartment:
+                self.add_compartment_to_scene(packed_object.ingredient)
+                continue
+            ingr_name = packed_object.name
+            ingredient = packed_object.ingredient
             sub_points = None
-            if self.is_fiber(ingredient.type):
+            radius = packed_object.radius
+            if simulariumHelper.is_fiber(ingredient.type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately
@@ -496,25 +501,25 @@ class simulariumHelper(hostHelper.Helper):
                 sub_points = ingredient.listePtLinear
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
-                self.display_data[ingredient.name] = DisplayData(
+                self.display_data[packed_object.name] = DisplayData(
                     name=ingr_name,
                     display_type=display_type,
                     url=url,
                     color=simulariumHelper.format_rgb_color(ingredient.color),
                 )
 
-            radius = ingredient.encapsulating_radius if ingredient is not None else 10
+            radius = radius if radius is not None else 10
             adj_pos = ingredient.representations.get_adjusted_position(
-                position, rotation
+                packed_object.position, packed_object.rotation
             )
 
             self.add_instance(
                 ingr_name,
                 ingredient,
-                f"{ingr_name}-{ptInd}-{instance_number}",
+                f"{ingr_name}-{packed_object.pt_index}-{instance_number}",
                 radius,
                 adj_pos,
-                rotation,
+                packed_object.rotation,
                 sub_points,
             )
             instance_number += 1
@@ -523,16 +528,18 @@ class simulariumHelper(hostHelper.Helper):
                     for level in range(len(ingredient.positions)):
                         for i in range(len(ingredient.positions[level])):
                             pos = ingredient.apply_rotation(
-                                rotation, ingredient.positions[level][i], position
+                                packed_object.rotation,
+                                ingredient.positions[level][i],
+                                adj_pos,
                             )
 
                             self.add_instance(
                                 f"{ingredient.name}-spheres",
                                 ingredient,
-                                f"{ingredient.name}-{ptInd}-{i}",
+                                f"{ingredient.name}-{packed_object.pt_index}-{instance_number}-{i}",
                                 ingredient.radii[level][i],
                                 pos,
-                                rotation,
+                                packed_object.rotation,
                                 None,
                             )
 
@@ -1379,13 +1386,15 @@ class simulariumHelper(hostHelper.Helper):
     def raycast_test(self, obj, start, end, length, **kw):
         return
 
-    def post_and_open_file(self, file_name):
+    def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         try:
             url = simulariumHelper.store_results_to_s3(simularium_file)
         except Exception as e:
-            aws_readme_url = "https://github.com/mesoscope/cellpack/blob/feature/main/README.md#aws-s3"
+            aws_readme_url = (
+                "https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3"
+            )
             if isinstance(e, NoCredentialsError):
                 print(
                     f"need to configure your aws account, find instructions here: {aws_readme_url}"
@@ -1394,7 +1403,7 @@ class simulariumHelper(hostHelper.Helper):
                 print(
                     f"An error occurred while storing the file {simularium_file} to S3: {e}"
                 )
-        if url is not None:
+        if url is not None and open_results_in_browser:
             simulariumHelper.open_in_simularium(url)
 
     @staticmethod

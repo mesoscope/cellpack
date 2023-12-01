@@ -52,7 +52,7 @@ from ..autopack.ingredient import Ingredient
                     "distribution": "invalid_distribution",
                 },
             },
-            "invalid_distribution is not a valid count distribution",
+            "invalid_distribution is not a valid distribution",
         ),
         (
             {

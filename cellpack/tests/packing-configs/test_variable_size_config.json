@@ -1,5 +1,5 @@
 {
-    "name": "test_variable_count_config",
+    "name": "test_variable_size_config",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,

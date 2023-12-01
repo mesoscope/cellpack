@@ -20,7 +20,7 @@
             "weight_mode": "exponential",
             "pick_mode": "rnd",
             "mode": "vector",
-            "invert": true,
+            "invert": "weight",
             "mode_settings": {
                 "direction": [
                     0.707,
@@ -34,7 +34,7 @@
                 ]
             },
             "weight_mode_settings": {
-                "decay_length": 0.05
+                "decay_length": 0.3
             }
         }
     },    
@@ -61,7 +61,7 @@
                 1,
                 1
             ],
-            "radius": 0.1,
+            "radius": 1,
             "packing_mode": "gradient",
             "gradient": "planar_gradient"
         }

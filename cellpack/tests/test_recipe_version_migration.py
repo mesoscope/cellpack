@@ -141,13 +141,13 @@ def test_create_packing_atomic_representation(
                 "encapsulatingRadius": 100,
                 "nbMol": 15,
                 "orientBiasRotRangeMax": 12,
+                "partners_name": [],
                 "proba_binding": 0.5,
                 "Type": "MultiSphere",
             },
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
-                "partners": {"probability_binding": 0.5},
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.MULTI_SPHERE,
             },
@@ -179,7 +179,6 @@ def test_create_packing_atomic_representation(
             {
                 "count": 15,
                 "orient_bias_range": [6, 12],
-                "partners": {"probability_binding": 0.5},
                 "radius": 100,
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.SINGLE_SPHERE,
@@ -275,7 +274,6 @@ def test_get_v1_ingredient():
                     "orient_bias_range": [6, pi],
                 },
                 "C": {
-                    "partners": {"probability_binding": 0.5},
                     "orient_bias_range": [-pi, 12],
                     "radius": 10,
                     "representations": {
@@ -400,6 +398,11 @@ def test_migrate_version_error():
                         "rotation_range": 6.2831,
                         "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
+                        "color": [
+                            0.498,
+                            0.498,
+                            0.498,
+                        ],
                         "is_attractor": False,
                         "principal_vector": [1, 0, 0],
                         "packing_mode": "random",
@@ -430,6 +433,7 @@ def test_migrate_version_error():
                         "rotation_range": 6.2831,
                         "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
+                        "color": [0.306, 0.45100001, 0.81599998],
                         "is_attractor": False,
                         "principal_vector": [1, 0, 0],
                         "packing_mode": "random",
@@ -449,6 +453,7 @@ def test_migrate_version_error():
                         "rotation_range": 6.2831,
                         "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
+                        "color": [0.306, 0.45100001, 0.81599998],
                         "is_attractor": False,
                         "principal_vector": [1, 0, 0],
                         "packing_mode": "random",

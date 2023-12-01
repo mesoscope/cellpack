@@ -86,10 +86,8 @@ class Agent:
         self, near_by_ingredients, placed_partners, current_packing_position=[0, 0, 0]
     ):
         # near_by_ingredient is [
-        #   ingredient pos[],
-        #   ingredient rot[],
-        #   ingredient[],
-        #   distance[]?
+        #   PackedObject
+        #   distance[]
         # ]
         # placed_partners is (index,placed_partner_ingredient,distance_from_current_point)
         # weight using the distance function
@@ -100,13 +98,13 @@ class Agent:
             return None
         partner_index = placed_partners[i][0]  # i,part,dist
         partner = placed_partners[i][1]
-        partner_ingredient = near_by_ingredients[2][partner_index]
+        partner_ingredient = near_by_ingredients[partner_index][0].ingredient
         self.log.info(f"binding to {partner_ingredient.name}")
 
-        if self.compNum > 0:
+        if self.compartment_id > 0:
             packing_position = self.env.grid.getClosestFreeGridPoint(
                 packing_position,
-                compId=self.compNum,
+                compId=self.compartment_id,
                 ball=(
                     partner_ingredient.encapsulating_radius + self.encapsulating_radius
                 ),
@@ -120,7 +118,7 @@ class Agent:
             if binding_probability > 0:
                 bind = chance <= binding_probability
                 if bind:
-                    partner_position = near_by_ingredients[0][partner_index]
+                    partner_position = near_by_ingredients[partner_index][0].position
 
                     # get closestFreePoint using freePoint and masterGridPosition
                     # if self.place_method == "rigid-body" or self.place_method == "jitter":

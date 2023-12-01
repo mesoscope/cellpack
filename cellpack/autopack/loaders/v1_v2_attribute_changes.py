@@ -2,6 +2,7 @@ from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 v1_to_v2_name_map = {
     "Type": "type",
+    "color": "color",
     "distExpression": "distance_expression",
     "distFunction": "distance_function",
     "isAttractor": "is_attractor",

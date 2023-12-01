@@ -160,7 +160,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.orientation = orientation
         self.seedOnPlus = True  # The filament should continue to grow on its (+) end
         self.seedOnMinus = False  # The filamen should continue to grow on its (-) end.
-        #        if self.compNum > 0 :
+        #        if self.compartment_id > 0 :
         #            self.seedOnMinus = False
         self.vector = [0.0, 0.0, 0.0]
         self.biased = biased
@@ -601,7 +601,7 @@ class GrowIngredient(MultiCylindersIngr):
         step = histoVol.grid.gridSpacing * size
         bb = ([cx - step, cy - step, cz - step], [cx + step, cy + step, cz + step])
         pointsInCube = histoVol.grid.getPointsInCube(bb, posc, step, addSP=False)
-        o = self.env.compartments[abs(self.compNum) - 1]
+        o = self.env.compartments[abs(self.compartment_id) - 1]
         sfpts = o.surfacePointsCoords
 
         found = False
@@ -905,7 +905,9 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         liste_nodes = []
         cutoff = self.env.largestProteinSize + self.uLength
-        closesbody_indice = self.get_closest_ingredients(pt2, self.env, cutoff=cutoff)
+        closesbody_indice = self.env.get_closest_ingredients(
+            pt2, self.env, cutoff=cutoff
+        )
         liste_nodes = self.get_rbNodes(
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
@@ -1138,7 +1140,7 @@ class GrowIngredient(MultiCylindersIngr):
                         prev = None
                         if len(self.env.rTrans) > 2:
                             prev = self.env.rTrans[-1]
-                        closesbody_indice = self.get_closest_ingredients(
+                        closesbody_indice = self.env.get_closest_ingredients(
                             newPt, histoVol, cutoff=cutoff
                         )  # vself.radii[0][0]*2.0
                         if len(closesbody_indice) == 0:
@@ -1211,7 +1213,13 @@ class GrowIngredient(MultiCylindersIngr):
                         # self.update_data_tree(jtrans1,rotMatj1,pt1=newPt,pt2=newPts[1])
                         self.partners[alternate].ingr.update_data_tree(jtrans, rotMatj)
                         self.compartment.molecules.append(
-                            [jtrans, rotMatj, self.partners[alternate].ingr, 0]
+                            [
+                                jtrans,
+                                rotMatj,
+                                self.partners[alternate].ingr,
+                                0,
+                                self.partners[alternate].ingr.radius,
+                            ]
                         )  # transpose ?
                         newv, d1 = self.vi.measure_distance(pt2, newPt, vec=True)
                         # v,d2 = self.vi.measure_distance(newPt,newPts[1],vec=True)
@@ -1324,7 +1332,9 @@ class GrowIngredient(MultiCylindersIngr):
         self.env.result.pop(len(self.env.result) - 1)
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.rTrans, leafsize=10)
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.packed_objects.get_positions(), leafsize=10
+            )
 
         # also remove from the result ?
         self.results.pop(len(self.results) - 1)
@@ -1361,8 +1371,8 @@ class GrowIngredient(MultiCylindersIngr):
 
         counter = 0
         mask = None
-        if self.walkingMode == "lattice" and self.compNum > 0:
-            o = self.env.compartments[abs(self.compNum) - 1]
+        if self.walkingMode == "lattice" and self.compartment_id > 0:
+            o = self.env.compartments[abs(self.compartment_id) - 1]
             v = o.surfacePointsCoords
             mask = numpy.ones(len(v), int)
         alternate = False
@@ -1413,7 +1423,7 @@ class GrowIngredient(MultiCylindersIngr):
                         marge=self.marge,
                         checkcollision=True,
                     )
-            if self.walkingMode == "lattice" and self.compNum > 0:
+            if self.walkingMode == "lattice" and self.compartment_id > 0:
                 secondPoint, success, mask = self.walkLatticeSurface(
                     startingPoint,
                     distance,
@@ -1521,14 +1531,13 @@ class GrowIngredient(MultiCylindersIngr):
                     #                    self.positions2=[[cent2T],]
                     # rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{"rtype":self.type},)#cylinder
                     # histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))
-                    insidePoints, newDistPoints = self.getInsidePoints(
-                        histoVol.grid,
-                        gridPointsCoords,
-                        dpad,
-                        distance,
-                        centT=cent1T,
+                    insidePoints, newDistPoints = self.get_new_distance_values(
                         jtrans=jtrans,
                         rotMatj=rotMatj,
+                        gridPointsCoords=gridPointsCoords,
+                        distance=distance,
+                        dpad=dpad,
+                        centT=cent1T,
                     )
 
                     nbFreePoints = BaseGrid.updateDistances(
@@ -1587,14 +1596,13 @@ class GrowIngredient(MultiCylindersIngr):
         for i in range(rg):  # len(self.results)):
             jtrans, rotMatj = self.results[-i]
             cent1T = self.transformPoints(jtrans, rotMatj, self.positions[-1])
-            new_inside_pts, new_dist_points = self.getInsidePoints(
-                histoVol.grid,
-                gridPointsCoords,
-                dpad,
-                distance,
-                centT=cent1T,
+            new_inside_pts, new_dist_points = self.get_new_distance_values(
                 jtrans=jtrans,
                 rotMatj=rotMatj,
+                gridPointsCoords=gridPointsCoords,
+                distance=distance,
+                dpad=dpad,
+                centT=cent1T,
             )
             insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
             newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
@@ -1605,10 +1613,12 @@ class GrowIngredient(MultiCylindersIngr):
         return insidePoints, newDistPoints, nbFreePoints, free_points
 
     def getFirstPoint(self, ptInd, seed=0):
-        if self.compNum > 0:  # surfacegrowing: first point is aling to the normal:
-            v2 = self.env.compartments[abs(self.compNum) - 1].surfacePointsNormals[
-                ptInd
-            ]
+        if (
+            self.compartment_id > 0
+        ):  # surfacegrowing: first point is aling to the normal:
+            v2 = self.env.compartments[
+                abs(self.compartment_id) - 1
+            ].surfacePointsNormals[ptInd]
             secondPoint = (
                 numpy.array(self.startingpoint) + numpy.array(v2) * self.uLength
             )
@@ -1634,7 +1644,7 @@ class GrowIngredient(MultiCylindersIngr):
                 secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
             )
             closeS = False
-            if inside and self.compNum <= 0:
+            if inside and self.compartment_id <= 0:
                 # only if not surface ingredient
                 closeS = self.far_enough_from_surfaces(
                     secondPoint, cutoff=self.cutoff_surface
@@ -1656,7 +1666,7 @@ class GrowIngredient(MultiCylindersIngr):
                     inside = self.env.grid.checkPointInside(
                         secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
                     )
-                    if self.compNum <= 0:
+                    if self.compartment_id <= 0:
                         closeS = self.far_enough_from_surfaces(
                             secondPoint, cutoff=self.cutoff_surface
                         )
@@ -1716,8 +1726,10 @@ class GrowIngredient(MultiCylindersIngr):
         normal = None
 
         # jitter the first point
-        if self.compNum > 0:
-            normal = env.compartments[abs(self.compNum) - 1].surfacePointsNormals[ptInd]
+        if self.compartment_id > 0:
+            normal = env.compartments[
+                abs(self.compartment_id) - 1
+            ].surfacePointsNormals[ptInd]
         self.startingpoint = previousPoint = startingPoint = self.jitterPosition(
             numpy.array(env.grid.masterGridPositions[ptInd]),
             env.smallestProteinSize,
@@ -1728,10 +1740,10 @@ class GrowIngredient(MultiCylindersIngr):
 
         # if u != self.uLength:
         #     self.positions2 = [[self.vector]]
-        if self.compNum == 0:
+        if self.compartment_id == 0:
             compartment = self.env
         else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compartment_id) - 1]
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)
@@ -1766,7 +1778,9 @@ class GrowIngredient(MultiCylindersIngr):
 
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.rTrans, leafsize=10)
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.packed_objects.get_positions(), leafsize=10
+            )
 
         self.currentLength = 0.0
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
@@ -1830,7 +1844,7 @@ class GrowIngredient(MultiCylindersIngr):
         for i in range(len(self.results)):
             jtrans, rotMatj = self.results[-i]
             dist, ptInd = env.grid.getClosestGridPoint(jtrans)
-            compartment.molecules.append([jtrans, rotMatj, self, ptInd])
+            compartment.molecules.append([jtrans, rotMatj, self, ptInd, self.radius])
             # reset the result ?
         self.results = []
         #        print ("After :",listePtLinear)

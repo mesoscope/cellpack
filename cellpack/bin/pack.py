@@ -29,6 +29,8 @@ def pack(recipe, config_path=None, analysis_config_path=None):
 
     :return: void
     """
+    log.info(f"Running in {__file__}")
+
     packing_config_data = ConfigLoader(config_path).config
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"]
@@ -44,7 +46,10 @@ def pack(recipe, config_path=None, analysis_config_path=None):
     env.helper = helper
 
     afviewer = None
-    if packing_config_data["save_analyze_result"]:
+    if (
+        packing_config_data["save_analyze_result"]
+        or packing_config_data["number_of_packings"] > 1
+    ):
         analyze = Analysis(
             env=env,
             viewer=afviewer,

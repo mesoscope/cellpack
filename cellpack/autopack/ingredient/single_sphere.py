@@ -52,6 +52,7 @@ class SingleSphereIngr(Ingredient):
         resolution_dictionary=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
+        size_options=None,
         use_orient_bias=False,
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
@@ -83,6 +84,7 @@ class SingleSphereIngr(Ingredient):
             representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
+            size_options=size_options,
             use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
@@ -95,6 +97,44 @@ class SingleSphereIngr(Ingredient):
         self.radius = radius
         self.encapsulating_radius = radius
         self.min_radius = radius
+
+    @staticmethod
+    def create_circular_mask(
+        x_width, y_width, z_width, center=None, radius=None, voxel_size=None
+    ):
+        """
+        Creates a circular mask of the given shape with the specified center
+        and radius
+        """
+        if center is None:  # use the middle of the image
+            center = (int(x_width / 2), int(y_width / 2), int(z_width / 2))
+        if (
+            radius is None
+        ):  # use the smallest distance between the center and image walls
+            radius = min(
+                center[0],
+                center[1],
+                center[2],
+                x_width - center[0],
+                y_width - center[1],
+                z_width - center[2],
+            )
+
+        if voxel_size is None:
+            voxel_size = numpy.array([1, 1, 1], dtype=int)
+
+        X, Y, Z = numpy.ogrid[:x_width, :y_width, :z_width]
+        dist_from_center = numpy.sqrt(
+            ((X - center[0]) * voxel_size[0]) ** 2
+            + ((Y - center[1]) * voxel_size[1]) ** 2
+            + ((Z - center[2]) * voxel_size[2]) ** 2
+        )
+
+        mask = dist_from_center <= radius
+        return mask
+
+    def get_radius(self):
+        return self.radius
 
     def collision_jitter(
         self,
@@ -175,8 +215,8 @@ class SingleSphereIngr(Ingredient):
         """
         ptsInSphere = env.grid.getPointsInSphere(jtrans, self.radius)  # indices
         compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
-        if self.compNum <= 0:
-            wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+        if self.compartment_id <= 0:
+            wrongPt = [cid for cid in compIdsSphere if cid != self.compartment_id]
             if len(wrongPt):
                 return True
         return False
@@ -253,43 +293,14 @@ class SingleSphereIngr(Ingredient):
 
             self.getData()
 
-    @staticmethod
-    def create_circular_mask(
-        x_width, y_width, z_width, center=None, radius=None, voxel_size=None
-    ):
-        """
-        Creates a circular mask of the given shape with the specified center
-        and radius
-        """
-        if center is None:  # use the middle of the image
-            center = (int(x_width / 2), int(y_width / 2), int(z_width / 2))
-        if (
-            radius is None
-        ):  # use the smallest distance between the center and image walls
-            radius = min(
-                center[0],
-                center[1],
-                center[2],
-                x_width - center[0],
-                y_width - center[1],
-                z_width - center[2],
-            )
-
-        if voxel_size is None:
-            voxel_size = numpy.array([1, 1, 1], dtype=int)
-
-        X, Y, Z = numpy.ogrid[:x_width, :y_width, :z_width]
-        dist_from_center = numpy.sqrt(
-            ((X - center[0]) * voxel_size[0]) ** 2
-            + ((Y - center[1]) * voxel_size[1]) ** 2
-            + ((Z - center[2]) * voxel_size[2]) ** 2
-        )
-
-        mask = dist_from_center <= radius
-        return mask
-
     def create_voxelization(
-        self, image_data, bounding_box, voxel_size, image_size, position, rotation
+        self,
+        image_data,
+        bounding_box,
+        voxel_size,
+        image_size,
+        position,
+        **kwargs,
     ):
         """
         Creates a voxelization for the sphere
@@ -300,7 +311,7 @@ class SingleSphereIngr(Ingredient):
             *image_size,
             center=voxelized_position,
             radius=self.radius,
-            voxel_size=voxel_size
+            voxel_size=voxel_size,
         )
         image_data[mask] = 255
 
