@@ -64,6 +64,10 @@ def pack(recipe, config_path=None, analysis_config_path=None):
         else:
             seed_list = None
 
+        if (seed_list is not None) and (len(seed_list) != packing_config_data["number_of_packings"]):
+            base_seed = int(seed_list[0])
+            seed_list = [base_seed + i for i in range(packing_config_data["number_of_packings"])]
+
         analyze.doloop(
             packing_config_data["number_of_packings"],
             env.boundingBox,
