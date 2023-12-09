@@ -221,8 +221,8 @@ class simulariumHelper(hostHelper.Helper):
         obj = self.getObject(name)
         obj.move(self.time, position, rotation, sub_points)
 
-    def place_object(self, name, position=None, rotation=None, sub_points=None):
-        obj = self.getObject(name)
+    def place_object(self, object_id, position=None, rotation=None, sub_points=None):
+        obj = self.getObject(object_id)
         obj.move(self.time, position, rotation, sub_points)
 
     def getObject(self, name):
@@ -312,7 +312,6 @@ class simulariumHelper(hostHelper.Helper):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
-
         new_instance = Instance(
             name,
             instance_id,
@@ -353,7 +352,6 @@ class simulariumHelper(hostHelper.Helper):
         return positions, values
 
     def add_grid_data_to_scene(self, incoming_name, positions, values, radius=0.5):
-
         positions, values = self.remove_nans(positions, values)
         if len(values) == 0:
             print("no values to display")
@@ -382,36 +380,71 @@ class simulariumHelper(hostHelper.Helper):
                 None,
             )
 
-    def add_compartment_to_scene(self, compartment):
+    def add_compartment_to_scene(self, compartment, instance_number):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
         radius = compartment.encapsulating_radius
-        if compartment.type == "mesh":
-            _, extension = os.path.splitext(compartment.path)
-            if extension == ".obj":
-                display_type = DISPLAY_TYPE.OBJ
-                url = (
-                    compartment.path
-                    if not os.path.isfile(compartment.path)
-                    else os.path.basename(compartment.path)
-                )
-                radius = 1
-        self.display_data[compartment.name] = DisplayData(
-            name=compartment.name,
-            display_type=display_type,
-            url=url,
-            color=simulariumHelper.format_rgb_color(compartment.color),
-        )
+        if compartment.name not in self.display_data:
+            if compartment.type == "mesh":
+                _, extension = os.path.splitext(compartment.path)
+                if extension == ".obj":
+                    display_type = DISPLAY_TYPE.OBJ
+                    url = (
+                        compartment.path
+                        if not os.path.isfile(compartment.path)
+                        else os.path.basename(compartment.path)
+                    )
+                    radius = 1
+            self.display_data[compartment.name] = DisplayData(
+                name=compartment.name,
+                display_type=display_type,
+                url=url,
+                color=simulariumHelper.format_rgb_color(compartment.color),
+            )
+        # if self.getObject(compartment.number) is None:
         self.add_instance(
             compartment.name,
             None,
-            compartment.number,
+            f"{compartment.number}-{self.time}",
             radius,
             compartment.position,
             np.identity(4),
         )
+        # self.set_object_static(compartment.number, compartment.position, np.identity(4))
 
-    def add_object_to_scene(
+    def add_object_to_scene(self, ingredient, packed_object, instance_number, adj_pos):
+        ingr_name = packed_object.name
+        sub_points = None
+        radius = packed_object.radius
+        if simulariumHelper.is_fiber(ingredient.type):
+            if ingredient.nbCurve == 0:
+                return
+            # TODO: get sub_points accurately
+            if ingredient.nbCurve > self.max_fiber_length:
+                self.max_fiber_length = ingredient.nbCurve
+            sub_points = ingredient.listePtLinear
+        if ingr_name not in self.display_data:
+            display_type, url = self.get_display_data(ingredient)
+            self.display_data[packed_object.name] = DisplayData(
+                name=ingr_name,
+                display_type=display_type,
+                url=url,
+                color=simulariumHelper.format_rgb_color(ingredient.color),
+            )
+
+        radius = radius if radius is not None else 10
+
+        self.add_instance(
+            ingr_name,
+            ingredient,
+            f"{ingr_name}-{packed_object.pt_index}-{instance_number}",
+            radius,
+            adj_pos,
+            packed_object.rotation,
+            sub_points,
+        )
+
+    def add_moving_object_to_scene(
         self,
         doc,
         ingredient,
@@ -486,42 +519,15 @@ class simulariumHelper(hostHelper.Helper):
         instance_number = 0
         for packed_object in objects:
             if packed_object.is_compartment:
-                self.add_compartment_to_scene(packed_object.ingredient)
-                continue
-            ingr_name = packed_object.name
-            ingredient = packed_object.ingredient
-            sub_points = None
-            radius = packed_object.radius
-            if simulariumHelper.is_fiber(ingredient.type):
-                if ingredient.nbCurve == 0:
-                    continue
-                # TODO: get sub_points accurately
-                if ingredient.nbCurve > self.max_fiber_length:
-                    self.max_fiber_length = ingredient.nbCurve
-                sub_points = ingredient.listePtLinear
-            if ingr_name not in self.display_data:
-                display_type, url = self.get_display_data(ingredient)
-                self.display_data[packed_object.name] = DisplayData(
-                    name=ingr_name,
-                    display_type=display_type,
-                    url=url,
-                    color=simulariumHelper.format_rgb_color(ingredient.color),
+                self.add_compartment_to_scene(packed_object.ingredient, instance_number)
+            else:
+                ingredient = packed_object.ingredient
+                adj_pos = ingredient.representations.get_adjusted_position(
+                    packed_object.position, packed_object.rotation
                 )
-
-            radius = radius if radius is not None else 10
-            adj_pos = ingredient.representations.get_adjusted_position(
-                packed_object.position, packed_object.rotation
-            )
-
-            self.add_instance(
-                ingr_name,
-                ingredient,
-                f"{ingr_name}-{packed_object.pt_index}-{instance_number}",
-                radius,
-                adj_pos,
-                packed_object.rotation,
-                sub_points,
-            )
+                self.add_object_to_scene(
+                    ingredient, packed_object, instance_number, adj_pos
+                )
             instance_number += 1
             if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
@@ -791,7 +797,7 @@ class simulariumHelper(hostHelper.Helper):
             quality=res,
             visible=1,
         )
-        self.add_object_to_scene(
+        self.add_moving_object_to_scene(
             None,
             baseCyl,
             parent=parent,
@@ -836,7 +842,7 @@ class simulariumHelper(hostHelper.Helper):
                         color,
                     ]
                 )
-        self.add_object_to_scene(None, baseSphere, parent=parent)
+        self.add_moving_object_to_scene(None, baseSphere, parent=parent)
         if pos is not None:
             self.setTranslation(baseSphere, pos)
         return [baseSphere, baseSphere]
@@ -886,7 +892,7 @@ class simulariumHelper(hostHelper.Helper):
         from Simularium.Points import Points
 
         obj = Points(name, **kw)
-        self.add_object_to_scene(self.getCurrentScene(), obj, parent=parent)
+        self.add_moving_object_to_scene(self.getCurrentScene(), obj, parent=parent)
         return obj
 
     def updatePoly(self, polygon, faces=None, vertices=None):
@@ -937,7 +943,7 @@ class simulariumHelper(hostHelper.Helper):
         parent = None
         if "parent" in kw:
             parent = kw["parent"]
-        self.add_object_to_scene(self.getCurrentScene(), box, parent=parent)
+        self.add_moving_object_to_scene(self.getCurrentScene(), box, parent=parent)
         return box, box
 
     def updateBox(
