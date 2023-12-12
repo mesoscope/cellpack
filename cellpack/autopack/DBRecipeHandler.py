@@ -23,11 +23,12 @@ class DataDoc(object):
 
     @staticmethod
     def is_nested_list(item):
-        return (
-            isinstance(item, list)
-            and len(item) > 0
-            and isinstance(item[0], (list, tuple))
-        )
+        if not isinstance(item, list):
+            return False
+        for element in item:
+            if isinstance(element, (list, tuple)):
+                return True
+        return False
 
     @staticmethod
     def is_db_dict(item):

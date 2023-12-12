@@ -29,6 +29,8 @@ def test_is_nested_list():
     assert DataDoc.is_nested_list([]) is False
     assert DataDoc.is_nested_list([[], []]) is True
     assert DataDoc.is_nested_list([[1, 2], [3, 4]]) is True
+    assert DataDoc.is_nested_list([1, [1, 2]]) is True
+    assert DataDoc.is_nested_list([[1, 2], 1]) is True
 
 
 def test_is_obj():
