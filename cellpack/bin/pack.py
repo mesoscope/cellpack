@@ -12,6 +12,7 @@ from cellpack.autopack.Environment import Environment
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
+from cellpack.autopack.utils import get_seed_list
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -57,16 +58,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
         )
         log.info(f"saving to {env.out_folder}")
 
-        if packing_config_data["randomness_seed"] is not None:
-            seed_list = packing_config_data["randomness_seed"]
-        elif recipe_data.get("randomness_seed") is not None:
-            seed_list = recipe_data["randomness_seed"]
-        else:
-            seed_list = None
-
-        if (seed_list is not None) and (len(seed_list) != packing_config_data["number_of_packings"]):
-            base_seed = int(seed_list[0])
-            seed_list = [base_seed + i for i in range(packing_config_data["number_of_packings"])]
+        seed_list = get_seed_list(packing_config_data, recipe_data)
 
         analyze.doloop(
             packing_config_data["number_of_packings"],

@@ -83,5 +83,6 @@
                 "max": 15
             }
         }
-    }
+    },
+    "randomness_seed": 0
 }
