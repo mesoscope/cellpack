@@ -32,6 +32,12 @@ def read_json_file(path):
 
 
 def write_json_file(path, data):
-    Path(path).parent.mkdir(exist_ok=True, parents=True)
-    with open(path, "w") as file_name:
-        json.dump(data, file_name)
+    if not Path(path).exists():
+        Path(path).parent.mkdir(exist_ok=True, parents=True)
+        with open(path, "w") as file_name:
+            json.dump(data, file_name)
+    else:
+        print(
+            f"{path} already exists. If uploading new data, provide a unique recipe name."
+        )
+        return
