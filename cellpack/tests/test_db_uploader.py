@@ -1,14 +1,8 @@
-from cellpack.autopack.DBRecipeHandler import DBRecipeHandler
+from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.tests.mocks.mock_db import MockDB
 from unittest.mock import MagicMock, patch
 
 mock_db = MockDB({})
-
-
-def test_is_nested_list():
-    assert DBRecipeHandler.is_nested_list([]) is False
-    assert DBRecipeHandler.is_nested_list([[], []]) is True
-    assert DBRecipeHandler.is_nested_list([[1, 2], [3, 4]]) is True
 
 
 def test_prep_data_for_db():
@@ -25,7 +19,7 @@ def test_prep_data_for_db():
         },
         "max_jitter": [1, 1, 0],
     }
-    new_data = DBRecipeHandler.prep_data_for_db(input_data)
+    new_data = DBUploader.prep_data_for_db(input_data)
     assert new_data == converted_data
 
 
@@ -38,7 +32,7 @@ def test_upload_data_with_recipe_and_id():
         "composition": {"test": {"inherit": "firebase:test_collection/test_id"}},
     }
     id = "test_id"
-    recipe_doc = DBRecipeHandler(mock_db)
+    recipe_doc = DBUploader(mock_db)
     expected_result = recipe_doc.upload_data(collection, data, id)
 
     assert expected_result[0] == "test_id"
@@ -51,7 +45,7 @@ def test_upload_data_with_object():
         "name": "test",
         "test_key": "test_value",
     }
-    object_doc = DBRecipeHandler(mock_db)
+    object_doc = DBUploader(mock_db)
     expected_result = object_doc.upload_data(collection, data)
 
     assert expected_result[0] == "test_id"
@@ -60,14 +54,14 @@ def test_upload_data_with_object():
 
 def test_upload_objects():
     data = {"test": {"test_key": "test_value"}}
-    object_doc = DBRecipeHandler(mock_db)
+    object_doc = DBUploader(mock_db)
     object_doc.upload_objects(data)
     assert object_doc.objects_to_path_map == {"test": "firebase:objects/test_id"}
 
 
 def test_upload_objects_with_gradient():
     data = {"test": {"test_key": "test_value", "gradient": "test_grad_name"}}
-    object_handler = DBRecipeHandler(mock_db)
+    object_handler = DBUploader(mock_db)
     object_handler.grad_to_path_map = {"test_grad_name": "firebase:gradients/test_id"}
 
     with patch(
@@ -102,7 +96,7 @@ def test_upload_compositions():
         },
     }
 
-    composition_doc = DBRecipeHandler(mock_db)
+    composition_doc = DBUploader(mock_db)
     references_to_update = composition_doc.upload_compositions(
         composition, recipe_to_save, recipe_data
     )
@@ -116,7 +110,7 @@ def test_upload_compositions():
 
 def test_upload_gradients():
     data = [{"name": "test_grad_name", "test_key": "test_value"}]
-    gradient_doc = DBRecipeHandler(mock_db)
+    gradient_doc = DBUploader(mock_db)
     gradient_doc.upload_gradients(data)
     assert gradient_doc.grad_to_path_map == {
         "test_grad_name": "firebase:gradients/test_id"
@@ -130,8 +124,8 @@ def test_get_recipe_id():
         "objects": None,
         "composition": {},
     }
-    recipe_doc = DBRecipeHandler(mock_db)
-    assert recipe_doc.get_recipe_id(recipe_data) == "test_v-1.0.0"
+    recipe_doc = DBUploader(mock_db)
+    assert recipe_doc._get_recipe_id(recipe_data) == "test_v_1.0.0"
 
 
 def test_upload_collections():
@@ -154,7 +148,7 @@ def test_upload_collections():
         },
     }
 
-    recipe_doc = DBRecipeHandler(mock_db)
+    recipe_doc = DBUploader(mock_db)
     expected_result = {
         "name": "one_sphere",
         "version": "1.0.0",
@@ -188,7 +182,7 @@ def test_upload_recipe():
         },
     }
 
-    recipe_doc = DBRecipeHandler(mock_db)
+    recipe_doc = DBUploader(mock_db)
     recipe_doc.upload_recipe(recipe_meta_data, recipe_data)
     assert recipe_doc.comp_to_path_map == {
         "space": {"path": "firebase:composition/test_id", "id": "test_id"},

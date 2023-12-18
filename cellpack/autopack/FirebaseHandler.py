@@ -1,5 +1,8 @@
+import ast
 import firebase_admin
 from firebase_admin import credentials, firestore
+from google.cloud.exceptions import NotFound
+from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
 
 class FirebaseHandler(object):
@@ -7,18 +10,26 @@ class FirebaseHandler(object):
     Retrieve data and perform common tasks when working with firebase.
     """
 
-    def __init__(self, cred_path):
-        login = credentials.Certificate(cred_path)
-        firebase_admin.initialize_app(login)
-        self.db = firestore.client()
+    # use class attributes to maintain a consistent state across all instances
+    _initialized = False
+    _db = None
+
+    def __init__(self):
+        # check if firebase is already initialized
+        if not FirebaseHandler._initialized:
+            cred_path = FirebaseHandler.get_creds()
+            login = credentials.Certificate(cred_path)
+            firebase_admin.initialize_app(login)
+            FirebaseHandler._initialized = True
+            FirebaseHandler._db = firestore.client()
+
+        self.db = FirebaseHandler._db
         self.name = "firebase"
 
+    # common utility methods
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
-
-    def db_name(self):
-        return self.name
 
     @staticmethod
     def doc_id(doc):
@@ -27,6 +38,10 @@ class FirebaseHandler(object):
     @staticmethod
     def create_path(collection, doc_id):
         return f"firebase:{collection}/{doc_id}"
+
+    @staticmethod
+    def create_timestamp():
+        return firestore.SERVER_TIMESTAMP
 
     @staticmethod
     def get_path_from_ref(doc):
@@ -40,24 +55,41 @@ class FirebaseHandler(object):
         id = components[1]
         return collection, id
 
+    # Create methods
+    def set_doc(self, collection, id, data):
+        doc, doc_ref = self.get_doc_by_id(collection, id)
+        if not doc:
+            doc_ref = self.db.collection(collection).document(id)
+            doc_ref.set(data)
+            print(f"successfully uploaded to path: {doc_ref.path}")
+            return doc_ref
+        else:
+            print(
+                f"ERROR: {doc_ref.path} already exists. If uploading new data, provide a unique recipe name."
+            )
+            return
+
+    def upload_doc(self, collection, data):
+        return self.db.collection(collection).add(data)
+
+    # Read methods
     @staticmethod
-    def update_reference_on_doc(doc_ref, index, new_item_ref):
-        doc_ref.update({index: new_item_ref})
+    def get_creds():
+        creds = read_json_file("./.creds")
+        if creds is None or "firebase" not in creds:
+            creds = FirebaseHandler.write_creds_path()
+        return creds["firebase"]
 
     @staticmethod
-    def update_elements_in_array(doc_ref, index, new_item_ref, remove_item):
-        doc_ref.update({index: firestore.ArrayRemove([remove_item])})
-        doc_ref.update({index: firestore.ArrayUnion([new_item_ref])})
+    def get_username():
+        creds = read_json_file("./.creds")
+        try:
+            return creds["username"]
+        except KeyError:
+            raise ValueError("No username found in .creds file")
 
-    @staticmethod
-    def is_reference(path):
-        if not isinstance(path, str):
-            return False
-        if path is None:
-            return False
-        if path.startswith("firebase:"):
-            return True
-        return False
+    def db_name(self):
+        return self.name
 
     def get_doc_by_name(self, collection, name):
         db = self.db
@@ -65,9 +97,9 @@ class FirebaseHandler(object):
         docs = data_ref.where("name", "==", name).get()  # docs is an array
         return docs
 
-    # `doc` is a DocumentSnapshot object
-    # `doc_ref` is a DocumentReference object to perform operations on the doc
     def get_doc_by_id(self, collection, id):
+        # `doc` is a DocumentSnapshot object
+        # `doc_ref` is a DocumentReference object to perform operations on the doc
         doc_ref = self.db.collection(collection).document(id)
         doc = doc_ref.get()
         if doc.exists:
@@ -79,19 +111,56 @@ class FirebaseHandler(object):
         collection, id = FirebaseHandler.get_collection_id_from_path(path)
         return self.get_doc_by_id(collection, id)
 
-    def set_doc(self, collection, id, data):
-        doc, doc_ref = self.get_doc_by_id(collection, id)
-        if not doc:
-            doc_ref = self.db.collection(collection).document(id)
-            doc_ref.set(data)
-            print(f"successfully uploaded to path: {doc_ref.path}")
-            return doc_ref
-        else:
-            print(f"ERROR, already data at this path:{collection}/{id}")
-            return
+    # Update methods
+    def update_doc(self, collection, id, data):
+        doc_ref = self.db.collection(collection).document(id)
+        doc_ref.update(data)
+        print(f"successfully updated to path: {doc_ref.path}")
+        return doc_ref
 
-    def upload_doc(self, collection, data):
-        return self.db.collection(collection).add(data)
+    @staticmethod
+    def update_reference_on_doc(doc_ref, index, new_item_ref):
+        doc_ref.update({index: new_item_ref})
+
+    @staticmethod
+    def update_elements_in_array(doc_ref, index, new_item_ref, remove_item):
+        doc_ref.update({index: firestore.ArrayRemove([remove_item])})
+        doc_ref.update({index: firestore.ArrayUnion([new_item_ref])})
+
+    def update_or_create(self, collection, id, data):
+        """
+        If the input id exists, update the doc. If not, create a new file.
+        """
+        try:
+            self.update_doc(collection, id, data)
+        except NotFound:
+            self.set_doc(collection, id, data)
+
+    # other utils
+    @staticmethod
+    def write_creds_path():
+        path = ast.literal_eval(input("provide path to firebase credentials: "))
+        data = read_json_file(path)
+        if data is None:
+            raise ValueError("The path to your credentials doesn't exist")
+        firebase_cred = {"firebase": data}
+        creds = read_json_file("./.creds")
+        if creds is None:
+            write_json_file("./.creds", firebase_cred)
+        else:
+            creds["firebase"] = data
+            write_json_file("./.creds", creds)
+        return firebase_cred
+
+    @staticmethod
+    def is_reference(path):
+        if not isinstance(path, str):
+            return False
+        if path is None:
+            return False
+        if path.startswith("firebase:"):
+            return True
+        return False
 
     @staticmethod
     def is_firebase_obj(obj):
