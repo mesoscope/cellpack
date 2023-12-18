@@ -80,13 +80,16 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">environ</span>
+<span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">ssl</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBRecipeLoader</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.database_ids</span> <span class="kn">import</span> <span class="n">DATABASE_IDS</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.meta_enum</span> <span class="kn">import</span> <span class="n">MetaEnum</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
 
 
 <span class="n">packageContainsVFCommands</span> <span class="o">=</span> <span class="mi">1</span>
@@ -240,21 +243,14 @@
                 <span class="n">autopackdir</span> <span class="o">=</span> <span class="n">pref_path</span><span class="p">[</span><span class="s2">&quot;autopackdir&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="DATABASE_NAME">
-<a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.DATABASE_NAME">[docs]</a>
-<span class="k">class</span> <span class="nc">DATABASE_NAME</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
-    <span class="n">GITHUB</span> <span class="o">=</span> <span class="s2">&quot;github:&quot;</span>
-    <span class="n">FIREBASE</span> <span class="o">=</span> <span class="s2">&quot;firebase:&quot;</span></div>
-
-
-
 <span class="n">REPLACE_PATH</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;autoPACKserver&quot;</span><span class="p">:</span> <span class="n">autoPACKserver</span><span class="p">,</span>
     <span class="s2">&quot;autopackdir&quot;</span><span class="p">:</span> <span class="n">autopackdir</span><span class="p">,</span>
     <span class="s2">&quot;autopackdata&quot;</span><span class="p">:</span> <span class="n">appdata</span><span class="p">,</span>
-    <span class="n">DATABASE_NAME</span><span class="o">.</span><span class="n">GITHUB</span><span class="p">:</span> <span class="n">autoPACKserver</span><span class="p">,</span>
-    <span class="n">DATABASE_NAME</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">GITHUB</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">:</span> <span class="n">autoPACKserver</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">FIREBASE</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">}</span>
+
 
 <span class="k">global</span> <span class="n">CURRENT_RECIPE_PATH</span>
 <span class="n">CURRENT_RECIPE_PATH</span> <span class="o">=</span> <span class="n">appdata</span>
@@ -351,7 +347,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    @param file_path: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">DATABASE_NAME</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">with_colon</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">file_path</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -470,10 +466,16 @@
 <span class="k">def</span> <span class="nf">load_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">is_remote_path</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
         <span class="n">database_name</span><span class="p">,</span> <span class="n">file_path</span> <span class="o">=</span> <span class="n">convert_db_shortname_to_url</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="c1"># command example: `pack -r firebase:recipes/[FIREBASE-RECIPE-ID] -c [CONFIG-FILE-PATH]`</span>
         <span class="k">if</span> <span class="n">database_name</span> <span class="o">==</span> <span class="s2">&quot;firebase&quot;</span><span class="p">:</span>
-            <span class="c1"># TODO: read from firebase</span>
-            <span class="c1"># return data</span>
-            <span class="k">pass</span>
+            <span class="n">db</span> <span class="o">=</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">database_name</span><span class="p">)</span>
+            <span class="n">db_handler</span> <span class="o">=</span> <span class="n">DBRecipeLoader</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+            <span class="n">recipe_id</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">db_doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">collect_docs_by_id</span><span class="p">(</span>
+                <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">recipe_id</span>
+            <span class="p">)</span>
+            <span class="n">downloaded_recipe_data</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">prep_db_doc_for_download</span><span class="p">(</span><span class="n">db_doc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">downloaded_recipe_data</span><span class="p">,</span> <span class="n">database_name</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">local_file_path</span> <span class="o">=</span> <span class="n">get_local_file_location</span><span class="p">(</span>
                 <span class="n">file_path</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="n">destination</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span>
@@ -482,7 +484,7 @@
         <span class="n">local_file_path</span> <span class="o">=</span> <span class="n">get_local_file_location</span><span class="p">(</span>
             <span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="n">destination</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">local_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">local_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)),</span> <span class="kc">None</span></div>
 
 
 
@@ -643,15 +645,29 @@
 
 
 
+<div class="viewcode-block" id="write_username_to_creds">
+<a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.write_username_to_creds">[docs]</a>
+<span class="k">def</span> <span class="nf">write_username_to_creds</span><span class="p">():</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
+    <span class="n">creds</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="s2">&quot;./.creds&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">creds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;username&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">creds</span><span class="p">:</span>
+        <span class="n">creds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">creds</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="n">write_json_file</span><span class="p">(</span><span class="s2">&quot;./.creds&quot;</span><span class="p">,</span> <span class="n">creds</span><span class="p">)</span></div>
+
+
+
 <span class="c1"># we should read a file to fill the RECIPE Dictionary</span>
 <span class="c1"># so we can add some and write/save setup</span>
 <span class="c1"># afdir  or user_pref</span>
-
 <span class="k">if</span> <span class="n">checkAtstartup</span><span class="p">:</span>
     <span class="n">checkPath</span><span class="p">()</span>
     <span class="c1"># updatePathJSON()</span>
     <span class="c1"># checkRecipeAvailable()</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;path are updated &quot;</span><span class="p">)</span>
+
+<span class="c1"># write username to creds</span>
+<span class="n">write_username_to_creds</span><span class="p">()</span>
 
 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;currently number recipes is </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="c1"># check cache directory create if doesnt exit.abs//should be in user pref?</span>

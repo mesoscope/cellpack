@@ -37,27 +37,18 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.bin.upload</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">import</span> <span class="nn">fire</span>
+<span></span><span class="kn">import</span> <span class="nn">fire</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.FirebaseHandler</span> <span class="kn">import</span> <span class="n">FirebaseHandler</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBRecipeHandler</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBUploader</span>
 
+<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.database_ids</span> <span class="kn">import</span> <span class="n">DATABASE_IDS</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
-
-
-<div class="viewcode-block" id="DATABASE_IDS">
-<a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.upload.DATABASE_IDS">[docs]</a>
-<span class="k">class</span> <span class="nc">DATABASE_IDS</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">FIREBASE</span> <span class="o">=</span> <span class="s2">&quot;firebase&quot;</span>
-    <span class="n">GITHUB</span> <span class="o">=</span> <span class="s2">&quot;github&quot;</span></div>
-
 
 
 <div class="viewcode-block" id="upload">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.upload.upload">[docs]</a>
 <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span>
     <span class="n">recipe_path</span><span class="p">,</span>
-    <span class="n">cred_path</span><span class="p">,</span>
     <span class="n">db_id</span><span class="o">=</span><span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -66,13 +57,12 @@
 <span class="sd">    :return: void</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">db_id</span> <span class="o">==</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">:</span>
-        <span class="n">cred_path</span> <span class="o">=</span> <span class="n">cred_path</span>
         <span class="c1"># fetch the service key json file</span>
-        <span class="n">db_handler</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="p">(</span><span class="n">cred_path</span><span class="p">)</span>
+        <span class="n">db_handler</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="p">()</span>
         <span class="n">recipe_loader</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe_path</span><span class="p">)</span>
-        <span class="n">recipe_full_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">recipe_data</span>
+        <span class="n">recipe_full_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">resolve_inheritance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">recipe_meta_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">get_only_recipe_metadata</span><span class="p">()</span>
-        <span class="n">recipe_db_handler</span> <span class="o">=</span> <span class="n">DBRecipeHandler</span><span class="p">(</span><span class="n">db_handler</span><span class="p">)</span>
+        <span class="n">recipe_db_handler</span> <span class="o">=</span> <span class="n">DBUploader</span><span class="p">(</span><span class="n">db_handler</span><span class="p">)</span>
         <span class="n">recipe_db_handler</span><span class="o">.</span><span class="n">upload_recipe</span><span class="p">(</span><span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_full_data</span><span class="p">)</span></div>
 
 

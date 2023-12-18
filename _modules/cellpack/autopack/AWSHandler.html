@@ -52,6 +52,10 @@
 <span class="sd">    Handles all the AWS S3 operations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># class attributes</span>
+    <span class="n">_session_created</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_s3_client</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">bucket_name</span><span class="p">,</span>
@@ -60,12 +64,21 @@
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">bucket_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">folder_name</span> <span class="o">=</span> <span class="n">sub_folder_name</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+        <span class="c1"># Create a session if one does not exist</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">AWSHandler</span><span class="o">.</span><span class="n">_session_created</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_create_session</span><span class="p">(</span><span class="n">region_name</span><span class="p">)</span>
+            <span class="n">AWSHandler</span><span class="o">.</span><span class="n">_session_created</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># use the existing session</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span> <span class="o">=</span> <span class="n">AWSHandler</span><span class="o">.</span><span class="n">_s3_client</span>
+
+    <span class="k">def</span> <span class="nf">_create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">):</span>
+        <span class="n">AWSHandler</span><span class="o">.</span><span class="n">_s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
             <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
             <span class="n">endpoint_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;https://s3.</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">.amazonaws.com&quot;</span><span class="p">,</span>
             <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3_client</span> <span class="o">=</span> <span class="n">AWSHandler</span><span class="o">.</span><span class="n">_s3_client</span>
 
 <div class="viewcode-block" id="AWSHandler.get_aws_object_key">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.AWSHandler.AWSHandler.get_aws_object_key">[docs]</a>
@@ -135,7 +148,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_presigned_url</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_presigned_url</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

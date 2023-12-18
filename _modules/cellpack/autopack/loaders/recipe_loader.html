@@ -57,6 +57,7 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.migrate_v1_to_v2</span> <span class="kn">import</span> <span class="n">convert</span> <span class="k">as</span> <span class="n">convert_v1_to_v2</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.migrate_v2_to_v2_1</span> <span class="kn">import</span> <span class="n">convert</span> <span class="k">as</span> <span class="n">convert_v2_to_v2_1</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBRecipeLoader</span>
 
 <span class="n">encoder</span><span class="o">.</span><span class="n">FLOAT_REPR</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;.8g&quot;</span><span class="p">)</span>
 <span class="n">CURRENT_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2.1&quot;</span>
@@ -213,8 +214,15 @@
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">old_recipe</span><span class="p">[</span><span class="s1">&#39;format_version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a format version we support&quot;</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">new_values</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolve_inheritance</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">new_values</span><span class="p">,</span> <span class="n">database_name</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">database_name</span> <span class="o">==</span> <span class="s2">&quot;firebase&quot;</span><span class="p">:</span>
+            <span class="n">objects</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">composition</span> <span class="o">=</span> <span class="n">DBRecipeLoader</span><span class="o">.</span><span class="n">collect_and_sort_data</span><span class="p">(</span>
+                <span class="n">new_values</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">new_values</span> <span class="o">=</span> <span class="n">DBRecipeLoader</span><span class="o">.</span><span class="n">compile_db_recipe_data</span><span class="p">(</span>
+                <span class="n">new_values</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">gradients</span><span class="p">,</span> <span class="n">composition</span>
+            <span class="p">)</span>
         <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">default_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">deep_merge</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">,</span> <span class="n">new_values</span><span class="p">)</span>
         <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">_sanitize_format_version</span><span class="p">(</span>
@@ -225,9 +233,10 @@
 
         <span class="c1"># TODO: request any external data before returning</span>
         <span class="k">if</span> <span class="s2">&quot;objects&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">:</span>
-            <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">resolve_inheritance</span><span class="p">(</span>
-                <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">resolve_inheritance</span><span class="p">:</span>
+                <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">resolve_inheritance</span><span class="p">(</span>
+                    <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
             <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">reps</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;representations&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;representations&quot;</span> <span class="ow">in</span> <span class="n">obj</span> <span class="k">else</span> <span class="p">{}</span>
                 <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;representations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Representations</span><span class="p">(</span>
@@ -235,14 +244,25 @@
                     <span class="n">atomic</span><span class="o">=</span><span class="n">reps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;atomic&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                     <span class="n">packing</span><span class="o">=</span><span class="n">reps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;packing&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="p">)</span>
-                <span class="n">partner_settings</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;partners&quot;</span> <span class="ow">in</span> <span class="n">obj</span> <span class="k">else</span> <span class="p">[]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partner_settings</span><span class="p">):</span>
-                    <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Partners</span><span class="p">(</span><span class="n">partner_settings</span><span class="p">)</span>
+                <span class="c1"># the key &quot;all_partners&quot; exists in obj[&quot;partners&quot;] if the recipe is downloaded from a remote db</span>
+                <span class="n">partner_settings</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="p">[]</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="s2">&quot;partners&quot;</span> <span class="ow">in</span> <span class="n">obj</span>
+                        <span class="ow">and</span> <span class="s2">&quot;all_partners&quot;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">][</span><span class="s2">&quot;all_partners&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="k">else</span> <span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;partners&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="p">)</span>
+                <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Partners</span><span class="p">(</span><span class="n">partner_settings</span><span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">obj</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]):</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not an allowed type&quot;</span><span class="p">)</span>
 
         <span class="c1"># handle gradients</span>
-        <span class="k">if</span> <span class="s2">&quot;gradients&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">:</span>
+        <span class="c1"># gradients in firebase recipes are already stored as a list of dicts</span>
+        <span class="k">if</span> <span class="s2">&quot;gradients&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">],</span> <span class="nb">list</span>
+        <span class="p">):</span>
             <span class="n">gradients</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">gradient_name</span><span class="p">,</span> <span class="n">gradient_dict</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">gradients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GradientData</span><span class="p">(</span><span class="n">gradient_dict</span><span class="p">,</span> <span class="n">gradient_name</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
