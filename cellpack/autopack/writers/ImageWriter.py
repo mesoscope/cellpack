@@ -35,7 +35,9 @@ class ImageWriter:
             self.voxel_size = numpy.array(voxel_size)
         else:
             grid_spacing = self.env.grid.gridSpacing
-            self.voxel_size = numpy.array([1, 1, 1]) * grid_spacing  # units of grid points per voxel
+            self.voxel_size = (
+                numpy.array([1, 1, 1]) * grid_spacing
+            )  # units of grid points per voxel
 
         self.hollow = hollow
 
@@ -187,7 +189,9 @@ class ImageWriter:
         for ct, (channel_name, channel_image) in enumerate(self.image_data.items()):
             concatenated_image[ct] = channel_image
             channel_names.append(channel_name)
-            channel_colors.append(self.channel_colors.get(channel_name, [255, 255, 255]))
+            channel_colors.append(
+                self.channel_colors.get(channel_name, [255, 255, 255])
+            )
 
         if self.convolution_options is not None:
             concatenated_image = self.convolve_image(
@@ -205,7 +209,11 @@ class ImageWriter:
         Saves the results as a tiff file
         """
         print(f"Exporting image to {self.output_path}")
-        concatenated_image, channel_names, channel_colors = self.concatenate_image_data()
+        (
+            concatenated_image,
+            channel_names,
+            channel_colors,
+        ) = self.concatenate_image_data()
         if len(self.channel_colors) != 0:
             filepath = self.output_path / f"voxelized_image_{self.name}.ome.tiff"
             OmeTiffWriter.save(
