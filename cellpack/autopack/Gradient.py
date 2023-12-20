@@ -363,3 +363,26 @@ class Gradient:
             rnd -= w
             if rnd < 0:
                 return listPts[i]
+
+    def create_voxelization(self, image_writer):
+        """
+        Creates a voxelized representation of the gradient distances and weights
+        """
+        image_writer.channel_colors = {"distances": [255, 0, 0], "weight": [0, 255, 0]}
+
+        for channel in ["distances", "weight"]:
+            channel_values = getattr(self, channel, None)
+            image_writer.image_data[channel] = numpy.zeros(
+                image_writer.image_size, dtype=numpy.uint8
+            )
+            if channel_values is None:
+                continue
+            normalized_values = self.get_normalized_values(channel_values)
+            reshaped_values = numpy.reshape(
+                normalized_values, image_writer.image_size, order="F"
+            )
+            image_writer.image_data[channel] = numpy.where(
+                reshaped_values > 0, numpy.rint(reshaped_values * 255), 0
+            )
+
+        return image_writer

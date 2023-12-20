@@ -70,6 +70,7 @@ def pack(recipe, config_path=None, analysis_config_path=None):
             recipe_version=recipe_data["version"],
             image_export_options=packing_config_data.get("image_export_options"),
             parallel=packing_config_data.get("parallel", False),
+            save_gradient_data_as_image=packing_config_data.get("save_gradient_data_as_image", False),
         )
         if analysis_config_path is not None:
             analyze.run_analysis_workflow(

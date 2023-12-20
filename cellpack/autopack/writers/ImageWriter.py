@@ -15,28 +15,27 @@ class ImageWriter:
         name=None,
         output_path=None,
         voxel_size=None,
-        num_voxels=None,
         hollow=False,
         convolution_options=None,
         projection_axis="z",
     ):
         self.env = env
 
-        self.name = "default"
         if name is not None:
             self.name = name
+        else:
+            self.name = "default"
 
-        self.output_path = Path(self.env.out_folder)
         if output_path is not None:
             self.output_path = Path(output_path)
+        else:
+            self.output_path = Path(self.env.out_folder)
 
-        self.voxel_size = numpy.array([1, 1, 1])  # units of grid points per voxel
         if voxel_size is not None:
             self.voxel_size = numpy.array(voxel_size)
-        elif num_voxels is not None:
-            self.voxel_size = (
-                self.env.boundingBox[1] - self.env.boundingBox[0]
-            ) / numpy.array(num_voxels)
+        else:
+            grid_spacing = self.env.grid.gridSpacing
+            self.voxel_size = numpy.array([1, 1, 1]) * grid_spacing  # units of grid points per voxel
 
         self.hollow = hollow
 
@@ -47,6 +46,7 @@ class ImageWriter:
             ).astype(int)
         )
         self.image_data = {}
+        self.channel_colors = {}
 
         self.convolution_options = convolution_options
 
@@ -174,22 +174,20 @@ class ImageWriter:
             conv_img[channel] = self.convolve_channel(image[channel], psf)
         return conv_img
 
-    def create_voxelization(self):
+    def concatenate_image_data(self):
         """
         Creates a voxelized representation of the current scene
         """
-
-        self.image_data, channel_colors = self.env.create_voxelization(
-            self.image_data, self.image_size, self.voxel_size, self.hollow
-        )
-
         concatenated_image = numpy.zeros(
             (len(self.image_data), *self.image_size), dtype=numpy.uint8
         )
+
         channel_names = []
+        channel_colors = []
         for ct, (channel_name, channel_image) in enumerate(self.image_data.items()):
             concatenated_image[ct] = channel_image
             channel_names.append(channel_name)
+            channel_colors.append(self.channel_colors.get(channel_name, [255, 255, 255]))
 
         if self.convolution_options is not None:
             concatenated_image = self.convolve_image(
@@ -207,8 +205,8 @@ class ImageWriter:
         Saves the results as a tiff file
         """
         print(f"Exporting image to {self.output_path}")
-        concatenated_image, channel_names, channel_colors = self.create_voxelization()
-        if len(channel_names) != 0:
+        concatenated_image, channel_names, channel_colors = self.concatenate_image_data()
+        if len(self.channel_colors) != 0:
             filepath = self.output_path / f"voxelized_image_{self.name}.ome.tiff"
             OmeTiffWriter.save(
                 concatenated_image,
