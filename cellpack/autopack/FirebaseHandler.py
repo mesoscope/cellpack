@@ -38,8 +38,9 @@ class FirebaseHandler(object):
         options = {"1": "dev", "2": "staging"}
         print("Choose database:")
         for key, value in options.items():
-            print(f"{key}: {value}")
+            print(f"[{key}] {value}")
         choice = input("Enter number: ").strip()
+        print(f"Using {options.get(choice, 'dev')} database -------------")
         return options.get(choice, "dev")  # default to dev db
 
     @staticmethod
