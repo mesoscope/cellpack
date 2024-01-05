@@ -4,16 +4,15 @@
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
-    "number_of_packings": 1,
+    "number_of_packings": 4,
     "out": "out/analyze",
     "overwrite_place_method": true,
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": false,
     "save_plot_figures": true,
-    "spacing": 2.5,
+    "spacing": 5,
     "use_periodicity": false,
     "show_sphere_trees": false,
-    "load_from_grid_file": true,
-    "upload_results": false
+    "load_from_grid_file": false
 }
