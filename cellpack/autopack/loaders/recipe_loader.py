@@ -17,6 +17,7 @@ from cellpack.autopack.interface_objects import (
 )
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert as convert_v1_to_v2
 from cellpack.autopack.loaders.migrate_v2_to_v2_1 import convert as convert_v2_to_v2_1
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 CURRENT_VERSION = "2.1"
@@ -165,8 +166,15 @@ class RecipeLoader(object):
                 f"{old_recipe['format_version']} is not a format version we support"
             )
 
-    def _read(self):
-        new_values = autopack.load_file(self.file_path, cache="recipes")
+    def _read(self, resolve_inheritance=True):
+        new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
+        if database_name == "firebase":
+            objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
+                new_values["composition"]
+            )
+            new_values = DBRecipeLoader.compile_db_recipe_data(
+                new_values, objects, gradients, composition
+            )
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
@@ -177,9 +185,10 @@ class RecipeLoader(object):
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
-            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
-                recipe_data["objects"]
-            )
+            if resolve_inheritance:
+                recipe_data["objects"] = RecipeLoader.resolve_inheritance(
+                    recipe_data["objects"]
+                )
             for _, obj in recipe_data["objects"].items():
                 reps = obj["representations"] if "representations" in obj else {}
                 obj["representations"] = Representations(
@@ -187,14 +196,25 @@ class RecipeLoader(object):
                     atomic=reps.get("atomic", None),
                     packing=reps.get("packing", None),
                 )
-                partner_settings = obj["partners"] if "partners" in obj else []
-                if len(partner_settings):
-                    obj["partners"] = Partners(partner_settings)
+                # the key "all_partners" exists in obj["partners"] if the recipe is downloaded from a remote db
+                partner_settings = (
+                    []
+                    if (
+                        "partners" in obj
+                        and "all_partners" in obj["partners"]
+                        and not obj["partners"]["all_partners"]
+                    )
+                    else obj.get("partners", [])
+                )
+                obj["partners"] = Partners(partner_settings)
                 if "type" in obj and not INGREDIENT_TYPE.is_member(obj["type"]):
                     raise TypeError(f"{obj['type']} is not an allowed type")
 
         # handle gradients
-        if "gradients" in recipe_data:
+        # gradients in firebase recipes are already stored as a list of dicts
+        if "gradients" in recipe_data and not isinstance(
+            recipe_data["gradients"], list
+        ):
             gradients = []
             for gradient_name, gradient_dict in recipe_data["gradients"].items():
                 gradients.append(GradientData(gradient_dict, gradient_name).data)
