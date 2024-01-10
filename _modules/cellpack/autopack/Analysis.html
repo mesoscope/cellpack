@@ -2424,8 +2424,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Packs one seed of a recipe and returns the recipe object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">seed_basename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">add_seed_number_to_base_name</span><span class="p">(</span><span class="n">seed_index</span><span class="p">)</span>
-        <span class="n">seed</span> <span class="o">=</span> <span class="n">seed_list</span><span class="p">[</span><span class="n">seed_index</span><span class="p">]</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed_list</span><span class="p">[</span><span class="n">seed_index</span><span class="p">])</span>
+        <span class="n">seed_basename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">add_seed_number_to_base_name</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="c1"># Clear</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">clearFill</span><span class="p">(</span><span class="s2">&quot;Test_Spheres2D&quot;</span><span class="p">)</span>

@@ -199,8 +199,7 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">_grid.dat&quot;</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">]):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">]</span>
 
         <span class="n">should_load_grid_file</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span>
@@ -2071,7 +2070,8 @@
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="s2">&quot;count_options&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ingr</span><span class="o">.</span><span class="n">count_options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
                 <span class="n">count</span> <span class="o">=</span> <span class="n">get_value_from_distribution</span><span class="p">(</span>
-                    <span class="n">distribution_options</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">count_options</span>
+                    <span class="n">distribution_options</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">count_options</span><span class="p">,</span>
+                    <span class="n">return_int</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span>
