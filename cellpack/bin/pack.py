@@ -12,6 +12,7 @@ from cellpack.autopack.Environment import Environment
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
+from cellpack.autopack.utils import get_seed_list
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
@@ -56,12 +57,15 @@ def pack(recipe, config_path=None, analysis_config_path=None):
             result_file=None,
         )
         log.info(f"saving to {env.out_folder}")
+
+        seed_list = get_seed_list(packing_config_data, recipe_data)
+
         analyze.doloop(
             packing_config_data["number_of_packings"],
             env.boundingBox,
             plot_figures=packing_config_data.get("save_plot_figures", True),
             show_grid=packing_config_data["show_grid_plot"],
-            seed_list=packing_config_data["randomness_seed"],
+            seed_list=seed_list,
             config_name=packing_config_data["name"],
             recipe_version=recipe_data["version"],
             image_export_options=packing_config_data.get("image_export_options"),

@@ -2173,8 +2173,8 @@ class Analysis:
         """
         Packs one seed of a recipe and returns the recipe object
         """
-        seed_basename = self.env.add_seed_number_to_base_name(seed_index)
-        seed = seed_list[seed_index]
+        seed = int(seed_list[seed_index])
+        seed_basename = self.env.add_seed_number_to_base_name(seed)
         # Clear
         if self.afviewer:
             self.afviewer.clearFill("Test_Spheres2D")
