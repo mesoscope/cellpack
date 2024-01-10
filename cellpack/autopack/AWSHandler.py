@@ -10,6 +10,10 @@ class AWSHandler(object):
     Handles all the AWS S3 operations
     """
 
+    # class attributes
+    _session_created = False
+    _s3_client = None
+
     def __init__(
         self,
         bucket_name,
@@ -18,12 +22,21 @@ class AWSHandler(object):
     ):
         self.bucket_name = bucket_name
         self.folder_name = sub_folder_name
-        session = boto3.Session()
-        self.s3_client = session.client(
+        # Create a session if one does not exist
+        if not AWSHandler._session_created:
+            self._create_session(region_name)
+            AWSHandler._session_created = True
+        else:
+            # use the existing session
+            self.s3_client = AWSHandler._s3_client
+
+    def _create_session(self, region_name):
+        AWSHandler._s3_client = boto3.client(
             "s3",
             endpoint_url=f"https://s3.{region_name}.amazonaws.com",
             region_name=region_name,
         )
+        self.s3_client = AWSHandler._s3_client
 
     def get_aws_object_key(self, object_name):
         if self.folder_name is not None:
@@ -82,4 +95,4 @@ class AWSHandler(object):
         """
         file_name = self.upload_file(file_path)
         if file_name:
-            return self.create_presigned_url(file_name)
+            return file_name, self.create_presigned_url(file_name)
