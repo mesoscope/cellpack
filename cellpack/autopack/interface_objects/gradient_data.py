@@ -45,6 +45,7 @@ class PickModes(MetaEnum):
     BINARY = "binary"
     SUB = "sub"
     REG = "reg"
+    UNIQUE = "unique"
 
 
 class ModeOptions(MetaEnum):

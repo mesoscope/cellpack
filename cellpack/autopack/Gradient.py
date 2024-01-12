@@ -87,6 +87,7 @@ class Gradient:
             "binary": self.getBinaryWeighted,
             "sub": self.getSubWeighted,
             "reg": self.getForwWeight,
+            "unique": self.get_unique_weights,
         }
 
         self.function = self.defaultFunction  # lambda ?
@@ -120,6 +121,15 @@ class Gradient:
         max_value = numpy.nanmax(values)
         min_value = numpy.nanmin(values)
         return (values - min_value) / (max_value - min_value)
+
+    def adjust_weights_by_number_of_points(self, weights):
+        """
+        Adjust weights based on number of points
+        """
+        unique_weights, counts = numpy.unique(weights, return_counts=True)
+        for i, weight in enumerate(unique_weights):
+            weights[weights == weight] = weight / counts[i]
+        return weights
 
     def pickPoint(self, listPts):
         """
@@ -231,6 +241,11 @@ class Gradient:
             self.weight = numpy.exp(
                 -self.scaled_distances / self.weight_mode_settings["decay_length"]
             )
+
+        # adjust weights based on number of points
+        if self.mode_settings.get("adjust_weights_by_number_of_points", False):
+            self.weight = self.adjust_weights_by_number_of_points(self.weight)
+
         # normalize the weight
         self.weight = self.get_normalized_values(self.weight)
 
@@ -288,6 +303,18 @@ class Gradient:
         s = numpy.sum(weight)
         i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]
         return list_of_pts[i]
+
+    def get_unique_weights(self, list_of_pts):
+        """
+        First pick a unique weight from the list of points,
+        then pick a specific point matching that weight
+        """
+        weights = numpy.take(self.weight, list_of_pts)
+        unique_weights = numpy.unique(weights)
+        weight_to_use = numpy.random.choice(unique_weights, p=unique_weights / sum(unique_weights))
+        possible_point_index = numpy.where(weights == weight_to_use)[0]
+        point_index = int(numpy.random.choice(possible_point_index))
+        return list_of_pts[point_index]
 
     def getLinearWeighted(self, listPts):
         """
