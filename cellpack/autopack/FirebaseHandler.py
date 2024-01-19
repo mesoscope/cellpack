@@ -98,15 +98,16 @@ class FirebaseHandler(object):
 
     @staticmethod
     def get_staging_creds():
-        # use override=True to refresh .env in case software updates affect env variables loading
-        load_dotenv(dotenv_path="./.env", override=True)
+        # set override=True to refresh the .env file if softwares or tokens updated
+        load_dotenv(dotenv_path="./.env", override=False)
         FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        firebase_key = FIREBASE_TOKEN.replace("\\n", "\n")
         FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
         return {
             "type": "service_account",
             "project_id": "cell-pack-database",
             "client_email": FIREBASE_EMAIL,
-            "private_key": FIREBASE_TOKEN,
+            "private_key": firebase_key,
             "token_uri": "https://oauth2.googleapis.com/token",
         }
 
