@@ -227,7 +227,7 @@ def get_max_value_from_distribution(distribution_options, return_int=False):
     return value
 
 
-def get_value_from_distribution(distribution_options, return_int=False):
+def get_value_from_distribution(distribution_options, return_int=False, return_positives=False):
     """
     Returns a value from the distribution options
     """
@@ -248,6 +248,12 @@ def get_value_from_distribution(distribution_options, return_int=False):
         value = numpy.random.normal(
             distribution_options.get("mean", 0), distribution_options.get("std", 1)
         )
+        set_value = 0.5 if return_int else 0
+        while return_positives and value <= set_value:
+            value = numpy.random.normal(
+                distribution_options.get("mean", 0),
+                distribution_options.get("std", 1),
+            )
     elif distribution_options.get("distribution") == "list":
         value = numpy.random.choice(distribution_options.get("list_values", None))
     else:

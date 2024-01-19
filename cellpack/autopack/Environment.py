@@ -1833,6 +1833,7 @@ class Environment(CompartmentList):
                 count = get_value_from_distribution(
                     distribution_options=ingr.count_options,
                     return_int=True,
+                    return_positives=True,
                 )
                 if count is not None:
                     ingr.count = count
