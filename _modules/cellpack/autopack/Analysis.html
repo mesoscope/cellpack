@@ -2741,7 +2741,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_occurences_file</span><span class="p">,</span> <span class="n">ingredient_occurence_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">ingredient_key_file</span><span class="p">,</span> <span class="n">ingredient_key_dict</span><span class="p">)</span>
 
-        <span class="n">Writer</span><span class="p">()</span><span class="o">.</span><span class="n">save_as_simularium</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed_to_results</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">number_of_packings</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">Writer</span><span class="p">()</span><span class="o">.</span><span class="n">save_as_simularium</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed_to_results</span><span class="p">)</span>
 
         <span class="n">all_ingredient_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_results_from_seeds</span><span class="p">(</span>
             <span class="n">ingredient_position_dict</span>
