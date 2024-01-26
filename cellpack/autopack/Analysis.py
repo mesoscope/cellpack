@@ -2487,7 +2487,8 @@ class Analysis:
         self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
         self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
-        Writer().save_as_simularium(self.env, self.seed_to_results)
+        if number_of_packings > 1:
+            Writer().save_as_simularium(self.env, self.seed_to_results)
 
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict
