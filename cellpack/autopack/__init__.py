@@ -387,6 +387,7 @@ def load_file(filename, destination="", cache="geometries", force=None):
         if database_name == "firebase":
             db = DATABASE_IDS.handlers().get(database_name)
             db_handler = DBRecipeLoader(db)
+            db_handler.validate_input_recipe_path(filename)
             recipe_id = file_path.split("/")[-1]
             db_doc, _ = db_handler.collect_docs_by_id(
                 collection="recipes", id=recipe_id

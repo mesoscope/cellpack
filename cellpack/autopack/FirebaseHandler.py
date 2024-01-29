@@ -49,10 +49,14 @@ class FirebaseHandler(object):
 
     @staticmethod
     def get_collection_id_from_path(path):
-        # path example = firebase:composition/uid_1
-        components = path.split(":")[1].split("/")
-        collection = components[0]
-        id = components[1]
+        try:
+            components = path.split(":")[1].split("/")
+            collection = components[0]
+            id = components[1]
+        except IndexError:
+            raise ValueError(
+                "Invalid path provided. Path example: firebase:collection/id"
+            )
         return collection, id
 
     # Create methods
@@ -110,6 +114,12 @@ class FirebaseHandler(object):
     def get_doc_by_ref(self, path):
         collection, id = FirebaseHandler.get_collection_id_from_path(path)
         return self.get_doc_by_id(collection, id)
+
+    def get_value(self, collection, id, field):
+        doc, _ = self.get_doc_by_id(collection, id)
+        if doc is None:
+            return None
+        return doc[field]
 
     # Update methods
     def update_doc(self, collection, id, data):
