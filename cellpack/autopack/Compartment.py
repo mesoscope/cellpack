@@ -283,7 +283,7 @@ class Compartment(CompartmentList):
     def create_rbnode(self):
         # Sphere
         return None
-    
+
     def get_rb_model(self):
         if self.rbnode is None:
             self.rbnode = self.create_rbnode()

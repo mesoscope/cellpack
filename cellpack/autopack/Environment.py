@@ -1953,7 +1953,6 @@ class Environment(CompartmentList):
         PlacedMols = 0
         vThreshStart = 0.0  # Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version
 
-
         # ==============================================================================
         #         #the big loop
         # ==============================================================================
@@ -2660,7 +2659,7 @@ class Environment(CompartmentList):
 
     def addRB(self, ingr, trans, rotMat, rtype="single_sphere", static=False):
         return None
-        
+
     def moveRBnode(self, node, trans, rotMat):
         return None
 
@@ -2669,7 +2668,7 @@ class Environment(CompartmentList):
 
     def runBullet(self, ingr, simulationTimes, runTimeDisplay):
         return None
-        
+
     def exportToBD_BOX(self, res_filename=None, output=None, bd_type="flex"):
         # , call the BD_BOX exporter, plugin ? better if result store somewhere.
         # only sphere + boudary ?

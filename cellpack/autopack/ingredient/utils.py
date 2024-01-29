@@ -200,6 +200,7 @@ def bullet_checkCollision_mp(world, node1, node2):
     #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.type},)
     return world.contactTestPair(node1, node2).getNumContacts() > 0
 
+
 def get_reflected_point(self, new_position, boundingBox=None):
     # returns the reflection of a point across a bounding box
     if boundingBox is None:

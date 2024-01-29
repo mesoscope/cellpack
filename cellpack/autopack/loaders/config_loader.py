@@ -13,6 +13,7 @@ class Place_Methods(MetaEnum):
     JITTER = "jitter"
     SPHERES_SST = "spheresSST"
 
+
 class Inner_Grid_Methods(MetaEnum):
     # Working inner grid methods
     RAYTRACE = "raytrace"

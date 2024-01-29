@@ -1580,7 +1580,7 @@ class Ingredient(Agent):
                     grid_point_distances,
                     dpad,
                 )
-            
+
             else:
                 self.log.error("Can't pack using this method %s", self.place_method)
                 self.reject()
