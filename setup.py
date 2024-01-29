@@ -27,6 +27,7 @@ analysis_requirements = [
     "scikit-learn>=1.1.3",
     "seaborn>=0.12.1",
     "aicsimageio>=4.10.0",
+    "pandas>=1.2.4",
 ]
 
 dev_requirements = [
@@ -51,7 +52,6 @@ requirements = [
     "firebase_admin>=6.0.1",
     "matplotlib>=3.3.4",
     "numpy>=1.19.2",
-    "panda3d==1.10.10",
     "pmw==2.0.1",
     "scipy>=1.6.2",
     "simulariumio>=1.6.3",
