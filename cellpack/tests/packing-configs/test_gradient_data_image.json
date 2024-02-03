@@ -1,24 +1,14 @@
 {
     "name": "test_gradient_data_image",
-    "format": "simularium",
-    "inner_grid_method": "trimesh",
-    "live_packing": false,
-    "ordered_packing": false,
-    "out": "out/",
-    "overwrite_place_method": true,
-    "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": true,
-    "number_of_packings": 1,
     "spacing": 0.25,
-    "use_periodicity": false,
     "show_sphere_trees": false,
     "load_from_grid_file": true,
-    "save_converted_recipe": true,
+    "save_gradient_data_as_image": true,
     "image_export_options": {
         "hollow": false,
         "voxel_size": [1,1,1],
         "projection_axis": "z"
-    },
-    "save_gradient_data_as_image": true
+    }
 }
