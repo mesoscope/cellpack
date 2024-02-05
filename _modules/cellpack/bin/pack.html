@@ -111,6 +111,9 @@
             <span class="n">recipe_version</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
             <span class="n">image_export_options</span><span class="o">=</span><span class="n">packing_config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;image_export_options&quot;</span><span class="p">),</span>
             <span class="n">parallel</span><span class="o">=</span><span class="n">packing_config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">save_gradient_data_as_image</span><span class="o">=</span><span class="n">packing_config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;save_gradient_data_as_image&quot;</span><span class="p">,</span> <span class="kc">False</span>
+            <span class="p">),</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">analysis_config_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">analyze</span><span class="o">.</span><span class="n">run_analysis_workflow</span><span class="p">(</span>

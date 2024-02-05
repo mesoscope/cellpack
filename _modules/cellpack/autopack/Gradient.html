@@ -461,6 +461,32 @@
             <span class="n">rnd</span> <span class="o">-=</span> <span class="n">w</span>
             <span class="k">if</span> <span class="n">rnd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">listPts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Gradient.create_voxelization">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.create_voxelization">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_writer</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a voxelized representation of the gradient distances and weights</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">image_writer</span><span class="o">.</span><span class="n">channel_colors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;distances&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">]}</span>
+
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;distances&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">]:</span>
+            <span class="n">channel_values</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">image_writer</span><span class="o">.</span><span class="n">image_data</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="n">image_writer</span><span class="o">.</span><span class="n">image_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">channel_values</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">normalized_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normalized_values</span><span class="p">(</span><span class="n">channel_values</span><span class="p">)</span>
+            <span class="n">reshaped_values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="n">normalized_values</span><span class="p">,</span> <span class="n">image_writer</span><span class="o">.</span><span class="n">image_size</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span>
+            <span class="p">)</span>
+            <span class="n">image_writer</span><span class="o">.</span><span class="n">image_data</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">reshaped_values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">reshaped_values</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">0</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">image_writer</span></div>
 </div>
 
 </pre></div>

@@ -3482,53 +3482,50 @@
 
 <div class="viewcode-block" id="Environment.create_voxelization">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_voxelization">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">image_size</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">hollow</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_writer</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the image data for all molecules in the recipe by creating voxelized</span>
 <span class="sd">        representations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        image_data: numpy.ndarray</span>
-<span class="sd">            The image data to update.</span>
-<span class="sd">        image_size: list</span>
-<span class="sd">            The size of the image data.</span>
-<span class="sd">        voxel_size: float</span>
-<span class="sd">            The size of a voxel in the image data.</span>
-<span class="sd">        hollow: bool</span>
-<span class="sd">            If True, the voxelization will be hollow.</span>
+<span class="sd">        image_writer: ImageWriter</span>
+<span class="sd">            The image writer to use for writing the voxelized representations.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
 <span class="sd">        image_data: numpy.ndarray</span>
 <span class="sd">            The updated image data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">channel_colors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">channel_colors</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_all</span><span class="p">():</span>
             <span class="n">mesh_store</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">image_data</span><span class="p">:</span>
-                <span class="n">image_data</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">image_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">image_writer</span><span class="o">.</span><span class="n">image_data</span><span class="p">:</span>
+                <span class="n">image_writer</span><span class="o">.</span><span class="n">image_data</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="n">image_writer</span><span class="o">.</span><span class="n">image_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span>
+                <span class="p">)</span>
                 <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">color</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">color</span>
                     <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">color</span><span class="p">]):</span>
                         <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">col</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">color</span><span class="p">]</span>
-                    <span class="n">channel_colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+                    <span class="n">channel_colors</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">is_compartment</span><span class="p">:</span>
                 <span class="n">mesh_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span>
 
-            <span class="n">image_data</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">ingredient</span><span class="o">.</span><span class="n">create_voxelization</span><span class="p">(</span>
-                <span class="n">image_data</span><span class="o">=</span><span class="n">image_data</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+            <span class="n">image_writer</span><span class="o">.</span><span class="n">image_data</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">ingredient</span><span class="o">.</span><span class="n">create_voxelization</span><span class="p">(</span>
+                <span class="n">image_data</span><span class="o">=</span><span class="n">image_writer</span><span class="o">.</span><span class="n">image_data</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
                 <span class="n">bounding_box</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span>
-                <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">,</span>
-                <span class="n">image_size</span><span class="o">=</span><span class="n">image_size</span><span class="p">,</span>
+                <span class="n">voxel_size</span><span class="o">=</span><span class="n">image_writer</span><span class="o">.</span><span class="n">voxel_size</span><span class="p">,</span>
+                <span class="n">image_size</span><span class="o">=</span><span class="n">image_writer</span><span class="o">.</span><span class="n">image_size</span><span class="p">,</span>
                 <span class="n">position</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
                 <span class="n">rotation</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span>
-                <span class="n">hollow</span><span class="o">=</span><span class="n">hollow</span><span class="p">,</span>
+                <span class="n">hollow</span><span class="o">=</span><span class="n">image_writer</span><span class="o">.</span><span class="n">hollow</span><span class="p">,</span>
                 <span class="n">mesh_store</span><span class="o">=</span><span class="n">mesh_store</span><span class="p">,</span>
             <span class="p">)</span>
+        <span class="n">image_writer</span><span class="o">.</span><span class="n">channel_colors</span> <span class="o">=</span> <span class="n">channel_colors</span>
 
-        <span class="k">return</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">channel_colors</span></div>
+        <span class="k">return</span> <span class="n">image_writer</span></div>
 </div>
 
 </pre></div>
