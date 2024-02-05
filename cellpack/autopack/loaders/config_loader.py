@@ -40,6 +40,7 @@ class ConfigLoader(object):
         "randomness_seed": None,
         "save_analyze_result": False,
         "save_converted_recipe": False,
+        "save_gradient_data_as_image": False,
         "show_grid_plot": False,
         "show_sphere_trees": False,
         "show_progress_bar": False,

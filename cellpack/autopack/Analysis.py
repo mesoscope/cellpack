@@ -2169,6 +2169,7 @@ class Analysis:
         image_export_options=None,
         show_grid=False,
         plot_figures=False,
+        save_gradient_data_as_image=False,
     ):
         """
         Packs one seed of a recipe and returns the recipe object
@@ -2309,13 +2310,26 @@ class Analysis:
                 plt.close()  # closes the current figure
 
         if image_export_options is not None:
-            image_writer = ImageWriter(
+            env_image_writer = ImageWriter(
                 env=self.env,
                 name=seed_basename,
                 output_path=self.figures_path,
                 **image_export_options,
             )
-            image_writer.export_image()
+            env_image_writer = self.env.create_voxelization(env_image_writer)
+            env_image_writer.export_image()
+
+        if save_gradient_data_as_image:
+            gradient_data_figure_path = self.figures_path / "gradient_data_figures"
+            gradient_data_figure_path.mkdir(exist_ok=True)
+            for _, gradient in self.env.gradients.items():
+                grid_image_writer = ImageWriter(
+                    env=self.env,
+                    name=f"{seed_basename}_grid_data",
+                    output_path=gradient_data_figure_path,
+                )
+                grid_image_writer = gradient.create_voxelization(grid_image_writer)
+                grid_image_writer.export_image()
 
         return (
             center_distance_dict,
@@ -2338,6 +2352,7 @@ class Analysis:
         recipe_version="1.0.0",
         image_export_options=None,
         parallel=False,
+        save_gradient_data_as_image=False,
     ):
         """
         Runs multiple packings of the same recipe in a loop. This workflow
@@ -2437,6 +2452,7 @@ class Analysis:
                             ingredient_key_dict=ingredient_key_dict,
                             get_distance_distribution=get_distance_distribution,
                             image_export_options=image_export_options,
+                            save_gradient_data_as_image=save_gradient_data_as_image,
                         )
                     )
                 for future in concurrent.futures.as_completed(futures):
@@ -2478,6 +2494,7 @@ class Analysis:
                     image_export_options=image_export_options,
                     show_grid=show_grid,
                     plot_figures=plot_figures,
+                    save_gradient_data_as_image=save_gradient_data_as_image,
                 )
 
         self.writeJSON(center_distance_file, center_distance_dict)

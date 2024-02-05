@@ -3129,50 +3129,47 @@ class Environment(CompartmentList):
         self.traj.applyState_primitive_name(self, step)
         # ho can we apply to parent instance the rotatiotn?
 
-    def create_voxelization(self, image_data, image_size, voxel_size, hollow=False):
+    def create_voxelization(self, image_writer):
         """
         Update the image data for all molecules in the recipe by creating voxelized
         representations.
 
         Parameters
         ----------
-        image_data: numpy.ndarray
-            The image data to update.
-        image_size: list
-            The size of the image data.
-        voxel_size: float
-            The size of a voxel in the image data.
-        hollow: bool
-            If True, the voxelization will be hollow.
+        image_writer: ImageWriter
+            The image writer to use for writing the voxelized representations.
 
         Returns
         ----------
         image_data: numpy.ndarray
             The updated image data.
         """
-        channel_colors = []
+        channel_colors = {}
 
         for obj in self.packed_objects.get_all():
             mesh_store = None
-            if obj.name not in image_data:
-                image_data[obj.name] = numpy.zeros(image_size, dtype=numpy.uint8)
+            if obj.name not in image_writer.image_data:
+                image_writer.image_data[obj.name] = numpy.zeros(
+                    image_writer.image_size, dtype=numpy.uint8
+                )
                 if obj.color is not None:
                     color = obj.color
                     if all([x <= 1 for x in obj.color]):
                         color = [int(col * 255) for col in obj.color]
-                    channel_colors.append(color)
+                    channel_colors[obj.name] = color
             if obj.is_compartment:
                 mesh_store = self.mesh_store
 
-            image_data[obj.name] = obj.ingredient.create_voxelization(
-                image_data=image_data[obj.name],
+            image_writer.image_data[obj.name] = obj.ingredient.create_voxelization(
+                image_data=image_writer.image_data[obj.name],
                 bounding_box=self.boundingBox,
-                voxel_size=voxel_size,
-                image_size=image_size,
+                voxel_size=image_writer.voxel_size,
+                image_size=image_writer.image_size,
                 position=obj.position,
                 rotation=obj.rotation,
-                hollow=hollow,
+                hollow=image_writer.hollow,
                 mesh_store=mesh_store,
             )
+        image_writer.channel_colors = channel_colors
 
-        return image_data, channel_colors
+        return image_writer
