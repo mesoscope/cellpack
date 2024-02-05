@@ -1,6 +1,8 @@
 import ast
+import os
 import firebase_admin
 from firebase_admin import credentials, firestore
+from dotenv import load_dotenv
 from google.cloud.exceptions import NotFound
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
@@ -17,8 +19,12 @@ class FirebaseHandler(object):
     def __init__(self):
         # check if firebase is already initialized
         if not FirebaseHandler._initialized:
-            cred_path = FirebaseHandler.get_creds()
-            login = credentials.Certificate(cred_path)
+            db_choice = FirebaseHandler.which_db()
+            if db_choice == "staging":
+                cred = FirebaseHandler.get_staging_creds()
+            else:
+                cred = FirebaseHandler.get_dev_creds()
+            login = credentials.Certificate(cred)
             firebase_admin.initialize_app(login)
             FirebaseHandler._initialized = True
             FirebaseHandler._db = firestore.client()
@@ -27,6 +33,16 @@ class FirebaseHandler(object):
         self.name = "firebase"
 
     # common utility methods
+    @staticmethod
+    def which_db():
+        options = {"1": "dev", "2": "staging"}
+        print("Choose database:")
+        for key, value in options.items():
+            print(f"[{key}] {value}")
+        choice = input("Enter number: ").strip()
+        print(f"Using {options.get(choice, 'dev')} database -------------")
+        return options.get(choice, "dev")  # default to dev db
+
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
@@ -74,11 +90,25 @@ class FirebaseHandler(object):
 
     # Read methods
     @staticmethod
-    def get_creds():
+    def get_dev_creds():
         creds = read_json_file("./.creds")
         if creds is None or "firebase" not in creds:
             creds = FirebaseHandler.write_creds_path()
         return creds["firebase"]
+
+    @staticmethod
+    def get_staging_creds():
+        # set override=True to refresh the .env file if softwares or tokens updated
+        load_dotenv(dotenv_path="./.env", override=False)
+        FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
+        return {
+            "type": "service_account",
+            "project_id": "cell-pack-database",
+            "client_email": FIREBASE_EMAIL,
+            "private_key": FIREBASE_TOKEN,
+            "token_uri": "https://oauth2.googleapis.com/token",
+        }
 
     @staticmethod
     def get_username():

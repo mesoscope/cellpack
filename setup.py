@@ -61,6 +61,7 @@ requirements = [
     "pymunk>=6.2.0",
     "trimesh>=3.9.34",
     "deepdiff>=5.5.0",
+    "python-dotenv>=1.0.0",
 ]
 
 extra_requirements = {
@@ -103,10 +104,10 @@ setup(
     name="cellpack",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
     package_data={
-        '': [
-            'cellpack/tests/packing-configs/*',
-            'cellpack/tests/recipes/*',
-            'logging.conf'
+        "": [
+            "cellpack/tests/packing-configs/*",
+            "cellpack/tests/recipes/*",
+            "logging.conf",
         ]
     },
     python_requires=">=3.8",
