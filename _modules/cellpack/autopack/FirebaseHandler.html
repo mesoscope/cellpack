@@ -39,8 +39,10 @@
             
   <h1>Source code for cellpack.autopack.FirebaseHandler</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">firebase_admin</span>
 <span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">firestore</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
 <span class="kn">from</span> <span class="nn">google.cloud.exceptions</span> <span class="kn">import</span> <span class="n">NotFound</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
 
@@ -59,8 +61,12 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># check if firebase is already initialized</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
-            <span class="n">cred_path</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">get_creds</span><span class="p">()</span>
-            <span class="n">login</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">Certificate</span><span class="p">(</span><span class="n">cred_path</span><span class="p">)</span>
+            <span class="n">db_choice</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">which_db</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">db_choice</span> <span class="o">==</span> <span class="s2">&quot;staging&quot;</span><span class="p">:</span>
+                <span class="n">cred</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">get_staging_creds</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cred</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">get_dev_creds</span><span class="p">()</span>
+            <span class="n">login</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">Certificate</span><span class="p">(</span><span class="n">cred</span><span class="p">)</span>
             <span class="n">firebase_admin</span><span class="o">.</span><span class="n">initialize_app</span><span class="p">(</span><span class="n">login</span><span class="p">)</span>
             <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">_initialized</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">firestore</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
@@ -69,6 +75,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;firebase&quot;</span>
 
     <span class="c1"># common utility methods</span>
+<div class="viewcode-block" id="FirebaseHandler.which_db">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.which_db">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">which_db</span><span class="p">():</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;staging&quot;</span><span class="p">}</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Choose database:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">choice</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter number: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dev&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> database -------------&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="s2">&quot;dev&quot;</span><span class="p">)</span>  <span class="c1"># default to dev db</span></div>
+
+
 <div class="viewcode-block" id="FirebaseHandler.doc_to_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -139,14 +158,31 @@
 
 
     <span class="c1"># Read methods</span>
-<div class="viewcode-block" id="FirebaseHandler.get_creds">
-<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_creds">[docs]</a>
+<div class="viewcode-block" id="FirebaseHandler.get_dev_creds">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_dev_creds">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_creds</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">get_dev_creds</span><span class="p">():</span>
         <span class="n">creds</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="s2">&quot;./.creds&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">creds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;firebase&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">creds</span><span class="p">:</span>
             <span class="n">creds</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">write_creds_path</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">creds</span><span class="p">[</span><span class="s2">&quot;firebase&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="FirebaseHandler.get_staging_creds">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_staging_creds">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_staging_creds</span><span class="p">():</span>
+        <span class="c1"># set override=True to refresh the .env file if softwares or tokens updated</span>
+        <span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;./.env&quot;</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">FIREBASE_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FIREBASE_TOKEN&quot;</span><span class="p">)</span>
+        <span class="n">FIREBASE_EMAIL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FIREBASE_EMAIL&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;service_account&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;project_id&quot;</span><span class="p">:</span> <span class="s2">&quot;cell-pack-database&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;client_email&quot;</span><span class="p">:</span> <span class="n">FIREBASE_EMAIL</span><span class="p">,</span>
+            <span class="s2">&quot;private_key&quot;</span><span class="p">:</span> <span class="n">FIREBASE_TOKEN</span><span class="p">,</span>
+            <span class="s2">&quot;token_uri&quot;</span><span class="p">:</span> <span class="s2">&quot;https://oauth2.googleapis.com/token&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.get_username">
