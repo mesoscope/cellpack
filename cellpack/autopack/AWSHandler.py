@@ -89,10 +89,11 @@ class AWSHandler(object):
         # https://{self.bucket_name}.s3.{region}.amazonaws.com/{object_key}
         return url
 
-    def save_file(self, file_path):
+    def save_file_and_get_url(self, file_path):
         """
         Uploads a file to S3 and returns the presigned url
         """
         file_name = self.upload_file(file_path)
         if file_name:
-            return file_name, self.create_presigned_url(file_name)
+            base_url = self.create_presigned_url(file_name).split("?")[0]
+            return file_name, base_url

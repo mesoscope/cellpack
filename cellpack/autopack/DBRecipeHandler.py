@@ -585,7 +585,7 @@ class DBUploader(object):
             self.db.update_or_create(
                 "results",
                 file_name,
-                {"user": username, "timestamp": timestamp, "url": url.split("?")[0]},
+                {"user": username, "timestamp": timestamp, "url": url},
             )
 
 

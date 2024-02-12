@@ -1416,7 +1416,7 @@ class simulariumHelper(hostHelper.Helper):
                 sub_folder_name="simularium/",
                 region_name="us-west-2",
             )
-        file_name, url = initialized_handler.save_file(file_path)
+        file_name, url = initialized_handler.save_file_and_get_url(file_path)
         simulariumHelper.store_metadata(file_name, url, db="firebase")
         return file_name, url
 
