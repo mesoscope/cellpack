@@ -40,9 +40,6 @@
   <h1>Source code for cellpack.autopack.ingredient.single_cube</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Point3</span><span class="p">,</span> <span class="n">TransformState</span><span class="p">,</span> <span class="n">Vec3</span>
-<span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletBoxShape</span><span class="p">,</span> <span class="n">BulletRigidBodyNode</span>
-
 <span class="kn">from</span> <span class="nn">.Ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">ApplyMatrix</span>
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
@@ -379,23 +376,6 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
         <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
-
-
-<div class="viewcode-block" id="SingleCubeIngr.add_rb_node">
-<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.add_rb_node">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_rb_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worldNP</span><span class="p">):</span>
-        <span class="n">halfextents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">shape</span> <span class="o">=</span> <span class="n">BulletBoxShape</span><span class="p">(</span>
-            <span class="n">Vec3</span><span class="p">(</span><span class="n">halfextents</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">halfextents</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">halfextents</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-        <span class="p">)</span>  <span class="c1"># halfExtents</span>
-        <span class="n">inodenp</span> <span class="o">=</span> <span class="n">worldNP</span><span class="o">.</span><span class="n">attachNewNode</span><span class="p">(</span><span class="n">BulletRigidBodyNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setMass</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-        <span class="c1">#        inodenp.node().addShape(shape)</span>
-        <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">addShape</span><span class="p">(</span>
-            <span class="n">shape</span><span class="p">,</span> <span class="n">TransformState</span><span class="o">.</span><span class="n">makePos</span><span class="p">(</span><span class="n">Point3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="p">)</span>  <span class="c1"># , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?</span>
-        <span class="c1">#        spherenp.setPos(-2, 0, 4)</span>
-        <span class="k">return</span> <span class="n">inodenp</span></div>
 
 
 <div class="viewcode-block" id="SingleCubeIngr.cube_surface_distance">

@@ -38,9 +38,7 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.ingredient.multi_sphere</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Point3</span><span class="p">,</span> <span class="n">TransformState</span>
-<span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletSphereShape</span><span class="p">,</span> <span class="n">BulletRigidBodyNode</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">.Ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
@@ -297,22 +295,6 @@
                     <span class="n">dpad</span><span class="p">,</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
-
-
-<div class="viewcode-block" id="MultiSphereIngr.add_rb_node">
-<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.add_rb_node">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_rb_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worldNP</span><span class="p">):</span>
-        <span class="n">inodenp</span> <span class="o">=</span> <span class="n">worldNP</span><span class="o">.</span><span class="n">attachNewNode</span><span class="p">(</span><span class="n">BulletRigidBodyNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setMass</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
-        <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
-        <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centers</span><span class="p">):</span>
-            <span class="n">shape</span> <span class="o">=</span> <span class="n">BulletSphereShape</span><span class="p">(</span><span class="n">radc</span><span class="p">)</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">addShape</span><span class="p">(</span>
-                <span class="n">shape</span><span class="p">,</span> <span class="n">TransformState</span><span class="o">.</span><span class="n">makePos</span><span class="p">(</span><span class="n">Point3</span><span class="p">(</span><span class="n">posc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">posc</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-            <span class="p">)</span>  <span class="c1">#</span>
-        <span class="k">return</span> <span class="n">inodenp</span></div>
 
 
 <div class="viewcode-block" id="MultiSphereIngr.get_signed_distance">

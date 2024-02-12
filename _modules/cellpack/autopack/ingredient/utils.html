@@ -39,8 +39,6 @@
             
   <h1>Source code for cellpack.autopack.ingredient.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">panda3d</span>
-<span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Mat4</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">asin</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.transformation</span> <span class="kn">import</span> <span class="n">angle_between_vectors</span>
 
@@ -264,36 +262,6 @@
     <span class="c1">#    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.type},)</span>
     <span class="c1">#    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.type},)</span>
     <span class="k">return</span> <span class="n">world</span><span class="o">.</span><span class="n">contactTestPair</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span><span class="o">.</span><span class="n">getNumContacts</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
-
-
-
-<span class="c1"># TODO : move somewhere in a more apropriate place ?</span>
-<div class="viewcode-block" id="pandaMatrice">
-<a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.pandaMatrice">[docs]</a>
-<span class="k">def</span> <span class="nf">pandaMatrice</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span>
-    <span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">16</span><span class="p">,))</span>
-    <span class="c1">#        print mat,len(mat),mat.shape</span>
-    <span class="n">pMat</span> <span class="o">=</span> <span class="n">Mat4</span><span class="p">(</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
-        <span class="n">mat</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">pMat</span></div>
 
 
 

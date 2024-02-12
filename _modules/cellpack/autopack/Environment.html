@@ -97,13 +97,6 @@
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">encoder</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-
-<span class="c1"># PANDA3D Physics engine ODE and Bullet</span>
-<span class="kn">import</span> <span class="nn">panda3d</span>
-
-<span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Mat3</span><span class="p">,</span> <span class="n">Mat4</span><span class="p">,</span> <span class="n">Vec3</span><span class="p">,</span> <span class="n">BitMask32</span><span class="p">,</span> <span class="n">NodePath</span>
-<span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletRigidBodyNode</span>
-
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.MeshStore</span> <span class="kn">import</span> <span class="n">MeshStore</span>
 <span class="kn">import</span> <span class="nn">cellpack.autopack.ingredient</span> <span class="k">as</span> <span class="nn">ingredient</span>
@@ -214,7 +207,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">timeUpDistLoopTotal</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hgrid</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># panda world for collision</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">octree</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ongoing octree test, no need if openvdb wrapped to python</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Grid()  # the main grid</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingGrid</span> <span class="o">=</span> <span class="p">(</span>
@@ -300,7 +292,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span> <span class="o">=</span> <span class="n">PackedObjects</span><span class="p">()</span>
 
         <span class="c1"># should be part of an independent module</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">=</span> <span class="s2">&quot;bullet&quot;</span>  <span class="c1"># or bullet</span>
         <span class="c1"># could be a problem here for pp</span>
         <span class="c1"># can&#39;t pickle this dictionary</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rb_func_dic</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1504,19 +1495,7 @@
             <span class="n">dpad</span><span class="o">=</span><span class="n">dpad</span><span class="p">,</span>
             <span class="n">centT</span><span class="o">=</span><span class="n">centT</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># update free points</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">insidePoints</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;panda&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot; is inside&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">checkPtIndIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">marray</span><span class="p">)</span>
-            <span class="c1"># ingr.inside_current_grid = True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># not in the grid</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot; is outside&quot;</span><span class="p">)</span>
-            <span class="c1"># rbnode = ingr.rbnode[ptInd]</span>
-            <span class="c1"># ingr.rbnode.pop(ptInd)</span>
-            <span class="n">marray</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ptInd</span>  <span class="c1"># uniq Id ?</span>
-            <span class="c1"># ingr.rbnode[-1] = rbnode</span>
-        <span class="c1"># doesnt seem to work properly...</span>
+        <span class="n">marray</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ptInd</span>  <span class="c1"># uniq Id ?</span>
         <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">updateDistances</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">insidePoints</span><span class="p">,</span>
@@ -1538,28 +1517,6 @@
             <span class="p">):</span>  <span class="c1"># Graham here on 5/16/12 are these two lines safe?</span>
                 <span class="k">del</span> <span class="n">ingr</span><span class="o">.</span><span class="n">allIngrPts</span>  <span class="c1"># Graham here on 5/16/12 are these two lines safe?</span>
         <span class="k">return</span> <span class="n">nbFreePoints</span></div>
-
-
-<div class="viewcode-block" id="Environment.checkPtIndIngr">
-<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.checkPtIndIngr">[docs]</a>
-    <span class="k">def</span> <span class="nf">checkPtIndIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">marray</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        We need to check if the point indice is correct in the case of panda packing.</span>
-<span class="sd">        as the pt indice in the result array have a different meaning.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># change key for rbnode too</span>
-        <span class="n">rbnode</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="p">:</span>
-            <span class="n">rbnode</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ptInd</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="o">-</span><span class="n">ptInd</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="p">:</span>
-            <span class="n">rbnode</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="p">[</span><span class="o">-</span><span class="n">ptInd</span><span class="p">]</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="n">ptInd</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ptInd &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ptInd</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; not in ingr.rbnode&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">marray</span><span class="p">):</span>
-            <span class="n">marray</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">insidePoints</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">rbnode</span><span class="p">[</span><span class="n">insidePoints</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rbnode</span></div>
 
 
 <div class="viewcode-block" id="Environment.getSortedActiveIngredients">
@@ -1695,13 +1652,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">resetIngrRecip</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
             <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">resetIngrRecip</span><span class="p">(</span><span class="n">ri</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># need to clear all node</span>
-            <span class="c1">#            nodes = self.rb_panda[:]</span>
-            <span class="c1">#            for node in nodes:</span>
-            <span class="c1">#                self.delRB(node)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">moving</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">octree</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">octree</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">octree</span> <span class="o">=</span> <span class="kc">None</span></div>
@@ -2250,10 +2200,6 @@
 
         <span class="n">PlacedMols</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">vThreshStart</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version</span>
-
-        <span class="c1"># if bullet build the organel rbnode</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
 
         <span class="c1"># ==============================================================================</span>
         <span class="c1">#         #the big loop</span>
@@ -2989,8 +2935,6 @@
     <span class="c1"># ==============================================================================</span>
     <span class="c1"># AFter this point, features development around physics engine and algo</span>
     <span class="c1"># octree</span>
-    <span class="c1"># panda bullet</span>
-    <span class="c1"># panda ode</span>
     <span class="c1"># ==============================================================================</span>
 
 <div class="viewcode-block" id="Environment.setupOctree">
@@ -3004,351 +2948,47 @@
             <span class="p">)</span>  <span class="c1"># Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?</span></div>
 
 
-<div class="viewcode-block" id="Environment.setupPanda">
-<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setupPanda">[docs]</a>
-    <span class="k">def</span> <span class="nf">setupPanda</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">panda3d</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">loadPrcFileData</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">loadPrcFileData</span><span class="p">(</span>
-                <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;bullet-sap-extents &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">)</span>
-            <span class="p">)</span>  <span class="c1"># grid may not be setup</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span>
-            <span class="n">loadPrcFileData</span><span class="p">(</span>
-                <span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">                load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)</span>
-<span class="sd">                audio-library-name null # Prevent ALSA errors</span>
-<span class="sd">                show-frame-rate-meter 0</span>
-<span class="sd">                sync-video 0</span>
-<span class="sd">                bullet-max-objects 10240</span>
-<span class="sd">                bullet-broadphase-algorithm sap</span>
-<span class="sd">                bullet-sap-extents 10000.0</span>
-<span class="sd">                textures-power-2 up</span>
-<span class="sd">                textures-auto-power-2 #t</span>
-<span class="sd">                &quot;&quot;&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="c1">#            loadPrcFileData(&quot;&quot;, &quot;window-type none&quot; )</span>
-            <span class="c1"># Make sure we don&#39;t need a graphics engine</span>
-            <span class="c1"># (Will also prevent X errors / Display errors when starting on linux without X server)</span>
-            <span class="c1">#            loadPrcFileData(&quot;&quot;, &quot;audio-library-name null&quot; ) # Prevent ALSA errors</span>
-            <span class="c1">#            loadPrcFileData(&#39;&#39;, &#39;bullet-enable-contact-events true&#39;)</span>
-            <span class="c1">#            loadPrcFileData(&#39;&#39;, &#39;bullet-max-objects 10240&#39;)#10240</span>
-            <span class="c1">#            loadPrcFileData(&#39;&#39;, &#39;bullet-broadphase-algorithm sap&#39;)#aabb</span>
-            <span class="c1">#            loadPrcFileData(&#39;&#39;, &#39;bullet-sap-extents 10000.0&#39;)#</span>
-            <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
-                <span class="n">loadPrcFileData</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;window-type offscreen&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">loadPrcFileData</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;window-type None&quot;</span><span class="p">)</span>
-
-            <span class="kn">from</span> <span class="nn">direct.showbase.ShowBase</span> <span class="kn">import</span> <span class="n">ShowBase</span>
-
-            <span class="n">base</span> <span class="o">=</span> <span class="n">ShowBase</span><span class="p">()</span>
-            <span class="n">base</span><span class="o">.</span><span class="n">disableMouse</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span>
-            <span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Vec3</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;bullet&quot;</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletWorld</span>
-
-                <span class="c1"># global variable from panda3d</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">worldNP</span> <span class="o">=</span> <span class="n">render</span><span class="o">.</span><span class="n">attachNewNode</span><span class="p">(</span><span class="s2">&quot;World&quot;</span><span class="p">)</span>  <span class="c1"># noqa: F821</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">BulletWorld</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">BitMask32</span> <span class="o">=</span> <span class="n">BitMask32</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;ode&quot;</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">panda3d.ode</span> <span class="kn">import</span> <span class="n">OdeWorld</span><span class="p">,</span> <span class="n">OdeHashSpace</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">OdeWorld</span><span class="p">()</span>
-                <span class="c1"># or hashspace ?</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ode_space</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">OdeHashSpace</span><span class="p">()</span>
-                <span class="p">)</span>  <span class="c1"># OdeQuadTreeSpace(center,extends,depth)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ode_space</span><span class="o">.</span><span class="n">set_levels</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ode_space</span><span class="o">.</span><span class="n">setAutoCollideWorld</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">setGravity</span><span class="p">(</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">moving</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rb_panda</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">base</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">compartment</span><span class="o">.</span><span class="n">rbnode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">compartment</span><span class="o">.</span><span class="n">rbnode</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">addShapeRB</span><span class="p">(</span>
-                    <span class="bp">self</span>
-                <span class="p">)</span>  <span class="c1"># addMeshRBOrganelle(o)</span></div>
-
-
-<div class="viewcode-block" id="Environment.add_rb_node">
-<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.add_rb_node">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_rb_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Mesh&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ingr</span><span class="o">.</span><span class="n">add_rb_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">worldNP</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;ode&quot;</span> <span class="ow">and</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Sphere&quot;</span><span class="p">:</span>
-            <span class="n">mat3x3</span> <span class="o">=</span> <span class="n">Mat3</span><span class="p">(</span>
-                <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">mat</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="n">ingr</span><span class="o">.</span><span class="n">add_rb_node_ode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">mat3x3</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ingr</span><span class="o">.</span><span class="n">add_rb_node</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">worldNP</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="Environment.delRB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.delRB">[docs]</a>
     <span class="k">def</span> <span class="nf">delRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;bullet&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">removeRigidBody</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="n">np</span> <span class="o">=</span> <span class="n">NodePath</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">np</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">removeNode</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;ode&quot;</span><span class="p">:</span>
-            <span class="n">node</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rb_panda</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rb_panda</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rb_panda</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">static</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">moving</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">moving</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.setGeomFaces">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setGeomFaces">[docs]</a>
     <span class="k">def</span> <span class="nf">setGeomFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tris</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-            <span class="c1"># have to add vertices one by one since they are not in order</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">face</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">face</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">face</span><span class="p">:</span>
-            <span class="n">tris</span><span class="o">.</span><span class="n">addVertex</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">tris</span><span class="o">.</span><span class="n">closePrimitive</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.addMeshRBOrganelle">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.addMeshRBOrganelle">[docs]</a>
     <span class="k">def</span> <span class="nf">addMeshRBOrganelle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
-            <span class="n">geom</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">gname</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">geom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">o</span><span class="o">.</span><span class="n">gname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Mesh&quot;</span> <span class="o">%</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span>
-                <span class="n">geom</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">gname</span><span class="p">)</span>
-            <span class="n">faces</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">vnormals</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">DecomposeMesh</span><span class="p">(</span>
-                <span class="n">geom</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">faces</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">faces</span>
-            <span class="n">vertices</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">vertices</span>
-        <span class="n">inodenp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">worldNP</span><span class="o">.</span><span class="n">attachNewNode</span><span class="p">(</span><span class="n">BulletRigidBodyNode</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setMass</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-
-        <span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="p">(</span>
-            <span class="n">GeomVertexFormat</span><span class="p">,</span>
-            <span class="n">GeomVertexWriter</span><span class="p">,</span>
-            <span class="n">GeomVertexData</span><span class="p">,</span>
-            <span class="n">Geom</span><span class="p">,</span>
-            <span class="n">GeomTriangles</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="p">(</span>
-            <span class="n">BulletTriangleMesh</span><span class="p">,</span>
-            <span class="n">BulletTriangleMeshShape</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="c1"># step 1) create GeomVertexData and add vertex information</span>
-        <span class="nb">format</span> <span class="o">=</span> <span class="n">GeomVertexFormat</span><span class="o">.</span><span class="n">getV3</span><span class="p">()</span>
-        <span class="n">vdata</span> <span class="o">=</span> <span class="n">GeomVertexData</span><span class="p">(</span><span class="s2">&quot;vertices&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="p">,</span> <span class="n">Geom</span><span class="o">.</span><span class="n">UHStatic</span><span class="p">)</span>
-        <span class="n">vertexWriter</span> <span class="o">=</span> <span class="n">GeomVertexWriter</span><span class="p">(</span><span class="n">vdata</span><span class="p">,</span> <span class="s2">&quot;vertex&quot;</span><span class="p">)</span>
-        <span class="p">[</span><span class="n">vertexWriter</span><span class="o">.</span><span class="n">addData3f</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
-
-        <span class="c1"># step 2) make primitives and assign vertices to them</span>
-        <span class="n">tris</span> <span class="o">=</span> <span class="n">GeomTriangles</span><span class="p">(</span><span class="n">Geom</span><span class="o">.</span><span class="n">UHStatic</span><span class="p">)</span>
-        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">setGeomFaces</span><span class="p">(</span><span class="n">tris</span><span class="p">,</span> <span class="n">face</span><span class="p">)</span> <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">faces</span><span class="p">]</span>
-
-        <span class="c1"># step 3) make a Geom object to hold the primitives</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">Geom</span><span class="p">(</span><span class="n">vdata</span><span class="p">)</span>
-        <span class="n">geom</span><span class="o">.</span><span class="n">addPrimitive</span><span class="p">(</span><span class="n">tris</span><span class="p">)</span>
-        <span class="c1"># step 4) create the bullet mesh and node</span>
-        <span class="n">mesh</span> <span class="o">=</span> <span class="n">BulletTriangleMesh</span><span class="p">()</span>
-        <span class="n">mesh</span><span class="o">.</span><span class="n">addGeom</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
-        <span class="n">shape</span> <span class="o">=</span> <span class="n">BulletTriangleMeshShape</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">dynamic</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># BulletConvexHullShape</span>
-        <span class="c1"># or</span>
-        <span class="c1"># shape = BulletConvexHullShape()</span>
-        <span class="c1"># shape.add_geom(geom)</span>
-        <span class="c1"># inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))</span>
-        <span class="c1"># inodenp.node().setMass(1.0)</span>
-        <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">addShape</span><span class="p">(</span>
-            <span class="n">shape</span>
-        <span class="p">)</span>  <span class="c1"># ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)</span>
-        <span class="c1"># TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;bullet&quot;</span><span class="p">:</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">setCollideMask</span><span class="p">(</span><span class="n">BitMask32</span><span class="o">.</span><span class="n">allOn</span><span class="p">())</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setAngularDamping</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setLinearDamping</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="c1">#            inodenp.setMat(pmat)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">attachRigidBody</span><span class="p">(</span><span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
-            <span class="n">inodenp</span> <span class="o">=</span> <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">inodenp</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.addRB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.addRB">[docs]</a>
     <span class="k">def</span> <span class="nf">addRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">rtype</span><span class="o">=</span><span class="s2">&quot;single_sphere&quot;</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="c1"># Sphere</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">mat</span> <span class="o">=</span> <span class="n">rotMat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="c1">#        mat[:3, 3] = trans</span>
-        <span class="c1">#        mat = mat.transpose()</span>
-        <span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">16</span><span class="p">,))</span>
-
-        <span class="n">pmat</span> <span class="o">=</span> <span class="n">Mat4</span><span class="p">(</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
-            <span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-            <span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-            <span class="n">mat</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
-        <span class="p">)</span>
-        <span class="n">inodenp</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">inodenp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_rb_node</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;bullet&quot;</span><span class="p">:</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">setCollideMask</span><span class="p">(</span><span class="n">BitMask32</span><span class="o">.</span><span class="n">allOn</span><span class="p">())</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setAngularDamping</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">setLinearDamping</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">setMat</span><span class="p">(</span><span class="n">pmat</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">attachRigidBody</span><span class="p">(</span><span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">())</span>
-            <span class="n">inodenp</span> <span class="o">=</span> <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;ode&quot;</span><span class="p">:</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">setCollideBits</span><span class="p">(</span><span class="n">BitMask32</span><span class="p">(</span><span class="mh">0x00000002</span><span class="p">))</span>
-            <span class="n">inodenp</span><span class="o">.</span><span class="n">setCategoryBits</span><span class="p">(</span><span class="n">BitMask32</span><span class="p">(</span><span class="mh">0x00000001</span><span class="p">))</span>
-            <span class="c1"># boxGeom.setBody(boxBody)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rb_panda</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inodenp</span><span class="p">)</span>
-        <span class="c1"># self.moveRBnode(inodenp.node(), trans, rotMat)</span>
-        <span class="k">return</span> <span class="n">inodenp</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.moveRBnode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.moveRBnode">[docs]</a>
     <span class="k">def</span> <span class="nf">moveRBnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">rotMat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="c1">#        mat[:3, 3] = trans</span>
-        <span class="c1">#        mat = mat.transpose()</span>
-        <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">rotation_matrix</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">16</span><span class="p">,))</span>
-        <span class="k">if</span> <span class="kc">True</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problem Matrix&quot;</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-            <span class="k">return</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;bullet&quot;</span><span class="p">:</span>
-            <span class="n">pMat</span> <span class="o">=</span> <span class="n">Mat4</span><span class="p">(</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
-                <span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
-            <span class="p">)</span>
-            <span class="n">nodenp</span> <span class="o">=</span> <span class="n">NodePath</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="n">nodenp</span><span class="o">.</span><span class="n">setMat</span><span class="p">(</span><span class="n">pMat</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">panda_solver</span> <span class="o">==</span> <span class="s2">&quot;ode&quot;</span><span class="p">:</span>
-            <span class="n">mat3x3</span> <span class="o">=</span> <span class="n">Mat3</span><span class="p">(</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
-                <span class="n">rotation_matrix</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-            <span class="p">)</span>
-            <span class="n">body</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_body</span><span class="p">()</span>
-            <span class="n">body</span><span class="o">.</span><span class="n">setPosition</span><span class="p">(</span><span class="n">Vec3</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-            <span class="n">body</span><span class="o">.</span><span class="n">setRotation</span><span class="p">(</span><span class="n">mat3x3</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.getRotTransRB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getRotTransRB">[docs]</a>
     <span class="k">def</span> <span class="nf">getRotTransRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="n">nodenp</span> <span class="o">=</span> <span class="n">NodePath</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">nodenp</span><span class="o">.</span><span class="n">getMat</span><span class="p">()</span>
-        <span class="n">M</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-        <span class="n">rRot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-        <span class="n">rRot</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-        <span class="n">rTrans</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">rTrans</span><span class="p">,</span> <span class="n">rRot</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.runBullet">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.runBullet">[docs]</a>
     <span class="k">def</span> <span class="nf">runBullet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">simulationTimes</span><span class="p">,</span> <span class="n">runTimeDisplay</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="n">simulationTimes</span> <span class="o">=</span> <span class="mf">5.0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-            <span class="c1"># should do it after a jitter run</span>
-            <span class="c1">#        for i in xrange(10):</span>
-            <span class="n">dt</span> <span class="o">=</span> <span class="n">globalClock</span><span class="o">.</span><span class="n">getDt</span><span class="p">()</span>  <span class="c1"># noqa: F821, global variable from panda3d</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">doPhysics</span><span class="p">(</span>
-                <span class="n">dt</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">500.0</span>
-            <span class="p">)</span>  <span class="c1"># world.doPhysics(dt, 10, 1.0/180.0)100, 1./500.#2, 1.0/120.0</span>
-            <span class="c1"># check number of contact betwee currrent and rest ?</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">contactTestPair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">moving</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">getNumContacts</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static</span>
-            <span class="p">]</span>
-            <span class="n">done</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="kc">True</span> <span class="ow">in</span> <span class="n">r</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">runTimeDisplay</span><span class="p">:</span>
-                <span class="c1"># move self.moving and update</span>
-                <span class="n">nodenp</span> <span class="o">=</span> <span class="n">NodePath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">moving</span><span class="p">)</span>
-                <span class="n">ma</span> <span class="o">=</span> <span class="n">nodenp</span><span class="o">.</span><span class="n">getMat</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setObjectMatrix</span><span class="p">(</span>
-                    <span class="n">ingr</span><span class="o">.</span><span class="n">moving_geom</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ma</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span>
-                <span class="p">)</span>  <span class="c1"># transpose ?</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">simulationTimes</span><span class="p">:</span>
-                <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">break</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
-
-                <span class="c1"># ==============================================================================</span>
-            <span class="c1">#               Export -&gt; another file ?</span>
-            <span class="c1"># ==============================================================================</span>
 
 <div class="viewcode-block" id="Environment.exportToBD_BOX">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToBD_BOX">[docs]</a>
