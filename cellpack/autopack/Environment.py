@@ -57,13 +57,6 @@ import json
 from json import encoder
 import logging
 from collections import OrderedDict
-
-# PANDA3D Physics engine ODE and Bullet
-import panda3d
-
-from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
-from panda3d.bullet import BulletRigidBodyNode
-
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
 import cellpack.autopack.ingredient as ingredient
@@ -172,7 +165,6 @@ class Environment(CompartmentList):
         self.timeUpDistLoopTotal = 0
         self.exteriorRecipe = None
         self.hgrid = []
-        self.world = None  # panda world for collision
         self.octree = None  # ongoing octree test, no need if openvdb wrapped to python
         self.grid = None  # Grid()  # the main grid
         self.encapsulatingGrid = (
@@ -258,7 +250,6 @@ class Environment(CompartmentList):
         self.packed_objects = PackedObjects()
 
         # should be part of an independent module
-        self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp
         # can't pickle this dictionary
         self.rb_func_dic = {}
@@ -1313,19 +1304,7 @@ class Environment(CompartmentList):
             dpad=dpad,
             centT=centT,
         )
-        # update free points
-        if len(insidePoints) and self.place_method.find("panda") != -1:
-            print(ingr.name, " is inside")
-            self.checkPtIndIngr(ingr, insidePoints, i, ptInd, marray)
-            # ingr.inside_current_grid = True
-        else:
-            # not in the grid
-            print(ingr.name, " is outside")
-            # rbnode = ingr.rbnode[ptInd]
-            # ingr.rbnode.pop(ptInd)
-            marray[i][3] = -ptInd  # uniq Id ?
-            # ingr.rbnode[-1] = rbnode
-        # doesnt seem to work properly...
+        marray[i][3] = -ptInd  # uniq Id ?
         nbFreePoints = BaseGrid.updateDistances(
             self,
             insidePoints,
@@ -1347,25 +1326,6 @@ class Environment(CompartmentList):
             ):  # Graham here on 5/16/12 are these two lines safe?
                 del ingr.allIngrPts  # Graham here on 5/16/12 are these two lines safe?
         return nbFreePoints
-
-    def checkPtIndIngr(self, ingr, insidePoints, i, ptInd, marray):
-        """
-        We need to check if the point indice is correct in the case of panda packing.
-        as the pt indice in the result array have a different meaning.
-        """
-        # change key for rbnode too
-        rbnode = None
-        if ptInd in ingr.rbnode:
-            rbnode = ingr.rbnode[ptInd]
-            ingr.rbnode.pop(ptInd)
-        elif -ptInd in ingr.rbnode:
-            rbnode = ingr.rbnode[-ptInd]
-            ingr.rbnode.pop(-ptInd)
-        else:
-            print("ptInd " + str(ptInd) + " not in ingr.rbnode")
-        if i < len(marray):
-            marray[i][3] = insidePoints.keys()[0]
-            ingr.rbnode[insidePoints.keys()[0]] = rbnode
 
     def getSortedActiveIngredients(self, allIngredients):
         """
@@ -1489,13 +1449,6 @@ class Environment(CompartmentList):
             self.resetIngrRecip(rs)
             ri = orga.innerRecipe
             self.resetIngrRecip(ri)
-        if self.world is not None:
-            # need to clear all node
-            #            nodes = self.rb_panda[:]
-            #            for node in nodes:
-            #                self.delRB(node)
-            self.static = []
-            self.moving = None
         if self.octree is not None:
             del self.octree
             self.octree = None
@@ -1999,10 +1952,6 @@ class Environment(CompartmentList):
 
         PlacedMols = 0
         vThreshStart = 0.0  # Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version
-
-        # if bullet build the organel rbnode
-        if self.place_method == "pandaBullet":
-            self.setupPanda()
 
         # ==============================================================================
         #         #the big loop
@@ -2689,8 +2638,6 @@ class Environment(CompartmentList):
     # ==============================================================================
     # AFter this point, features development around physics engine and algo
     # octree
-    # panda bullet
-    # panda ode
     # ==============================================================================
 
     def setupOctree(
@@ -2701,324 +2648,26 @@ class Environment(CompartmentList):
                 self.grid.getRadius(), helper=helper
             )  # Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?
 
-    def setupPanda(self):
-        try:
-            import panda3d
-        except Exception:
-            return
-        from panda3d.core import loadPrcFileData
-
-        if self.grid is not None:
-            loadPrcFileData(
-                "", "bullet-sap-extents " + str(self.grid.diag)
-            )  # grid may not be setup
-        if self.world is None:
-            if panda3d is None:
-                return
-            loadPrcFileData(
-                "",
-                """
-                load-display p3tinydisplay # to force CPU only rendering (to make it available as an option if everything else fail, use aux-display p3tinydisplay)
-                audio-library-name null # Prevent ALSA errors
-                show-frame-rate-meter 0
-                sync-video 0
-                bullet-max-objects 10240
-                bullet-broadphase-algorithm sap
-                bullet-sap-extents 10000.0
-                textures-power-2 up
-                textures-auto-power-2 #t
-                """,
-            )
-            #            loadPrcFileData("", "window-type none" )
-            # Make sure we don't need a graphics engine
-            # (Will also prevent X errors / Display errors when starting on linux without X server)
-            #            loadPrcFileData("", "audio-library-name null" ) # Prevent ALSA errors
-            #            loadPrcFileData('', 'bullet-enable-contact-events true')
-            #            loadPrcFileData('', 'bullet-max-objects 10240')#10240
-            #            loadPrcFileData('', 'bullet-broadphase-algorithm sap')#aabb
-            #            loadPrcFileData('', 'bullet-sap-extents 10000.0')#
-            if autopack.helper is not None and autopack.helper.nogui:
-                loadPrcFileData("", "window-type offscreen")
-            else:
-                loadPrcFileData("", "window-type None")
-
-            from direct.showbase.ShowBase import ShowBase
-
-            base = ShowBase()
-            base.disableMouse()
-            self.base = base
-            from panda3d.core import Vec3
-
-            if self.panda_solver == "bullet":
-                from panda3d.bullet import BulletWorld
-
-                # global variable from panda3d
-                self.worldNP = render.attachNewNode("World")  # noqa: F821
-                self.world = BulletWorld()
-                self.BitMask32 = BitMask32
-            elif self.panda_solver == "ode":
-                from panda3d.ode import OdeWorld, OdeHashSpace
-
-                self.world = OdeWorld()
-                # or hashspace ?
-                self.ode_space = (
-                    OdeHashSpace()
-                )  # OdeQuadTreeSpace(center,extends,depth)
-                self.ode_space.set_levels(-2, 6)
-                self.ode_space.setAutoCollideWorld(self.world)
-
-            self.world.setGravity(Vec3(0, 0, 0))
-            self.static = []
-            self.moving = None
-            self.rb_panda = []
-            base.destroy()
-
-        for compartment in self.compartments:
-            if compartment.rbnode is None:
-                compartment.rbnode = compartment.addShapeRB(
-                    self
-                )  # addMeshRBOrganelle(o)
-
-    def add_rb_node(self, ingr, trans, mat):
-        if ingr.type == "Mesh":
-            return ingr.add_rb_mesh(self.worldNP)
-        elif self.panda_solver == "ode" and ingr.type == "Sphere":
-            mat3x3 = Mat3(
-                mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
-            )
-            return ingr.add_rb_node_ode(self.world, trans, mat3x3)
-        return ingr.add_rb_node(self.worldNP)
-
     def delRB(self, node):
-        if panda3d is None:
-            return
-        if self.panda_solver == "bullet":
-            self.world.removeRigidBody(node)
-            np = NodePath(node)
-            if np is not None:
-                np.removeNode()
-        elif self.panda_solver == "ode":
-            node.destroy()
-
-        if node in self.rb_panda:
-            self.rb_panda.pop(self.rb_panda.index(node))
-        if node in self.static:
-            self.static.pop(self.static.index(node))
-        if node == self.moving:
-            self.moving = None
+        return None
 
     def setGeomFaces(self, tris, face):
-        if panda3d is None:
-            return
-            # have to add vertices one by one since they are not in order
-        if len(face) == 2:
-            face = numpy.array([face[0], face[1], face[1], face[1]], dtype="int")
-        for i in face:
-            tris.addVertex(i)
-        tris.closePrimitive()
+        return None
 
     def addMeshRBOrganelle(self, o):
-        if panda3d is None:
-            return
-        helper = autopack.helper
-        if not autopack.helper.nogui:
-            geom = helper.getObject(o.gname)
-            if geom is None:
-                o.gname = "%s_Mesh" % o.name
-                geom = helper.getObject(o.gname)
-            faces, vertices, vnormals = helper.DecomposeMesh(
-                geom, edit=False, copy=False, tri=True, transform=True
-            )
-        else:
-            faces = o.faces
-            vertices = o.vertices
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(o.name))
-        inodenp.node().setMass(1.0)
-
-        from panda3d.core import (
-            GeomVertexFormat,
-            GeomVertexWriter,
-            GeomVertexData,
-            Geom,
-            GeomTriangles,
-        )
-        from panda3d.bullet import (
-            BulletTriangleMesh,
-            BulletTriangleMeshShape,
-        )
-
-        # step 1) create GeomVertexData and add vertex information
-        format = GeomVertexFormat.getV3()
-        vdata = GeomVertexData("vertices", format, Geom.UHStatic)
-        vertexWriter = GeomVertexWriter(vdata, "vertex")
-        [vertexWriter.addData3f(v[0], v[1], v[2]) for v in vertices]
-
-        # step 2) make primitives and assign vertices to them
-        tris = GeomTriangles(Geom.UHStatic)
-        [self.setGeomFaces(tris, face) for face in faces]
-
-        # step 3) make a Geom object to hold the primitives
-        geom = Geom(vdata)
-        geom.addPrimitive(tris)
-        # step 4) create the bullet mesh and node
-        mesh = BulletTriangleMesh()
-        mesh.addGeom(geom)
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
-        # or
-        # shape = BulletConvexHullShape()
-        # shape.add_geom(geom)
-        # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        # inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)
-        # TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-
-        if self.panda_solver == "bullet":
-            inodenp.setCollideMask(BitMask32.allOn())
-            inodenp.node().setAngularDamping(1.0)
-            inodenp.node().setLinearDamping(1.0)
-            #            inodenp.setMat(pmat)
-            self.world.attachRigidBody(inodenp.node())
-            inodenp = inodenp.node()
-        return inodenp
+        return None
 
     def addRB(self, ingr, trans, rotMat, rtype="single_sphere", static=False):
-        # Sphere
-        if panda3d is None:
-            return None
-        mat = rotMat.copy()
-        #        mat[:3, 3] = trans
-        #        mat = mat.transpose()
-        mat = mat.transpose().reshape((16,))
-
-        pmat = Mat4(
-            mat[0],
-            mat[1],
-            mat[2],
-            mat[3],
-            mat[4],
-            mat[5],
-            mat[6],
-            mat[7],
-            mat[8],
-            mat[9],
-            mat[10],
-            mat[11],
-            trans[0],
-            trans[1],
-            trans[2],
-            mat[15],
-        )
-        inodenp = None
-        inodenp = self.add_rb_node(ingr, trans, mat)
-        if self.panda_solver == "bullet":
-            inodenp.setCollideMask(BitMask32.allOn())
-            inodenp.node().setAngularDamping(1.0)
-            inodenp.node().setLinearDamping(1.0)
-            inodenp.setMat(pmat)
-            self.world.attachRigidBody(inodenp.node())
-            inodenp = inodenp.node()
-        elif self.panda_solver == "ode":
-            inodenp.setCollideBits(BitMask32(0x00000002))
-            inodenp.setCategoryBits(BitMask32(0x00000001))
-            # boxGeom.setBody(boxBody)
-        self.rb_panda.append(inodenp)
-        # self.moveRBnode(inodenp.node(), trans, rotMat)
-        return inodenp
+        return None
 
     def moveRBnode(self, node, trans, rotMat):
-        if panda3d is None:
-            return
-        rotation_matrix = rotMat.copy()
-        #        mat[:3, 3] = trans
-        #        mat = mat.transpose()
-        rotation_matrix = rotation_matrix.transpose().reshape((16,))
-        if True in numpy.isnan(rotation_matrix).flatten():
-            print("problem Matrix", node)
-            return
-        if self.panda_solver == "bullet":
-            pMat = Mat4(
-                rotation_matrix[0],
-                rotation_matrix[1],
-                rotation_matrix[2],
-                rotation_matrix[3],
-                rotation_matrix[4],
-                rotation_matrix[5],
-                rotation_matrix[6],
-                rotation_matrix[7],
-                rotation_matrix[8],
-                rotation_matrix[9],
-                rotation_matrix[10],
-                rotation_matrix[11],
-                trans[0],
-                trans[1],
-                trans[2],
-                rotation_matrix[15],
-            )
-            nodenp = NodePath(node)
-            nodenp.setMat(pMat)
-        elif self.panda_solver == "ode":
-            mat3x3 = Mat3(
-                rotation_matrix[0],
-                rotation_matrix[1],
-                rotation_matrix[2],
-                rotation_matrix[4],
-                rotation_matrix[5],
-                rotation_matrix[6],
-                rotation_matrix[8],
-                rotation_matrix[9],
-                rotation_matrix[10],
-            )
-            body = node.get_body()
-            body.setPosition(Vec3(trans[0], trans[1], trans[2]))
-            body.setRotation(mat3x3)
+        return None
 
     def getRotTransRB(self, node):
-        if panda3d is None:
-            return
-        nodenp = NodePath(node)
-        m = nodenp.getMat()
-        M = numpy.array(m)
-        rRot = numpy.identity(4)
-        rRot[:3, :3] = M[:3, :3]
-        rTrans = M[3, :3]
-        return rTrans, rRot
+        return None
 
     def runBullet(self, ingr, simulationTimes, runTimeDisplay):
-        if panda3d is None:
-            return
-        done = False
-        t1 = time()
-        simulationTimes = 5.0
-        while not done:
-            # should do it after a jitter run
-            #        for i in xrange(10):
-            dt = globalClock.getDt()  # noqa: F821, global variable from panda3d
-            self.world.doPhysics(
-                dt, 100, 1.0 / 500.0
-            )  # world.doPhysics(dt, 10, 1.0/180.0)100, 1./500.#2, 1.0/120.0
-            # check number of contact betwee currrent and rest ?
-            r = [
-                (self.world.contactTestPair(self.moving, n).getNumContacts() > 0)
-                for n in self.static
-            ]
-            done = not (True in r)
-            if runTimeDisplay:
-                # move self.moving and update
-                nodenp = NodePath(self.moving)
-                ma = nodenp.getMat()
-                self.afviewer.vi.setObjectMatrix(
-                    ingr.moving_geom, numpy.array(ma), transpose=False
-                )  # transpose ?
-                self.afviewer.vi.update()
-            if (time() - t1) > simulationTimes:
-                done = True
-                break
-
-                # ==============================================================================
-            #               Export -> another file ?
-            # ==============================================================================
+        return None
 
     def exportToBD_BOX(self, res_filename=None, output=None, bd_type="flex"):
         # , call the BD_BOX exporter, plugin ? better if result store somewhere.
