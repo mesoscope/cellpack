@@ -1,9 +1,5 @@
 import numpy
 from math import pi
-from panda3d.bullet import BulletRigidBodyNode, BulletSphereShape
-from panda3d.core import Point3, TransformState, Vec3
-from panda3d.ode import OdeBody, OdeMass, OdeSphereGeom
-
 import cellpack.autopack as autopack
 
 from .Ingredient import Ingredient
@@ -261,29 +257,6 @@ class SingleSphereIngr(Ingredient):
                 else:
                     newDistPoints[pt] = d
         return insidePoints, newDistPoints
-
-    def add_rb_node(self, worldNP):
-        shape = BulletSphereShape(self.encapsulating_radius)
-        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
-        inodenp.node().setMass(1.0)
-        #        inodenp.node().addShape(shape)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # rotation ?
-        #        spherenp.setPos(-2, 0, 4)
-        return inodenp
-
-    def add_rb_node_ode(self, world, jtrans, pMat):
-        body = OdeBody(world)
-        M = OdeMass()
-        M.setSphereTotal(1.0, self.encapsulating_radius)
-        body.setMass(M)
-        body.setPosition(Vec3(jtrans[0], jtrans[1], jtrans[2]))
-        body.setRotation(pMat)
-        # the geometry for the collision ?
-        geom = OdeSphereGeom(self.ode_space, self.encapsulating_radius)
-        geom.setBody(body)
-        return geom
 
     def initialize_mesh(self, mesh_store):
         if self.mesh is None:

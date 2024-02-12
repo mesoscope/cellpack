@@ -44,7 +44,6 @@
 
 # TODO: Describe Ingredient class here at high level
 from scipy import spatial
-from panda3d.bullet import BulletRigidBodyNode
 import numpy
 import logging
 import collada
@@ -486,59 +485,6 @@ class Ingredient(Agent):
             m, edit=edit, copy=copy, tri=tri, transform=tr
         )
         return faces, vertices, vnormals
-
-    def addRBsegment(self, pt1, pt2):
-        # ovewrite by grow ingredient
-        pass
-
-    def add_rb_mesh(self, worldNP):
-        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
-        inodenp.node().setMass(1.0)
-        if self.mesh is None:
-            return
-        self.getData()
-        if not len(self.vertices):
-            return inodenp
-        from panda3d.core import (
-            GeomVertexFormat,
-            GeomVertexWriter,
-            GeomVertexData,
-            Geom,
-            GeomTriangles,
-        )
-        from panda3d.bullet import (
-            BulletTriangleMesh,
-            BulletTriangleMeshShape,
-        )
-
-        # step 1) create GeomVertexData and add vertex information
-        format = GeomVertexFormat.getV3()
-        vdata = GeomVertexData("vertices", format, Geom.UHStatic)
-        vertexWriter = GeomVertexWriter(vdata, "vertex")
-        [vertexWriter.addData3f(v[0], v[1], v[2]) for v in self.vertices]
-
-        # step 2) make primitives and assign vertices to them
-        tris = GeomTriangles(Geom.UHStatic)
-        [self.setGeomFaces(tris, face) for face in self.faces]
-
-        # step 3) make a Geom object to hold the primitives
-        geom = Geom(vdata)
-        geom.addPrimitive(tris)
-        # step 4) create the bullet mesh and node
-        #        if ingr.convex_hull:
-        #            shape = BulletConvexHullShape()
-        #            shape.add_geom(geom)
-        #        else :
-        mesh = BulletTriangleMesh()
-        mesh.addGeom(geom)
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
-        print("shape ok", shape)
-        # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        # inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        return inodenp
 
     def getEncapsulatingRadius(self, mesh=None):
         if self.vertices is None or not len(self.vertices):
@@ -1592,7 +1538,6 @@ class Ingredient(Agent):
         is_fiber = self.type == "Grow" or self.type == "Actine"
         collision_possible = True
         if collision_possible or is_fiber:
-            # grow doesnt use panda.......but could use all the geom produce by the grow as rb
             if is_fiber:
                 success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
                     env,
@@ -1635,47 +1580,7 @@ class Ingredient(Agent):
                     grid_point_distances,
                     dpad,
                 )
-            elif self.place_method == "pandaBullet":
-                (
-                    success,
-                    jtrans,
-                    rotMatj,
-                    insidePoints,
-                    newDistPoints,
-                ) = self.pandaBullet_place(
-                    env,
-                    ptInd,
-                    grid_point_distances,
-                    dpad,
-                    env.afviewer,
-                    compartment,
-                    gridPointsCoords,
-                    rotation_matrix,
-                    target_grid_point_position,
-                    current_visual_instance,
-                    usePP=usePP,
-                )
-            elif (
-                self.place_method == "pandaBulletRelax"
-                or self.place_method == "pandaBulletSpring"
-            ):
-                (
-                    success,
-                    jtrans,
-                    rotMatj,
-                    insidePoints,
-                    newDistPoints,
-                ) = self.pandaBullet_relax(
-                    env,
-                    ptInd,
-                    compartment,
-                    target_grid_point_position,
-                    rotation_matrix,
-                    grid_point_distances,
-                    dpad,
-                    current_visual_instance,
-                    dpad,
-                )
+
             else:
                 self.log.error("Can't pack using this method %s", self.place_method)
                 self.reject()
@@ -2162,36 +2067,6 @@ class Ingredient(Agent):
             self.log.info("no partner found")
         return targetPoint, rotMat, found
 
-    def pandaBullet_collision(self, pos, rot, rbnode, getnodes=False):
-        collision = False
-        liste_nodes = []
-        if len(self.env.rTrans) != 0:
-            closesbody_indice = self.env.get_closest_ingredients(
-                pos,
-                cutoff=self.env.largestProteinSize + self.encapsulating_radius * 2.0,
-            )  # vself.radii[0][0]*2.0
-            if len(closesbody_indice["indices"]) != 0:
-                self.log.info("get RB %d", len(closesbody_indice["indices"]))
-                if rbnode is None:
-                    rbnode = self.get_rb_model()
-                    self.env.moveRBnode(rbnode, pos, rot)
-                    self.log.info("get RB for %s", self.name)
-                liste_nodes = self.get_rbNodes(closesbody_indice, pos, getInfo=True)
-                self.log.info("test collision against  %d", len(liste_nodes))
-                for node in liste_nodes:
-                    self.log.info("collision test with %r", node)
-                    self.env.moveRBnode(node[0], node[1], node[2])  # Pb here ?
-                    collision = (
-                        self.env.world.contactTestPair(rbnode, node[0]).getNumContacts()
-                        > 0
-                    )
-                    if collision:
-                        break
-        if getnodes:
-            return collision, liste_nodes
-        else:
-            return collision
-
     def get_compartment(self, env):
         if self.compartment_id == 0:
             return env
@@ -2229,153 +2104,6 @@ class Ingredient(Agent):
 
         return instance_id
 
-    def pandaBullet_place(
-        self,
-        env,
-        ptInd,
-        distance,
-        dpad,
-        afvi,
-        compartment,
-        gridPointsCoords,
-        rot_matrix,
-        target_point,
-        moving,
-        usePP=False,
-    ):
-        """
-        drop the ingredient on grid point ptInd
-        """
-        env.setupPanda()
-        is_realtime = moving is not None
-        # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
-        if self.packing_mode[-4:] == "tile":
-            if self.tilling is None:
-                self.setTilling(compartment)
-            if self.counter != 0:
-                # pick the next Hexa pos/rot.
-                t, collision_results = self.tilling.getNextHexaPosRot()
-                if len(t):
-                    rot_matrix = collision_results
-                    trans = t
-                    target_point = trans
-                    if is_realtime:
-                        self.update_display_rt(moving, target_point, rot_matrix)
-                else:
-                    return False, None, None, {}, {}  # ,targetPoint, rotMat
-            else:
-                self.tilling.init_seed(env.seed_used)
-
-        packing_location = None
-        level = self.collisionLevel
-
-        for jitter_attempt in range(self.jitter_attempts):
-            env.totnbJitter += 1
-
-            (
-                packing_location,
-                packing_rotation,
-            ) = self.get_new_jitter_location_and_rotation(
-                env,
-                target_point,
-                rot_matrix,
-            )
-
-            if is_realtime:
-                self.update_display_rt(moving, target_point, rot_matrix)
-
-            if not self.point_is_available(packing_location):
-                # jittered into wrong compartment,
-                # go to next jitter
-                continue
-
-            collision_results = []
-            rbnode = self.get_rb_model()
-
-            points_to_check = self.get_all_positions_to_check(
-                packing_location
-            )  # includes periodic points, if appropriate
-            for pt in points_to_check:
-                env.callFunction(
-                    env.moveRBnode,
-                    (
-                        rbnode,
-                        pt,
-                        packing_rotation,
-                    ),
-                )
-                collision = self.pandaBullet_collision(pt, packing_rotation, rbnode)
-                collision_results.extend([collision])
-                if True in collision_results:
-                    # break out of point check loop, not this jitter loop
-                    break
-            t = time()
-            # checked packing location and periodic positions
-            if True in collision_results:
-                # found a collision, should check next jitter
-                continue
-
-            # need to check compartment too
-            self.log.info("no additional collisions, checking compartment")
-            if self.compareCompartment:
-                collisionComp = self.compareCompartmentPrimitive(
-                    level,
-                    packing_location,
-                    packing_rotation,
-                    gridPointsCoords,
-                    distance,
-                )
-                collision_results.extend([collisionComp])
-            if self.collides_with_compartment(env, packing_location, packing_rotation):
-                continue
-
-            # got all the way through the checks with no collision
-            if True not in collision_results:
-                inside_points = {}
-                new_dist_points = {}
-                t3 = time()
-                self.env.static.append(rbnode)
-                self.env.moving = None
-
-                for pt in points_to_check:
-
-                    self.pack_at_grid_pt_location(
-                        env,
-                        pt,
-                        packing_rotation,
-                        dpad,
-                        distance,
-                        inside_points,
-                        new_dist_points,
-                        ptInd,
-                    )
-                self.log.info("compute distance loop %d", time() - t3)
-
-                if self.packing_mode[-4:] == "tile":
-                    self.tilling.dropTile(
-                        self.tilling.idc,
-                        self.tilling.edge_id,
-                        packing_location,
-                        packing_rotation,
-                    )
-
-                success = True
-                return (
-                    success,
-                    packing_location,
-                    packing_rotation,
-                    inside_points,
-                    new_dist_points,
-                )
-
-        # never found a place to pack
-        success = False
-        if self.packing_mode[-4:] == "tile":
-            if self.tilling.start.nvisit[self.tilling.edge_id] >= 2:
-                self.tilling.start.free_pos[self.tilling.edge_id] = 0
-
-        return success, None, None, {}, {}
-
     def spheres_SST_place(
         self,
         env,
@@ -2390,7 +2118,6 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        env.setupPanda()
         is_realtime = moving is not None
 
         targetPoint = target_grid_point_position
@@ -2500,138 +2227,3 @@ class Ingredient(Agent):
 
         success = False
         return success, packing_location, packing_rotation, insidePoints, newDistPoints
-
-    def pandaBullet_relax(
-        self,
-        env,
-        ptInd,
-        compartment,
-        target_grid_point_position,
-        rotation_matrix,
-        distance,
-        dpad,
-        moving,
-        drop=True,
-    ):
-        """
-        drop the ingredient on grid point ptInd
-        """
-        env.setupPanda()
-        afvi = env.afviewer
-        simulationTimes = env.simulationTimes
-        runTimeDisplay = env.runTimeDisplay
-        is_realtime = moving is not None
-        gridPointsCoords = env.grid.masterGridPositions
-        insidePoints = {}
-        newDistPoints = {}
-        jtrans, rotMatj = self.oneJitter(
-            env, target_grid_point_position, rotation_matrix
-        )
-        # here should go the simulation
-        # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
-        targetPoint = jtrans
-        if is_realtime:
-            if hasattr(self, "mesh_3d"):
-                # create an instance of mesh3d and place it
-                name = self.name + str(ptInd)
-                if self.mesh_3d is None:
-                    self.moving_geom = afvi.vi.Sphere(
-                        name, radius=self.radii[0][0], parent=afvi.movingMesh
-                    )[0]
-                    afvi.vi.setTranslation(self.moving_geom, pos=jtrans)
-                else:
-                    self.moving_geom = afvi.vi.newInstance(
-                        name,
-                        self.mesh_3d,
-                        matrice=rotMatj,
-                        location=jtrans,
-                        parent=afvi.movingMesh,
-                    )
-        # 2- get the neighboring object from ptInd
-        if env.ingrLookForNeighbours:
-            near_by_ingredients, placed_partners = self.get_partners(
-                env, jtrans, rotation_matrix, compartment, afvi
-            )
-            for i, elem in enumerate(near_by_ingredients):
-                ing = elem[2]
-                t = elem[0]
-                r = elem[1]
-                ind = elem[3]
-                if hasattr(ing, "mesh_3d"):
-                    # create an instance of mesh3d and place it
-                    name = ing.name + str(ind)
-                    if ing.mesh_3d is None:
-                        ipoly = afvi.vi.Sphere(
-                            name, radius=self.radii[0][0], parent=afvi.staticMesh
-                        )[0]
-                        afvi.vi.setTranslation(ipoly, pos=t)
-                    else:
-                        ipoly = afvi.vi.newInstance(
-                            name,
-                            ing.mesh_3d,
-                            matrice=r,
-                            location=t,
-                            parent=afvi.staticMesh,
-                        )
-                elif ing.type == "Grow":
-                    name = ing.name + str(ind)
-                    ipoly = afvi.vi.newInstance(
-                        name, afvi.orgaToMasterGeom[ing], parent=afvi.staticMesh
-                    )
-
-            if placed_partners:
-                self.log.info(f"len listePartner: {len(placed_partners)}")
-                if not self.force_random:
-                    targetPoint = self.pick_partner_grid_index(
-                        near_by_ingredients,
-                        placed_partners,
-                        current_packing_position=jtrans,
-                    )
-                    if targetPoint is None:
-                        targetPoint = jtrans
-                else:
-                    targetPoint = jtrans
-                    #       should be panda util
-                    #        add the rigid body
-        self.env.moving = rbnode = self.env.callFunction(
-            self.env.addRB,
-            (
-                self,
-                jtrans,
-                rotation_matrix,
-            ),
-            {"rtype": self.type},
-        )
-        self.env.callFunction(
-            self.env.moveRBnode,
-            (
-                rbnode,
-                jtrans,
-                rotMatj,
-            ),
-        )
-        # run he simulation for simulationTimes
-        env.callFunction(
-            self.env.runBullet,
-            (
-                self,
-                simulationTimes,
-                runTimeDisplay,
-            ),
-        )
-        # cb=self.getTransfo)
-        rTrans, rRot = self.env.getRotTransRB(rbnode)
-        # 5- we get the resuling transofrmation matrix and decompose ->rTrans rRot
-        # use
-        # r=[ (self.env.world.contactTestPair(rbnode, n).getNumContacts() > 0 ) for n in self.env.static]
-        self.env.static.append(rbnode)
-
-        jtrans = rTrans[:]
-        rotMatj = rRot[:]
-        insidePoints, newDistPoints = self.get_new_distance_values(
-            jtrans, rotMatj, gridPointsCoords, distance, dpad
-        )
-        self.rRot.append(rotMatj)
-        self.tTrans.append(jtrans)
-        success = True
-        return success, jtrans, rotMatj, insidePoints, newDistPoints

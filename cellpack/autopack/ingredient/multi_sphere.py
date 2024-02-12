@@ -1,5 +1,3 @@
-from panda3d.core import Point3, TransformState
-from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi
 import numpy
 
@@ -247,19 +245,6 @@ class MultiSphereIngr(Ingredient):
                     dpad,
                 )
         return False, insidePoints, newDistPoints
-
-    def add_rb_node(self, worldNP):
-        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
-        inodenp.node().setMass(1.0)
-        level = self.deepest_level
-        centers = self.positions[level]
-        radii = self.radii[level]
-        for radc, posc in zip(radii, centers):
-            shape = BulletSphereShape(radc)
-            inodenp.node().addShape(
-                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
-            )  #
-        return inodenp
 
     def get_signed_distance(
         self,
