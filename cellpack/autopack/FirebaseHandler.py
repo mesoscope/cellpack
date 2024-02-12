@@ -5,6 +5,9 @@ from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
 from google.cloud.exceptions import NotFound
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
+from cellpack.autopack.interface_objects.default_values import (
+    default_firebase_collection_names,
+)
 
 
 class FirebaseHandler(object):
@@ -69,9 +72,13 @@ class FirebaseHandler(object):
             components = path.split(":")[1].split("/")
             collection = components[0]
             id = components[1]
+            if collection not in default_firebase_collection_names:
+                raise ValueError(
+                    f"Invalid collection name: {collection}. Choose from: {default_firebase_collection_names}"
+                )
         except IndexError:
             raise ValueError(
-                "Invalid path provided. Path example: firebase:collection/id"
+                "Invalid path provided. Expected format: firebase:collection/id"
             )
         return collection, id
 
