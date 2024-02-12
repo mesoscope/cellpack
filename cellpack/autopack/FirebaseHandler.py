@@ -74,7 +74,7 @@ class FirebaseHandler(object):
             id = components[1]
             if collection not in default_firebase_collection_names:
                 raise ValueError(
-                    f"Invalid collection name: {collection}. Choose from: {default_firebase_collection_names}"
+                    f"Invalid collection name: '{collection}'. Choose from: {default_firebase_collection_names}"
                 )
         except IndexError:
             raise ValueError(

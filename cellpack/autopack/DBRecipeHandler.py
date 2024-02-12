@@ -640,7 +640,7 @@ class DBRecipeLoader(object):
         recipe_path = self.db.get_value(collection, id, "recipe_path")
         if not recipe_path:
             raise ValueError(
-                f"No recipe found at the input path. Expected path format: 'firebase:recipes/[RECIPE-ID]'"
+                f"No recipe found at the input path: '{path}'. Please ensure the recipe exists in the database and is spelled correctly. Expected path format: 'firebase:recipes/[RECIPE-ID]'"
             )
 
     @staticmethod
