@@ -1,5 +1,5 @@
 import fire
-from os import path
+from pathlib import Path
 import logging
 import logging.config
 import time
@@ -12,10 +12,9 @@ from cellpack.autopack.Environment import Environment
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
-from cellpack.autopack.utils import get_seed_list
 
 ###############################################################################
-log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
+log_file_path = Path(__file__).parent.parent / "logging.conf"
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
@@ -30,8 +29,6 @@ def pack(recipe, config_path=None, analysis_config_path=None):
 
     :return: void
     """
-    log.info(f"Running in {__file__}")
-
     packing_config_data = ConfigLoader(config_path).config
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"]
@@ -58,21 +55,10 @@ def pack(recipe, config_path=None, analysis_config_path=None):
         )
         log.info(f"saving to {env.out_folder}")
 
-        seed_list = get_seed_list(packing_config_data, recipe_data)
-
         analyze.doloop(
-            packing_config_data["number_of_packings"],
+            recipe_data,
+            packing_config_data,
             env.boundingBox,
-            plot_figures=packing_config_data.get("save_plot_figures", True),
-            show_grid=packing_config_data["show_grid_plot"],
-            seed_list=seed_list,
-            config_name=packing_config_data["name"],
-            recipe_version=recipe_data["version"],
-            image_export_options=packing_config_data.get("image_export_options"),
-            parallel=packing_config_data.get("parallel", False),
-            save_gradient_data_as_image=packing_config_data.get(
-                "save_gradient_data_as_image", False
-            ),
         )
         if analysis_config_path is not None:
             analyze.run_analysis_workflow(
