@@ -1,4 +1,5 @@
 import copy
+from enum import Enum
 
 from deepdiff import DeepDiff
 
@@ -404,6 +405,9 @@ class DBUploader(object):
                 modified_data[key] = unpacked_value
                 if isinstance(unpacked_value, dict):
                     modified_data[key] = DBUploader.prep_data_for_db(unpacked_value)
+            # If the value is an enum, convert it to a string. e.g. during a version migration process where "type" in a v1 recipe is an enum
+            elif isinstance(value, Enum):
+                modified_data[key] = value.name
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
                 modified_data[key] = DBUploader.prep_data_for_db(value)
