@@ -19,6 +19,11 @@ import cellpack.autopack as autopack
 from cellpack.autopack.GeometryTools import GeometryTools
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
+<<<<<<< HEAD
+=======
+from cellpack.autopack.upy import colors as col
+from cellpack.autopack.upy.colors import map_colors
+>>>>>>> feature/send_config_data_to_analysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
 from cellpack.autopack.writers import Writer
 from cellpack.autopack.writers.ImageWriter import ImageWriter
