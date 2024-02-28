@@ -21,8 +21,11 @@ class DATABASE_IDS(MetaEnum):
                 region_name=region_name,
             )
 
+        def create_firebase_handler(default_db):
+            return FirebaseHandler(default_db=default_db)
+
         handlers_dict = {
-            cls.FIREBASE: FirebaseHandler(),
+            cls.FIREBASE: create_firebase_handler,
             cls.AWS: create_aws_handler,
         }
         return handlers_dict
