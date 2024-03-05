@@ -1,6 +1,9 @@
 name: Cleanup Firebase Metadata
 
 on:
+    push:
+        branches:
+            - feature/firebase-delete-metadata
     schedule:
         - cron: "24 18 * * 1" # Runs at 18:24 UTC every Monday
 
