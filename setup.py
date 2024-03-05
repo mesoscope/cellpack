@@ -47,6 +47,7 @@ dev_requirements = [
 ]
 
 requirements = [
+    *analysis_requirements,
     "boto3>=1.28.3",
     "fire>=0.4.0",
     "firebase_admin>=6.0.1",
