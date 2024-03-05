@@ -2,6 +2,7 @@ import copy
 from enum import Enum
 
 from deepdiff import DeepDiff
+import requests
 
 from cellpack.autopack.utils import deep_merge
 
@@ -376,6 +377,30 @@ class GradientDoc(DataDoc):
         return None, None
 
 
+class ResultDoc(DataDoc):
+    def __init__(self, db):
+        self.db = db
+
+    def check_expired_results(self):
+        """
+        Check if the results in the database are expired and delete them if the linked object expired.
+        """
+        current_utc = self.db.create_timestamp()
+        results = self.db.collection("results").stream()
+        for result in results:
+            result_data = self.db.doc_to_dict(result)
+            result_age = current_utc - result_data["timestamp"]
+            if result_age.days > 180 and not self.check_url_expires(result_data["url"]):
+                self.db.delete_doc("results", self.db.doc_id(result))
+
+    def check_url_exists(self, url):
+        """
+        Check if the S3 object at the URL exists.
+        """
+        response = requests.head(url)
+        return response.status_code == 200
+
+
 class DBUploader(object):
     """
     Handles the uploading of data to the database.
@@ -710,3 +735,19 @@ class DBRecipeLoader(object):
         if grad_dict:
             recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
         return recipe_data
+
+
+class DBMaintenance(object):
+    """
+    Handles the maintenance of the database.
+    """
+
+    def __init__(self, db_handler):
+        self.db = db_handler
+        self.result_doc = ResultDoc(self.db)
+
+    def cleanup_results(self):
+        """
+        Check if the results in the database are expired and delete them if the linked object expired.
+        """
+        self.result_doc.check_expired_results()

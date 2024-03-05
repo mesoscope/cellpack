@@ -166,6 +166,13 @@ class FirebaseHandler(object):
         except NotFound:
             self.set_doc(collection, id, data)
 
+    # Delete methods
+    def delete_doc(self, collection, id):
+        doc_ref = self.db.collection(collection).document(id)
+        doc_ref.delete()
+        print(f"successfully deleted path: {doc_ref.path}")
+        return doc_ref.id
+
     # other utils
     @staticmethod
     def write_creds_path():
