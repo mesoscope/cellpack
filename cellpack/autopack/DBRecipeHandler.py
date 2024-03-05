@@ -1,4 +1,5 @@
 import copy
+from datetime import datetime, timezone
 from enum import Enum
 
 from deepdiff import DeepDiff
@@ -377,26 +378,35 @@ class GradientDoc(DataDoc):
         return None, None
 
 
-class ResultDoc(DataDoc):
+class ResultDoc:
     def __init__(self, db):
         self.db = db
 
-    def check_expired_results(self):
+    def handle_expired_results(self):
         """
         Check if the results in the database are expired and delete them if the linked object expired.
         """
-        current_utc = self.db.create_timestamp()
-        results = self.db.collection("results").stream()
-        for result in results:
-            result_data = self.db.doc_to_dict(result)
-            result_age = current_utc - result_data["timestamp"]
-            if result_age.days > 180 and not self.check_url_expires(result_data["url"]):
-                self.db.delete_doc("results", self.db.doc_id(result))
+        current_utc = datetime.utcnow().replace(tzinfo=timezone.utc)
+        results = self.db.get_all_docs("results")
+        if results:
+            for result in results:
+                result_data = self.db.doc_to_dict(result)
+                result_age = current_utc - result_data["timestamp"]
+                if result_age.days > 180 and not self.validate_existence(
+                    result_data["url"]
+                ):
+                    self.db.delete_doc("results", self.db.doc_id(result))
+                else:
+                    print("All results are up to date.")
+        else:
+            print("No stored results to cleanup.")
 
-    def check_url_exists(self, url):
+    def validate_existence(self, url):
         """
-        Check if the S3 object at the URL exists.
+        Validate the existence of an S3 object by checking if the URL is accessible.
+        Returns True if the URL is accessible.
         """
+        print("1")
         response = requests.head(url)
         return response.status_code == 200
 
@@ -750,4 +760,4 @@ class DBMaintenance(object):
         """
         Check if the results in the database are expired and delete them if the linked object expired.
         """
-        self.result_doc.check_expired_results()
+        self.result_doc.handle_expired_results()
