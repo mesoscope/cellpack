@@ -406,7 +406,6 @@ class ResultDoc:
         Validate the existence of an S3 object by checking if the URL is accessible.
         Returns True if the URL is accessible.
         """
-        print("1")
         response = requests.head(url)
         return response.status_code == 200
 
