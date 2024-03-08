@@ -1413,7 +1413,7 @@ class simulariumHelper(hostHelper.Helper):
             handler = DATABASE_IDS.handlers().get(storage)
             initialized_handler = handler(
                 bucket_name="cellpack-results",
-                sub_folder_name="simularium/",
+                sub_folder_name="simularium",
                 region_name="us-west-2",
             )
         file_name, url = initialized_handler.save_file_and_get_url(file_path)
