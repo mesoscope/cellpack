@@ -62,6 +62,7 @@ requirements = [
     "trimesh>=3.9.34",
     "deepdiff>=5.5.0",
     "python-dotenv>=1.0.0",
+    "moto>=5.0.2",
 ]
 
 extra_requirements = {
