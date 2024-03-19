@@ -1218,7 +1218,7 @@ class Compartment(CompartmentList):
 
         off_grid_surface_points = surface_points_in_bounding_box
 
-        ex = False  # True if nbGridPoints == len(idarray) else False
+        ex = True  # True if nbGridPoints == len(idarray) else False
 
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints,

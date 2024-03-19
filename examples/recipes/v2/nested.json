@@ -19,7 +19,6 @@
             "type": "single_sphere",
             "jitter_attempts": 10,
             "packing_mode": "random",
-            "place_method": "jitter",
             "available_regions": {
                 "interior": {},
                 "surface": {}
@@ -84,7 +83,11 @@
                         "object": "red_sphere",
                         "count": 40
                     }
-                ]
+                ],
+                "surface": [{
+                    "object": "green_sphere",
+                    "count": 40
+                }]
             }
         },
         "inner_sphere": {
