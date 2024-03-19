@@ -28,6 +28,7 @@ analysis_requirements = [
     "seaborn>=0.12.1",
     "aicsimageio>=4.10.0",
     "pandas>=1.2.4",
+    "mdutils>=1.4.0",
 ]
 
 dev_requirements = [
