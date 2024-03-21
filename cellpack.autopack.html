@@ -813,9 +813,15 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.AWSHandler.AWSHandler.save_file">
-<span class="sig-name descname"><span class="pre">save_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/AWSHandler.html#AWSHandler.save_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.AWSHandler.AWSHandler.save_file" title="Link to this definition">¶</a></dt>
-<dd><p>Uploads a file to S3 and returns the presigned url</p>
+<dt class="sig sig-object py" id="cellpack.autopack.AWSHandler.AWSHandler.is_url_valid">
+<span class="sig-name descname"><span class="pre">is_url_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/AWSHandler.html#AWSHandler.is_url_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.AWSHandler.AWSHandler.is_url_valid" title="Link to this definition">¶</a></dt>
+<dd><p>Validate the url’s scheme, bucket name, and query parameters, etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.AWSHandler.AWSHandler.save_file_and_get_url">
+<span class="sig-name descname"><span class="pre">save_file_and_get_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/AWSHandler.html#AWSHandler.save_file_and_get_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.AWSHandler.AWSHandler.save_file_and_get_url" title="Link to this definition">¶</a></dt>
+<dd><p>Uploads a file to S3 and returns the base url</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2153,6 +2159,13 @@ Return restructured composition dict with “composition” as key</p>
 <dd><p>convert data from db and resolve references.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBRecipeLoader.validate_input_recipe_path">
+<span class="sig-name descname"><span class="pre">validate_input_recipe_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBRecipeLoader.validate_input_recipe_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.validate_input_recipe_path" title="Link to this definition">¶</a></dt>
+<dd><p>Validates if the input path corresponds to a recipe path in the database.
+Format of a recipe path: firebase:recipes/[RECIPE-ID]</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -3028,6 +3041,11 @@ listingredient influenced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.get_username">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_username</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.get_username"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_username" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_value" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5682,7 +5700,8 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler"><code class="docutils literal notranslate"><span class="pre">AWSHandler</span></code></a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.create_presigned_url"><code class="docutils literal notranslate"><span class="pre">AWSHandler.create_presigned_url()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.get_aws_object_key"><code class="docutils literal notranslate"><span class="pre">AWSHandler.get_aws_object_key()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.save_file"><code class="docutils literal notranslate"><span class="pre">AWSHandler.save_file()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.is_url_valid"><code class="docutils literal notranslate"><span class="pre">AWSHandler.is_url_valid()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.save_file_and_get_url"><code class="docutils literal notranslate"><span class="pre">AWSHandler.save_file_and_get_url()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.upload_file"><code class="docutils literal notranslate"><span class="pre">AWSHandler.upload_file()</span></code></a></li>
 </ul>
 </li>
@@ -5902,6 +5921,7 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_docs_by_id"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.collect_docs_by_id()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.compile_db_recipe_data"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.compile_db_recipe_data()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.prep_db_doc_for_download"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.prep_db_doc_for_download()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.validate_input_recipe_path"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.validate_input_recipe_path()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBUploader"><code class="docutils literal notranslate"><span class="pre">DBUploader</span></code></a><ul>
@@ -6061,6 +6081,7 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_path_from_ref"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_path_from_ref()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_staging_creds"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_staging_creds()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_username"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_username()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_value"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_value()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.is_firebase_obj"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.is_firebase_obj()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.is_reference"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.is_reference()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.set_doc"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.set_doc()</span></code></a></li>

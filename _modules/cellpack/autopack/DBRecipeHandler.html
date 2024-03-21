@@ -716,6 +716,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">recipe_id</span><span class="si">}</span><span class="s2"> is already in firestore&quot;</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="n">recipe_to_save</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_collections</span><span class="p">(</span><span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">)</span>
+        <span class="n">recipe_to_save</span><span class="p">[</span><span class="s2">&quot;recipe_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span> <span class="n">recipe_id</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upload_data</span><span class="p">(</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span> <span class="n">recipe_to_save</span><span class="p">,</span> <span class="n">recipe_id</span><span class="p">)</span></div>
 
 
@@ -731,7 +732,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">update_or_create</span><span class="p">(</span>
                 <span class="s2">&quot;results&quot;</span><span class="p">,</span>
                 <span class="n">file_name</span><span class="p">,</span>
-                <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">},</span>
             <span class="p">)</span></div>
 </div>
 
@@ -785,6 +786,21 @@
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_docs_by_id">[docs]</a>
     <span class="k">def</span> <span class="nf">collect_docs_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DBRecipeLoader.validate_input_recipe_path">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.validate_input_recipe_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_input_recipe_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates if the input path corresponds to a recipe path in the database.</span>
+<span class="sd">        Format of a recipe path: firebase:recipes/[RECIPE-ID]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_collection_id_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">recipe_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="s2">&quot;recipe_path&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">recipe_path</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No recipe found at the input path: &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39;. Please ensure the recipe exists in the database and is spelled correctly. Expected path format: &#39;firebase:recipes/[RECIPE-ID]&#39;&quot;</span>
+            <span class="p">)</span></div>
 
 
     <span class="nd">@staticmethod</span>

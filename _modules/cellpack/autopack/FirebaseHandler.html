@@ -45,6 +45,9 @@
 <span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
 <span class="kn">from</span> <span class="nn">google.cloud.exceptions</span> <span class="kn">import</span> <span class="n">NotFound</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.default_values</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">default_firebase_collection_names</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="FirebaseHandler">
@@ -127,10 +130,18 @@
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_collection_id_from_path">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_collection_id_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="c1"># path example = firebase:composition/uid_1</span>
-        <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-        <span class="n">collection</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="n">collection</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">collection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">default_firebase_collection_names</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Invalid collection name: &#39;</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s2">&#39;. Choose from: </span><span class="si">{</span><span class="n">default_firebase_collection_names</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid path provided. Expected format: firebase:collection/id&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span></div>
 
 
@@ -229,6 +240,15 @@
     <span class="k">def</span> <span class="nf">get_doc_by_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">get_collection_id_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FirebaseHandler.get_value">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">doc</span><span class="p">[</span><span class="n">field</span><span class="p">]</span></div>
 
 
     <span class="c1"># Update methods</span>
