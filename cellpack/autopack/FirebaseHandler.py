@@ -19,10 +19,10 @@ class FirebaseHandler(object):
     _initialized = False
     _db = None
 
-    def __init__(self):
+    def __init__(self, default_db=None):
         # check if firebase is already initialized
         if not FirebaseHandler._initialized:
-            db_choice = FirebaseHandler.which_db()
+            db_choice = FirebaseHandler.which_db(default_db=default_db)
             if db_choice == "staging":
                 cred = FirebaseHandler.get_staging_creds()
             else:
@@ -37,14 +37,16 @@ class FirebaseHandler(object):
 
     # common utility methods
     @staticmethod
-    def which_db():
+    def which_db(default_db=None):
         options = {"1": "dev", "2": "staging"}
-        print("Choose database:")
+        if default_db in options.values():
+            print(f"Using {default_db} database -------------")
+            return default_db
         for key, value in options.items():
             print(f"[{key}] {value}")
         choice = input("Enter number: ").strip()
         print(f"Using {options.get(choice, 'dev')} database -------------")
-        return options.get(choice, "dev")  # default to dev db
+        return options.get(choice, "dev")  # default to dev db for recipe uploads
 
     @staticmethod
     def doc_to_dict(doc):
@@ -112,12 +114,13 @@ class FirebaseHandler(object):
         # set override=True to refresh the .env file if softwares or tokens updated
         load_dotenv(dotenv_path="./.env", override=False)
         FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        firebase_key = FIREBASE_TOKEN.replace("\\n", "\n")
         FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
         return {
             "type": "service_account",
             "project_id": "cell-pack-database",
             "client_email": FIREBASE_EMAIL,
-            "private_key": FIREBASE_TOKEN,
+            "private_key": firebase_key,
             "token_uri": "https://oauth2.googleapis.com/token",
         }
 

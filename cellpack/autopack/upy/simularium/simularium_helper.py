@@ -1423,8 +1423,12 @@ class simulariumHelper(hostHelper.Helper):
     @staticmethod
     def store_metadata(file_name, url, db=None):
         if db == "firebase":
-            db_handler = DBUploader(DATABASE_IDS.handlers().get(db))
-            db_handler.upload_result_metadata(file_name, url)
+            handler = DATABASE_IDS.handlers().get(db)
+            initialized_db = handler(
+                default_db="staging"
+            )  # default to staging for metadata uploads
+            db_uploader = DBUploader(initialized_db)
+            db_uploader.upload_result_metadata(file_name, url)
 
     @staticmethod
     def open_in_simularium(aws_url):
