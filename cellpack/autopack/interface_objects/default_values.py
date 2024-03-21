@@ -13,3 +13,11 @@ DEFAULT_GRADIENT_MODE_SETTINGS = {
     "mode_settings": {},
     "weight_mode_settings": {},
 }
+
+default_firebase_collection_names = [
+    "composition",
+    "objects",
+    "gradients",
+    "recipes",
+    "results",
+]
