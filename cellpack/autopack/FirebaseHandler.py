@@ -5,6 +5,9 @@ from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
 from google.cloud.exceptions import NotFound
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
+from cellpack.autopack.interface_objects.default_values import (
+    default_firebase_collection_names,
+)
 
 
 class FirebaseHandler(object):
@@ -65,10 +68,18 @@ class FirebaseHandler(object):
 
     @staticmethod
     def get_collection_id_from_path(path):
-        # path example = firebase:composition/uid_1
-        components = path.split(":")[1].split("/")
-        collection = components[0]
-        id = components[1]
+        try:
+            components = path.split(":")[1].split("/")
+            collection = components[0]
+            id = components[1]
+            if collection not in default_firebase_collection_names:
+                raise ValueError(
+                    f"Invalid collection name: '{collection}'. Choose from: {default_firebase_collection_names}"
+                )
+        except IndexError:
+            raise ValueError(
+                "Invalid path provided. Expected format: firebase:collection/id"
+            )
         return collection, id
 
     # Create methods
@@ -140,6 +151,12 @@ class FirebaseHandler(object):
     def get_doc_by_ref(self, path):
         collection, id = FirebaseHandler.get_collection_id_from_path(path)
         return self.get_doc_by_id(collection, id)
+
+    def get_value(self, collection, id, field):
+        doc, _ = self.get_doc_by_id(collection, id)
+        if doc is None:
+            return None
+        return doc[field]
 
     # Update methods
     def update_doc(self, collection, id, data):
