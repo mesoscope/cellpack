@@ -68,8 +68,11 @@
                 <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
             <span class="p">)</span>
 
+        <span class="k">def</span> <span class="nf">create_firebase_handler</span><span class="p">(</span><span class="n">default_db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">FirebaseHandler</span><span class="p">(</span><span class="n">default_db</span><span class="o">=</span><span class="n">default_db</span><span class="p">)</span>
+
         <span class="n">handlers_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">:</span> <span class="n">FirebaseHandler</span><span class="p">(),</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">:</span> <span class="n">create_firebase_handler</span><span class="p">,</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">AWS</span><span class="p">:</span> <span class="n">create_aws_handler</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">handlers_dict</span></div>

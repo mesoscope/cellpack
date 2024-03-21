@@ -1807,8 +1807,12 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">store_metadata</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">db</span> <span class="o">==</span> <span class="s2">&quot;firebase&quot;</span><span class="p">:</span>
-            <span class="n">db_handler</span> <span class="o">=</span> <span class="n">DBUploader</span><span class="p">(</span><span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">db</span><span class="p">))</span>
-            <span class="n">db_handler</span><span class="o">.</span><span class="n">upload_result_metadata</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span></div>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+            <span class="n">initialized_db</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span>
+                <span class="n">default_db</span><span class="o">=</span><span class="s2">&quot;staging&quot;</span>
+            <span class="p">)</span>  <span class="c1"># default to staging for metadata uploads</span>
+            <span class="n">db_uploader</span> <span class="o">=</span> <span class="n">DBUploader</span><span class="p">(</span><span class="n">initialized_db</span><span class="p">)</span>
+            <span class="n">db_uploader</span><span class="o">.</span><span class="n">upload_result_metadata</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.open_in_simularium">
