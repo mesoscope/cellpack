@@ -610,6 +610,7 @@ class DBUploader(object):
             print(f"{recipe_id} is already in firestore")
             return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
+        recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
 
     def upload_result_metadata(self, file_name, url):
@@ -622,7 +623,7 @@ class DBUploader(object):
             self.db.update_or_create(
                 "results",
                 file_name,
-                {"user": username, "timestamp": timestamp, "url": url.split("?")[0]},
+                {"user": username, "timestamp": timestamp, "url": url},
             )
 
 
@@ -667,6 +668,18 @@ class DBRecipeLoader(object):
 
     def collect_docs_by_id(self, collection, id):
         return self.db.get_doc_by_id(collection, id)
+
+    def validate_input_recipe_path(self, path):
+        """
+        Validates if the input path corresponds to a recipe path in the database.
+        Format of a recipe path: firebase:recipes/[RECIPE-ID]
+        """
+        collection, id = self.db.get_collection_id_from_path(path)
+        recipe_path = self.db.get_value(collection, id, "recipe_path")
+        if not recipe_path:
+            raise ValueError(
+                f"No recipe found at the input path: '{path}'. Please ensure the recipe exists in the database and is spelled correctly. Expected path format: 'firebase:recipes/[RECIPE-ID]'"
+            )
 
     @staticmethod
     def _get_grad_and_obj(obj_data, obj_dict, grad_dict):

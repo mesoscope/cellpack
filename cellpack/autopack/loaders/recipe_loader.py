@@ -196,7 +196,7 @@ class RecipeLoader(object):
                     atomic=reps.get("atomic", None),
                     packing=reps.get("packing", None),
                 )
-                # the key "all_partners" exists in obj["partners"] if the recipe is downloaded from a remote db
+                # the key "all_partners" already exists in obj["partners"] if the recipe is downloaded from firebase
                 partner_settings = (
                     []
                     if (
