@@ -156,6 +156,17 @@ class FirebaseHandler(object):
         collection, id = FirebaseHandler.get_collection_id_from_path(path)
         return self.get_doc_by_id(collection, id)
 
+    def get_all_docs(self, collection):
+        try:
+            docs_stream = self.db.collection(collection).stream()
+            docs = list(docs_stream)
+            return docs
+        except Exception as e:
+            logging.error(
+                f"An error occurred while retrieving docs from collection '{collection}': {e}"
+            )
+            return None
+
     def get_value(self, collection, id, field):
         doc, _ = self.get_doc_by_id(collection, id)
         if doc is None:
