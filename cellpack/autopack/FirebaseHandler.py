@@ -1,4 +1,5 @@
 import ast
+import logging
 import os
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -90,10 +91,10 @@ class FirebaseHandler(object):
         if not doc:
             doc_ref = self.db.collection(collection).document(id)
             doc_ref.set(data)
-            print(f"successfully uploaded to path: {doc_ref.path}")
+            logging.info(f"successfully uploaded to path: {doc_ref.path}")
             return doc_ref
         else:
-            print(
+            logging.error(
                 f"ERROR: {doc_ref.path} already exists. If uploading new data, provide a unique recipe name."
             )
             return
@@ -155,6 +156,17 @@ class FirebaseHandler(object):
         collection, id = FirebaseHandler.get_collection_id_from_path(path)
         return self.get_doc_by_id(collection, id)
 
+    def get_all_docs(self, collection):
+        try:
+            docs_stream = self.db.collection(collection).stream()
+            docs = list(docs_stream)
+            return docs
+        except Exception as e:
+            logging.error(
+                f"An error occurred while retrieving docs from collection '{collection}': {e}"
+            )
+            return None
+
     def get_value(self, collection, id, field):
         doc, _ = self.get_doc_by_id(collection, id)
         if doc is None:
@@ -165,7 +177,7 @@ class FirebaseHandler(object):
     def update_doc(self, collection, id, data):
         doc_ref = self.db.collection(collection).document(id)
         doc_ref.update(data)
-        print(f"successfully updated to path: {doc_ref.path}")
+        logging.info(f"successfully updated to path: {doc_ref.path}")
         return doc_ref
 
     @staticmethod
@@ -185,6 +197,13 @@ class FirebaseHandler(object):
             self.update_doc(collection, id, data)
         except NotFound:
             self.set_doc(collection, id, data)
+
+    # Delete methods
+    def delete_doc(self, collection, id):
+        doc_ref = self.db.collection(collection).document(id)
+        doc_ref.delete()
+        logging.info(f"successfully deleted path: {doc_ref.path}")
+        return doc_ref.id
 
     # other utils
     @staticmethod
