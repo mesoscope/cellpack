@@ -26,8 +26,8 @@ jobs:
                     pip install .[all]
             -   name: Cleanup Firebase Metadata
                 env:
-                    STAGING_FIREBASE_TOKEN: ${{ secrets.STAGING_FIREBASE_TOKEN }}
-                    STAGING_FIREBASE_EMAIL: ${{ secrets.STAGING_FIREBASE_EMAIL }}
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    FIREBASE_EMAIL: ${{ secrets.FIREBASE_EMAIL }}
                 run: |
                     python cellpack/bin/cleanup_tasks.py
                     echo "Cleanup complete."
