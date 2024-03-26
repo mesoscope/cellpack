@@ -396,8 +396,9 @@ class ResultDoc:
                     result_data["url"]
                 ):
                     self.db.delete_doc("results", self.db.doc_id(result))
+            print("Results cleanup complete.")
         else:
-            print("All results are up to date.")
+            print("No results found in the database.")
 
     def validate_existence(self, url):
         """

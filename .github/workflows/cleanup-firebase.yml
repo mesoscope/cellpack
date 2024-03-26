@@ -30,4 +30,3 @@ jobs:
                     FIREBASE_EMAIL: ${{ secrets.FIREBASE_EMAIL }}
                 run: |
                     python cellpack/bin/cleanup_tasks.py
-                    echo "Cleanup complete."
