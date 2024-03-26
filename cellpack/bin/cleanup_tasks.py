@@ -10,9 +10,10 @@ def run_cleanup(db_id=DATABASE_IDS.FIREBASE):
     Args:
         db_id(str): The database id to use
     """
-    db = DATABASE_IDS.handlers().get(db_id)
-    db_handler = DBMaintenance(db)
-    db_handler.cleanup_results()
+    handler = DATABASE_IDS.handlers().get(db_id)
+    initialized_db = handler(default_db="staging")
+    db_maintainer = DBMaintenance(initialized_db)
+    db_maintainer.cleanup_results()
 
 
 if __name__ == "__main__":
