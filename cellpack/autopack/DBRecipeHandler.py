@@ -386,7 +386,7 @@ class ResultDoc:
         """
         Check if the results in the database are expired and delete them if the linked object expired.
         """
-        current_utc = datetime.utcnow().replace(tzinfo=timezone.utc)
+        current_utc = datetime.now(timezone.utc)
         results = self.db.get_all_docs("results")
         if results:
             for result in results:
