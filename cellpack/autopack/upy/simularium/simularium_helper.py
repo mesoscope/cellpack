@@ -18,6 +18,7 @@ from simulariumio import (
     ModelMetaData,
     CameraData,
     DisplayData,
+    ScatterPlotData,
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
@@ -1371,7 +1372,64 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
-        TrajectoryConverter(converted_data).save(file_name, False)
+        plot_data = ScatterPlotData(
+            title="test_plot",
+            xaxis_title="concentrations (uM)",
+            yaxis_title="time (s)",
+            xtrace=np.array(
+                [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    3.0,
+                    4.0,
+                    3.0,
+                    7.0,
+                    5.0,
+                    3.0,
+                    6.0,
+                    5.0,
+                    2.0,
+                    4.0,
+                ]
+            ),
+            ytraces={
+                "agent1": np.array(
+                    [
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        3.0,
+                        4.0,
+                        3.0,
+                        7.0,
+                        5.0,
+                        3.0,
+                        6.0,
+                        5.0,
+                        2.0,
+                        4.0,
+                    ]
+                ),
+            },
+        )
+        trajectory_converter = TrajectoryConverter(converted_data)
+        trajectory_converter.add_plot(plot_data, "scatter")
+        trajectory_converter.save(file_name, False)
         return file_name
 
     def raycast(self, **kw):
