@@ -1,7 +1,9 @@
 import copy
+from datetime import datetime, timezone
 from enum import Enum
 
 from deepdiff import DeepDiff
+import requests
 
 from cellpack.autopack.utils import deep_merge
 
@@ -376,6 +378,36 @@ class GradientDoc(DataDoc):
         return None, None
 
 
+class ResultDoc:
+    def __init__(self, db):
+        self.db = db
+
+    def handle_expired_results(self):
+        """
+        Check if the results in the database are expired and delete them if the linked object expired.
+        """
+        current_utc = datetime.now(timezone.utc)
+        results = self.db.get_all_docs("results")
+        if results:
+            for result in results:
+                result_data = self.db.doc_to_dict(result)
+                result_age = current_utc - result_data["timestamp"]
+                if result_age.days > 180 and not self.validate_existence(
+                    result_data["url"]
+                ):
+                    self.db.delete_doc("results", self.db.doc_id(result))
+            print("Results cleanup complete.")
+        else:
+            print("No results found in the database.")
+
+    def validate_existence(self, url):
+        """
+        Validate the existence of an S3 object by checking if the URL is accessible.
+        Returns True if the URL is accessible.
+        """
+        return requests.head(url).status_code == requests.codes.ok
+
+
 class DBUploader(object):
     """
     Handles the uploading of data to the database.
@@ -723,3 +755,19 @@ class DBRecipeLoader(object):
         if grad_dict:
             recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
         return recipe_data
+
+
+class DBMaintenance(object):
+    """
+    Handles the maintenance of the database.
+    """
+
+    def __init__(self, db_handler):
+        self.db = db_handler
+        self.result_doc = ResultDoc(self.db)
+
+    def cleanup_results(self):
+        """
+        Check if the results in the database are expired and delete them if the linked object expired.
+        """
+        self.result_doc.handle_expired_results()
