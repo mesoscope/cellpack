@@ -405,8 +405,7 @@ class ResultDoc:
         Validate the existence of an S3 object by checking if the URL is accessible.
         Returns True if the URL is accessible.
         """
-        response = requests.head(url)
-        return response.status_code == 200
+        return requests.head(url).status_code == requests.codes.ok
 
 
 class DBUploader(object):
