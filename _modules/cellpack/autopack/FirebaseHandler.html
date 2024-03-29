@@ -39,6 +39,7 @@
             
   <h1>Source code for cellpack.autopack.FirebaseHandler</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">firebase_admin</span>
 <span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">firestore</span>
@@ -155,10 +156,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">doc</span><span class="p">:</span>
             <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
             <span class="n">doc_ref</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully uploaded to path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully uploaded to path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">doc_ref</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;ERROR: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2"> already exists. If uploading new data, provide a unique recipe name.&quot;</span>
             <span class="p">)</span>
             <span class="k">return</span></div>
@@ -245,6 +246,20 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="FirebaseHandler.get_all_docs">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_all_docs">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_docs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">docs_stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
+            <span class="n">docs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">docs_stream</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">docs</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;An error occurred while retrieving docs from collection &#39;</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
 <div class="viewcode-block" id="FirebaseHandler.get_value">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_value">[docs]</a>
     <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
@@ -260,7 +275,7 @@
     <span class="k">def</span> <span class="nf">update_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">doc_ref</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully updated to path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully updated to path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">doc_ref</span></div>
 
 
@@ -289,6 +304,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">update_doc</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">NotFound</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_doc</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Delete methods</span>
+<div class="viewcode-block" id="FirebaseHandler.delete_doc">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.delete_doc">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="n">doc_ref</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully deleted path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">doc_ref</span><span class="o">.</span><span class="n">id</span></div>
 
 
     <span class="c1"># other utils</span>

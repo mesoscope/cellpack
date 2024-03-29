@@ -2130,6 +2130,19 @@ To determine whether the composition data already exists or if it needs to be wr
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBMaintenance">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.DBRecipeHandler.</span></span><span class="sig-name descname"><span class="pre">DBMaintenance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBMaintenance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBMaintenance" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handles the maintenance of the database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBMaintenance.cleanup_results">
+<span class="sig-name descname"><span class="pre">cleanup_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBMaintenance.cleanup_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBMaintenance.cleanup_results" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the results in the database are expired and delete them if the linked object expired.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.DBRecipeLoader">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.DBRecipeHandler.</span></span><span class="sig-name descname"><span class="pre">DBRecipeLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_handler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#DBRecipeLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -2297,6 +2310,25 @@ i.e. in object, convert lists back to tuples in representations/packing/position
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.ObjectDoc.should_write">
 <span class="sig-name descname"><span class="pre">should_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#ObjectDoc.should_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.should_write" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.ResultDoc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.DBRecipeHandler.</span></span><span class="sig-name descname"><span class="pre">ResultDoc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#ResultDoc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.ResultDoc" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.ResultDoc.handle_expired_results">
+<span class="sig-name descname"><span class="pre">handle_expired_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#ResultDoc.handle_expired_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.ResultDoc.handle_expired_results" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the results in the database are expired and delete them if the linked object expired.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.ResultDoc.validate_existence">
+<span class="sig-name descname"><span class="pre">validate_existence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#ResultDoc.validate_existence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.ResultDoc.validate_existence" title="Link to this definition">¶</a></dt>
+<dd><p>Validate the existence of an S3 object by checking if the URL is accessible.
+Returns True if the URL is accessible.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -2994,6 +3026,11 @@ listingredient influenced</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.delete_doc">
+<span class="sig-name descname"><span class="pre">delete_doc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.delete_doc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.delete_doc" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">doc_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.doc_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -3001,6 +3038,11 @@ listingredient influenced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">doc_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.doc_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.FirebaseHandler.FirebaseHandler.get_all_docs">
+<span class="sig-name descname"><span class="pre">get_all_docs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/FirebaseHandler.html#FirebaseHandler.get_all_docs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_all_docs" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5916,6 +5958,10 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.update_reference"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.update_reference()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBMaintenance"><code class="docutils literal notranslate"><span class="pre">DBMaintenance</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBMaintenance.cleanup_results"><code class="docutils literal notranslate"><span class="pre">DBMaintenance.cleanup_results()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader</span></code></a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_and_sort_data"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.collect_and_sort_data()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_docs_by_id"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.collect_docs_by_id()</span></code></a></li>
@@ -5954,6 +6000,11 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_positions_in_representation"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.convert_positions_in_representation()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_representation"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.convert_representation()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ObjectDoc.should_write"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.should_write()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ResultDoc"><code class="docutils literal notranslate"><span class="pre">ResultDoc</span></code></a><ul>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ResultDoc.handle_expired_results"><code class="docutils literal notranslate"><span class="pre">ResultDoc.handle_expired_results()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.ResultDoc.validate_existence"><code class="docutils literal notranslate"><span class="pre">ResultDoc.validate_existence()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -6071,8 +6122,10 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_path"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.create_path()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_timestamp"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.create_timestamp()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.db_name"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.db_name()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.delete_doc"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.delete_doc()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.doc_id()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.doc_to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_all_docs"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_all_docs()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_collection_id_from_path"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_collection_id_from_path()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_dev_creds"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_dev_creds()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_id"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_doc_by_id()</span></code></a></li>

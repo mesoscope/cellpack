@@ -39,9 +39,11 @@
             
   <h1>Source code for cellpack.autopack.DBRecipeHandler</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 <span class="kn">from</span> <span class="nn">deepdiff</span> <span class="kn">import</span> <span class="n">DeepDiff</span>
+<span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">deep_merge</span>
 
@@ -491,6 +493,45 @@
 
 
 
+<div class="viewcode-block" id="ResultDoc">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc">[docs]</a>
+<span class="k">class</span> <span class="nc">ResultDoc</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db</span>
+
+<div class="viewcode-block" id="ResultDoc.handle_expired_results">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc.handle_expired_results">[docs]</a>
+    <span class="k">def</span> <span class="nf">handle_expired_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the results in the database are expired and delete them if the linked object expired.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_utc</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_all_docs</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                <span class="n">result_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">doc_to_dict</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="n">result_age</span> <span class="o">=</span> <span class="n">current_utc</span> <span class="o">-</span> <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">result_age</span><span class="o">.</span><span class="n">days</span> <span class="o">&gt;</span> <span class="mi">180</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_existence</span><span class="p">(</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">delete_doc</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">doc_id</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Results cleanup complete.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No results found in the database.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResultDoc.validate_existence">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc.validate_existence">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_existence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate the existence of an S3 object by checking if the URL is accessible.</span>
+<span class="sd">        Returns True if the URL is accessible.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">ok</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="DBUploader">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader">[docs]</a>
 <span class="k">class</span> <span class="nc">DBUploader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -884,6 +925,28 @@
         <span class="k">if</span> <span class="n">grad_dict</span><span class="p">:</span>
             <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="o">**</span><span class="n">v</span><span class="p">}</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">grad_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
         <span class="k">return</span> <span class="n">recipe_data</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DBMaintenance">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance">[docs]</a>
+<span class="k">class</span> <span class="nc">DBMaintenance</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the maintenance of the database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_doc</span> <span class="o">=</span> <span class="n">ResultDoc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DBMaintenance.cleanup_results">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance.cleanup_results">[docs]</a>
+    <span class="k">def</span> <span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the results in the database are expired and delete them if the linked object expired.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_doc</span><span class="o">.</span><span class="n">handle_expired_results</span><span class="p">()</span></div>
 </div>
 
 </pre></div>

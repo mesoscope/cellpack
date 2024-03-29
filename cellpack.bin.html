@@ -76,6 +76,20 @@ path to packing results</p>
 <dd></dd></dl>
 
 </section>
+<section id="module-cellpack.bin.cleanup_tasks">
+<span id="cellpack-bin-cleanup-tasks-module"></span><h2>cellpack.bin.cleanup_tasks module<a class="headerlink" href="#module-cellpack.bin.cleanup_tasks" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cellpack.bin.cleanup_tasks.run_cleanup">
+<span class="sig-prename descclassname"><span class="pre">cellpack.bin.cleanup_tasks.</span></span><span class="sig-name descname"><span class="pre">run_cleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">DATABASE_IDS.FIREBASE</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/cleanup_tasks.html#run_cleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.cleanup_tasks.run_cleanup" title="Link to this definition">¶</a></dt>
+<dd><p>Performs cleanup operations on expired database entries.
+This function is executed as part of a scheduled task defined in .github/workflows/cleanup-firebase.yml</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>db_id(str): The database id to use</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="cellpack-bin-get-pdb-offset-module">
 <h2>cellpack.bin.get-pdb-offset module<a class="headerlink" href="#cellpack-bin-get-pdb-offset-module" title="Link to this heading">¶</a></h2>
 </section>
@@ -245,6 +259,10 @@ path to packing results</p>
 <li><a class="reference internal" href="#module-cellpack.bin.analyze">cellpack.bin.analyze module</a><ul>
 <li><a class="reference internal" href="#cellpack.bin.analyze.analyze"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.bin.analyze.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-cellpack.bin.cleanup_tasks">cellpack.bin.cleanup_tasks module</a><ul>
+<li><a class="reference internal" href="#cellpack.bin.cleanup_tasks.run_cleanup"><code class="docutils literal notranslate"><span class="pre">run_cleanup()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cellpack-bin-get-pdb-offset-module">cellpack.bin.get-pdb-offset module</a></li>

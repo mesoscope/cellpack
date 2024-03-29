@@ -328,6 +328,10 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.update_reference"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.update_reference()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance"><code class="docutils literal notranslate"><span class="pre">DBMaintenance</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance.cleanup_results"><code class="docutils literal notranslate"><span class="pre">DBMaintenance.cleanup_results()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_and_sort_data"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.collect_and_sort_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_docs_by_id"><code class="docutils literal notranslate"><span class="pre">DBRecipeLoader.collect_docs_by_id()</span></code></a></li>
@@ -366,6 +370,11 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_positions_in_representation"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.convert_positions_in_representation()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_representation"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.convert_representation()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.should_write"><code class="docutils literal notranslate"><span class="pre">ObjectDoc.should_write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc"><code class="docutils literal notranslate"><span class="pre">ResultDoc</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc.handle_expired_results"><code class="docutils literal notranslate"><span class="pre">ResultDoc.handle_expired_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc.validate_existence"><code class="docutils literal notranslate"><span class="pre">ResultDoc.validate_existence()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -483,8 +492,10 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_path"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.create_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_timestamp"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.create_timestamp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.db_name"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.db_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.delete_doc"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.delete_doc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.doc_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.doc_to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_all_docs"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_all_docs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_collection_id_from_path"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_collection_id_from_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_dev_creds"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_dev_creds()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_id"><code class="docutils literal notranslate"><span class="pre">FirebaseHandler.get_doc_by_id()</span></code></a></li>
@@ -948,6 +959,10 @@
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.analyze">cellpack.bin.analyze module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.analyze.analyze"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.analyze.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.cleanup_tasks">cellpack.bin.cleanup_tasks module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.cleanup_tasks.run_cleanup"><code class="docutils literal notranslate"><span class="pre">run_cleanup()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#cellpack-bin-get-pdb-offset-module">cellpack.bin.get-pdb-offset module</a></li>

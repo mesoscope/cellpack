@@ -12,6 +12,14 @@ cellpack.bin.analyze module
    :undoc-members:
    :show-inheritance:
 
+cellpack.bin.cleanup\_tasks module
+----------------------------------
+
+.. automodule:: cellpack.bin.cleanup_tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.bin.get\-pdb\-offset module
 ------------------------------------
 
