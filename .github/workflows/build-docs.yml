@@ -7,6 +7,7 @@ on:
 
 jobs:
   docs:
+    if: ${{ !contains(github.event.head_commit.message, 'Bump version') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.1
