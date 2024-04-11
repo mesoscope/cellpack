@@ -24,14 +24,12 @@ class FirebaseHandler(object):
         # check if firebase is already initialized
         if not FirebaseHandler._initialized:
             db_choice = FirebaseHandler.which_db(default_db=default_db)
-            if db_choice == "staging":
-                cred = FirebaseHandler.get_staging_creds()
-            else:
-                cred = FirebaseHandler.get_dev_creds()
-            login = credentials.Certificate(cred)
-            firebase_admin.initialize_app(login)
-            FirebaseHandler._initialized = True
-            FirebaseHandler._db = firestore.client()
+            cred = FirebaseHandler.get_creds(db_choice)
+            if cred:
+                login = credentials.Certificate(cred)
+                firebase_admin.initialize_app(login)
+                FirebaseHandler._db = firestore.client()
+                FirebaseHandler._initialized = True
 
         self.db = FirebaseHandler._db
         self.name = "firebase"
@@ -48,6 +46,14 @@ class FirebaseHandler(object):
         choice = input("Enter number: ").strip()
         print(f"Using {options.get(choice, 'dev')} database -------------")
         return options.get(choice, "dev")  # default to dev db for recipe uploads
+
+    @staticmethod
+    def get_creds(db_choice):
+        if db_choice == "staging":
+            cred = FirebaseHandler.get_staging_creds()
+        else:
+            cred = FirebaseHandler.get_dev_creds()
+        return cred
 
     @staticmethod
     def doc_to_dict(doc):
@@ -114,9 +120,14 @@ class FirebaseHandler(object):
     def get_staging_creds():
         # set override=True to refresh the .env file if softwares or tokens updated
         load_dotenv(dotenv_path="./.env", override=False)
-        FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        # FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        # FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
+        FIREBASE_TOKEN = None
+        FIREBASE_EMAIL = None
+        if not FIREBASE_TOKEN or not FIREBASE_EMAIL:
+            print("Firebase credentials are not found. If needed, please contact the code owner for assistance. \nSkipping firebase staging database -------------")
+            return
         firebase_key = FIREBASE_TOKEN.replace("\\n", "\n")
-        FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
         return {
             "type": "service_account",
             "project_id": "cell-pack-database",

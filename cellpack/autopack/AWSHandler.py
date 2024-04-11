@@ -3,7 +3,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse, urlunparse
 
 import boto3
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, NoCredentialsError
 
 
 class AWSHandler(object):
@@ -115,8 +115,26 @@ class AWSHandler(object):
         """
         Uploads a file to S3 and returns the base url
         """
-        file_name = self.upload_file(file_path)
-        base_url = self.create_presigned_url(file_name)
-        if file_name and base_url:
-            if self.is_url_valid(base_url):
-                return file_name, base_url
+        try:
+            file_name = self.upload_file(file_path)
+            base_url = self.create_presigned_url(file_name)
+            if file_name and base_url:
+                if self.is_url_valid(base_url):
+                    return file_name, base_url
+        except NoCredentialsError as e:
+            print(self.skip_aws_credentials(e))
+            return None, None
+        return None, None
+
+    @staticmethod
+    def skip_aws_credentials(e):
+        """
+        Handles the case when AWS credentials are not configured.
+        Provides a detailed error message and instruction.
+        """
+        aws_readme_url = (
+                "https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3"
+            )
+        return (
+            f"AWS credentials are not configured, details:{e}. If needed, find instructions here: {aws_readme_url}. \nSkipping AWS. Manual result viewing required  -------------"
+        )
