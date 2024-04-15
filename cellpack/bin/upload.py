@@ -36,8 +36,9 @@ def upload(
             recipe_db_handler = DBUploader(db_handler)
             recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
         else:
-            sys.exit("The selected database is not initialized. Please set up Firebase credentials to upload recipes.")
-            
+            sys.exit(
+                "The selected database is not initialized. Please set up Firebase credentials to upload recipes."
+            )
 
 
 def main():

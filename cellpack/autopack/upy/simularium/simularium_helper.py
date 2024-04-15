@@ -1390,7 +1390,9 @@ class simulariumHelper(hostHelper.Helper):
     def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
-        file_name, url = simulariumHelper.store_result_file(simularium_file, storage="aws")
+        file_name, url = simulariumHelper.store_result_file(
+            simularium_file, storage="aws"
+        )
         if file_name and url:
             simulariumHelper.store_metadata(file_name, url, db="firebase")
             if open_results_in_browser:
@@ -1418,7 +1420,7 @@ class simulariumHelper(hostHelper.Helper):
             if initialized_db._initialized:
                 db_uploader = DBUploader(initialized_db)
                 db_uploader.upload_result_metadata(file_name, url)
-        return 
+        return
 
     @staticmethod
     def open_in_simularium(aws_url):
