@@ -120,12 +120,12 @@ class FirebaseHandler(object):
     def get_staging_creds():
         # set override=True to refresh the .env file if softwares or tokens updated
         load_dotenv(dotenv_path="./.env", override=False)
-        # FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
-        # FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
-        FIREBASE_TOKEN = None
-        FIREBASE_EMAIL = None
+        FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
         if not FIREBASE_TOKEN or not FIREBASE_EMAIL:
-            print("Firebase credentials are not found. If needed, please contact the code owner for assistance. \nSkipping firebase staging database -------------")
+            print(
+                "Firebase credentials are not found. If needed, please contact the code owner for assistance. \nSkipping firebase staging database -------------"
+            )
             return
         firebase_key = FIREBASE_TOKEN.replace("\\n", "\n")
         return {

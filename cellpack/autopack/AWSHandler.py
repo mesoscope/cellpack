@@ -133,8 +133,6 @@ class AWSHandler(object):
         Provides a detailed error message and instruction.
         """
         aws_readme_url = (
-                "https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3"
-            )
-        return (
-            f"AWS credentials are not configured, details:{e}. If needed, find instructions here: {aws_readme_url}. \nSkipping AWS. Manual result viewing required  -------------"
+            "https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3"
         )
+        return f"AWS credentials are not configured, details:{e}. If needed, refer to the instructions at {aws_readme_url}. \nSkipping the opening of new browser tabs  -------------"
