@@ -7,7 +7,6 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import trimesh
-from botocore.exceptions import NoCredentialsError
 
 from simulariumio import (
     TrajectoryConverter,
