@@ -1372,6 +1372,7 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
+        converter = TrajectoryConverter(converted_data)
         plot_data = ScatterPlotData(
             title="test_plot",
             xaxis_title="concentrations (uM)",
@@ -1427,9 +1428,8 @@ class simulariumHelper(hostHelper.Helper):
                 ),
             },
         )
-        trajectory_converter = TrajectoryConverter(converted_data)
-        trajectory_converter.add_plot(plot_data, "scatter")
-        trajectory_converter.save(file_name, False)
+        converter.add_plot(plot_data, "scatter")
+        converter.save(file_name)
         return file_name
 
     def raycast(self, **kw):
