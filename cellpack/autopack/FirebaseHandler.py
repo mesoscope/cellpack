@@ -123,9 +123,6 @@ class FirebaseHandler(object):
         FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
         FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
         if not FIREBASE_TOKEN or not FIREBASE_EMAIL:
-            print(
-                "Firebase credentials are not found. If needed, please contact the code owner for assistance. \nSkipping firebase staging database -------------"
-            )
             return
         firebase_key = FIREBASE_TOKEN.replace("\\n", "\n")
         return {

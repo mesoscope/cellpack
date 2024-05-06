@@ -122,17 +122,6 @@ class AWSHandler(object):
                 if self.is_url_valid(base_url):
                     return file_name, base_url
         except NoCredentialsError as e:
-            print(self.skip_aws_credentials(e))
+            print(f"AWS credentials are not configured, details:{e}")
             return None, None
         return None, None
-
-    @staticmethod
-    def skip_aws_credentials(e):
-        """
-        Handles the case when AWS credentials are not configured.
-        Provides a detailed error message and instruction.
-        """
-        aws_readme_url = (
-            "https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3"
-        )
-        return f"AWS credentials are not configured, details:{e}. If needed, refer to the instructions at {aws_readme_url}. \nSkipping the opening of new browser tabs  -------------"

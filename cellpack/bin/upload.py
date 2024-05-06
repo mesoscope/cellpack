@@ -2,7 +2,7 @@ import sys
 import fire
 
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
 
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
@@ -27,8 +27,9 @@ def upload(
             recipe_db_handler = DBUploader(db_handler)
             recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
         else:
+            db_maintainer = DBMaintenance(db_handler)
             sys.exit(
-                "The selected database is not initialized. Please set up Firebase credentials to upload recipes."
+                f"The selected database is not initialized. Please set up Firebase credentials to upload recipes. Refer to the instructions at {db_maintainer.readme_url()} "
             )
 
 

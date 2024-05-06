@@ -22,7 +22,7 @@ from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 import collada
 
@@ -1407,6 +1407,11 @@ class simulariumHelper(hostHelper.Helper):
                 region_name="us-west-2",
             )
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
+            if not file_name or not url:
+                db_maintainer = DBMaintenance(initialized_handler)
+                print(
+                    f"If AWS access needed, please refer to the instructions at {db_maintainer.readme_url()}. \nSkipping the opening of new browser tabs  -------------"
+                )
         return file_name, url
 
     @staticmethod
@@ -1419,6 +1424,11 @@ class simulariumHelper(hostHelper.Helper):
             if initialized_db._initialized:
                 db_uploader = DBUploader(initialized_db)
                 db_uploader.upload_result_metadata(file_name, url)
+            else:
+                db_maintainer = DBMaintenance(initialized_db)
+                print(
+                    f"Firebase credentials are not found. If needed, please refer to the instructions at {db_maintainer.readme_url()}. \nSkipping firebase staging database -------------"
+                )
         return
 
     @staticmethod
