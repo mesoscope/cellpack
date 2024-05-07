@@ -72,7 +72,6 @@ class Analysis:
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
         self.seed_to_results = {}
-        autopack._colors = None
 
     @staticmethod
     def cartesian_to_sph(xyz, center=None):
@@ -177,7 +176,13 @@ class Analysis:
     def get_obj_dict(self, packing_results_path):
         """
         Returns the object dictionary from the input path folder.
-        TODO: add description of object dictionary
+
+        Args:
+            packing_results_path (str): The path to the folder containing the packing results.
+
+        Returns:
+            tuple: A tuple containing the object dictionary and the list of all positions.
+
         """
         file_list = Path(packing_results_path).glob("positions_*.json")
         all_pos_list = []
@@ -269,7 +274,7 @@ class Analysis:
                 ingredient_radii[object_key] = object_values["radius"]
         return ingredient_radii
 
-    def get_dict_from_glob(
+    def read_dict_from_glob_file(
         self,
         glob_str,
     ):
@@ -500,7 +505,9 @@ class Analysis:
         )
 
         if not hasattr(self, "ingredient_key_dict"):
-            self.ingredient_key_dict = self.get_dict_from_glob("ingredient_keys_*")
+            self.ingredient_key_dict = self.read_dict_from_glob_file(
+                "ingredient_keys_*"
+            )
 
         if ingredient_keys is None:
             ingredient_keys = list(self.ingredient_key_dict.keys())
@@ -511,7 +518,7 @@ class Analysis:
         ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
 
         if not hasattr(self, "pairwise_distance_dict"):
-            self.pairwise_distance_dict = self.get_dict_from_glob(
+            self.pairwise_distance_dict = self.read_dict_from_glob_file(
                 "pairwise_distances_*.json"
             )
 
@@ -685,88 +692,6 @@ class Analysis:
             self.plotly.add_ingredient_positions(self.env)
             self.plotly.show()
 
-    def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
-        nDimPoints = numpy.array(nDimPoints)
-        n, m = nDimPoints.shape
-        delta = numpy.zeros((n, n), "d")
-        for d in range(m):
-            data = nDimPoints[:, d]
-            delta += (data - data[:, numpy.newaxis]) ** 2
-        return numpy.sqrt(delta)
-
-    def flush(self):
-        import gc
-        import pprint
-
-        for i in range(2):
-            print("Collecting %d ..." % i)
-            n = gc.collect()
-            print("Unreachable objects:", n)
-            print("Remaining Garbage:")
-            pprint.pprint(gc.garbage)
-            del gc.garbage[:]
-
-    def merge(self, d1, d2, merge=lambda x, y: y):
-        result = dict(d1)
-        for k, v in d2.items():
-            if k in result:
-                result[k].extend(v)
-            else:
-                result[k] = v
-        return result
-
-    def plotNResult2D(self, n, bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]]):
-        for i in range(n):
-            f = "results_seed_" + str(i) + ".json"
-            self.plot_one_result_2d(filename=f, bbox=bbox)
-
-    def plot_one_result_2d(
-        self,
-        data=None,
-        filename=None,
-        bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]],
-    ):
-        if data is None and filename is None:
-            return
-        elif data is None and filename is not None:
-            with open(filename) as data_file:
-                data = json.load(data_file)
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        radius = {}
-        ingrrot = {}
-        ingrpos = {}
-        for recipe in data:
-            for ingrname in data[recipe]:
-                for k in range(len(data[recipe][ingrname]["results"])):
-                    if ingrname not in ingrrot:
-                        ingrrot[ingrname] = []
-                        ingrpos[ingrname] = []
-                        radius[ingrname] = data[recipe][ingrname][
-                            "encapsulating_radius"
-                        ]
-                    ingrrot[ingrname].append(data[recipe][ingrname]["results"][k][1])
-                    ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
-        for ingr in ingrpos:
-            for i, p in enumerate(ingrpos[ingr]):
-                ax.add_patch(
-                    Circle(
-                        (p[0], p[1]),
-                        radius[ingr],
-                        edgecolor="black",
-                        facecolor="red",
-                    )
-                )
-            ax.set_aspect(1.0)
-            plt.axhline(y=bbox[0][1], color="k")
-            plt.axhline(y=bbox[1][1], color="k")
-            plt.axvline(x=bbox[0][0], color="k")
-            plt.axvline(x=bbox[1][0], color="k")
-            plt.axis([bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1]])
-            plt.savefig("plot" + ingr + ".png")
-            plt.close()  # closes the current figure
-        return ingrpos
-
     def set_ingredient_color(self, ingr):
         """
         Sets the color of an ingredient
@@ -853,7 +778,10 @@ class Analysis:
                 )
                 # plot the sphere
                 if ingr.use_rbsphere:
-                    (ext_recipe, pts,) = ingr.getInterpolatedSphere(
+                    (
+                        ext_recipe,
+                        pts,
+                    ) = ingr.getInterpolatedSphere(
                         seed_ingredient_positions[-i - 1],
                         seed_ingredient_positions[-i],
                     )
@@ -867,21 +795,6 @@ class Analysis:
                             )
                         )
         return ax
-
-    def one_exp(self, seed, output_path, eid=0, nmol=1, periodicity=True, dim=2):
-        output = output_path + str(nmol)
-        if periodicity:
-            self.env.use_periodicity = True
-            autopack.testPeriodicity = True
-        else:
-            self.env.use_periodicity = False
-            autopack.testPeriodicity = False
-        if dim == 3:
-            autopack.biasedPeriodicity = [1, 1, 1]
-        else:
-            autopack.biasedPeriodicity = [1, 1, 0]
-        if not os.path.exists(output):
-            os.makedirs(output)
 
     def getHaltonUnique(self, n):
         seeds_f = numpy.array(halton(int(n * 1.5))) * int(n * 1.5)
@@ -948,7 +861,7 @@ class Analysis:
             ingredient_occurence_dict,
         )
 
-    def update_crosswise_distances(
+    def update_pairwise_distances(
         self, ingr, recipe, pairwise_distance_dict, seed_index
     ):
         """
@@ -962,9 +875,9 @@ class Analysis:
                 ingr.name,
                 ingr2.name,
             ):
-                pairwise_distance_dict[seed_index][
-                    f"{ingr.name}_{ingr2.name}"
-                ] = self.env.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
+                pairwise_distance_dict[seed_index][f"{ingr.name}_{ingr2.name}"] = (
+                    self.env.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
+                )
 
         return pairwise_distance_dict
 
@@ -1017,7 +930,7 @@ class Analysis:
             )
 
             # calculate cross ingredient_distances
-            pairwise_distance_dict = self.update_crosswise_distances(
+            pairwise_distance_dict = self.update_pairwise_distances(
                 ingr, recipe, pairwise_distance_dict, seed_index
             )
 
@@ -1204,18 +1117,13 @@ class Analysis:
 
             if plot_figures and two_d:
                 ax.set_aspect(1.0)
-                plt.axhline(y=bounding_box[0][1], color="k")
-                plt.axhline(y=bounding_box[1][1], color="k")
-                plt.axvline(x=bounding_box[0][0], color="k")
-                plt.axvline(x=bounding_box[1][0], color="k")
-                plt.axis(
-                    [
-                        bounding_box[0][0],
-                        bounding_box[1][0],
-                        bounding_box[0][1],
-                        bounding_box[1][1],
-                    ]
-                )
+                ax.axhline(y=bounding_box[0][1], color="k")
+                ax.axhline(y=bounding_box[1][1], color="k")
+                ax.axvline(x=bounding_box[0][0], color="k")
+                ax.axvline(x=bounding_box[1][0], color="k")
+                ax.set_xlim([bounding_box[0][0], bounding_box[1][0]])
+                ax.set_ylim([bounding_box[0][1], bounding_box[1][1]])
+
                 plt.savefig(self.figures_path / f"packing_image_{seed_basename}.png")
                 plt.close()  # closes the current figure
 
