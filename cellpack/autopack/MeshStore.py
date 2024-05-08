@@ -268,8 +268,8 @@ class MeshStore:
             else:
                 # chunk the points
                 for i in range(0, len(points), CHUNK_SIZE):
-                    chunk = points[i: i + CHUNK_SIZE]
-                    inside[i: i + CHUNK_SIZE] = mesh.contains(chunk)
+                    chunk = points[i : i + CHUNK_SIZE]
+                    inside[i : i + CHUNK_SIZE] = mesh.contains(chunk)
                 return inside
         return inside
 
