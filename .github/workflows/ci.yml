@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - main
+      - update/python_version
     tags:
       - "v*"
   pull_request:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.x"]
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
