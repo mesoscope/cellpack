@@ -19,6 +19,7 @@ from simulariumio import (
     CameraData,
     DisplayData,
     ScatterPlotData,
+    HistogramPlotData,
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
@@ -1373,35 +1374,65 @@ class simulariumHelper(hostHelper.Helper):
             spatial_units=UnitData("nm"),  # nanometers
         )
         converter = TrajectoryConverter(converted_data)
-        plot_data = ScatterPlotData(
-            title="test_plot",
+        # plot_data = ScatterPlotData(
+        #     title="test_plot",
+        #     xaxis_title="concentrations (uM)",
+        #     yaxis_title="time (s)",
+        #     xtrace=np.array(
+        #         [
+        #             0.0,
+        #             1.0,
+        #             2.0,
+        #             3.0,
+        #             4.0,
+        #             5.0,
+        #             6.0,
+        #             7.0,
+        #             8.0,
+        #             9.0,
+        #             3.0,
+        #             4.0,
+        #             3.0,
+        #             7.0,
+        #             5.0,
+        #             3.0,
+        #             6.0,
+        #             5.0,
+        #             2.0,
+        #             4.0,
+        #         ]
+        #     ),
+        #     ytraces={
+        #         "agent1": np.array(
+        #             [
+        #                 0.0,
+        #                 1.0,
+        #                 2.0,
+        #                 3.0,
+        #                 4.0,
+        #                 5.0,
+        #                 6.0,
+        #                 7.0,
+        #                 8.0,
+        #                 9.0,
+        #                 3.0,
+        #                 4.0,
+        #                 3.0,
+        #                 7.0,
+        #                 5.0,
+        #                 3.0,
+        #                 6.0,
+        #                 5.0,
+        #                 2.0,
+        #                 4.0,
+        #             ]
+        #         ),
+        #     },
+        # )
+        plot_data = HistogramPlotData(
+            title="Test Histogram 2",
             xaxis_title="concentrations (uM)",
-            yaxis_title="time (s)",
-            xtrace=np.array(
-                [
-                    0.0,
-                    1.0,
-                    2.0,
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0,
-                    9.0,
-                    3.0,
-                    4.0,
-                    3.0,
-                    7.0,
-                    5.0,
-                    3.0,
-                    6.0,
-                    5.0,
-                    2.0,
-                    4.0,
-                ]
-            ),
-            ytraces={
+            traces={
                 "agent1": np.array(
                     [
                         0.0,
@@ -1428,8 +1459,8 @@ class simulariumHelper(hostHelper.Helper):
                 ),
             },
         )
-        converter.add_plot(plot_data, "scatter")
-        converter.save(file_name)
+        converter.add_plot(plot_data, "histogram")
+        converter.save(file_name, False)
         return file_name
 
     def raycast(self, **kw):
