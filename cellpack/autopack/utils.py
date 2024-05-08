@@ -1,8 +1,30 @@
 import collections
 import copy
+import csv
+import json
+import math
+import os
 import pickle
 
 import numpy
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import trimesh
+from matplotlib import pyplot as plt
+from matplotlib.patches import Circle, Patch
+from PIL import Image
+from scipy import stats
+from scipy.cluster import hierarchy
+from scipy.spatial import distance
+from sklearn.metrics import matthews_corrcoef
+from tqdm import tqdm
+
+import cellpack.autopack as autopack
+from cellpack.autopack.GeometryTools import Rectangle
+from cellpack.autopack.MeshStore import MeshStore
+from cellpack.autopack.upy import colors as col
+from cellpack.autopack.upy.colors import map_colors
 
 
 def get_distance(pt1, pt2):
@@ -289,30 +311,6 @@ Created on Mon May  6 22:58:44 2013
 
 @author: ludo
 """
-
-import csv
-import json
-import math
-import os
-
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import trimesh
-from matplotlib import pyplot as plt
-from matplotlib.patches import Circle, Patch
-from PIL import Image
-from scipy import stats
-from scipy.cluster import hierarchy
-from scipy.spatial import distance
-from sklearn.metrics import matthews_corrcoef
-from tqdm import tqdm
-
-import cellpack.autopack as autopack
-from cellpack.autopack.GeometryTools import Rectangle
-from cellpack.autopack.MeshStore import MeshStore
-from cellpack.autopack.upy import colors as col
-from cellpack.autopack.upy.colors import map_colors
 
 
 def get_xyz_dict_from_all_pos_dict(all_pos_dict):
