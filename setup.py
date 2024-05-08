@@ -53,7 +53,7 @@ requirements = [
     "fire>=0.4.0",
     "firebase_admin>=6.0.1",
     "matplotlib>=3.3.4",
-    "numpy>=1.19.2",
+    "numpy>=1.26.4",
     "pmw==2.0.1",
     "scipy>=1.6.2",
     "simulariumio>=1.6.3",
