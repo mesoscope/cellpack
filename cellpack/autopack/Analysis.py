@@ -4,8 +4,9 @@ Created on Mon May  6 22:58:44 2013
 
 @author: ludo
 """
+import concurrent.futures
 import json
-import os
+import multiprocessing
 from pathlib import Path
 from time import time
 
@@ -22,8 +23,6 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
 from cellpack.autopack.writers import Writer
 from cellpack.autopack.writers.ImageWriter import ImageWriter
-import concurrent.futures
-import multiprocessing
 
 
 class Analysis:
