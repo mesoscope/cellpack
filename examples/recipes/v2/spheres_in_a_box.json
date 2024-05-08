@@ -1,0 +1,88 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0",
+    "name": "analysis_b",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1000
+        ]
+    ],
+    "objects": {
+        "base": {
+            "type": "single_sphere"
+
+        },
+        "sphere_100": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.498,
+                0.498,
+                0.498
+            ],
+            "radius": 100
+        },
+        "sphere_200": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.827,
+                0.82700002,
+                0.82700002
+            ],
+            "radius": 200
+        },
+        "sphere_50": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.306,
+                0.45100001,
+                0.81599998
+            ],
+            "radius": 50
+        },
+        "sphere_25": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.467,
+                0.23899999,
+                0.972
+            ],
+            "radius": 25
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A", "B", "C", "D"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere_100",
+            "count": 6
+        },
+        "B": {
+            "object": "sphere_200",
+            "count": 2
+        },
+        "C": {
+            "object": "sphere_50",
+            "count": 15
+        },
+        "D": {
+            "object": "sphere_25",
+            "count": 40
+        }
+    }
+}

@@ -16,7 +16,6 @@ test_requirements = [
     "black>=19.10b0, <=23.0",
     "flake8>=3.8.3, <=6.0.0",
     "flake8-debugger>=3.2.1",
-    "mdutils>=1.4.0",
     "pytest>=5.4.3",
     "pytest-cov>=2.9.0",
     "pytest-raises>=0.11",
@@ -24,10 +23,12 @@ test_requirements = [
 
 analysis_requirements = [
     "tqdm>=4.64.1",
+    "mdutils>=1.4.0",
     "scikit-learn>=1.1.3",
     "seaborn>=0.12.1",
     "aicsimageio>=4.10.0",
     "pandas>=1.2.4",
+    "mdutils>=1.4.0",
 ]
 
 dev_requirements = [
@@ -47,6 +48,7 @@ dev_requirements = [
 ]
 
 requirements = [
+    *analysis_requirements,
     "boto3>=1.28.3",
     "fire>=0.4.0",
     "firebase_admin>=6.0.1",
@@ -62,6 +64,7 @@ requirements = [
     "trimesh>=3.9.34",
     "deepdiff>=5.5.0",
     "python-dotenv>=1.0.0",
+    "moto>=5.0.2",
 ]
 
 extra_requirements = {
@@ -118,6 +121,6 @@ setup(
     url="https://github.com/mesoscope/cellpack",
     # Do not edit this string manually, always use bumpversion
     # Details in CONTRIBUTING.rst
-    version="1.0.3",
+    version="1.0.8",
     zip_safe=False,
 )

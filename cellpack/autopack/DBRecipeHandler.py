@@ -1,6 +1,9 @@
 import copy
+from datetime import datetime, timezone
+from enum import Enum
 
 from deepdiff import DeepDiff
+import requests
 
 from cellpack.autopack.utils import deep_merge
 
@@ -375,6 +378,36 @@ class GradientDoc(DataDoc):
         return None, None
 
 
+class ResultDoc:
+    def __init__(self, db):
+        self.db = db
+
+    def handle_expired_results(self):
+        """
+        Check if the results in the database are expired and delete them if the linked object expired.
+        """
+        current_utc = datetime.now(timezone.utc)
+        results = self.db.get_all_docs("results")
+        if results:
+            for result in results:
+                result_data = self.db.doc_to_dict(result)
+                result_age = current_utc - result_data["timestamp"]
+                if result_age.days > 180 and not self.validate_existence(
+                    result_data["url"]
+                ):
+                    self.db.delete_doc("results", self.db.doc_id(result))
+            print("Results cleanup complete.")
+        else:
+            print("No results found in the database.")
+
+    def validate_existence(self, url):
+        """
+        Validate the existence of an S3 object by checking if the URL is accessible.
+        Returns True if the URL is accessible.
+        """
+        return requests.head(url).status_code == requests.codes.ok
+
+
 class DBUploader(object):
     """
     Handles the uploading of data to the database.
@@ -404,6 +437,9 @@ class DBUploader(object):
                 modified_data[key] = unpacked_value
                 if isinstance(unpacked_value, dict):
                     modified_data[key] = DBUploader.prep_data_for_db(unpacked_value)
+            # If the value is an enum, convert it to a string. e.g. during a version migration process where "type" in a v1 recipe is an enum
+            elif isinstance(value, Enum):
+                modified_data[key] = value.name
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
                 modified_data[key] = DBUploader.prep_data_for_db(value)
@@ -572,6 +608,7 @@ class DBUploader(object):
             print(f"{recipe_id} is already in firestore")
             return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
+        recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
 
     def upload_result_metadata(self, file_name, url):
@@ -584,7 +621,7 @@ class DBUploader(object):
             self.db.update_or_create(
                 "results",
                 file_name,
-                {"user": username, "timestamp": timestamp, "url": url.split("?")[0]},
+                {"user": username, "timestamp": timestamp, "url": url},
             )
 
 
@@ -629,6 +666,18 @@ class DBRecipeLoader(object):
 
     def collect_docs_by_id(self, collection, id):
         return self.db.get_doc_by_id(collection, id)
+
+    def validate_input_recipe_path(self, path):
+        """
+        Validates if the input path corresponds to a recipe path in the database.
+        Format of a recipe path: firebase:recipes/[RECIPE-ID]
+        """
+        collection, id = self.db.get_collection_id_from_path(path)
+        recipe_path = self.db.get_value(collection, id, "recipe_path")
+        if not recipe_path:
+            raise ValueError(
+                f"No recipe found at the input path: '{path}'. Please ensure the recipe exists in the database and is spelled correctly. Expected path format: 'firebase:recipes/[RECIPE-ID]'"
+            )
 
     @staticmethod
     def _get_grad_and_obj(obj_data, obj_dict, grad_dict):
@@ -706,3 +755,19 @@ class DBRecipeLoader(object):
         if grad_dict:
             recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
         return recipe_data
+
+
+class DBMaintenance(object):
+    """
+    Handles the maintenance of the database.
+    """
+
+    def __init__(self, db_handler):
+        self.db = db_handler
+        self.result_doc = ResultDoc(self.db)
+
+    def cleanup_results(self):
+        """
+        Check if the results in the database are expired and delete them if the linked object expired.
+        """
+        self.result_doc.handle_expired_results()
