@@ -18,6 +18,7 @@ jobs:
       with:
         python-version: 3.9
         cache: "pip"
+        cache-dependency-path: setup.py
     - name: Install Dependencies
       run: |
         pip install --upgrade pip
