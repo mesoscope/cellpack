@@ -388,8 +388,9 @@ def load_file(filename, destination="", cache="geometries", force=None):
             db = DATABASE_IDS.handlers().get(database_name)
             initialize_db = db()
             if not initialize_db._initialized:
+                readme_url = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
                 sys.exit(
-                    "The selected database is not initialized. Please set up Firebase credentials to pack remote recipes."
+                    f"The selected database is not initialized. Please set up Firebase credentials to pack remote recipes. Refer to the instructions at {readme_url}"
                 )
             db_handler = DBRecipeLoader(initialize_db)
             recipe_id = file_path.split("/")[-1]
