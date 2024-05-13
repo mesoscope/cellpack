@@ -470,6 +470,11 @@
         <span class="k">if</span> <span class="n">database_name</span> <span class="o">==</span> <span class="s2">&quot;firebase&quot;</span><span class="p">:</span>
             <span class="n">db</span> <span class="o">=</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">database_name</span><span class="p">)</span>
             <span class="n">initialize_db</span> <span class="o">=</span> <span class="n">db</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">initialize_db</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
+                <span class="n">readme_url</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases&quot;</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The selected database is not initialized. Please set up Firebase credentials to pack remote recipes. Refer to the instructions at </span><span class="si">{</span><span class="n">readme_url</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
             <span class="n">db_handler</span> <span class="o">=</span> <span class="n">DBRecipeLoader</span><span class="p">(</span><span class="n">initialize_db</span><span class="p">)</span>
             <span class="n">recipe_id</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">db_doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">collect_docs_by_id</span><span class="p">(</span>

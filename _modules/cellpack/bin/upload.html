@@ -37,9 +37,11 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.bin.upload</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">fire</span>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">fire</span>
+
 <span class="kn">from</span> <span class="nn">cellpack.autopack.FirebaseHandler</span> <span class="kn">import</span> <span class="n">FirebaseHandler</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBUploader</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBUploader</span><span class="p">,</span> <span class="n">DBMaintenance</span>
 
 <span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.database_ids</span> <span class="kn">import</span> <span class="n">DATABASE_IDS</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
@@ -59,11 +61,17 @@
     <span class="k">if</span> <span class="n">db_id</span> <span class="o">==</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">FIREBASE</span><span class="p">:</span>
         <span class="c1"># fetch the service key json file</span>
         <span class="n">db_handler</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="p">()</span>
-        <span class="n">recipe_loader</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe_path</span><span class="p">)</span>
-        <span class="n">recipe_full_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">resolve_inheritance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">recipe_meta_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">get_only_recipe_metadata</span><span class="p">()</span>
-        <span class="n">recipe_db_handler</span> <span class="o">=</span> <span class="n">DBUploader</span><span class="p">(</span><span class="n">db_handler</span><span class="p">)</span>
-        <span class="n">recipe_db_handler</span><span class="o">.</span><span class="n">upload_recipe</span><span class="p">(</span><span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_full_data</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
+            <span class="n">recipe_loader</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">recipe_path</span><span class="p">)</span>
+            <span class="n">recipe_full_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">resolve_inheritance</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">recipe_meta_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">get_only_recipe_metadata</span><span class="p">()</span>
+            <span class="n">recipe_db_handler</span> <span class="o">=</span> <span class="n">DBUploader</span><span class="p">(</span><span class="n">db_handler</span><span class="p">)</span>
+            <span class="n">recipe_db_handler</span><span class="o">.</span><span class="n">upload_recipe</span><span class="p">(</span><span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_full_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">db_maintainer</span> <span class="o">=</span> <span class="n">DBMaintenance</span><span class="p">(</span><span class="n">db_handler</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The selected database is not initialized. Please set up Firebase credentials to upload recipes. Refer to the instructions at </span><span class="si">{</span><span class="n">db_maintainer</span><span class="o">.</span><span class="n">readme_url</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="p">)</span></div>
 
 
 

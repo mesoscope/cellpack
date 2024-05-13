@@ -43,7 +43,7 @@
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">parse_qs</span><span class="p">,</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">urlunparse</span>
 
 <span class="kn">import</span> <span class="nn">boto3</span>
-<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="kn">import</span> <span class="n">ClientError</span>
+<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="kn">import</span> <span class="n">ClientError</span><span class="p">,</span> <span class="n">NoCredentialsError</span>
 
 
 <div class="viewcode-block" id="AWSHandler">
@@ -171,11 +171,16 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uploads a file to S3 and returns the base url</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-        <span class="n">base_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_presigned_url</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">file_name</span> <span class="ow">and</span> <span class="n">base_url</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_url_valid</span><span class="p">(</span><span class="n">base_url</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">base_url</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="n">base_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_presigned_url</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">file_name</span> <span class="ow">and</span> <span class="n">base_url</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_url_valid</span><span class="p">(</span><span class="n">base_url</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">base_url</span>
+        <span class="k">except</span> <span class="n">NoCredentialsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AWS credentials are not configured, details:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 </div>
 
 </pre></div>
