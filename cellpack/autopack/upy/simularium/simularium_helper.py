@@ -7,7 +7,6 @@ from pathlib import Path
 import matplotlib
 import numpy as np
 import trimesh
-from botocore.exceptions import NoCredentialsError
 
 from simulariumio import (
     TrajectoryConverter,
@@ -25,7 +24,7 @@ from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 import collada
 
@@ -1479,22 +1478,13 @@ class simulariumHelper(hostHelper.Helper):
     def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
-        try:
-            _, url = simulariumHelper.store_result_file(simularium_file, storage="aws")
-        except Exception as e:
-            aws_readme_url = (
-                "https://github.com/mesoscope/cellpack/blob/main/README.md#aws-s3"
-            )
-            if isinstance(e, NoCredentialsError):
-                print(
-                    f"need to configure your aws account, find instructions here: {aws_readme_url}"
-                )
-            else:
-                print(
-                    f"An error occurred while storing the file {simularium_file} to S3: {e}"
-                )
-        if url is not None and open_results_in_browser:
-            simulariumHelper.open_in_simularium(url)
+        file_name, url = simulariumHelper.store_result_file(
+            simularium_file, storage="aws"
+        )
+        if file_name and url:
+            simulariumHelper.store_metadata(file_name, url, db="firebase")
+            if open_results_in_browser:
+                simulariumHelper.open_in_simularium(url)
 
     @staticmethod
     def store_result_file(file_path, storage=None):
@@ -1505,8 +1495,12 @@ class simulariumHelper(hostHelper.Helper):
                 sub_folder_name="simularium",
                 region_name="us-west-2",
             )
-        file_name, url = initialized_handler.save_file_and_get_url(file_path)
-        simulariumHelper.store_metadata(file_name, url, db="firebase")
+            file_name, url = initialized_handler.save_file_and_get_url(file_path)
+            if not file_name or not url:
+                db_maintainer = DBMaintenance(initialized_handler)
+                print(
+                    f"If AWS access needed, please refer to the instructions at {db_maintainer.readme_url()}. \nSkipping the opening of new browser tabs  -------------"
+                )
         return file_name, url
 
     @staticmethod
@@ -1516,8 +1510,15 @@ class simulariumHelper(hostHelper.Helper):
             initialized_db = handler(
                 default_db="staging"
             )  # default to staging for metadata uploads
-            db_uploader = DBUploader(initialized_db)
-            db_uploader.upload_result_metadata(file_name, url)
+            if initialized_db._initialized:
+                db_uploader = DBUploader(initialized_db)
+                db_uploader.upload_result_metadata(file_name, url)
+            else:
+                db_maintainer = DBMaintenance(initialized_db)
+                print(
+                    f"Firebase credentials are not found. If needed, please refer to the instructions at {db_maintainer.readme_url()}. \nSkipping firebase staging database -------------"
+                )
+        return
 
     @staticmethod
     def open_in_simularium(aws_url):

@@ -16,7 +16,6 @@ test_requirements = [
     "black>=19.10b0, <=23.0",
     "flake8>=3.8.3, <=6.0.0",
     "flake8-debugger>=3.2.1",
-    "mdutils>=1.4.0",
     "pytest>=5.4.3",
     "pytest-cov>=2.9.0",
     "pytest-raises>=0.11",
@@ -24,6 +23,7 @@ test_requirements = [
 
 analysis_requirements = [
     "tqdm>=4.64.1",
+    "mdutils>=1.4.0",
     "scikit-learn>=1.1.3",
     "seaborn>=0.12.1",
     "aicsimageio>=4.10.0",
@@ -121,6 +121,6 @@ setup(
     url="https://github.com/mesoscope/cellpack",
     # Do not edit this string manually, always use bumpversion
     # Details in CONTRIBUTING.rst
-    version="1.0.7",
+    version="1.0.8",
     zip_safe=False,
 )
