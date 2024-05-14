@@ -51,7 +51,8 @@ from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
-
+import boto3
+import botocore
 
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -261,8 +262,39 @@ def updateReplacePath(newPaths):
         REPLACE_PATH[w[0]] = w[1]
 
 
+def download_file_from_s3(s3_uri, local_file_path):
+    s3_client = boto3.client("s3")
+    bucket_name, key = parse_s3_uri(s3_uri)
+
+    try:
+        s3_client.download_file(bucket_name, key, local_file_path)
+        print("File downloaded successfully.")
+    except botocore.exceptions.ClientError as e:
+        if e.response["Error"]["Code"] == "404":
+            print("The object does not exist.")
+        else:
+            print("An error occurred while downloading the file.")
+
+
+def parse_s3_uri(s3_uri):
+    # Remove the "s3://" prefix and split the remaining string into bucket name and key
+    s3_uri = s3_uri.replace("s3://", "")
+    parts = s3_uri.split("/")
+    bucket_name = parts[0]
+    folder = "/".join(parts[1:-1])
+    key = parts[-1]
+
+    return bucket_name, folder, key
+
+
 def download_file(url, local_file_path, reporthook):
-    if url_exists(url):
+    if is_s3_url(url):
+        # download from s3
+        bucket_name, folder, key = parse_s3_uri(url)
+        s3_handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+        s3_handler = s3_handler(bucket_name, folder)
+
+    elif url_exists(url):
         try:
             urllib.urlretrieve(url, local_file_path, reporthook=reporthook)
         except Exception as e:
@@ -271,8 +303,19 @@ def download_file(url, local_file_path, reporthook):
         raise Exception(f"Url does not exist {url}")
 
 
+# def is_full_url(file_path):
+#     return file_path.find("http") != -1 or file_path.find("ftp") != -1
+
+
 def is_full_url(file_path):
-    return file_path.find("http") != -1 or file_path.find("ftp") != -1
+    url_regex = re.compile(
+        r"^(?:http|https|ftp|s3)://", re.IGNORECASE
+    )  # check http, https, ftp, s3
+    return re.match(url_regex, file_path) is not None
+
+
+def is_s3_url(file_path):
+    return file_path.find("s3://") != -1
 
 
 def is_remote_path(file_path):
