@@ -290,9 +290,19 @@ def parse_s3_uri(s3_uri):
 def download_file(url, local_file_path, reporthook):
     if is_s3_url(url):
         # download from s3
+        # bucket_name, folder, key = parse_s3_uri(url)
+        # s3_handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+        # s3_handler = s3_handler(bucket_name, folder)
+        s3_client = boto3.client("s3")
         bucket_name, folder, key = parse_s3_uri(url)
-        s3_handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
-        s3_handler = s3_handler(bucket_name, folder)
+        try:
+            s3_client.download_file(bucket_name, f"{folder}/{key}", local_file_path)
+            print("File downloaded successfully.")
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "404":
+                print("The object does not exist.")
+            else:
+                print("An error occurred while downloading the file.")
 
     elif url_exists(url):
         try:
