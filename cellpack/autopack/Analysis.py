@@ -2347,8 +2347,6 @@ class Analysis:
                 )
                 grid_image_writer = gradient.create_voxelization(grid_image_writer)
                 grid_image_writer.export_image()
-
-        Writer().save_as_simularium(self.env, self.seed_to_results)
         return (
             center_distance_dict,
             pairwise_distance_dict,

@@ -48,7 +48,6 @@ def pack(recipe, config_path=None, analysis_config_path=None):
         packing_config_data["save_analyze_result"]
         or packing_config_data["number_of_packings"] > 1
     ):
-        env.saveResult = False
         analyze = Analysis(
             env=env,
             viewer=afviewer,
