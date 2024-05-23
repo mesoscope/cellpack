@@ -2178,9 +2178,7 @@ class Environment(CompartmentList):
             pbar.close()
         self.log.info("time to fill %d", t2 - t1)
         all_objects = self.prep_molecules_for_save(distances, free_points, nbFreePoints)
-        print("SELF.result", self.saveResult)
         if self.saveResult:
-            print("SAVING FROM ENV")
             self.save_result(
                 free_points,
                 distances=distances,
