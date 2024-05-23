@@ -17,13 +17,12 @@ from simulariumio import (
     ModelMetaData,
     CameraData,
     DisplayData,
-    ScatterPlotData,
-    HistogramPlotData,
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
+from cellpack.autopack.upy.simularium.plots import PlotData
 from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 import collada
@@ -114,6 +113,7 @@ class simulariumHelper(hostHelper.Helper):
         self.nogui = True
         self.hext = "dae"
         self.max_fiber_length = 0
+        self.plot_data = PlotData()
 
     @staticmethod
     def format_rgb_color(color):
@@ -1373,92 +1373,9 @@ class simulariumHelper(hostHelper.Helper):
             spatial_units=UnitData("nm"),  # nanometers
         )
         converter = TrajectoryConverter(converted_data)
-        # plot_data = ScatterPlotData(
-        #     title="test_plot",
-        #     xaxis_title="concentrations (uM)",
-        #     yaxis_title="time (s)",
-        #     xtrace=np.array(
-        #         [
-        #             0.0,
-        #             1.0,
-        #             2.0,
-        #             3.0,
-        #             4.0,
-        #             5.0,
-        #             6.0,
-        #             7.0,
-        #             8.0,
-        #             9.0,
-        #             3.0,
-        #             4.0,
-        #             3.0,
-        #             7.0,
-        #             5.0,
-        #             3.0,
-        #             6.0,
-        #             5.0,
-        #             2.0,
-        #             4.0,
-        #         ]
-        #     ),
-        #     ytraces={
-        #         "agent1": np.array(
-        #             [
-        #                 0.0,
-        #                 1.0,
-        #                 2.0,
-        #                 3.0,
-        #                 4.0,
-        #                 5.0,
-        #                 6.0,
-        #                 7.0,
-        #                 8.0,
-        #                 9.0,
-        #                 3.0,
-        #                 4.0,
-        #                 3.0,
-        #                 7.0,
-        #                 5.0,
-        #                 3.0,
-        #                 6.0,
-        #                 5.0,
-        #                 2.0,
-        #                 4.0,
-        #             ]
-        #         ),
-        #     },
-        # )
-        plot_data = HistogramPlotData(
-            title="Test Histogram 2",
-            xaxis_title="concentrations (uM)",
-            traces={
-                "agent1": np.array(
-                    [
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        3.0,
-                        4.0,
-                        3.0,
-                        7.0,
-                        5.0,
-                        3.0,
-                        6.0,
-                        5.0,
-                        2.0,
-                        4.0,
-                    ]
-                ),
-            },
-        )
-        converter.add_plot(plot_data, "histogram")
+        plot_list = self.plot_data.plot_list
+        for type, plot in plot_list:
+            converter.add_plot(plot, type)
         converter.save(file_name, False)
         return file_name
 

@@ -57,7 +57,6 @@ class Analysis:
             self.smallest = env.smallestProteinSize
             self.largest = env.largestProteinSize
         self.afviewer = viewer
-        self.helper = None
         if viewer:
             self.helper = self.afviewer.vi
         self.result_file = result_file
@@ -86,6 +85,7 @@ class Analysis:
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
         self.seed_to_results = {}
+        self.helper = autopack.helper
         autopack._colors = None
 
     @staticmethod
@@ -643,6 +643,11 @@ class Analysis:
                 x_label=dim,
                 y_label="count",
             )
+            self.helper.plot_data.add_histogram(
+                title="all_ingredients",
+                xaxis_title=dim,
+                traces={"count": all_pos[:, ind]},
+            )
 
     def plot_position_distribution(self, ingr):
         pos_xyz = numpy.array(self.env.ingredient_positions[ingr.name])
@@ -657,6 +662,9 @@ class Analysis:
                 title_str=ingr.name,
                 x_label=dim,
                 y_label="count",
+            )
+            self.helper.plot_data.add_histogram(
+                title=ingr.name, xaxis_title=dim, traces={"count": all_pos[:, ind]}
             )
 
     def plot_occurence_distribution(self, ingr):
@@ -680,6 +688,11 @@ class Analysis:
             x_label="occurrences",
             y_label="count",
         )
+        self.helper.plot_data.add_histogram(
+            title=ingr.name,
+            xaxis_title="occurrences",
+            traces={"count": numpy.array(occ)},
+        )
 
     def plot_distance_distribution(self, all_ingredient_distances):
         """
@@ -695,6 +708,11 @@ class Analysis:
                 title_str=ingr_key,
                 x_label="pairwise distance",
                 y_label="count",
+            )
+            self.helper.plot_data.add_histogram(
+                title=ingr_key,
+                xaxis_title="pairwise distance",
+                traces={"count": numpy.array(distances)},
             )
 
     def correlation(self, ingr):
@@ -2181,7 +2199,6 @@ class Analysis:
             self.afviewer.clearFill("Test_Spheres2D")
         else:
             self.env.reset()
-        self.env.saveResult = True
         numpy.random.seed(seed)
         self.build_grid()
         two_d = self.env.is_two_d()
@@ -2331,6 +2348,7 @@ class Analysis:
                 grid_image_writer = gradient.create_voxelization(grid_image_writer)
                 grid_image_writer.export_image()
 
+        Writer().save_as_simularium(self.env, self.seed_to_results)
         return (
             center_distance_dict,
             pairwise_distance_dict,
@@ -2498,9 +2516,6 @@ class Analysis:
         self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
         self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
-        if number_of_packings > 1:
-            Writer().save_as_simularium(self.env, self.seed_to_results)
-
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict
         )
@@ -2559,6 +2574,11 @@ class Analysis:
                     x_label="center distance",
                     y_label="count",
                 )
+                self.helper.plot_data.add_histogram(
+                    title="all_ingredients",
+                    xaxis_title="center distance",
+                    traces={"count": numpy.array(all_center_distance_array)},
+                )
 
             if len(all_center_distance_array) > 1:
                 self.histogram(
@@ -2568,6 +2588,11 @@ class Analysis:
                     title_str="all_ingredients",
                     x_label="pairwise distances",
                     y_label="count",
+                )
+                self.helper.plot_data.add_histogram(
+                    title="all_ingredients",
+                    xaxis_title="pairwise distances",
+                    traces={"count": numpy.array(all_pairwise_distance_array)},
                 )
 
             # plot the angle
@@ -2579,12 +2604,22 @@ class Analysis:
                     x_label="angles X",
                     y_label="count",
                 )
+                self.helper.plot_data.add_histogram(
+                    title="all_ingredients",
+                    xaxis_title="angles X",
+                    traces={"count": numpy.array(all_ingredient_angle_array[0])},
+                )
                 self.histogram(
                     all_ingredient_angle_array[1],
                     self.figures_path / f"all_angles_Y_{self.env.basename}.png",
                     title_str="all_ingredients",
                     x_label="angles Y",
                     y_label="count",
+                )
+                self.helper.plot_data.add_histogram(
+                    title="all_ingredients",
+                    xaxis_title="angles Y",
+                    traces={"count": numpy.array(all_ingredient_angle_array[1])},
                 )
                 self.histogram(
                     all_ingredient_angle_array[2],
@@ -2593,3 +2628,9 @@ class Analysis:
                     x_label="angles Z",
                     y_label="count",
                 )
+                self.helper.plot_data.add_histogram(
+                    title="all_ingredients",
+                    xaxis_title="angles Z",
+                    traces={"count": numpy.array(all_ingredient_angle_array[2])},
+                )
+        Writer().save_as_simularium(self.env, self.seed_to_results)
