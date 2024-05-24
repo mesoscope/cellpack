@@ -46,6 +46,7 @@
 from scipy import spatial
 import numpy
 import logging
+import collada
 from scipy.spatial.transform import Rotation as R
 from math import pi
 from random import uniform, gauss, random
