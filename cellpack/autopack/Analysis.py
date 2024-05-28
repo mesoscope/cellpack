@@ -17,7 +17,6 @@ from matplotlib.patches import Circle
 from mdutils.mdutils import MdUtils
 
 import cellpack.autopack as autopack
-from cellpack.autopack.GeometryTools import GeometryTools
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
@@ -29,29 +28,13 @@ class Analysis:
     def __init__(
         self,
         env=None,
-        viewer=None,
-        result_file=None,
         packing_results_path=None,
         output_path=None,
     ):
         self.env = None
-        self.smallest = 99999.0
-        self.largest = 0.0
         if env:
             self.env = env
-            self.smallest = env.smallestProteinSize
-            self.largest = env.largestProteinSize
-        self.afviewer = viewer
-        self.helper = None
-        if viewer:
-            self.helper = self.afviewer.vi
-        self.result_file = result_file
         self.center = [0, 0, 0]
-        self.bbox = [[0, 0, 0], [1, 1, 1]]
-        self.g = GeometryTools()
-        self.g.Resolution = 1.0  # or grid step?
-        self.current_pos = None
-        self.current_distance = None
         self.plotly = PlotlyAnalysis()
 
         if packing_results_path is not None:
@@ -995,11 +978,7 @@ class Analysis:
         """
         seed = int(seed_list[seed_index])
         seed_basename = self.env.add_seed_number_to_base_name(seed)
-        # Clear
-        if self.afviewer:
-            self.afviewer.clearFill("Test_Spheres2D")
-        else:
-            self.env.reset()
+        self.env.reset()
         self.env.saveResult = True
         numpy.random.seed(seed)
         self.build_grid()
