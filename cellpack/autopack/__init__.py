@@ -77,24 +77,9 @@ def make_directory_if_needed(directory):
 # #Setup autopack data directory.
 # ==============================================================================
 # the dir will have all the recipe + cache.
-
-APPNAME = "autoPACK"
-
-
-if sys.platform == "darwin":
-    # from AppKit import NSSearchPathForDirectoriesInDomains
-    # http://developer.apple.com/DOCUMENTATION/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Functions/Reference/reference.html#//apple_ref/c/func/NSSearchPathForDirectoriesInDomains
-    # NSApplicationSupportDirectory = 14
-    # NSUserDomainMask = 1
-    # True for expanding the tilde into a fully qualified path
-    # appdata = path.join(NSSearchPathForDirectoriesInDomains(14, 1, True)[0], APPNAME)
-    appdata = os.path.expanduser("~") + "/Library/Application Support/autoPACK"
-elif sys.platform == "win32":
-    appdata = path.join(environ["APPDATA"], APPNAME)
-else:
-    appdata = path.expanduser(path.join("~", "." + APPNAME))
+appdata = Path(__file__).parents[2] / ".cache"
 make_directory_if_needed(appdata)
-log.info(f"autoPACK data dir created {appdata}")
+log.info(f"cellPACK data dir created {appdata}")
 appdata = Path(appdata)
 
 
@@ -110,16 +95,15 @@ def url_exists(url):
 # setup the cache directory inside the app data folder
 # ==============================================================================
 
-
-cache_results = appdata / "cache_results"
-cache_geoms = appdata / "cache_geometries"
-cache_sphere = appdata / "cache_collisionTrees"
-cache_recipes = appdata / "cache_recipes"
-cache_grids = appdata / "cache_grids"
+cache_results = appdata / "results"
+cache_geoms = appdata / "geometries"
+cache_sphere = appdata / "collisionTrees"
+cache_recipes = appdata / "recipes"
+cache_grids = appdata / "grids"
 preferences = appdata / "preferences"
 # we can now use some json/xml file for storing preferences and options.
 # need others ?
-cache_dir = {
+CACHE_DIR = {
     "geometries": cache_geoms,
     "results": cache_results,
     "collisionTrees": cache_sphere,
@@ -128,7 +112,7 @@ cache_dir = {
     "prefs": preferences,
 }
 
-for _, dir in cache_dir.items():
+for _, dir in CACHE_DIR.items():
     make_directory_if_needed(dir)
 
 usePP = False
@@ -355,7 +339,7 @@ def get_cache_location(name, cache, destination):
     name: str
     destination: str
     """
-    local_file_directory = cache_dir[cache] / destination
+    local_file_directory = CACHE_DIR[cache] / destination
     local_file_path = local_file_directory / name
     make_directory_if_needed(local_file_directory)
     return local_file_path
@@ -395,8 +379,8 @@ def get_local_file_location(
 
     # not url, use pathlib
     input_file_location = Path(input_file_location)
-    if os.path.isfile(cache_dir[cache] / input_file_location):
-        return cache_dir[cache] / input_file_location
+    if os.path.isfile(CACHE_DIR[cache] / input_file_location):
+        return CACHE_DIR[cache] / input_file_location
     if os.path.isfile(CURRENT_RECIPE_PATH / input_file_location):
         # if no folder provided, use the current_recipe_folder
         return CURRENT_RECIPE_PATH / input_file_location
@@ -408,7 +392,7 @@ def get_local_file_location(
         if helper is not None:
             reporthook = helper.reporthook
         name = input_file_location
-        local_file_path = cache_dir[cache] / destination / name
+        local_file_path = CACHE_DIR[cache] / destination / name
         download_file(url, local_file_path, reporthook)
         return local_file_path
     return input_file_location
@@ -585,12 +569,12 @@ def saveRecipeAvailableJSON(recipe_dictionary, filename):
 
 def clearCaches(*args):
     # can't work if file are open!
-    for k in cache_dir:
+    for k in CACHE_DIR:
         try:
-            shutil.rmtree(cache_dir[k])
-            os.makedirs(cache_dir[k])
+            shutil.rmtree(CACHE_DIR[k])
+            os.makedirs(CACHE_DIR[k])
         except:  # noqa: E722
-            print("problem cleaning ", cache_dir[k])
+            print("problem cleaning ", CACHE_DIR[k])
 
 
 def write_username_to_creds():
