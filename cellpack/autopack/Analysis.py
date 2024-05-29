@@ -1746,12 +1746,13 @@ class Analysis:
         self,
         seed=20,
         show_plotly_plot=True,
+        **kwargs,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.place_method)
 
         t1 = time()
-        results = self.env.pack_grid(seedNum=seed)
+        results = self.env.pack_grid(seedNum=seed, **kwargs)
         self.seed_to_results[seed] = results
         t2 = time()
         run_time = t2 - t1
@@ -2170,6 +2171,7 @@ class Analysis:
         show_grid=False,
         plot_figures=False,
         save_gradient_data_as_image=False,
+        clean_grid_cache=False,
     ):
         """
         Packs one seed of a recipe and returns the recipe object
@@ -2190,6 +2192,7 @@ class Analysis:
             seed=seed,
             # TODO: fix this to disable plotly if using simularium
             show_plotly_plot=(show_grid and two_d) and not use_simularium,
+            clean_grid_cache=clean_grid_cache,
         )
 
         self.center = self.env.grid.getCenter()
@@ -2385,6 +2388,7 @@ class Analysis:
         save_gradient_data_as_image = packing_config_data.get(
             "save_gradient_data_as_image", False
         )
+        clean_grid_cache = packing_config_data.get("clean_grid_cache", False)
 
         seed_list = get_seed_list(packing_config_data, recipe_data)
         if seed_list is None:
@@ -2447,6 +2451,7 @@ class Analysis:
                             get_distance_distribution=get_distance_distribution,
                             image_export_options=image_export_options,
                             save_gradient_data_as_image=save_gradient_data_as_image,
+                            clean_grid_cache=clean_grid_cache,
                         )
                     )
                 for future in concurrent.futures.as_completed(futures):
@@ -2489,6 +2494,7 @@ class Analysis:
                     show_grid=show_grid,
                     plot_figures=plot_figures,
                     save_gradient_data_as_image=save_gradient_data_as_image,
+                    clean_grid_cache=clean_grid_cache,
                 )
 
         self.writeJSON(center_distance_file, center_distance_dict)
