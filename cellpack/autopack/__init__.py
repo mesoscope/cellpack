@@ -115,6 +115,7 @@ cache_results = appdata / "cache_results"
 cache_geoms = appdata / "cache_geometries"
 cache_sphere = appdata / "cache_collisionTrees"
 cache_recipes = appdata / "cache_recipes"
+cache_grids = appdata / "cache_grids"
 preferences = appdata / "preferences"
 # we can now use some json/xml file for storing preferences and options.
 # need others ?
@@ -123,6 +124,7 @@ cache_dir = {
     "results": cache_results,
     "collisionTrees": cache_sphere,
     "recipes": cache_recipes,
+    "grids": cache_grids,
     "prefs": preferences,
 }
 
