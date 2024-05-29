@@ -1,0 +1,10 @@
+{
+    "name": "test_s3_mesh_config",
+    "out": "out/test",
+    "save_analyze_result": true,
+    "save_plot_figures": true,
+    "load_from_grid_file": true,
+    "show_progress_bar": true,
+    "upload_results": false,
+    "open_in_browser": false
+}

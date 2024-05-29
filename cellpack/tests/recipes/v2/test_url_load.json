@@ -1,0 +1,89 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.1",
+    "name": "test_s3_mesh",
+    "bounding_box": [
+        [
+            -5,
+            -5,
+            -5
+        ],
+        [
+            5,
+            5,
+            5
+        ]
+    ],   
+    "objects": {
+        "membrane_mesh": {
+            "type": "mesh",
+            "color": [
+                1,
+                0,
+                1
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/meshes",
+                    "name": "sphere_4.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "nucleus_mesh": {
+            "type": "mesh",
+            "color": [
+                0,
+                1,
+                1
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/meshes",
+                    "name": "sphere_2.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "primitive_sphere": {
+            "type": "single_sphere",
+            "color": [
+                0.2,
+                0.7,
+                0.1
+            ],
+            "radius": 0.5,
+            "packing_mode": "random"
+        }
+    },
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "membrane"
+                ]
+            }
+        },
+        "membrane": {
+            "object": "membrane_mesh",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    "nucleus",
+                    {
+                        "object": "primitive_sphere",
+                        "count": 100
+                    }
+                ]
+            }
+        },
+        "nucleus": {
+            "object": "nucleus_mesh",
+            "count": 1,
+            "regions": {
+                "interior": []
+            }
+        }
+    },
+    "grid_file_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/grids/test_s3_mesh_test_s3_mesh_config_1.0.0_grid.dat"
+}
