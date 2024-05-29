@@ -2202,8 +2202,6 @@ class Analysis:
             self.afviewer.clearFill("Test_Spheres2D")
         else:
             self.env.reset()
-        # TODO: why we set saveResult to True here? can we add a condition?
-        # self.env.saveResult = True
         numpy.random.seed(seed)
         self.build_grid()
         two_d = self.env.is_two_d()
