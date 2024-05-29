@@ -2,7 +2,7 @@
     "name": "test_s3_mesh_config",
     "out": "out/test",
     "save_analyze_result": true,
-    "clean_grid_cache": true,
+    "clean_grid_cache": false,
     "save_plot_figures": true,
     "load_from_grid_file": true,
     "show_progress_bar": true,
