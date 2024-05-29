@@ -695,6 +695,7 @@ class Analysis:
                 title_str=ingr_key,
                 x_label="pairwise distance",
                 y_label="count",
+                save_png=True,
             )
 
     def correlation(self, ingr):
@@ -1727,6 +1728,7 @@ class Analysis:
             plt.ylabel(y_label)
             plt.savefig(filename)
             plt.close()
+            print("saved", filename)
 
         if add_to_result:
             # add histogrm to result file and display on the web page
