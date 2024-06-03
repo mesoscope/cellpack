@@ -54,7 +54,7 @@ jobs:
             - uses: actions/download-artifact@v3
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
-            - uses: iterative/setup-cml@v1
+            - uses: iterative/setup-cml@v3
             - name: Update comment
               env:
                   REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
