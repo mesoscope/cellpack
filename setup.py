@@ -28,7 +28,6 @@ analysis_requirements = [
     "seaborn>=0.12.1",
     "aicsimageio>=4.10.0",
     "pandas>=1.2.4",
-    "mdutils>=1.4.0",
 ]
 
 dev_requirements = [
@@ -54,13 +53,12 @@ requirements = [
     "firebase_admin>=6.0.1",
     "matplotlib>=3.3.4",
     "numpy>=1.19.2",
-    "pmw==2.0.1",
     "scipy>=1.6.2",
     "simulariumio>=1.6.3",
     "plotly>=5.3.1",
-    "pycollada==0.7.2",
-    "pyembree>=0.1.8",
+    "pycollada>=0.7.1",
     "pymunk>=6.2.0",
+    "rtree",
     "trimesh>=3.9.34",
     "deepdiff>=5.5.0",
     "python-dotenv>=1.0.0",

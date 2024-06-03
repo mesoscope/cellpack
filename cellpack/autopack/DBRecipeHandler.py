@@ -771,3 +771,9 @@ class DBMaintenance(object):
         Check if the results in the database are expired and delete them if the linked object expired.
         """
         self.result_doc.handle_expired_results()
+
+    def readme_url(self):
+        """
+        Return the URL to the README file for the database setup section.
+        """
+        return "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
