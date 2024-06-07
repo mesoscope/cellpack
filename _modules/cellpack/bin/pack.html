@@ -84,15 +84,12 @@
     <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">packing_config_data</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">recipe_data</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">helper</span>
 
-    <span class="n">afviewer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;save_analyze_result&quot;</span><span class="p">]</span>
         <span class="ow">or</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;number_of_packings&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="p">):</span>
         <span class="n">analyze</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span>
             <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-            <span class="n">viewer</span><span class="o">=</span><span class="n">afviewer</span><span class="p">,</span>
-            <span class="n">result_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;saving to </span><span class="si">{</span><span class="n">env</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 

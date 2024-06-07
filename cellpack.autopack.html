@@ -843,61 +843,8 @@
 <p>&#64;author: ludo</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></span><span class="sig-name descname"><span class="pre">Analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing_results_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></span><span class="sig-name descname"><span class="pre">Analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing_results_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_2D">
-<span class="sig-name descname"><span class="pre">PairCorrelationFunction_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.PairCorrelationFunction_2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_2D" title="Link to this definition">¶</a></dt>
-<dd><p>Compute the two-dimensional pair correlation function, also known
-as the radial distribution function, for a set of circular particles
-contained in a square region of a plane.  This simple function finds
-reference particles such that a circle of radius rMax drawn around the
-particle will fit entirely within the square, eliminating the need to
-compensate for edge effects.  If no such particles exist, an error is
-returned. Try a smaller rMax…or write some code to handle edge effects! ;)</p>
-<dl>
-<dt>Arguments:</dt><dd><p>x               an array of x positions of centers of particles
-y               an array of y positions of centers of particles
-S               length of each side of the square region of the plane
-rMax            outer diameter of largest annulus
-dr              increment for increasing radius of annulus</p>
-</dd>
-<dt>Returns a tuple: (g, radii, interior_x, interior_y)</dt><dd><p>g(r)            a numpy array containing the correlation function g(r)
-radii           a numpy array containing the radii of the</p>
-<blockquote>
-<div><p>annuli used to compute g(r)</p>
-</div></blockquote>
-<p>interior_x      x coordinates of reference particles
-interior_y      y coordinates of reference particles</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_3D">
-<span class="sig-name descname"><span class="pre">PairCorrelationFunction_3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.PairCorrelationFunction_3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_3D" title="Link to this definition">¶</a></dt>
-<dd><p>Compute the three-dimensional pair correlation function for a set of
-spherical particles contained in a cube with side length S. This simple
-function finds reference particles such that a sphere of radius rMax drawn
-around the particle will fit entirely within the cube, eliminating the need
-to compensate for edge effects. If no such particles exist, an error is
-returned. Try a smaller rMax…or write some code to handle edge effects! ;)
-Arguments:
-x an array of x positions of centers of particles
-y an array of y positions of centers of particles
-z an array of z positions of centers of particles
-S length of each side of the cube in space
-rMax outer diameter of largest spherical shell
-dr increment for increasing radius of spherical shell</p>
-<p>Returns a tuple: (g, radii, interior_x, interior_y, interior_z)
-g(r) a numpy array containing the correlation function g(r)
-radii a numpy array containing the radii of the
-spherical shells used to compute g(r)
-interior_x x coordinates of reference particles
-interior_y y coordinates of reference particles
-interior_z z coordinates of reference particles</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.add_ingredient_positions_to_plot">
 <span class="sig-name descname"><span class="pre">add_ingredient_positions_to_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_position_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.add_ingredient_positions_to_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.add_ingredient_positions_to_plot" title="Link to this definition">¶</a></dt>
@@ -908,27 +855,6 @@ interior_z z coordinates of reference particles</p>
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.build_grid">
 <span class="sig-name descname"><span class="pre">build_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.build_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.build_grid" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.calcDistanceMatrixFastEuclidean2">
-<span class="sig-name descname"><span class="pre">calcDistanceMatrixFastEuclidean2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDimPoints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.calcDistanceMatrixFastEuclidean2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.calcDistanceMatrixFastEuclidean2" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.calc_and_save_correlations">
-<span class="sig-name descname"><span class="pre">calc_and_save_correlations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_spilr_scaled</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.calc_and_save_correlations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.calc_and_save_correlations" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.calc_avg_similarity_values_for_dim">
-<span class="sig-name descname"><span class="pre">calc_avg_similarity_values_for_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_vals_for_dim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.calc_avg_similarity_values_for_dim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.calc_avg_similarity_values_for_dim" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.calc_similarity_df">
-<span class="sig-name descname"><span class="pre">calc_similarity_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_objs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.calc_similarity_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.calc_similarity_df" title="Link to this definition">¶</a></dt>
-<dd><p>Calculates a dataframe of similarity values between packings</p>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.cartesian_to_sph">
@@ -950,11 +876,6 @@ Dictionary keys are ingredient names</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.correlation">
-<span class="sig-name descname"><span class="pre">correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.correlation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.correlation" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.create_report">
 <span class="sig-name descname"><span class="pre">create_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_output_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_image_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_distance_analysis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_partner_analysis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.create_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.create_report" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a markdown file with various analyses included</p>
@@ -970,21 +891,6 @@ Dictionary keys are ingredient names</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.displayDistance">
-<span class="sig-name descname"><span class="pre">displayDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ramp_color1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.displayDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.displayDistance" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.displayDistanceCube">
-<span class="sig-name descname"><span class="pre">displayDistanceCube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ramp_color1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.displayDistanceCube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.displayDistanceCube" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.displayDistancePlane">
-<span class="sig-name descname"><span class="pre">displayDistancePlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ramp_color1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.displayDistancePlane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.displayDistancePlane" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.doloop">
@@ -1015,51 +921,8 @@ across seeds</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.flush">
-<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.flush"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.flush" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getAreaShell">
-<span class="sig-name descname"><span class="pre">getAreaShell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getAreaShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getAreaShell" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getClosestDistance">
-<span class="sig-name descname"><span class="pre">getClosestDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getClosestDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getClosestDistance" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getDistanceFrom">
-<span class="sig-name descname"><span class="pre">getDistanceFrom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getDistanceFrom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getDistanceFrom" title="Link to this definition">¶</a></dt>
-<dd><p>target : name or host object target or target position
-parent : name of host parent object for the list of object to measure distance from
-objects : list of object or list of points</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getHaltonUnique">
 <span class="sig-name descname"><span class="pre">getHaltonUnique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getHaltonUnique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getHaltonUnique" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getPositionsFromObject">
-<span class="sig-name descname"><span class="pre">getPositionsFromObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getPositionsFromObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getPositionsFromObject" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getPositionsFromResFile">
-<span class="sig-name descname"><span class="pre">getPositionsFromResFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getPositionsFromResFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getPositionsFromResFile" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.getVolumeShell">
-<span class="sig-name descname"><span class="pre">getVolumeShell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.getVolumeShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.getVolumeShell" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.get_dict_from_glob">
-<span class="sig-name descname"><span class="pre">get_dict_from_glob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glob_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.get_dict_from_glob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.get_dict_from_glob" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1104,8 +967,13 @@ objects : list of object or list of points</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.get_obj_dict">
 <span class="sig-name descname"><span class="pre">get_obj_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packing_results_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.get_obj_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.get_obj_dict" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the object dictionary from the input path folder.
-TODO: add description of object dictionary</p>
+<dd><p>Returns the object dictionary from the input path folder.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>packing_results_path (str): The path to the folder containing the packing results.</p>
+</dd>
+<dt>Returns:</dt><dd><p>tuple: A tuple containing the object dictionary and the list of all positions.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1113,11 +981,6 @@ TODO: add description of object dictionary</p>
 <span class="sig-name descname"><span class="pre">get_packed_minimum_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pairwise_distance_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.get_packed_minimum_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.get_packed_minimum_distance" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the minimum distance between packed objects</p>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.get_parametrized_representation">
-<span class="sig-name descname"><span class="pre">get_parametrized_representation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_pos_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_angular_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_plots_to_save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_correlations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.get_parametrized_representation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.get_parametrized_representation" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.get_partner_pair_dict">
@@ -1135,23 +998,6 @@ TODO: add description of object dictionary</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.get_xyz_dict_from_all_pos_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_xyz_dict_from_all_pos_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_pos_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.get_xyz_dict_from_all_pos_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.get_xyz_dict_from_all_pos_dict" title="Link to this definition">¶</a></dt>
-<dd><p>returns array of x, y, and z positions for each seed for runs
-in all_pos_dict</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.grabResultFromJSON">
-<span class="sig-name descname"><span class="pre">grabResultFromJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.grabResultFromJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.grabResultFromJSON" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.grabResultFromTXT">
-<span class="sig-name descname"><span class="pre">grabResultFromTXT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doanalyze</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.grabResultFromTXT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.grabResultFromTXT" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.histogram">
 <span class="sig-name descname"><span class="pre">histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.histogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.histogram" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1159,22 +1005,6 @@ in all_pos_dict</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.loadJSON">
 <span class="sig-name descname"><span class="pre">loadJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.loadJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.loadJSON" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.merge">
-<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge=&lt;function</span> <span class="pre">Analysis.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.merge" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.normalize_similarity_df">
-<span class="sig-name descname"><span class="pre">normalize_similarity_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.normalize_similarity_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.normalize_similarity_df" title="Link to this definition">¶</a></dt>
-<dd><p>Normalizes the similarity dataframe</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.one_exp">
-<span class="sig-name descname"><span class="pre">one_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nmol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodicity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.one_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.one_exp" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1194,17 +1024,6 @@ in all_pos_dict</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.plotNResult2D">
-<span class="sig-name descname"><span class="pre">plotNResult2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[0.0,</span> <span class="pre">0,</span> <span class="pre">0.0],</span> <span class="pre">[1000.0,</span> <span class="pre">1000.0,</span> <span class="pre">1000.0]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.plotNResult2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.plotNResult2D" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.plot_and_save_similarity_heatmaps">
-<span class="sig-name descname"><span class="pre">plot_and_save_similarity_heatmaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">similarity_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.plot_and_save_similarity_heatmaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.plot_and_save_similarity_heatmaps" title="Link to this definition">¶</a></dt>
-<dd><p>Plots heatmaps with hierarchical clustering using similarity scores</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.plot_distance_distribution">
 <span class="sig-name descname"><span class="pre">plot_distance_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_ingredient_distances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.plot_distance_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.plot_distance_distribution" title="Link to this definition">¶</a></dt>
 <dd><p>Plots the distribution of distances for ingredient and pairs of ingredients</p>
@@ -1213,11 +1032,6 @@ in all_pos_dict</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.plot_occurence_distribution">
 <span class="sig-name descname"><span class="pre">plot_occurence_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.plot_occurence_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.plot_occurence_distribution" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.plot_one_result_2d">
-<span class="sig-name descname"><span class="pre">plot_one_result_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[0.0,</span> <span class="pre">0,</span> <span class="pre">0.0],</span> <span class="pre">[1000.0,</span> <span class="pre">1000.0,</span> <span class="pre">1000.0]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.plot_one_result_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.plot_one_result_2d" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1237,28 +1051,8 @@ in all_pos_dict</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.rdf">
-<span class="sig-name descname"><span class="pre">rdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.rdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.rdf" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.rdf_2d">
-<span class="sig-name descname"><span class="pre">rdf_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.rdf_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.rdf_2d" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.rdf_3d">
-<span class="sig-name descname"><span class="pre">rdf_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.rdf_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.rdf_3d" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.rectangle_circle_area">
-<span class="sig-name descname"><span class="pre">rectangle_circle_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.rectangle_circle_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.rectangle_circle_area" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.ripley">
-<span class="sig-name descname"><span class="pre">ripley</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.ripley"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.ripley" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.read_dict_from_glob_file">
+<span class="sig-name descname"><span class="pre">read_dict_from_glob_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glob_str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.read_dict_from_glob_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.read_dict_from_glob_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1280,27 +1074,6 @@ the analysis report</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.run_similarity_analysis">
-<span class="sig-name descname"><span class="pre">run_similarity_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_objs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_heatmaps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalculate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.run_similarity_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.run_similarity_analysis" title="Link to this definition">¶</a></dt>
-<dd><p>TODO: add docs</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.save_array_to_file">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_array_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_to_save</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.save_array_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.save_array_to_file" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.save_csv">
-<span class="sig-name descname"><span class="pre">save_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.save_csv" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.save_spilr_heatmap">
-<span class="sig-name descname"><span class="pre">save_spilr_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.save_spilr_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.save_spilr_heatmap" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.set_ingredient_color">
 <span class="sig-name descname"><span class="pre">set_ingredient_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.set_ingredient_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.set_ingredient_color" title="Link to this definition">¶</a></dt>
 <dd><p>Sets the color of an ingredient</p>
@@ -1312,15 +1085,15 @@ the analysis report</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.update_crosswise_distances">
-<span class="sig-name descname"><span class="pre">update_crosswise_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.update_crosswise_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.update_crosswise_distances" title="Link to this definition">¶</a></dt>
-<dd><p>Adds cross-ingredient distances for pairwise distance dictionary</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.update_distance_distribution_dictionaries">
 <span class="sig-name descname"><span class="pre">update_distance_distribution_dictionaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_position_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_angle_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_occurence_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.update_distance_distribution_dictionaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.update_distance_distribution_dictionaries" title="Link to this definition">¶</a></dt>
 <dd><p>Update dictionaries that store distance and angle information</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.update_pairwise_distances">
+<span class="sig-name descname"><span class="pre">update_pairwise_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.update_pairwise_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.update_pairwise_distances" title="Link to this definition">¶</a></dt>
+<dd><p>Adds cross-ingredient distances for pairwise distance dictionary</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5762,32 +5535,14 @@ destination: str</p>
 </li>
 <li><a class="reference internal" href="#module-cellpack.autopack.Analysis">cellpack.autopack.Analysis module</a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis"><code class="docutils literal notranslate"><span class="pre">Analysis</span></code></a><ul>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_2D"><code class="docutils literal notranslate"><span class="pre">Analysis.PairCorrelationFunction_2D()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.PairCorrelationFunction_3D"><code class="docutils literal notranslate"><span class="pre">Analysis.PairCorrelationFunction_3D()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.add_ingredient_positions_to_plot"><code class="docutils literal notranslate"><span class="pre">Analysis.add_ingredient_positions_to_plot()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.build_grid"><code class="docutils literal notranslate"><span class="pre">Analysis.build_grid()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calcDistanceMatrixFastEuclidean2"><code class="docutils literal notranslate"><span class="pre">Analysis.calcDistanceMatrixFastEuclidean2()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calc_and_save_correlations"><code class="docutils literal notranslate"><span class="pre">Analysis.calc_and_save_correlations()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calc_avg_similarity_values_for_dim"><code class="docutils literal notranslate"><span class="pre">Analysis.calc_avg_similarity_values_for_dim()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.calc_similarity_df"><code class="docutils literal notranslate"><span class="pre">Analysis.calc_similarity_df()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.cartesian_to_sph"><code class="docutils literal notranslate"><span class="pre">Analysis.cartesian_to_sph()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.combine_results_from_ingredients"><code class="docutils literal notranslate"><span class="pre">Analysis.combine_results_from_ingredients()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.combine_results_from_seeds"><code class="docutils literal notranslate"><span class="pre">Analysis.combine_results_from_seeds()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.correlation"><code class="docutils literal notranslate"><span class="pre">Analysis.correlation()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.create_report"><code class="docutils literal notranslate"><span class="pre">Analysis.create_report()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.displayDistance"><code class="docutils literal notranslate"><span class="pre">Analysis.displayDistance()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.displayDistanceCube"><code class="docutils literal notranslate"><span class="pre">Analysis.displayDistanceCube()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.displayDistancePlane"><code class="docutils literal notranslate"><span class="pre">Analysis.displayDistancePlane()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.doloop"><code class="docutils literal notranslate"><span class="pre">Analysis.doloop()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.flush"><code class="docutils literal notranslate"><span class="pre">Analysis.flush()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getAreaShell"><code class="docutils literal notranslate"><span class="pre">Analysis.getAreaShell()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getClosestDistance"><code class="docutils literal notranslate"><span class="pre">Analysis.getClosestDistance()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getDistanceFrom"><code class="docutils literal notranslate"><span class="pre">Analysis.getDistanceFrom()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getHaltonUnique"><code class="docutils literal notranslate"><span class="pre">Analysis.getHaltonUnique()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getPositionsFromObject"><code class="docutils literal notranslate"><span class="pre">Analysis.getPositionsFromObject()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getPositionsFromResFile"><code class="docutils literal notranslate"><span class="pre">Analysis.getPositionsFromResFile()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.getVolumeShell"><code class="docutils literal notranslate"><span class="pre">Analysis.getVolumeShell()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_dict_from_glob"><code class="docutils literal notranslate"><span class="pre">Analysis.get_dict_from_glob()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_ingredient_key_from_object_or_comp_name"><code class="docutils literal notranslate"><span class="pre">Analysis.get_ingredient_key_from_object_or_comp_name()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_ingredient_radii"><code class="docutils literal notranslate"><span class="pre">Analysis.get_ingredient_radii()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_list_of_dims"><code class="docutils literal notranslate"><span class="pre">Analysis.get_list_of_dims()</span></code></a></li>
@@ -5795,43 +5550,25 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_number_of_ingredients_packed"><code class="docutils literal notranslate"><span class="pre">Analysis.get_number_of_ingredients_packed()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_obj_dict"><code class="docutils literal notranslate"><span class="pre">Analysis.get_obj_dict()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_packed_minimum_distance"><code class="docutils literal notranslate"><span class="pre">Analysis.get_packed_minimum_distance()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_parametrized_representation"><code class="docutils literal notranslate"><span class="pre">Analysis.get_parametrized_representation()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_partner_pair_dict"><code class="docutils literal notranslate"><span class="pre">Analysis.get_partner_pair_dict()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.get_xyz_dict_from_all_pos_dict"><code class="docutils literal notranslate"><span class="pre">Analysis.get_xyz_dict_from_all_pos_dict()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.grabResultFromJSON"><code class="docutils literal notranslate"><span class="pre">Analysis.grabResultFromJSON()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.grabResultFromTXT"><code class="docutils literal notranslate"><span class="pre">Analysis.grabResultFromTXT()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.histogram"><code class="docutils literal notranslate"><span class="pre">Analysis.histogram()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.loadJSON"><code class="docutils literal notranslate"><span class="pre">Analysis.loadJSON()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.merge"><code class="docutils literal notranslate"><span class="pre">Analysis.merge()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.normalize_similarity_df"><code class="docutils literal notranslate"><span class="pre">Analysis.normalize_similarity_df()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.one_exp"><code class="docutils literal notranslate"><span class="pre">Analysis.one_exp()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.pack"><code class="docutils literal notranslate"><span class="pre">Analysis.pack()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.pack_one_seed"><code class="docutils literal notranslate"><span class="pre">Analysis.pack_one_seed()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot"><code class="docutils literal notranslate"><span class="pre">Analysis.plot()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plotNResult2D"><code class="docutils literal notranslate"><span class="pre">Analysis.plotNResult2D()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_and_save_similarity_heatmaps"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_and_save_similarity_heatmaps()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_distance_distribution"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_distance_distribution()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_occurence_distribution"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_occurence_distribution()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_one_result_2d"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_one_result_2d()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_position_distribution"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_position_distribution()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.plot_position_distribution_total"><code class="docutils literal notranslate"><span class="pre">Analysis.plot_position_distribution_total()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.process_ingredients_in_recipe"><code class="docutils literal notranslate"><span class="pre">Analysis.process_ingredients_in_recipe()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rdf"><code class="docutils literal notranslate"><span class="pre">Analysis.rdf()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rdf_2d"><code class="docutils literal notranslate"><span class="pre">Analysis.rdf_2d()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rdf_3d"><code class="docutils literal notranslate"><span class="pre">Analysis.rdf_3d()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.rectangle_circle_area"><code class="docutils literal notranslate"><span class="pre">Analysis.rectangle_circle_area()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.ripley"><code class="docutils literal notranslate"><span class="pre">Analysis.ripley()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.read_dict_from_glob_file"><code class="docutils literal notranslate"><span class="pre">Analysis.read_dict_from_glob_file()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_analysis_workflow"><code class="docutils literal notranslate"><span class="pre">Analysis.run_analysis_workflow()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_distance_analysis"><code class="docutils literal notranslate"><span class="pre">Analysis.run_distance_analysis()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_partner_analysis"><code class="docutils literal notranslate"><span class="pre">Analysis.run_partner_analysis()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.run_similarity_analysis"><code class="docutils literal notranslate"><span class="pre">Analysis.run_similarity_analysis()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.save_array_to_file"><code class="docutils literal notranslate"><span class="pre">Analysis.save_array_to_file()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.save_csv"><code class="docutils literal notranslate"><span class="pre">Analysis.save_csv()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.save_spilr_heatmap"><code class="docutils literal notranslate"><span class="pre">Analysis.save_spilr_heatmap()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.set_ingredient_color"><code class="docutils literal notranslate"><span class="pre">Analysis.set_ingredient_color()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.simpleplot"><code class="docutils literal notranslate"><span class="pre">Analysis.simpleplot()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.update_crosswise_distances"><code class="docutils literal notranslate"><span class="pre">Analysis.update_crosswise_distances()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.update_distance_distribution_dictionaries"><code class="docutils literal notranslate"><span class="pre">Analysis.update_distance_distribution_dictionaries()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.update_pairwise_distances"><code class="docutils literal notranslate"><span class="pre">Analysis.update_pairwise_distances()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Analysis.Analysis.writeJSON"><code class="docutils literal notranslate"><span class="pre">Analysis.writeJSON()</span></code></a></li>
 </ul>
 </li>
