@@ -588,7 +588,23 @@ class Analysis:
                 **analysis_config["create_report"],
             )
 
-    def histogram(self, distances, filename, title_str="", x_label="", y_label="", save_png=True, add_to_result=True):
+    def histogram(
+        self,
+        distances,
+        filename,
+        title_str="",
+        x_label="",
+        y_label="",
+        add_to_result=True,
+        save_png=False,
+    ):
+        if add_to_result:
+            # add histogrm to result file and display on the web page
+            self.helper.plot_data.add_histogram(
+                title=f"{title_str}: {x_label}",
+                xaxis_title=x_label,
+                traces={y_label: numpy.array(distances)},
+            )
         if save_png:
             # use matplotlib to create histogram and save as png
             plt.clf()
@@ -619,14 +635,6 @@ class Analysis:
             plt.ylabel(y_label)
             plt.savefig(filename)
             plt.close()
-
-        if add_to_result:
-            # add histogrm to result file and display on the web page
-            self.helper.plot_data.add_histogram(
-                title=f"{title_str}: {x_label}",
-                xaxis_title=x_label,
-                traces={y_label: numpy.array(distances)},
-            )
 
     def plot(self, rdf, radii, file_name):
         plt.clf()
