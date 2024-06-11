@@ -43,15 +43,12 @@ def pack(recipe, config_path=None, analysis_config_path=None):
     env = Environment(config=packing_config_data, recipe=recipe_data)
     env.helper = helper
 
-    afviewer = None
     if (
         packing_config_data["save_analyze_result"]
         or packing_config_data["number_of_packings"] > 1
     ):
         analyze = Analysis(
             env=env,
-            viewer=afviewer,
-            result_file=None,
         )
         log.info(f"saving to {env.out_folder}")
 

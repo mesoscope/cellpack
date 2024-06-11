@@ -143,7 +143,11 @@ class Environment(CompartmentList):
         self.name = name
         self.version = recipe.get("version", "default")
         # saving/pickle option
-        self.saveResult = "out" in config
+        self.saveResult = (
+            "out" in config
+            and not config["save_analyze_result"]
+            and not config["number_of_packings"] > 1
+        )
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
         self.base_name = f"{self.name}_{config['name']}_{self.version}"
         self.grid_file_out = (
@@ -2188,7 +2192,6 @@ class Environment(CompartmentList):
             pbar.close()
         self.log.info("time to fill %d", t2 - t1)
         all_objects = self.prep_molecules_for_save(distances, free_points, nbFreePoints)
-
         if self.saveResult:
             self.save_result(
                 free_points,
