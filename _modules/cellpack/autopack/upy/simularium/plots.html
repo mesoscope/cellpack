@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cellpack.autopack.upy.simularium.plots &#8212; cellPack 1.0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/classic.css?v=def86cc0" />
+    
+    <script src="../../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../cellpack.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../../../autopack.html" >cellpack.autopack</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="../../upy.html" accesskey="U">cellpack.autopack.upy</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.upy.simularium.plots</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cellpack.autopack.upy.simularium.plots</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">simulariumio</span> <span class="kn">import</span> <span class="n">ScatterPlotData</span><span class="p">,</span> <span class="n">HistogramPlotData</span>
+
+
+<div class="viewcode-block" id="PlotData">
+<a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.plots.PlotData">[docs]</a>
+<span class="k">class</span> <span class="nc">PlotData</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of tuples</span>
+
+    <span class="k">def</span> <span class="nf">_add_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PlotData.add_scatter">
+<a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.plots.PlotData.add_scatter">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_scatter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xaxis_title</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="p">,</span> <span class="n">xtrace</span><span class="p">,</span> <span class="n">ytraces</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_plot</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;scatter&quot;</span><span class="p">,</span>
+                <span class="n">ScatterPlotData</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                    <span class="n">xaxis_title</span><span class="o">=</span><span class="n">xaxis_title</span><span class="p">,</span>
+                    <span class="n">yaxis_title</span><span class="o">=</span><span class="n">yaxis_title</span><span class="p">,</span>
+                    <span class="n">xtrace</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xtrace</span><span class="p">),</span>
+                    <span class="n">ytraces</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ytraces</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlotData.add_histogram">
+<a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.plots.PlotData.add_histogram">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xaxis_title</span><span class="p">,</span> <span class="n">traces</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_plot</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;histogram&quot;</span><span class="p">,</span>
+                <span class="n">HistogramPlotData</span><span class="p">(</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+                    <span class="n">xaxis_title</span><span class="o">=</span><span class="n">xaxis_title</span><span class="p">,</span>
+                    <span class="n">traces</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">traces</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../../cellpack.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../../../autopack.html" >cellpack.autopack</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="../../upy.html" >cellpack.autopack.upy</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.upy.simularium.plots</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

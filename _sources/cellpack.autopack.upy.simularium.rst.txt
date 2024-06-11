@@ -4,6 +4,14 @@ cellpack.autopack.upy.simularium package
 Submodules
 ----------
 
+cellpack.autopack.upy.simularium.plots module
+---------------------------------------------
+
+.. automodule:: cellpack.autopack.upy.simularium.plots
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.upy.simularium.simularium\_helper module
 ----------------------------------------------------------
 

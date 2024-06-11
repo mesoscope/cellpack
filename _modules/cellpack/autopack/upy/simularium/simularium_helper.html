@@ -63,6 +63,7 @@
 <span class="kn">from</span> <span class="nn">simulariumio.constants</span> <span class="kn">import</span> <span class="n">DISPLAY_TYPE</span><span class="p">,</span> <span class="n">VIZ_TYPE</span>
 
 <span class="kn">from</span> <span class="nn">cellpack.autopack.upy</span> <span class="kn">import</span> <span class="n">hostHelper</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.upy.simularium.plots</span> <span class="kn">import</span> <span class="n">PlotData</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBUploader</span><span class="p">,</span> <span class="n">DBMaintenance</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.database_ids</span> <span class="kn">import</span> <span class="n">DATABASE_IDS</span>
 <span class="kn">import</span> <span class="nn">collada</span>
@@ -167,6 +168,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nogui</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hext</span> <span class="o">=</span> <span class="s2">&quot;dae&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span> <span class="o">=</span> <span class="n">PlotData</span><span class="p">()</span>
 
 <div class="viewcode-block" id="simulariumHelper.format_rgb_color">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.format_rgb_color">[docs]</a>
@@ -1739,7 +1741,11 @@
             <span class="n">time_units</span><span class="o">=</span><span class="n">UnitData</span><span class="p">(</span><span class="s2">&quot;ns&quot;</span><span class="p">),</span>  <span class="c1"># nanoseconds</span>
             <span class="n">spatial_units</span><span class="o">=</span><span class="n">UnitData</span><span class="p">(</span><span class="s2">&quot;nm&quot;</span><span class="p">),</span>  <span class="c1"># nanometers</span>
         <span class="p">)</span>
-        <span class="n">TrajectoryConverter</span><span class="p">(</span><span class="n">converted_data</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">converter</span> <span class="o">=</span> <span class="n">TrajectoryConverter</span><span class="p">(</span><span class="n">converted_data</span><span class="p">)</span>
+        <span class="n">plot_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_list</span>
+        <span class="k">for</span> <span class="nb">type</span><span class="p">,</span> <span class="n">plot</span> <span class="ow">in</span> <span class="n">plot_list</span><span class="p">:</span>
+            <span class="n">converter</span><span class="o">.</span><span class="n">add_plot</span><span class="p">(</span><span class="n">plot</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span>
+        <span class="n">converter</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">file_name</span></div>
 
 
