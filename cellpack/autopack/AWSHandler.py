@@ -19,7 +19,7 @@ class AWSHandler(object):
         self,
         bucket_name,
         sub_folder_name=None,
-        region_name="us-west-2",
+        region_name=None,
     ):
         self.bucket_name = bucket_name
         self.folder_name = sub_folder_name
@@ -125,3 +125,16 @@ class AWSHandler(object):
             print(f"AWS credentials are not configured, details:{e}")
             return None, None
         return None, None
+
+    def download_file_from_s3(self, key, local_file_path):
+        try:
+            self.s3_client.download_file(self.bucket_name, key, local_file_path)
+            print("File downloaded successfully.")
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "404":
+                print("The object does not exist.")
+            else:
+                print("An error occurred while downloading the file.")
+
+    def is_s3_url(self, file_path):
+        return file_path.find("s3://") != -1
