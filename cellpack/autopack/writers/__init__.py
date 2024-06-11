@@ -188,6 +188,8 @@ class Writer(object):
         is_aggregate = len(seed_to_results_map) > 1
         if is_aggregate:
             result_file_name = f"{env.result_file.split('_seed')[0]}_all"
+        else:
+            result_file_name = f"{env.result_file.split('_seed')[0]}_seed_{list(seed_to_results_map.keys())[0]}"
         file_name = env.helper.writeToFile(
             result_file_name, env.boundingBox, env.name, env.version
         )

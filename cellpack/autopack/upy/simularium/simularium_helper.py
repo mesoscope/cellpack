@@ -22,6 +22,7 @@ from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import hostHelper
+from cellpack.autopack.upy.simularium.plots import PlotData
 from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 import collada
@@ -112,6 +113,7 @@ class simulariumHelper(hostHelper.Helper):
         self.nogui = True
         self.hext = "dae"
         self.max_fiber_length = 0
+        self.plot_data = PlotData()
 
     @staticmethod
     def format_rgb_color(color):
@@ -1370,7 +1372,11 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
-        TrajectoryConverter(converted_data).save(file_name, False)
+        converter = TrajectoryConverter(converted_data)
+        plot_list = self.plot_data.plot_list
+        for type, plot in plot_list:
+            converter.add_plot(plot, type)
+        converter.save(file_name, False)
         return file_name
 
     def raycast(self, **kw):

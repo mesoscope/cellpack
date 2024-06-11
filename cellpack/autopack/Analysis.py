@@ -54,6 +54,7 @@ class Analysis:
         self.figures_path = self.output_path / "figures"
         self.figures_path.mkdir(parents=True, exist_ok=True)
         self.seed_to_results = {}
+        self.helper = autopack.helper
 
     @staticmethod
     def cartesian_to_sph(xyz, center=None):
@@ -153,6 +154,7 @@ class Analysis:
                 title_str=ingr_key,
                 x_label="pairwise distance",
                 y_label="count",
+                save_png=True,
             )
 
     def get_obj_dict(self, packing_results_path):
@@ -586,33 +588,53 @@ class Analysis:
                 **analysis_config["create_report"],
             )
 
-    def histogram(self, distances, filename, title_str="", x_label="", y_label=""):
-        plt.clf()
-        # calculate histogram
-        nbins = int(numpy.sqrt(len(distances)))
-        if nbins < 2:
-            return
-        y, bin_edges = numpy.histogram(distances, bins=nbins)
-        bincenters = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+    def histogram(
+        self,
+        distances,
+        filename,
+        title_str="",
+        x_label="",
+        y_label="",
+        add_to_result=True,
+        save_png=False,
+    ):
+        if add_to_result:
+            # add histogrm to result file and display on the web page
+            self.helper.plot_data.add_histogram(
+                title=f"{title_str}: {x_label}",
+                xaxis_title=x_label,
+                traces={y_label: numpy.array(distances)},
+            )
+        if save_png:
+            # use matplotlib to create histogram and save as png
+            plt.clf()
+            # calculate histogram
+            nbins = int(numpy.sqrt(len(distances)))
+            if nbins < 2:
+                return
+            y, bin_edges = numpy.histogram(distances, bins=nbins)
+            bincenters = 0.5 * (bin_edges[1:] + bin_edges[:-1])
 
-        # calculate standard error for values in each bin
-        bin_inds = numpy.digitize(distances, bin_edges)
-        x_err_vals = numpy.zeros(y.shape)
-        for bc in range(nbins):
-            dist_vals = distances[bin_inds == (bc + 1)]
-            if len(dist_vals) > 1:
-                x_err_vals[bc] = numpy.std(dist_vals)
-            else:
-                x_err_vals[bc] = 0
-        y_err_vals = numpy.sqrt(y * (1 - y / numpy.sum(y)))
-        # set bin width
-        dbin = 0.9 * (bincenters[1] - bincenters[0])
-        plt.bar(bincenters, y, width=dbin, color="r", xerr=x_err_vals, yerr=y_err_vals)
-        plt.title(title_str)
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
-        plt.savefig(filename)
-        plt.close()
+            # calculate standard error for values in each bin
+            bin_inds = numpy.digitize(distances, bin_edges)
+            x_err_vals = numpy.zeros(y.shape)
+            for bc in range(nbins):
+                dist_vals = distances[bin_inds == (bc + 1)]
+                if len(dist_vals) > 1:
+                    x_err_vals[bc] = numpy.std(dist_vals)
+                else:
+                    x_err_vals[bc] = 0
+            y_err_vals = numpy.sqrt(y * (1 - y / numpy.sum(y)))
+            # set bin width
+            dbin = 0.9 * (bincenters[1] - bincenters[0])
+            plt.bar(
+                bincenters, y, width=dbin, color="r", xerr=x_err_vals, yerr=y_err_vals
+            )
+            plt.title(title_str)
+            plt.xlabel(x_label)
+            plt.ylabel(y_label)
+            plt.savefig(filename)
+            plt.close()
 
     def plot(self, rdf, radii, file_name):
         plt.clf()
@@ -979,7 +1001,6 @@ class Analysis:
         seed = int(seed_list[seed_index])
         seed_basename = self.env.add_seed_number_to_base_name(seed)
         self.env.reset()
-        self.env.saveResult = True
         numpy.random.seed(seed)
         self.build_grid()
         two_d = self.env.is_two_d()
@@ -1123,7 +1144,6 @@ class Analysis:
                 )
                 grid_image_writer = gradient.create_voxelization(grid_image_writer)
                 grid_image_writer.export_image()
-
         return (
             center_distance_dict,
             pairwise_distance_dict,
@@ -1291,9 +1311,6 @@ class Analysis:
         self.writeJSON(ingredient_occurences_file, ingredient_occurence_dict)
         self.writeJSON(ingredient_key_file, ingredient_key_dict)
 
-        if number_of_packings > 1:
-            Writer().save_as_simularium(self.env, self.seed_to_results)
-
         all_ingredient_positions = self.combine_results_from_seeds(
             ingredient_position_dict
         )
@@ -1386,3 +1403,7 @@ class Analysis:
                     x_label="angles Z",
                     y_label="count",
                 )
+        if number_of_packings > 1:
+            for seed, result in self.seed_to_results.items():
+                Writer().save_as_simularium(self.env, {seed: result})
+        Writer().save_as_simularium(self.env, self.seed_to_results)
