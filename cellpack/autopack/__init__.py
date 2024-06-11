@@ -34,24 +34,25 @@ Define here some usefull variable and setup filename path that facilitate
 AF
 @author: Ludovic Autin with editing by Graham Johnson
 """
+import getpass
+import json
 import logging
 import logging.config
 import os
-import sys
 import re
 import shutil
-import getpass
-from pathlib import Path
+import ssl
+import sys
 import urllib.request as urllib
 from collections import OrderedDict
-import ssl
-import json
-from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
-from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from pathlib import Path
 
-from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 import boto3
 import botocore
+
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.loaders.utils import read_json_file, write_json_file
 
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
