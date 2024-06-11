@@ -301,10 +301,6 @@ def download_file(url, local_file_path, reporthook):
         raise Exception(f"Url does not exist {url}")
 
 
-# def is_full_url(file_path):
-#     return file_path.find("http") != -1 or file_path.find("ftp") != -1
-
-
 def is_full_url(file_path):
     url_regex = re.compile(
         r"^(?:http|https|ftp|s3)://", re.IGNORECASE
