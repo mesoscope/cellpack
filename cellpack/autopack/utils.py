@@ -257,3 +257,26 @@ def get_value_from_distribution(distribution_options, return_int=False):
         value = int(numpy.rint(value))
 
     return value
+
+
+def get_seed_list(packing_config_data, recipe_data):
+    # Returns a list of seeds to use for packing
+    if packing_config_data["randomness_seed"] is not None:
+        seed_list = packing_config_data["randomness_seed"]
+    elif recipe_data.get("randomness_seed") is not None:
+        seed_list = recipe_data["randomness_seed"]
+    else:
+        seed_list = None
+
+    if isinstance(seed_list, int):
+        seed_list = [seed_list]
+
+    if (seed_list is not None) and (
+        len(seed_list) != packing_config_data["number_of_packings"]
+    ):
+        base_seed = int(seed_list[0])
+        seed_list = [
+            base_seed + i for i in range(packing_config_data["number_of_packings"])
+        ]
+
+    return seed_list

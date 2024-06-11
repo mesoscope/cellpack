@@ -1,8 +1,9 @@
 import logging
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse, urlunparse
 
 import boto3
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, NoCredentialsError
 
 
 class AWSHandler(object):
@@ -40,7 +41,7 @@ class AWSHandler(object):
 
     def get_aws_object_key(self, object_name):
         if self.folder_name is not None:
-            object_name = self.folder_name + object_name
+            object_name = f"{self.folder_name}/{object_name}"
         else:
             object_name = object_name
         return object_name
@@ -76,23 +77,51 @@ class AWSHandler(object):
         """
         object_name = self.get_aws_object_key(object_name)
         # Generate a presigned URL for the S3 object
+        # The response contains the presigned URL
+        # https://{self.bucket_name}.s3.{region}.amazonaws.com/{object_key}
         try:
             url = self.s3_client.generate_presigned_url(
                 "get_object",
                 Params={"Bucket": self.bucket_name, "Key": object_name},
                 ExpiresIn=expiration,
             )
+            base_url = urlunparse(urlparse(url)._replace(query="", fragment=""))
+            return base_url
         except ClientError as e:
-            logging.error(e)
+            logging.error(f"Error generating presigned URL: {e}")
             return None
-        # The response contains the presigned URL
-        # https://{self.bucket_name}.s3.{region}.amazonaws.com/{object_key}
-        return url
 
-    def save_file(self, file_path):
+    def is_url_valid(self, url):
         """
-        Uploads a file to S3 and returns the presigned url
+        Validate the url's scheme, bucket name, and query parameters, etc.
         """
-        file_name = self.upload_file(file_path)
-        if file_name:
-            return file_name, self.create_presigned_url(file_name)
+        parsed_url = urlparse(url)
+        # Check the scheme
+        if parsed_url.scheme != "https":
+            return False
+        # Check the bucket name
+        if not parsed_url.path.startswith(f"/{self.bucket_name}/"):
+            return False
+        # Check unwanted query parameters
+        unwanted_query_params = ["AWSAccessKeyId", "Signature", "Expires"]
+        if parsed_url.query:
+            query_params = parse_qs(parsed_url.query)
+            for param in unwanted_query_params:
+                if param in query_params:
+                    return False
+        return True
+
+    def save_file_and_get_url(self, file_path):
+        """
+        Uploads a file to S3 and returns the base url
+        """
+        try:
+            file_name = self.upload_file(file_path)
+            base_url = self.create_presigned_url(file_name)
+            if file_name and base_url:
+                if self.is_url_valid(base_url):
+                    return file_name, base_url
+        except NoCredentialsError as e:
+            print(f"AWS credentials are not configured, details:{e}")
+            return None, None
+        return None, None

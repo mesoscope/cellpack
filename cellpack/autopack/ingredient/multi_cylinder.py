@@ -1,12 +1,8 @@
 import numpy
 import math
 from math import pi, sqrt
-from panda3d.core import Point3, TransformState
-from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
-
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
-from .utils import pandaMatrice
 
 helper = autopack.helper
 
@@ -240,31 +236,6 @@ class MultiCylindersIngr(Ingredient):
             histoVol,
             dpad,
         )
-
-    def add_rb_node(self, worldNP):
-        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
-        inodenp.node().setMass(1.0)
-        centT1 = self.positions[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        centT2 = self.positions2[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions2[0])
-        for radc, p1, p2 in zip(self.radii[0], centT1, centT2):
-            length, mat = autopack.helper.getTubePropertiesMatrix(p1, p2)
-            pMat = pandaMatrice(mat)
-            #            d = numpy.array(p1) - numpy.array(p2)
-            #            s = numpy.sum(d*d)
-            Point3(
-                self.principal_vector[0],
-                self.principal_vector[1],
-                self.principal_vector[2],
-            )
-            shape = BulletCylinderShape(
-                radc, length, 1
-            )  # math.sqrt(s), 1)# { XUp = 0, YUp = 1, ZUp = 2 } or LVector3f const half_extents
-            inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
-        return inodenp
 
     def checkCylCollisions(
         self,

@@ -12,8 +12,6 @@ encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 class Place_Methods(MetaEnum):
     JITTER = "jitter"
     SPHERES_SST = "spheresSST"
-    PANDA_BULLET = "pandaBullet"
-    PANDA_BULLET_RELAX = "pandaBulletRelax"
 
 
 class Inner_Grid_Methods(MetaEnum):
@@ -40,6 +38,7 @@ class ConfigLoader(object):
         "randomness_seed": None,
         "save_analyze_result": False,
         "save_converted_recipe": False,
+        "save_gradient_data_as_image": False,
         "show_grid_plot": False,
         "show_sphere_trees": False,
         "show_progress_bar": False,

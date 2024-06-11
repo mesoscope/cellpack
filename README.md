@@ -85,8 +85,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
 ### Firebase Firestore
 1. Step-by-step Guide
-   * Create a Firebase project in test mode with your google account, select `firebase_admin` as the SDK. [Firebase Firestore tutorial](https://firebase.google.com/docs/firestore)
-   * Generate a new private key by navigating to "Project settings">"Service account" in the project's dashboard.
+   * For dev database:
+     * Create a Firebase project in test mode with your google account, select `firebase_admin` as the SDK. [Firebase Firestore tutorial](https://firebase.google.com/docs/firestore)
+     * Generate a new private key by navigating to "Project settings">"Service account" in the project's dashboard.
+   * For staging database:
+       * Reach out to the code owner for the necessary credentials.
+       * Set up an `.env` file as instructed.
 
 **MIT license**
 

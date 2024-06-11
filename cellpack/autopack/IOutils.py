@@ -1251,10 +1251,6 @@ def setupFromJsonDic(
     env.loopThroughIngr(env.restore_molecules_array)
 
 
-#        if env.place_method.find("panda") != -1 :
-#            env.setupPanda()
-
-
 def load_MixedasJson(env, resultfilename=None, transpose=True):
     #        from upy.hostHelper import Helper as helper
     if resultfilename is None:

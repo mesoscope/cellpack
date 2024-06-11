@@ -28,7 +28,7 @@ def test_wrong_place_method():
     except TypeError as error:
         assert (
             format(error)
-            == "place_method must be one of ['jitter', 'spheresSST', 'pandaBullet', 'pandaBulletRelax'], not error"
+            == "place_method must be one of ['jitter', 'spheresSST'], not error"
         )
 
 

@@ -1,8 +1,14 @@
 import ast
+import logging
+import os
 import firebase_admin
 from firebase_admin import credentials, firestore
+from dotenv import load_dotenv
 from google.cloud.exceptions import NotFound
 from cellpack.autopack.loaders.utils import read_json_file, write_json_file
+from cellpack.autopack.interface_objects.default_values import (
+    default_firebase_collection_names,
+)
 
 
 class FirebaseHandler(object):
@@ -14,19 +20,41 @@ class FirebaseHandler(object):
     _initialized = False
     _db = None
 
-    def __init__(self):
+    def __init__(self, default_db=None):
         # check if firebase is already initialized
         if not FirebaseHandler._initialized:
-            cred_path = FirebaseHandler.get_creds()
-            login = credentials.Certificate(cred_path)
-            firebase_admin.initialize_app(login)
-            FirebaseHandler._initialized = True
-            FirebaseHandler._db = firestore.client()
+            db_choice = FirebaseHandler.which_db(default_db=default_db)
+            cred = FirebaseHandler.get_creds(db_choice)
+            if cred:
+                login = credentials.Certificate(cred)
+                firebase_admin.initialize_app(login)
+                FirebaseHandler._db = firestore.client()
+                FirebaseHandler._initialized = True
 
         self.db = FirebaseHandler._db
         self.name = "firebase"
 
     # common utility methods
+    @staticmethod
+    def which_db(default_db=None):
+        options = {"1": "dev", "2": "staging"}
+        if default_db in options.values():
+            print(f"Using {default_db} database -------------")
+            return default_db
+        for key, value in options.items():
+            print(f"[{key}] {value}")
+        choice = input("Enter number: ").strip()
+        print(f"Using {options.get(choice, 'dev')} database -------------")
+        return options.get(choice, "dev")  # default to dev db for recipe uploads
+
+    @staticmethod
+    def get_creds(db_choice):
+        if db_choice == "staging":
+            cred = FirebaseHandler.get_staging_creds()
+        else:
+            cred = FirebaseHandler.get_dev_creds()
+        return cred
+
     @staticmethod
     def doc_to_dict(doc):
         return doc.to_dict()
@@ -49,10 +77,18 @@ class FirebaseHandler(object):
 
     @staticmethod
     def get_collection_id_from_path(path):
-        # path example = firebase:composition/uid_1
-        components = path.split(":")[1].split("/")
-        collection = components[0]
-        id = components[1]
+        try:
+            components = path.split(":")[1].split("/")
+            collection = components[0]
+            id = components[1]
+            if collection not in default_firebase_collection_names:
+                raise ValueError(
+                    f"Invalid collection name: '{collection}'. Choose from: {default_firebase_collection_names}"
+                )
+        except IndexError:
+            raise ValueError(
+                "Invalid path provided. Expected format: firebase:collection/id"
+            )
         return collection, id
 
     # Create methods
@@ -61,10 +97,10 @@ class FirebaseHandler(object):
         if not doc:
             doc_ref = self.db.collection(collection).document(id)
             doc_ref.set(data)
-            print(f"successfully uploaded to path: {doc_ref.path}")
+            logging.info(f"successfully uploaded to path: {doc_ref.path}")
             return doc_ref
         else:
-            print(
+            logging.error(
                 f"ERROR: {doc_ref.path} already exists. If uploading new data, provide a unique recipe name."
             )
             return
@@ -74,11 +110,28 @@ class FirebaseHandler(object):
 
     # Read methods
     @staticmethod
-    def get_creds():
+    def get_dev_creds():
         creds = read_json_file("./.creds")
         if creds is None or "firebase" not in creds:
             creds = FirebaseHandler.write_creds_path()
         return creds["firebase"]
+
+    @staticmethod
+    def get_staging_creds():
+        # set override=True to refresh the .env file if softwares or tokens updated
+        load_dotenv(dotenv_path="./.env", override=False)
+        FIREBASE_TOKEN = os.getenv("FIREBASE_TOKEN")
+        FIREBASE_EMAIL = os.getenv("FIREBASE_EMAIL")
+        if not FIREBASE_TOKEN or not FIREBASE_EMAIL:
+            return
+        firebase_key = FIREBASE_TOKEN.replace("\\n", "\n")
+        return {
+            "type": "service_account",
+            "project_id": "cell-pack-database",
+            "client_email": FIREBASE_EMAIL,
+            "private_key": firebase_key,
+            "token_uri": "https://oauth2.googleapis.com/token",
+        }
 
     @staticmethod
     def get_username():
@@ -111,11 +164,28 @@ class FirebaseHandler(object):
         collection, id = FirebaseHandler.get_collection_id_from_path(path)
         return self.get_doc_by_id(collection, id)
 
+    def get_all_docs(self, collection):
+        try:
+            docs_stream = self.db.collection(collection).stream()
+            docs = list(docs_stream)
+            return docs
+        except Exception as e:
+            logging.error(
+                f"An error occurred while retrieving docs from collection '{collection}': {e}"
+            )
+            return None
+
+    def get_value(self, collection, id, field):
+        doc, _ = self.get_doc_by_id(collection, id)
+        if doc is None:
+            return None
+        return doc[field]
+
     # Update methods
     def update_doc(self, collection, id, data):
         doc_ref = self.db.collection(collection).document(id)
         doc_ref.update(data)
-        print(f"successfully updated to path: {doc_ref.path}")
+        logging.info(f"successfully updated to path: {doc_ref.path}")
         return doc_ref
 
     @staticmethod
@@ -135,6 +205,13 @@ class FirebaseHandler(object):
             self.update_doc(collection, id, data)
         except NotFound:
             self.set_doc(collection, id, data)
+
+    # Delete methods
+    def delete_doc(self, collection, id):
+        doc_ref = self.db.collection(collection).document(id)
+        doc_ref.delete()
+        logging.info(f"successfully deleted path: {doc_ref.path}")
+        return doc_ref.id
 
     # other utils
     @staticmethod

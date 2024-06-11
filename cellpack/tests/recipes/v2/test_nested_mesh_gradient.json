@@ -1,0 +1,104 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.1",
+    "name": "test_nested_mesh_gradient",
+    "bounding_box": [
+        [
+            -5,
+            -5,
+            -5
+        ],
+        [
+            5,
+            5,
+            5
+        ]
+    ],
+    "gradients": {
+        "surface_gradient": {
+            "description": "gradient based on distance from the surface of a mesh",
+            "pick_mode": "rnd",
+            "mode": "surface",
+            "mode_settings": {
+                "object": "nucleus",
+                "scale_to_next_surface": false,
+                "weight_mode": "exponential"
+            },
+            "weight_mode_settings": {
+                "decay_length": 0.3
+            }
+        }
+    },    
+    "objects": {
+        "membrane_mesh": {
+            "type": "mesh",
+            "color": [
+                1,
+                0,
+                1
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "cellpack/tests/geometry",
+                    "name": "sphere_4.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "nucleus_mesh": {
+            "type": "mesh",
+            "color": [
+                0,
+                1,
+                1
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "cellpack/tests/geometry",
+                    "name": "sphere_2.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "primitive_sphere": {
+            "type": "single_sphere",
+            "color": [
+                0.2,
+                0.7,
+                0.1
+            ],
+            "radius": 0.5,
+            "packing_mode": "gradient",
+            "gradient": "surface_gradient"
+        }
+    },
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "membrane"
+                ]
+            }
+        },
+        "membrane": {
+            "object": "membrane_mesh",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    "nucleus",
+                    {
+                        "object": "primitive_sphere",
+                        "count": 100
+                    }
+                ]
+            }
+        },
+        "nucleus": {
+            "object": "nucleus_mesh",
+            "count": 1,
+            "regions": {
+                "interior": []
+            }
+        }
+    }
+}
