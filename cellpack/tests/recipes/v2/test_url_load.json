@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "2.1",
-    "name": "test_s3_mesh",
+    "name": "test_url_loading",
     "bounding_box": [
         [
             -5,
@@ -85,5 +85,5 @@
             }
         }
     },
-    "grid_file_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/grids/test_s3_mesh_test_s3_mesh_config_1.0.0_grid.dat"
+    "grid_file_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/grids/nested_mesh_grid.dat"
 }
