@@ -272,7 +272,7 @@ def download_file(url, local_file_path, reporthook, database_name="aws"):
         initialize_db = db(
             bucket_name=bucket_name, sub_folder_name=folder, region_name="us-west-2"
         )
-        initialize_db.download_file_from_s3(f"{folder}/{key}", local_file_path)
+        initialize_db.download_file(f"{folder}/{key}", local_file_path)
     elif url_exists(url):
         try:
             urllib.urlretrieve(url, local_file_path, reporthook=reporthook)
