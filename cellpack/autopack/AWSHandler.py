@@ -135,6 +135,3 @@ class AWSHandler(object):
                 print("The object does not exist.")
             else:
                 print("An error occurred while downloading the file.")
-
-    def is_s3_url(self, file_path):
-        return file_path.find("s3://") != -1

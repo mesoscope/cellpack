@@ -261,15 +261,18 @@ def parse_s3_uri(s3_uri):
     return bucket_name, folder, key
 
 
+def is_s3_url(file_path):
+    return file_path.find("s3://") != -1
+
+
 def download_file(url, local_file_path, reporthook, database_name="aws"):
-    if database_name == "aws":
+    if is_s3_url(url):
         db = DATABASE_IDS.handlers().get(database_name)
         bucket_name, folder, key = parse_s3_uri(url)
         initialize_db = db(
             bucket_name=bucket_name, sub_folder_name=folder, region_name="us-west-2"
         )
-        if initialize_db.is_s3_url(url):
-            initialize_db.download_file_from_s3(f"{folder}/{key}", local_file_path)
+        initialize_db.download_file_from_s3(f"{folder}/{key}", local_file_path)
     elif url_exists(url):
         try:
             urllib.urlretrieve(url, local_file_path, reporthook=reporthook)
