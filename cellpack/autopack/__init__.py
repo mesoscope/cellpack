@@ -47,8 +47,6 @@ import urllib.request as urllib
 from collections import OrderedDict
 from pathlib import Path
 
-import boto3
-import botocore
 
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
