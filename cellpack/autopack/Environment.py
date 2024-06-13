@@ -76,7 +76,7 @@ from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
-from cellpack.autopack import IOutils
+from cellpack.autopack import IOutils, get_cache_location, get_local_file_location
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import signed_angle_between_vectors
@@ -153,13 +153,16 @@ class Environment(CompartmentList):
         self.grid_file_out = (
             f"{self.out_folder}/{self.name}_{config['name']}_{self.version}_grid.dat"
         )
-        if recipe.get("grid_file_path") is not None:
-            self.grid_file_out = recipe["grid_file_path"]
-
-        should_load_grid_file = (
-            os.path.isfile(self.grid_file_out) and self.load_from_grid_file
-        )
-        self.previous_grid_file = self.grid_file_out if should_load_grid_file else None
+        self.previous_grid_file = None
+        if self.load_from_grid_file:
+            # first check if grid file path is specified in recipe
+            if recipe.get("grid_file_path") is not None:
+                self.grid_file_out = get_local_file_location(
+                    recipe["grid_file_path"], cache="grids"
+                )
+            # check if grid file is already present in the output folder
+            if os.path.isfile(self.grid_file_out):
+                self.previous_grid_file = self.grid_file_out
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -281,6 +284,17 @@ class Environment(CompartmentList):
         if self.use_gradient:
             for gradient_data in self.recipe_data["gradients"]:
                 self.set_gradient(gradient_data)
+
+    def clean_grid_cache(self, grid_file_name):
+        """
+        Clean the grid cache
+        """
+        local_file_path = get_cache_location(
+            name=grid_file_name, cache="grids", destination=""
+        )
+        if os.path.exists(local_file_path):
+            print(f"Removing grid cache file: {local_file_path}")  # TODO: change to log
+            os.remove(local_file_path)
 
     def get_compartment_object_by_name(self, compartment_name):
         """
@@ -502,7 +516,7 @@ class Environment(CompartmentList):
         if not os.path.isfile(self.grid_file_out) and self.load_from_grid_file:
             # do not overwrite if grid was loaded from file
             self.grid.result_filename = self.grid_file_out
-            self.saveGridToFile(self.grid_file_out)
+            self.save_grids_to_pickle(self.grid_file_out)
         if save_grid_logs:
             self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
@@ -2184,6 +2198,11 @@ class Environment(CompartmentList):
                 distances=distances,
                 all_objects=all_objects,
             )
+
+        if kw.get("clean_grid_cache", False):
+            grid_file_name = str(self.previous_grid_file).split(os.path.sep)[-1]
+            self.clean_grid_cache(grid_file_name=grid_file_name)
+
         return all_objects
 
     def restore_molecules_array(self, ingr):

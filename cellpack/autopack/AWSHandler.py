@@ -19,7 +19,7 @@ class AWSHandler(object):
         self,
         bucket_name,
         sub_folder_name=None,
-        region_name=None,
+        region_name="us-west-2",
     ):
         self.bucket_name = bucket_name
         self.folder_name = sub_folder_name

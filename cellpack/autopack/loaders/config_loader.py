@@ -23,6 +23,7 @@ class Inner_Grid_Methods(MetaEnum):
 
 class ConfigLoader(object):
     default_values = {
+        "clean_grid_cache": False,
         "format": "simularium",
         "load_from_grid_file": False,
         "inner_grid_method": "trimesh",
