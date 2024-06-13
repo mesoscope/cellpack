@@ -358,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.calc_pairwise_distances"><code class="docutils literal notranslate"><span class="pre">Environment.calc_pairwise_distances()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.callFunction"><code class="docutils literal notranslate"><span class="pre">Environment.callFunction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.check_new_placement"><code class="docutils literal notranslate"><span class="pre">Environment.check_new_placement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.clean_grid_cache"><code class="docutils literal notranslate"><span class="pre">Environment.clean_grid_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.clear"><code class="docutils literal notranslate"><span class="pre">Environment.clear()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.clearRBingredient"><code class="docutils literal notranslate"><span class="pre">Environment.clearRBingredient()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.collectResultPerIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.collectResultPerIngredient()</span></code></a></li>
@@ -898,14 +899,17 @@
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.clearCaches"><code class="docutils literal notranslate"><span class="pre">clearCaches()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.convert_db_shortname_to_url"><code class="docutils literal notranslate"><span class="pre">convert_db_shortname_to_url()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.download_file"><code class="docutils literal notranslate"><span class="pre">download_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.download_file_from_s3"><code class="docutils literal notranslate"><span class="pre">download_file_from_s3()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.fixOnePath"><code class="docutils literal notranslate"><span class="pre">fixOnePath()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.fixPath"><code class="docutils literal notranslate"><span class="pre">fixPath()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.get_cache_location"><code class="docutils literal notranslate"><span class="pre">get_cache_location()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.get_local_file_location"><code class="docutils literal notranslate"><span class="pre">get_local_file_location()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.is_full_url"><code class="docutils literal notranslate"><span class="pre">is_full_url()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.is_remote_path"><code class="docutils literal notranslate"><span class="pre">is_remote_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.is_s3_url"><code class="docutils literal notranslate"><span class="pre">is_s3_url()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.load_file"><code class="docutils literal notranslate"><span class="pre">load_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.make_directory_if_needed"><code class="docutils literal notranslate"><span class="pre">make_directory_if_needed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.parse_s3_uri"><code class="docutils literal notranslate"><span class="pre">parse_s3_uri()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.read_text_file"><code class="docutils literal notranslate"><span class="pre">read_text_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.resetDefault"><code class="docutils literal notranslate"><span class="pre">resetDefault()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.saveRecipeAvailable"><code class="docutils literal notranslate"><span class="pre">saveRecipeAvailable()</span></code></a></li>
@@ -925,6 +929,11 @@
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.analyze">cellpack.bin.analyze module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.analyze.analyze"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.analyze.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.clean">cellpack.bin.clean module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.clean.clean"><code class="docutils literal notranslate"><span class="pre">clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.clean.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.cleanup_tasks">cellpack.bin.cleanup_tasks module</a><ul>

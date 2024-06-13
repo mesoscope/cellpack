@@ -12,6 +12,14 @@ cellpack.bin.analyze module
    :undoc-members:
    :show-inheritance:
 
+cellpack.bin.clean module
+-------------------------
+
+.. automodule:: cellpack.bin.clean
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.bin.cleanup\_tasks module
 ----------------------------------
 

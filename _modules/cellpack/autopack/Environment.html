@@ -116,7 +116,7 @@
 <span class="kn">from</span> <span class="nn">.Compartment</span> <span class="kn">import</span> <span class="n">CompartmentList</span><span class="p">,</span> <span class="n">Compartment</span>
 <span class="kn">from</span> <span class="nn">.Recipe</span> <span class="kn">import</span> <span class="n">Recipe</span>
 <span class="kn">from</span> <span class="nn">.ingredient</span> <span class="kn">import</span> <span class="n">GrowIngredient</span><span class="p">,</span> <span class="n">ActinIngredient</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">IOutils</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">IOutils</span><span class="p">,</span> <span class="n">get_cache_location</span><span class="p">,</span> <span class="n">get_local_file_location</span>
 <span class="kn">from</span> <span class="nn">.octree</span> <span class="kn">import</span> <span class="n">Octree</span>
 <span class="kn">from</span> <span class="nn">.Gradient</span> <span class="kn">import</span> <span class="n">Gradient</span>
 <span class="kn">from</span> <span class="nn">.transformation</span> <span class="kn">import</span> <span class="n">signed_angle_between_vectors</span>
@@ -195,13 +195,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">_grid.dat&quot;</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">]</span>
-
-        <span class="n">should_load_grid_file</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="k">if</span> <span class="n">should_load_grid_file</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span><span class="p">:</span>
+            <span class="c1"># first check if grid file path is specified in recipe</span>
+            <span class="k">if</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="n">get_local_file_location</span><span class="p">(</span>
+                    <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;grid_file_path&quot;</span><span class="p">],</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;grids&quot;</span>
+                <span class="p">)</span>
+            <span class="c1"># check if grid file is already present in the output folder</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setupfile</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_path</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the path of the recipe file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">custom_paths</span> <span class="o">=</span> <span class="kc">None</span>
@@ -323,6 +326,20 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_gradient</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">gradient_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_gradient</span><span class="p">(</span><span class="n">gradient_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Environment.clean_grid_cache">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.clean_grid_cache">[docs]</a>
+    <span class="k">def</span> <span class="nf">clean_grid_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clean the grid cache</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">local_file_path</span> <span class="o">=</span> <span class="n">get_cache_location</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">grid_file_name</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;grids&quot;</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">local_file_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removing grid cache file: </span><span class="si">{</span><span class="n">local_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># TODO: change to log</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">local_file_path</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="Environment.get_compartment_object_by_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_compartment_object_by_name">[docs]</a>
@@ -579,7 +596,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span><span class="p">:</span>
             <span class="c1"># do not overwrite if grid was loaded from file</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_grids_to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">save_grid_logs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveGridLogsAsJson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="o">+</span> <span class="s2">&quot;_grid-data.json&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collectResultPerIngredient</span><span class="p">()</span>
@@ -2432,6 +2449,11 @@
                 <span class="n">distances</span><span class="o">=</span><span class="n">distances</span><span class="p">,</span>
                 <span class="n">all_objects</span><span class="o">=</span><span class="n">all_objects</span><span class="p">,</span>
             <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clean_grid_cache&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">grid_file_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clean_grid_cache</span><span class="p">(</span><span class="n">grid_file_name</span><span class="o">=</span><span class="n">grid_file_name</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">all_objects</span></div>
 
 
