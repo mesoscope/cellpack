@@ -19,7 +19,7 @@ class AWSHandler(object):
         self,
         bucket_name,
         sub_folder_name=None,
-        region_name="us-west-2",
+        region_name=None,
     ):
         self.bucket_name = bucket_name
         self.folder_name = sub_folder_name
@@ -68,6 +68,22 @@ class AWSHandler(object):
             logging.error(e)
             return False
         return file_name
+
+    def download_file(self, key, local_file_path):
+        """
+        Download a file from S3
+        :param key: S3 object key
+        :param local_file_path: Local file path to save the downloaded file
+        """
+
+        try:
+            self.s3_client.download_file(self.bucket_name, key, local_file_path)
+            print("File downloaded successfully.")
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "404":
+                print("The object does not exist.")
+            else:
+                print("An error occurred while downloading the file.")
 
     def create_presigned_url(self, object_name, expiration=3600):
         """Generate a presigned URL to share an S3 object
