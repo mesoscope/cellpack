@@ -796,7 +796,7 @@
 <span id="cellpack-autopack-awshandler-module"></span><h2>cellpack.autopack.AWSHandler module<a class="headerlink" href="#module-cellpack.autopack.AWSHandler" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.AWSHandler.AWSHandler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.AWSHandler.</span></span><span class="sig-name descname"><span class="pre">AWSHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'us-west-2'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/AWSHandler.html#AWSHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.AWSHandler.AWSHandler" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.AWSHandler.</span></span><span class="sig-name descname"><span class="pre">AWSHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bucket_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_folder_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/AWSHandler.html#AWSHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.AWSHandler.AWSHandler" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Handles all the AWS S3 operations</p>
 <dl class="py method">
@@ -806,6 +806,14 @@
 :param object_name: string
 :param expiration: Time in seconds for the presigned URL to remain valid
 :return: Presigned URL as string. If error, returns None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.AWSHandler.AWSHandler.download_file">
+<span class="sig-name descname"><span class="pre">download_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/AWSHandler.html#AWSHandler.download_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.AWSHandler.AWSHandler.download_file" title="Link to this definition">¶</a></dt>
+<dd><p>Download a file from S3
+:param key: S3 object key
+:param local_file_path: Local file path to save the downloaded file</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5412,12 +5420,7 @@ AF
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.autopack.download_file">
-<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></span><span class="sig-name descname"><span class="pre">download_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reporthook</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#download_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.download_file" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cellpack.autopack.download_file_from_s3">
-<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></span><span class="sig-name descname"><span class="pre">download_file_from_s3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s3_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#download_file_from_s3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.download_file_from_s3" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></span><span class="sig-name descname"><span class="pre">download_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reporthook</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'aws'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#download_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.download_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -5547,6 +5550,7 @@ destination: str</p>
 <li><a class="reference internal" href="#module-cellpack.autopack.AWSHandler">cellpack.autopack.AWSHandler module</a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler"><code class="docutils literal notranslate"><span class="pre">AWSHandler</span></code></a><ul>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.create_presigned_url"><code class="docutils literal notranslate"><span class="pre">AWSHandler.create_presigned_url()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.download_file"><code class="docutils literal notranslate"><span class="pre">AWSHandler.download_file()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.get_aws_object_key"><code class="docutils literal notranslate"><span class="pre">AWSHandler.get_aws_object_key()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.is_url_valid"><code class="docutils literal notranslate"><span class="pre">AWSHandler.is_url_valid()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.AWSHandler.AWSHandler.save_file_and_get_url"><code class="docutils literal notranslate"><span class="pre">AWSHandler.save_file_and_get_url()</span></code></a></li>
@@ -6335,7 +6339,6 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.clearCaches"><code class="docutils literal notranslate"><span class="pre">clearCaches()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.convert_db_shortname_to_url"><code class="docutils literal notranslate"><span class="pre">convert_db_shortname_to_url()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.download_file"><code class="docutils literal notranslate"><span class="pre">download_file()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.download_file_from_s3"><code class="docutils literal notranslate"><span class="pre">download_file_from_s3()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.fixOnePath"><code class="docutils literal notranslate"><span class="pre">fixOnePath()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.fixPath"><code class="docutils literal notranslate"><span class="pre">fixPath()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.get_cache_location"><code class="docutils literal notranslate"><span class="pre">get_cache_location()</span></code></a></li>
