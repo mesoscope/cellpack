@@ -10,7 +10,7 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 def get_recipe_metadata(loader):
     """
-    Fetches and returns the metadata of the recipe for uploading
+    Extracts and returns essential metadata from a recipe for uploading
     """
     try:
         recipe_meta_data = {
