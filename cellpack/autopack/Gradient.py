@@ -91,6 +91,67 @@ class Gradient:
 
         self.function = self.defaultFunction  # lambda ?
 
+    @staticmethod
+    def scale_between_0_and_1(values):
+        """
+        Scale values between 0 and 1
+        """
+        max_value = numpy.nanmax(values)
+        min_value = numpy.nanmin(values)
+        return (values - min_value) / (max_value - min_value)
+
+    @staticmethod
+    def get_combined_gradient_weight(gradient_list):
+        """
+        Combine the gradient weights
+
+        Parameters
+        ----------
+        gradient_list: list
+            list of gradient objects
+
+        Returns
+        ----------
+        numpy.ndarray
+            the combined gradient weight
+        """
+        weight_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
+        for i in range(len(gradient_list)):
+            weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
+
+        combined_weight = numpy.mean(weight_list, axis=0)
+        combined_weight = Gradient.scale_between_0_and_1(combined_weight)
+
+        return combined_weight
+
+    @staticmethod
+    def pick_point_from_weight(weight, points):
+        """
+        Picks a point from a list of points according to the given weight
+
+        Parameters
+        ----------
+        weight: numpy.ndarray
+            the weight of each point
+
+        points: numpy.ndarray
+            list of grid point indices
+
+        Returns
+        ----------
+        int
+            the index of the picked point
+        """
+        weights_to_use = numpy.take(weight, points)
+        weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
+        weights_to_use[numpy.isnan(weights_to_use)] = 0
+
+        point_probabilities = weights_to_use / numpy.sum(weights_to_use)
+
+        point = numpy.random.choice(points, p=point_probabilities)
+
+        return point
+
     def get_center(self):
         """get the center of the gradient grid"""
         center = [0.0, 0.0, 0.0]
@@ -112,14 +173,6 @@ class Gradient:
         Normalize to unit vector
         """
         return vector / numpy.linalg.norm(vector)
-
-    def get_normalized_values(self, values):
-        """
-        Scale values between 0 and 1
-        """
-        max_value = numpy.nanmax(values)
-        min_value = numpy.nanmin(values)
-        return (values - min_value) / (max_value - min_value)
 
     def pickPoint(self, listPts):
         """
@@ -205,7 +258,7 @@ class Gradient:
 
     def set_weights_by_mode(self):
 
-        self.scaled_distances = self.get_normalized_values(self.distances)
+        self.scaled_distances = Gradient.scale_between_0_and_1(self.distances)
 
         if (numpy.nanmax(self.scaled_distances) > 1.0) or (
             numpy.nanmin(self.scaled_distances) < 0.0
@@ -232,7 +285,7 @@ class Gradient:
                 -self.scaled_distances / self.weight_mode_settings["decay_length"]
             )
         # normalize the weight
-        self.weight = self.get_normalized_values(self.weight)
+        self.weight = Gradient.scale_between_0_and_1(self.weight)
 
         if (numpy.nanmax(self.weight) > 1.0) or (numpy.nanmin(self.weight) < 0.0):
             raise ValueError(
@@ -377,7 +430,7 @@ class Gradient:
             )
             if channel_values is None:
                 continue
-            normalized_values = self.get_normalized_values(channel_values)
+            normalized_values = Gradient.scale_between_0_and_1(channel_values)
             reshaped_values = numpy.reshape(
                 normalized_values, image_writer.image_size, order="F"
             )

@@ -828,9 +828,12 @@ class Analysis:
 
         get_angles = False
         if ingr.packing_mode == "gradient" and self.env.use_gradient:
-            self.center = center = self.env.gradients[ingr.gradient].mode_settings.get(
-                "center", center
-            )
+            if not isinstance(ingr.gradient, list):
+                self.center = center = self.env.gradients[
+                    ingr.gradient
+                ].mode_settings.get("center", center)
+            else:
+                self.center = center
             get_angles = True
 
         # get angles wrt gradient
