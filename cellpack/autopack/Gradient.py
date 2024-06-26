@@ -50,6 +50,7 @@ import numpy
 from random import random
 import bisect
 from cellpack.autopack.utils import get_distances_from_point
+import matplotlib.pyplot as plt
 
 
 class Gradient:
@@ -101,7 +102,7 @@ class Gradient:
         return (values - min_value) / (max_value - min_value)
 
     @staticmethod
-    def get_combined_gradient_weight(gradient_list):
+    def get_combined_gradient_weight(gradient_list, gradient_weights=None):
         """
         Combine the gradient weights
 
@@ -119,7 +120,7 @@ class Gradient:
         for i in range(len(gradient_list)):
             weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
 
-        combined_weight = numpy.mean(weight_list, axis=0)
+        combined_weight = numpy.average(weight_list, axis=0, weights=gradient_weights)
         combined_weight = Gradient.scale_between_0_and_1(combined_weight)
 
         return combined_weight
@@ -143,8 +144,8 @@ class Gradient:
             the index of the picked point
         """
         weights_to_use = numpy.take(weight, points)
-        weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
         weights_to_use[numpy.isnan(weights_to_use)] = 0
+        weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
 
         point_probabilities = weights_to_use / numpy.sum(weights_to_use)
 
