@@ -50,7 +50,6 @@ import numpy
 from random import random
 import bisect
 from cellpack.autopack.utils import get_distances_from_point
-import matplotlib.pyplot as plt
 
 
 class Gradient:
