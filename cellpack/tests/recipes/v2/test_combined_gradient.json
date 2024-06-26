@@ -21,7 +21,7 @@
             "pick_mode": "rnd",
             "weight_mode": "exponential",
             "weight_mode_settings": {
-                "decay_length": 0.3
+                "decay_length": 0.5
             }
         },
         "Y_gradient": {
@@ -30,7 +30,7 @@
             "pick_mode": "rnd",
             "weight_mode": "exponential",
             "weight_mode_settings": {
-                "decay_length": 0.3
+                "decay_length": 0.5
             }
         }
     },
@@ -88,6 +88,10 @@
             "gradient": [
                 "X_gradient",
                 "Y_gradient"
+            ],
+            "gradient_weights": [
+                70,
+                30
             ]
         }
     },
