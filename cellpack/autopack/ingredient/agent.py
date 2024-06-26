@@ -11,7 +11,8 @@ class Agent:
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
+        gradient_weights=None,
         is_attractor=False,
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
@@ -42,6 +43,7 @@ class Agent:
         self.distance_expression = distance_expression
         self.overwrite_distance_function = overwrite_distance_function
         self.gradient = gradient
+        self.gradient_weights = gradient_weights
         self.cb = None
         self.radii = None
         self.recipe = None  # weak ref to recipe

@@ -50,6 +50,7 @@ class GrowIngredient(MultiCylindersIngr):
         cutoff_boundary=1.0,
         cutoff_surface=0.5,
         gradient=None,
+        gradient_weights=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         length=10.0,

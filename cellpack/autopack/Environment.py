@@ -980,7 +980,7 @@ class Environment(CompartmentList):
             and arguments["gradient"] != "None"
         ):
             ingr.gradient = arguments["gradient"]
-            # TODO: allow ingrdients to have multiple gradients
+            ingr.gradient_weights = arguments["gradient_weights"]
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
@@ -1702,13 +1702,17 @@ class Environment(CompartmentList):
                 self.log.info("pick point from gradients %d", (len(allIngrPts)))
                 if isinstance(ingr.gradient, list) and len(ingr.gradient) > 1:
                     if not hasattr(ingr, "combined_weight"):
-                        gradient_list = [
-                            gradient
-                            for gradient_name, gradient in self.gradients.items()
-                            if gradient_name in ingr.gradient
-                        ]
+                        gradient_list = []
+                        gradient_weights = []
+                        for (gradient_name, gradient), gradient_weight in zip(
+                            self.gradients.items(), ingr.gradient_weights
+                        ):
+                            if gradient_name in ingr.gradient:
+                                gradient_list.append(gradient)
+                                gradient_weights.append(gradient_weight)
+
                         combined_weight = Gradient.get_combined_gradient_weight(
-                            gradient_list
+                            gradient_list, gradient_weights
                         )
                         ingr.combined_weight = combined_weight
 

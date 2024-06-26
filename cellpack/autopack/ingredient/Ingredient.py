@@ -161,6 +161,7 @@ class Ingredient(Agent):
         "distance_function",
         "force_random",
         "gradient",
+        "gradient_weights",
         "is_attractor",
         "max_jitter",
         "molarity",
@@ -199,6 +200,7 @@ class Ingredient(Agent):
         distance_function=None,
         force_random=False,  # avoid any binding
         gradient=None,
+        gradient_weights=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         molarity=0.0,
@@ -231,6 +233,7 @@ class Ingredient(Agent):
             distance_function=distance_function,
             force_random=force_random,
             gradient=gradient,
+            gradient_weights=gradient_weights,
             is_attractor=is_attractor,
             overwrite_distance_function=overwrite_distance_function,
             packing_mode=packing_mode,

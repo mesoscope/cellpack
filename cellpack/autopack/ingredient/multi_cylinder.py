@@ -30,6 +30,7 @@ class MultiCylindersIngr(Ingredient):
         distance_function=None,
         force_random=False,  # avoid any binding
         gradient=None,
+        gradient_weights=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         molarity=0.0,
