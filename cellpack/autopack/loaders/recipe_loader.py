@@ -132,16 +132,6 @@ class RecipeLoader(object):
             format_version = recipe_data["format_version"]
         return format_version
 
-    def get_only_recipe_metadata(self):
-        recipe_meta_data = {
-            "format_version": self.recipe_data["format_version"],
-            "version": self.recipe_data["version"],
-            "name": self.recipe_data["name"],
-            "bounding_box": self.recipe_data["bounding_box"],
-            "composition": {},
-        }
-        return recipe_meta_data
-
     def _migrate_version(self, old_recipe):
         converted = False
         if old_recipe["format_version"] == "1.0":
