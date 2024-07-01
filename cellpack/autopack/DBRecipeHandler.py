@@ -218,15 +218,14 @@ class CompositionDoc(DataDoc):
                         # replace nested objs in comp["regions"]
                         if DataDoc.is_key(region_item):
                             update_field_path = f"regions.{region_name}"
+                            update_data = {
+                                "index": update_field_path,
+                                "name": region_item,
+                            }
                             if self.name in references_to_update:
-                                references_to_update[self.name].update(
-                                    {"index": update_field_path, "name": region_item}
-                                )
+                                references_to_update[self.name].append(update_data)
                             else:
-                                references_to_update[self.name] = {
-                                    "index": update_field_path,
-                                    "name": region_item,
-                                }
+                                references_to_update[self.name] = [update_data]
                         elif not db.is_reference(region_item["object"]):
                             obj_name = region_item["object"]
                             region_item["object"] = objects_to_path_map.get(obj_name)
@@ -554,7 +553,8 @@ class DBUploader(object):
                 "inherit": self.comp_to_path_map[comp_name]["path"]
             }
             if comp_name in references_to_update:
-                references_to_update[comp_name].update({"comp_id": doc_id})
+                for inner_data in references_to_update[comp_name]:
+                    inner_data["comp_id"] = doc_id
         return references_to_update
 
     def _get_recipe_id(self, recipe_data):
@@ -586,15 +586,14 @@ class DBUploader(object):
         # update nested comp in composition
         if references_to_update:
             for comp_name in references_to_update:
-                inner_data = references_to_update[comp_name]
-                comp_id = inner_data["comp_id"]
-                index = inner_data["index"]
-                name = inner_data["name"]
-
-                item_id = self.comp_to_path_map[name]["id"]
-                CompositionDoc.update_reference(
-                    self.db, comp_id, item_id, index, name, update_in_array=True
-                )
+                for inner_data in references_to_update[comp_name]:
+                    comp_id = inner_data["comp_id"]
+                    index = inner_data["index"]
+                    name = inner_data["name"]
+                    item_id = self.comp_to_path_map[name]["id"]
+                    CompositionDoc.update_reference(
+                        self.db, comp_id, item_id, index, name, update_in_array=True
+                    )
         return recipe_to_save
 
     def upload_recipe(self, recipe_meta_data, recipe_data):
