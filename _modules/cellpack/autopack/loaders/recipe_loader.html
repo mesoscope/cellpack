@@ -177,19 +177,6 @@
             <span class="n">format_version</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">format_version</span>
 
-<div class="viewcode-block" id="RecipeLoader.get_only_recipe_metadata">
-<a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.get_only_recipe_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_only_recipe_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">recipe_meta_data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;format_version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;bounding_box&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;bounding_box&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;composition&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">recipe_meta_data</span></div>
-
-
     <span class="k">def</span> <span class="nf">_migrate_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_recipe</span><span class="p">):</span>
         <span class="n">converted</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">old_recipe</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
