@@ -152,6 +152,43 @@ class Gradient:
 
         return point
 
+    @staticmethod
+    def pick_point_for_ingredient(ingr, allIngrPts, all_gradients):
+        """
+        Picks a point for an ingredient according to the gradient
+
+        Parameters
+        ----------
+        ingr: Ingredient
+            the ingredient object
+
+        allIngrPts: numpy.ndarray
+            list of grid point indices
+
+        gradients: dict
+            dictionary of gradient objects
+
+        Returns
+        ----------
+        int
+            the index of the picked point
+        """
+        if isinstance(ingr.gradient, list) and len(ingr.gradient) > 1:
+            if not hasattr(ingr, "combined_weight"):
+                gradient_list = [
+                    gradient
+                    for gradient_name, gradient in all_gradients.items()
+                    if gradient_name in ingr.gradient
+                ]
+                combined_weight = Gradient.get_combined_gradient_weight(gradient_list)
+                ingr.combined_weight = combined_weight
+
+            ptInd = Gradient.pick_point_from_weight(ingr.combined_weight, allIngrPts)
+        else:
+            ptInd = all_gradients[ingr.gradient].pickPoint(allIngrPts)
+
+        return ptInd
+
     def get_center(self):
         """get the center of the gradient grid"""
         center = [0.0, 0.0, 0.0]
