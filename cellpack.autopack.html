@@ -3225,15 +3225,26 @@ the total weight will be skipped in the beginning.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.get_gauss_weights">
-<span class="sig-name descname"><span class="pre">get_gauss_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.get_gauss_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.get_gauss_weights" title="Link to this definition">¶</a></dt>
-<dd><p>given a number of points compute the gaussian weight for each</p>
+<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.get_combined_gradient_weight">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_combined_gradient_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.get_combined_gradient_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.get_combined_gradient_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Combine the gradient weights</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>gradient_list</strong> (<em>list</em>) – list of gradient objects</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the combined gradient weight</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.get_normalized_values">
-<span class="sig-name descname"><span class="pre">get_normalized_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.get_normalized_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.get_normalized_values" title="Link to this definition">¶</a></dt>
-<dd><p>Scale values between 0 and 1</p>
+<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.get_gauss_weights">
+<span class="sig-name descname"><span class="pre">get_gauss_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.get_gauss_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.get_gauss_weights" title="Link to this definition">¶</a></dt>
+<dd><p>given a number of points compute the gaussian weight for each</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3246,6 +3257,53 @@ the total weight will be skipped in the beginning.</p>
 <dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.pickPoint">
 <span class="sig-name descname"><span class="pre">pickPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listPts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.pickPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.pickPoint" title="Link to this definition">¶</a></dt>
 <dd><p>pick next random point according to the chosen function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.pick_point_for_ingredient">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pick_point_for_ingredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allIngrPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_gradients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.pick_point_for_ingredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.pick_point_for_ingredient" title="Link to this definition">¶</a></dt>
+<dd><p>Picks a point for an ingredient according to the gradient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ingr</strong> (<em>Ingredient</em>) – the ingredient object</p></li>
+<li><p><strong>allIngrPts</strong> (<em>numpy.ndarray</em>) – list of grid point indices</p></li>
+<li><p><strong>all_gradients</strong> (<em>dict</em>) – dictionary of all gradient objects</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the index of the picked point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.pick_point_from_weight">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pick_point_from_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.pick_point_from_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.pick_point_from_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Picks a point from a list of points according to the given weight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weight</strong> (<em>numpy.ndarray</em>) – the weight of each point</p></li>
+<li><p><strong>points</strong> (<em>numpy.ndarray</em>) – list of grid point indices</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the index of the picked point</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient.scale_between_0_and_1">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scale_between_0_and_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient.scale_between_0_and_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient.scale_between_0_and_1" title="Link to this definition">¶</a></dt>
+<dd><p>Scale values between 0 and 1</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5966,10 +6024,13 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getRndWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getRndWeighted()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.getSubWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getSubWeighted()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.get_center"><code class="docutils literal notranslate"><span class="pre">Gradient.get_center()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.get_combined_gradient_weight"><code class="docutils literal notranslate"><span class="pre">Gradient.get_combined_gradient_weight()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.get_gauss_weights"><code class="docutils literal notranslate"><span class="pre">Gradient.get_gauss_weights()</span></code></a></li>
-<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.get_normalized_values"><code class="docutils literal notranslate"><span class="pre">Gradient.get_normalized_values()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.normalize_vector"><code class="docutils literal notranslate"><span class="pre">Gradient.normalize_vector()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.pickPoint"><code class="docutils literal notranslate"><span class="pre">Gradient.pickPoint()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.pick_point_for_ingredient"><code class="docutils literal notranslate"><span class="pre">Gradient.pick_point_for_ingredient()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.pick_point_from_weight"><code class="docutils literal notranslate"><span class="pre">Gradient.pick_point_from_weight()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.scale_between_0_and_1"><code class="docutils literal notranslate"><span class="pre">Gradient.scale_between_0_and_1()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.Gradient.Gradient.set_weights_by_mode"><code class="docutils literal notranslate"><span class="pre">Gradient.set_weights_by_mode()</span></code></a></li>
 </ul>
 </li>

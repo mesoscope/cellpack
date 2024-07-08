@@ -1921,7 +1921,9 @@
                 <span class="c1"># get the most probable point using the gradient</span>
                 <span class="c1"># use the gradient weighted map and get mot probabl point</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;pick point from gradients </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">allIngrPts</span><span class="p">)))</span>
-                <span class="n">ptInd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span><span class="p">]</span><span class="o">.</span><span class="n">pickPoint</span><span class="p">(</span><span class="n">allIngrPts</span><span class="p">)</span>
+                <span class="n">ptInd</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">pick_point_for_ingredient</span><span class="p">(</span>
+                    <span class="n">ingr</span><span class="p">,</span> <span class="n">allIngrPts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># pick a point randomly among free points</span>
                 <span class="c1"># random or uniform?</span>
