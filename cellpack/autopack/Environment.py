@@ -1700,28 +1700,9 @@ class Environment(CompartmentList):
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
                 self.log.info("pick point from gradients %d", (len(allIngrPts)))
-                if isinstance(ingr.gradient, list) and len(ingr.gradient) > 1:
-                    if not hasattr(ingr, "combined_weight"):
-                        gradient_list = []
-                        gradient_weights = []
-                        for (gradient_name, gradient), gradient_weight in zip(
-                            self.gradients.items(), ingr.gradient_weights
-                        ):
-                            if gradient_name in ingr.gradient:
-                                gradient_list.append(gradient)
-                                gradient_weights.append(gradient_weight)
-
-                        combined_weight = Gradient.get_combined_gradient_weight(
-                            gradient_list, gradient_weights
-                        )
-                        ingr.combined_weight = combined_weight
-
-                    ptInd = Gradient.pick_point_from_weight(
-                        ingr.combined_weight, allIngrPts
-                    )
-
-                else:
-                    ptInd = self.gradients[ingr.gradient].pickPoint(allIngrPts)
+                ptInd = Gradient.pick_point_for_ingredient(
+                    ingr, allIngrPts, self.gradients
+                )
             else:
                 # pick a point randomly among free points
                 # random or uniform?

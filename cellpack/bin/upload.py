@@ -8,6 +8,25 @@ from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
+def get_recipe_metadata(loader):
+    """
+    Extracts and returns essential metadata from a recipe for uploading
+    """
+    try:
+        recipe_meta_data = {
+            "format_version": loader.recipe_data["format_version"],
+            "version": loader.recipe_data["version"],
+            "name": loader.recipe_data["name"],
+            "bounding_box": loader.recipe_data["bounding_box"],
+            "composition": {},
+        }
+        if "grid_file_path" in loader.recipe_data:
+            recipe_meta_data["grid_file_path"] = loader.recipe_data["grid_file_path"]
+        return recipe_meta_data
+    except KeyError as e:
+        sys.exit(f"Recipe metadata is missing. {e}")
+
+
 def upload(
     recipe_path,
     db_id=DATABASE_IDS.FIREBASE,
@@ -23,7 +42,7 @@ def upload(
         if FirebaseHandler._initialized:
             recipe_loader = RecipeLoader(recipe_path)
             recipe_full_data = recipe_loader._read(resolve_inheritance=False)
-            recipe_meta_data = recipe_loader.get_only_recipe_metadata()
+            recipe_meta_data = get_recipe_metadata(recipe_loader)
             recipe_db_handler = DBUploader(db_handler)
             recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
         else:

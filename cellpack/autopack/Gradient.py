@@ -101,7 +101,7 @@ class Gradient:
         return (values - min_value) / (max_value - min_value)
 
     @staticmethod
-    def get_combined_gradient_weight(gradient_list, gradient_weights=None):
+    def get_combined_gradient_weight(gradient_list):
         """
         Combine the gradient weights
 
@@ -119,7 +119,7 @@ class Gradient:
         for i in range(len(gradient_list)):
             weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
 
-        combined_weight = numpy.average(weight_list, axis=0, weights=gradient_weights)
+        combined_weight = numpy.mean(weight_list, axis=0)
         combined_weight = Gradient.scale_between_0_and_1(combined_weight)
 
         return combined_weight
@@ -143,14 +143,58 @@ class Gradient:
             the index of the picked point
         """
         weights_to_use = numpy.take(weight, points)
-        weights_to_use[numpy.isnan(weights_to_use)] = 0
         weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
+        weights_to_use[numpy.isnan(weights_to_use)] = 0
 
         point_probabilities = weights_to_use / numpy.sum(weights_to_use)
 
         point = numpy.random.choice(points, p=point_probabilities)
 
         return point
+
+    @staticmethod
+    def pick_point_for_ingredient(ingr, allIngrPts, all_gradients):
+        """
+        Picks a point for an ingredient according to the gradient
+
+        Parameters
+        ----------
+        ingr: Ingredient
+            the ingredient object
+
+        allIngrPts: numpy.ndarray
+            list of grid point indices
+
+        all_gradients: dict
+            dictionary of all gradient objects
+
+        Returns
+        ----------
+        int
+            the index of the picked point
+        """
+        if isinstance(ingr.gradient, list):
+            if len(ingr.gradient) > 1:
+                if not hasattr(ingr, "combined_weight"):
+                    gradient_list = [
+                        gradient
+                        for gradient_name, gradient in all_gradients.items()
+                        if gradient_name in ingr.gradient
+                    ]
+                    combined_weight = Gradient.get_combined_gradient_weight(
+                        gradient_list
+                    )
+                    ingr.combined_weight = combined_weight
+
+                ptInd = Gradient.pick_point_from_weight(
+                    ingr.combined_weight, allIngrPts
+                )
+            else:
+                ptInd = all_gradients[ingr.gradient[0]].pickPoint(allIngrPts)
+        else:
+            ptInd = all_gradients[ingr.gradient].pickPoint(allIngrPts)
+
+        return ptInd
 
     def get_center(self):
         """get the center of the gradient grid"""

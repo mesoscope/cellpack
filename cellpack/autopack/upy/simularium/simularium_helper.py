@@ -363,7 +363,10 @@ class simulariumHelper(hostHelper.Helper):
 
         positions, values = self.sort_values(positions, values)
 
-        colormap = matplotlib.cm.Reds(values)
+        normalized_values = (values - np.min(values)) / (
+            np.max(values) - np.min(values)
+        )
+        colormap = matplotlib.cm.Reds(normalized_values)
 
         for index, value in enumerate(values):
             name = f"{incoming_name}#{value:.3f}"
