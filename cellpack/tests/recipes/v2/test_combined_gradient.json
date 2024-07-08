@@ -1,0 +1,107 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0",
+    "name": "test_combined_gradient",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1
+        ]
+    ],
+    "gradients": {
+        "X_gradient": {
+            "description": "X gradient",
+            "mode": "X",
+            "pick_mode": "rnd",
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.1
+            }
+        },
+        "Y_gradient": {
+            "description": "Y gradient",
+            "mode": "Y",
+            "pick_mode": "rnd",
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.1
+            }
+        }
+    },
+    "objects": {
+        "base": {
+            "jitter_attempts": 10,
+            "orient_bias_range": [
+                -3.1415927,
+                3.1415927
+            ],
+            "rotation_range": 6.2831,
+            "cutoff_boundary": 0,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "packing_mode": "random",
+            "principal_vector": [
+                0,
+                0,
+                1
+            ],
+            "rejection_threshold": 50,
+            "place_method": "spheresSST",
+            "cutoff_surface": 42,
+            "rotation_axis": [
+                0,
+                0,
+                1
+            ],
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "sphere_25": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "radius": 25,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "packing_mode": "gradient",
+            "gradient": [
+                "X_gradient",
+                "Y_gradient"
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere_25",
+            "count": 500
+        }
+    }
+}
