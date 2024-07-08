@@ -12,15 +12,15 @@ from time import time
 
 import matplotlib
 import numpy
+import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle
-from mdutils.mdutils import MdUtils
 
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
-from cellpack.autopack.writers import Writer
+from cellpack.autopack.writers import Writer, MarkdownWriter
 from cellpack.autopack.writers.ImageWriter import ImageWriter
 
 
@@ -271,7 +271,7 @@ class Analysis:
 
     def run_distance_analysis(
         self,
-        report_md,
+        md_object: MarkdownWriter,
         recipe_data,
         pairwise_distance_dict,
         figure_path,
@@ -293,19 +293,21 @@ class Analysis:
                 pairwise_distance_dict
             )
 
-            report_md.new_header(level=1, title="Distance analysis")
-            report_md.new_line(
+            md_object.add_header(level=1, header="Distance analysis")
+            # TODO: add new method to add new line in markdown writer
+            md_object.report_md.new_line(
                 f"Expected minimum distance: {expected_minimum_distance:.2f}"
             )
-            report_md.new_line(
+            md_object.report_md.new_line(
                 f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
             )
 
             if expected_minimum_distance > packed_minimum_distance:
-                report_md.new_header(
-                    level=2, title="Possible errors", add_table_of_contents="n"
+                # TODO: add new method to add new list in markdown writer, check `add_table_of_contents`
+                md_object.add_header(
+                    level=2, header="Possible errors", add_table_of_contents="n"
                 )
-                report_md.new_list(
+                md_object.report_md.new_list(
                     [
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
                         " is less than the "
@@ -313,7 +315,9 @@ class Analysis:
                     ]
                 )
 
-            num_keys = len(all_pairwise_distances.keys())
+            df = pd.DataFrame()
+            df["Ingredient key"] = []
+            df["Pairwise distance distribution"] = []
             img_list = []
             for ingr_key in all_pairwise_distances:
                 ingr_distance_histo_path = figure_path.glob(
@@ -321,24 +325,16 @@ class Analysis:
                 )
                 for img_path in ingr_distance_histo_path:
                     img_list.append(
-                        report_md.new_inline_image(
+                        md_object.report_md.new_inline_image(
                             text=f"Distance distribution {ingr_key}",
                             path=f"{output_image_location}/{img_path.name}",
                         )
                     )
-            text_list = [
-                "Ingredient key",
-                "Pairwise distance distribution",
-                *[
-                    val
-                    for pair in zip(all_pairwise_distances.keys(), img_list)
-                    for val in pair
-                ],
-            ]
 
-            report_md.new_table(
-                columns=2, rows=(num_keys + 1), text=text_list, text_align="center"
-            )
+            df = pd.DataFrame()
+            df["Ingredient key"] = all_pairwise_distances.keys()
+            df["Pairwise distance distribution"] = img_list
+            md_object.add_table(header="", table=df)
 
     def get_ingredient_key_from_object_or_comp_name(
         self, search_name, ingredient_key_dict
@@ -398,7 +394,7 @@ class Analysis:
 
     def run_partner_analysis(
         self,
-        report_md,
+        md_object: MarkdownWriter,
         recipe_data,
         combined_pairwise_distance_dict,
         ingredient_radii,
@@ -414,9 +410,12 @@ class Analysis:
             avg_num_packed,
         )
         if len(partner_pair_dict):
-            report_md.new_header(level=1, title="Partner Analysis")
+            md_object.add_header(header="Partner Analysis")
 
-            val_list = []
+            paired_keys = []
+            touching_radii = []
+            binding_probabilities = []
+            close_fractions = []
             for paired_key, partner_values in partner_pair_dict.items():
                 pairwise_distances = numpy.array(
                     combined_pairwise_distance_dict[paired_key]
@@ -426,28 +425,18 @@ class Analysis:
                     numpy.count_nonzero(pairwise_distances < padded_radius)
                     / partner_values["num_packed"]
                 )
-                val_list.extend(
-                    [
-                        paired_key,
-                        partner_values["touching_radius"],
-                        partner_values["binding_probability"],
-                        close_fraction,
-                    ]
-                )
+                paired_keys.append(paired_key)
+                touching_radii.append(partner_values["touching_radius"])
+                binding_probabilities.append(partner_values["binding_probability"])
+                close_fractions.append(close_fraction)
 
-            text_list = [
-                "Partner pair",
-                "Touching radius",
-                "Binding probability",
-                "Close packed fraction",
-                *val_list,
-            ]
-            report_md.new_table(
-                columns=4,
-                rows=(len(partner_pair_dict) + 1),
-                text=text_list,
-                text_align="center",
-            )
+            df = pd.DataFrame()
+            df["Paired keys"] = paired_keys
+            df["Touching radii"] = touching_radii
+            df["Binding probabilities"] = binding_probabilities
+            df["Close packing fractions"] = close_fractions
+
+            md_object.add_table(header="", table=df)
 
     def create_report(
         self,
@@ -474,24 +463,7 @@ class Analysis:
         run_*_analysis: bool
             whether to run specific analysis
         """
-        if report_output_path is None:
-            report_output_path = self.output_path
-        report_output_path = Path(report_output_path)
-
-        report_md = MdUtils(
-            file_name=f"{report_output_path}/analysis_report",
-            title="Packing analysis report",
-        )
-        report_md.new_header(
-            level=2,
-            title=f"Analysis for packing results located at {self.packing_results_path}",
-            add_table_of_contents="n",
-        )
-
-        if not hasattr(self, "ingredient_key_dict"):
-            self.ingredient_key_dict = self.read_dict_from_glob_file(
-                "ingredient_keys_*"
-            )
+        self.ingredient_key_dict = self.read_dict_from_glob_file("ingredient_key_*")
 
         if ingredient_keys is None:
             ingredient_keys = list(self.ingredient_key_dict.keys())
@@ -500,34 +472,38 @@ class Analysis:
             ingredient_keys=ingredient_keys
         )
         ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
-
+        pairwise_distance_dict = self.read_dict_from_glob_file(
+            "pairwise_distances_*.json"
+        )
+        combined_pairwise_distance_dict = self.combine_results_from_seeds(
+            pairwise_distance_dict
+        )
         if not hasattr(self, "pairwise_distance_dict"):
             self.pairwise_distance_dict = self.read_dict_from_glob_file(
                 "pairwise_distances_*.json"
             )
 
-        combined_pairwise_distance_dict = self.combine_results_from_seeds(
-            self.pairwise_distance_dict
+        df = pd.DataFrame()
+        df["Ingredient name"] = list(ingredient_keys)
+        df["Encapsulating radius"] = list(ingredient_radii.values())
+        df["Average number packed"] = list(avg_num_packed.values())
+
+        # path to save report and other outputs
+        if output_image_location is None:
+            output_image_location = self.output_path
+
+        md_object = MarkdownWriter(
+            title="Packing analysis report",
+            output_path=self.output_path,
+            output_image_location=output_image_location,
+            report_name="analysis_report",
         )
 
-        val_list = []
-        for key, radius, num_packed in zip(
-            ingredient_keys, ingredient_radii.values(), avg_num_packed.values()
-        ):
-            val_list.extend([key, radius, num_packed])
-        text_list = [
-            "Ingredient name",
-            "Encapsulating radius",
-            "Average number packed",
-            *val_list,
-        ]
-        report_md.new_table(
-            columns=3,
-            rows=(len(ingredient_keys) + 1),
-            text=text_list,
-            text_align="center",
+        md_object.add_header(
+            header=f"Analysis for packing results located at {self.packing_results_path}"
         )
 
+        # TODO: check if this is needed
         # path to save report and other outputs
         if output_image_location is None:
             output_image_location = self.output_path
@@ -536,21 +512,16 @@ class Analysis:
         packing_results_path = self.packing_results_path
         figure_path = packing_results_path / "figures"
 
-        report_md.new_header(level=1, title="Packing image")
-        glob_to_packing_image = figure_path.glob("packing_image_*.png")
-        for img_path in glob_to_packing_image:
-            report_md.new_line(
-                report_md.new_inline_image(
-                    text="Packing image",
-                    path=f"{output_image_location}/{img_path.name}",
-                )
-            )
-        report_md.new_line("")
+        md_object.add_images(
+            header="Packing image",
+            image_text=["Packing image"],
+            filepaths=list(figure_path.glob("packing_image_*.png")),
+        )
 
         if run_distance_analysis:
             # TODO: take packing distance dict as direct input for live mode
             self.run_distance_analysis(
-                report_md,
+                md_object,
                 recipe_data,
                 self.pairwise_distance_dict,
                 figure_path,
@@ -559,14 +530,14 @@ class Analysis:
 
         if run_partner_analysis:
             self.run_partner_analysis(
-                report_md,
+                md_object,
                 recipe_data,
                 combined_pairwise_distance_dict,
                 ingredient_radii,
                 avg_num_packed,
             )
 
-        report_md.create_md_file()
+        md_object.write_file()
 
     def run_analysis_workflow(
         self,

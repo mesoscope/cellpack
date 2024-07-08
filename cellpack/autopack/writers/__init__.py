@@ -5,8 +5,12 @@
 
 import json
 import os
+from pathlib import Path
 import numpy
 from collections import OrderedDict
+
+from mdutils.mdutils import MdUtils
+import pandas as pd
 
 from cellpack import autopack
 from cellpack.autopack.ingredient.grow import ActinIngredient, GrowIngredient
@@ -431,3 +435,92 @@ class Writer(object):
             self.save_as_simularium(env, seed_to_results_map)
         else:
             print("format output " + output_format + " not recognized (json,python)")
+
+
+class MarkdownWriter(object):
+    def __init__(
+        self,
+        title: str,
+        output_path: Path,
+        output_image_location: Path,
+        report_name: str,
+    ):
+        self.title = title
+        self.output_path = output_path
+        self.output_image_location = output_image_location
+        self.report_md = MdUtils(
+            file_name=str(self.output_path / report_name),
+            title=title,
+        )
+
+    # level is the header style, can only be 1 or 2
+    def add_header(self, header, level: int = 2):
+        self.report_md.new_header(level=level, title=header, add_table_of_contents="n")
+
+    def add_table(self, header, table, text_align="center"):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+
+        text_list = []
+        for row in table.values.tolist():
+            for item in row:
+                text_list.append(item)
+
+        self.report_md.new_table(
+            columns=table.shape[1],
+            rows=table.shape[0],
+            text=self.text_list,
+            text_align=text_align,
+        )
+
+    def add_table_from_csv(self, header, filepath, text_align="center"):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+
+        table = pd.read_csv(filepath)
+
+        text_list = []
+        for row in table.values.tolist():
+            for item in row:
+                text_list.append(item)
+
+        self.report_md.new_table(
+            columns=table.shape[1],
+            rows=table.shape[0],
+            text=self.text_list,
+            text_align=text_align,
+        )
+
+    def write_file(self):
+        self.report_md.create_md_file()
+
+    # Image text must be a list, if list is not same length as list of filepaths, only 1st item in image_text is used
+    def add_images(self, header, image_text, filepaths):
+        self.report_md.new_header(
+            level=1,
+            title=header,
+            add_table_of_contents="n",
+        )
+        if len(image_text) == len(filepaths):
+            for i in range(len(filepaths)):
+                self.report_md.new_line(
+                    self.report_md.new_inline_image(
+                        text=image_text[i],
+                        path=str(self.output_image_location / filepaths[i]),
+                    )
+                )
+        else:
+            for i in range(len(filepaths)):
+                self.report_md.new_line(
+                    self.report_md.new_inline_image(
+                        text=image_text[0],
+                        path=str(self.output_image_location / filepaths[i]),
+                    )
+                )
+        self.report_md.new_line()
