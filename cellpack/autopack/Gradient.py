@@ -200,6 +200,10 @@ class Gradient:
                 if not hasattr(ingr, "combined_weight"):
                     gradient_list = []
                     for gradient_name in ingr.gradient:
+                        if gradient_name not in all_gradients:
+                            raise ValueError(
+                                f"Gradient {gradient_name} not found in gradient list"
+                            )
                         gradient_list.append(all_gradients[gradient_name])
 
                     combined_weight = Gradient.get_combined_gradient_weight(
