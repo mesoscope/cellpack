@@ -137,6 +137,8 @@ class Gradient:
         numpy.ndarray
             the combined gradient weight
         """
+        assert len(gradient_list) > 1, "Need at least two gradients to combine"
+
         weight_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
         for i in range(len(gradient_list)):
             weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
