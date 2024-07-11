@@ -483,8 +483,16 @@ class DBUploader(object):
     def upload_single_object(self, obj_name, obj_data):
         # replace gradient name with path to check if gradient exists in db
         if "gradient" in obj_data[obj_name]:
-            grad_name = obj_data[obj_name]["gradient"]
-            obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
+            # single gradient
+            if isinstance(obj_data[obj_name]["gradient"], str):
+                grad_name = obj_data[obj_name]["gradient"]
+                obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
+            # combined gradients
+            elif isinstance(obj_data[obj_name]["gradient"], list):
+                new_grad_list = []
+                for grad in obj_data[obj_name]["gradient"]:
+                    new_grad_list.append({grad: self.grad_to_path_map[grad]})
+                obj_data[obj_name]["gradient"] = new_grad_list
         object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
         _, doc_id = object_doc.should_write(self.db)
         if doc_id:
