@@ -96,19 +96,9 @@ class Gradient:
         """
         Update the ingredient gradient
         """
-        if (
-            "gradient" in arguments
-            and arguments["gradient"] != ""
-            and arguments["gradient"] != "None"
-        ):
-            ingr.gradient = arguments["gradient"]
-
+        ingr.gradient = arguments["gradient"]
         ingr.gradient_weights = None
-        if (
-            "gradient_weights" in arguments
-            and arguments["gradient_weights"] != ""
-            and arguments["gradient_weights"] != "None"
-        ):
+        if "gradient_weights" in arguments:
             ingr.gradient_weights = arguments["gradient_weights"]
 
         return ingr
