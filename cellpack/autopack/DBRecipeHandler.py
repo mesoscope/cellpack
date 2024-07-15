@@ -86,8 +86,15 @@ class CompositionDoc(DataDoc):
     @staticmethod
     def get_reference_in_obj(downloaded_data, db):
         for key in CompositionDoc.KEY_TO_DICT_MAPPING:
-            if key in downloaded_data and db.is_reference(downloaded_data[key]):
-                downloaded_data[key], _ = db.get_doc_by_ref(downloaded_data[key])
+            if key in downloaded_data:
+                # single gradient and inherited object
+                if db.is_reference(downloaded_data[key]):
+                    downloaded_data[key], _ = db.get_doc_by_ref(downloaded_data[key])
+                # combined gradients
+                elif isinstance(downloaded_data[key], list):
+                    for gradient in downloaded_data[key]:
+                        for gradient_name, path in gradient.items():
+                            gradient[gradient_name], _ = db.get_doc_by_ref(path)
 
     @staticmethod
     def get_reference_data(key_or_dict, db):
