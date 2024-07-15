@@ -410,6 +410,38 @@ class Ingredient(Agent):
                 ingredient_info["size_options"]
             )
 
+        # check if gradient information is entered correctly
+        if "gradient" in ingredient_info:
+            if not isinstance(ingredient_info["gradient"], (list, str)):
+                raise Exception(
+                    (
+                        f"Invalid gradient: {ingredient_info['gradient']} "
+                        f"for ingredient {ingredient_info['name']}"
+                    )
+                )
+            if (
+                ingredient_info["gradient"] == ""
+                or ingredient_info["gradient"] == "None"
+            ):
+                raise Exception(
+                    f"Missing gradient for ingredient {ingredient_info['name']}"
+                )
+
+            # if multiple gradients are provided with weights, check if weights are correct
+            if isinstance(ingredient_info["gradient"], list):
+                if "gradient_weights" in ingredient_info:
+                    # check if gradient_weights are missing
+                    if not isinstance(ingredient_info["gradient_weights"], list):
+                        raise Exception(
+                            f"Invalid gradient weights for ingredient {ingredient_info['name']}"
+                        )
+                    if len(ingredient_info["gradient"]) != len(
+                        ingredient_info["gradient_weights"]
+                    ):
+                        raise Exception(
+                            f"Missing gradient weights for ingredient {ingredient_info['name']}"
+                        )
+
         return ingredient_info
 
     def reset(self):
