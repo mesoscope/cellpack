@@ -156,9 +156,19 @@ class CompositionDoc(DataDoc):
         Resolve the object data from the local data.
         """
         for key in CompositionDoc.KEY_TO_DICT_MAPPING:
-            if key in object_data and isinstance(object_data[key], str):
-                target_dict = CompositionDoc.KEY_TO_DICT_MAPPING[key]
-                object_data[key] = prep_recipe_data[target_dict][object_data[key]]
+            if key in object_data:
+                # single gradient and inherited object
+                if isinstance(object_data[key], str):
+                    target_dict = CompositionDoc.KEY_TO_DICT_MAPPING[key]
+                    object_data[key] = prep_recipe_data[target_dict][object_data[key]]
+                # combined gradients
+                elif isinstance(object_data[key], list):
+                    new_grad_list = []
+                    for grad in object_data[key]:
+                        new_grad_list.append(
+                            {grad: prep_recipe_data["gradients"][grad]}
+                        )
+                    object_data[key] = new_grad_list
 
     def resolve_local_regions(self, local_data, recipe_data, db):
         """
