@@ -65,6 +65,44 @@ from ..autopack.ingredient import Ingredient
             },
             "Missing option 'min' for uniform distribution",
         ),
+        (
+            {
+                "name": "test",
+                "type": "single_sphere",
+                "count": 1,
+                "gradient": 3,
+            },
+            "Invalid gradient: 3 for ingredient test",
+        ),
+        (
+            {
+                "name": "test",
+                "type": "single_sphere",
+                "count": 1,
+                "gradient": "",
+            },
+            "Missing gradient for ingredient test",
+        ),
+        (
+            {
+                "name": "test",
+                "type": "single_sphere",
+                "count": 1,
+                "gradient": ["gradient_1", "gradient_2"],
+                "gradient_weights": 0.5,
+            },
+            "Invalid gradient weights for ingredient test",
+        ),
+        (
+            {
+                "name": "test",
+                "type": "single_sphere",
+                "count": 1,
+                "gradient": ["gradient_1", "gradient_2", "gradient_3"],
+                "gradient_weights": [0.5, 0.5],
+            },
+            "Missing gradient weights for ingredient test",
+        ),
     ],
 )
 def test_validate_ingredient_info(ingredient_info, output):

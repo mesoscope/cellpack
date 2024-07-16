@@ -974,13 +974,8 @@ class Environment(CompartmentList):
         ingredient_type = arguments["type"]
         ingredient_class = ingredient.get_ingredient_class(ingredient_type)
         ingr = ingredient_class(**arguments)
-        if (
-            "gradient" in arguments
-            and arguments["gradient"] != ""
-            and arguments["gradient"] != "None"
-        ):
-            ingr.gradient = arguments["gradient"]
-            # TODO: allow ingrdients to have multiple gradients
+        if "gradient" in arguments:
+            ingr = Gradient.update_ingredient_gradient(ingr, arguments)
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
