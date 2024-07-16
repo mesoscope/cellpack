@@ -713,10 +713,20 @@ class DBRecipeLoader(object):
         obj_name = obj_data["name"]
         for key, target_dict in CompositionDoc.KEY_TO_DICT_MAPPING.items():
             if key in obj_data:
-                item_name = obj_data[key]["name"]
-                target_dict = grad_dict if key == "gradient" else obj_dict
-                target_dict[item_name] = obj_data[key]
-                obj_dict[obj_name][key] = item_name
+                # single gradient and inherited object
+                if isinstance(obj_data[key], dict):
+                    item_name = obj_data[key]["name"]
+                    target_dict = grad_dict if key == "gradient" else obj_dict
+                    target_dict[item_name] = obj_data[key]
+                    obj_dict[obj_name][key] = item_name
+                # combined gradients
+                elif key == "gradient" and isinstance(obj_data[key], list):
+                    new_grad_list = []
+                    for grad in obj_data[key]:
+                        for name in grad:
+                            grad_dict[name] = grad[name]
+                            new_grad_list.append(name)
+                    obj_dict[obj_name][key] = new_grad_list
         return obj_dict, grad_dict
 
     @staticmethod
