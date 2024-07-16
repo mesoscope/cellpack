@@ -88,6 +88,10 @@
             "gradient": [
                 "X_gradient",
                 "Y_gradient"
+            ],
+            "gradient_weights": [
+                70,
+                30
             ]
         }
     },
