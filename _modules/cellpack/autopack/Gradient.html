@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -133,6 +133,21 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaultFunction</span>  <span class="c1"># lambda ?</span>
 
+<div class="viewcode-block" id="Gradient.update_ingredient_gradient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.update_ingredient_gradient">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">update_ingredient_gradient</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the ingredient gradient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">gradient_weights</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;gradient_weights&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">gradient_weights</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient_weights&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ingr</span></div>
+
+
 <div class="viewcode-block" id="Gradient.scale_between_0_and_1">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.scale_between_0_and_1">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -148,7 +163,7 @@
 <div class="viewcode-block" id="Gradient.get_combined_gradient_weight">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_combined_gradient_weight">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_combined_gradient_weight</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_combined_gradient_weight</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">,</span> <span class="n">gradient_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine the gradient weights</span>
 
@@ -162,11 +177,13 @@
 <span class="sd">        numpy.ndarray</span>
 <span class="sd">            the combined gradient weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Need at least two gradients to combine&quot;</span>
+
         <span class="n">weight_list</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)))</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">)):</span>
             <span class="n">weight_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">scale_between_0_and_1</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
 
-        <span class="n">combined_weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">weight_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">combined_weight</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">weight_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">gradient_weights</span><span class="p">)</span>
         <span class="n">combined_weight</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">scale_between_0_and_1</span><span class="p">(</span><span class="n">combined_weight</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">combined_weight</span></div>
@@ -193,8 +210,8 @@
 <span class="sd">            the index of the picked point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">weights_to_use</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
-        <span class="n">weights_to_use</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">scale_between_0_and_1</span><span class="p">(</span><span class="n">weights_to_use</span><span class="p">)</span>
         <span class="n">weights_to_use</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">weights_to_use</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">weights_to_use</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">scale_between_0_and_1</span><span class="p">(</span><span class="n">weights_to_use</span><span class="p">)</span>
 
         <span class="n">point_probabilities</span> <span class="o">=</span> <span class="n">weights_to_use</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights_to_use</span><span class="p">)</span>
 
@@ -229,13 +246,16 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="s2">&quot;combined_weight&quot;</span><span class="p">):</span>
-                    <span class="n">gradient_list</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="n">gradient</span>
-                        <span class="k">for</span> <span class="n">gradient_name</span><span class="p">,</span> <span class="n">gradient</span> <span class="ow">in</span> <span class="n">all_gradients</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">gradient_name</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span>
-                    <span class="p">]</span>
+                    <span class="n">gradient_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">gradient_name</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">gradient_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_gradients</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;Gradient </span><span class="si">{</span><span class="n">gradient_name</span><span class="si">}</span><span class="s2"> not found in gradient list&quot;</span>
+                            <span class="p">)</span>
+                        <span class="n">gradient_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">all_gradients</span><span class="p">[</span><span class="n">gradient_name</span><span class="p">])</span>
+
                     <span class="n">combined_weight</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">get_combined_gradient_weight</span><span class="p">(</span>
-                        <span class="n">gradient_list</span>
+                        <span class="n">gradient_list</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">gradient_weights</span>
                     <span class="p">)</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">combined_weight</span> <span class="o">=</span> <span class="n">combined_weight</span>
 
@@ -601,7 +621,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -617,7 +637,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -635,7 +655,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.4.
     </div>
   </body>
 </html>

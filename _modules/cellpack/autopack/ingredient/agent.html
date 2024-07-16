@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -53,7 +53,8 @@
         <span class="n">distance_expression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">distance_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">force_random</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># avoid any binding</span>
-        <span class="n">gradient</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">gradient</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gradient_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">is_attractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">overwrite_distance_function</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
         <span class="n">packing_mode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
@@ -84,6 +85,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">distance_expression</span> <span class="o">=</span> <span class="n">distance_expression</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_distance_function</span> <span class="o">=</span> <span class="n">overwrite_distance_function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient_weights</span> <span class="o">=</span> <span class="n">gradient_weights</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cb</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># weak ref to recipe</span>
@@ -210,7 +212,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
@@ -226,7 +228,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -244,7 +246,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.4.
     </div>
   </body>
 </html>
