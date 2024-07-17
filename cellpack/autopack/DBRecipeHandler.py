@@ -151,6 +151,19 @@ class CompositionDoc(DataDoc):
                 gradient_dict[gradient["name"]] = gradient
             prep_recipe_data["gradients"] = gradient_dict
 
+    @staticmethod
+    def create_combined_gradient_list(key, obj_data, prep_data):
+        """
+        When the gradients are combined, fetch and replace gradient data in a list.
+        key --> the key in the object data that we want to modify its value
+        obj_data --> the object data that contains the gradient list
+        prep_data --> the data that contains the gradients (raw data or path) we want to fetch
+        """
+        new_grad_list = []
+        for grad in obj_data[key]:
+            new_grad_list.append({grad: prep_data[grad]})
+        obj_data[key] = new_grad_list
+
     def resolve_object_data(self, object_data, prep_recipe_data):
         """
         Resolve the object data from the local data.
@@ -163,12 +176,9 @@ class CompositionDoc(DataDoc):
                     object_data[key] = prep_recipe_data[target_dict][object_data[key]]
                 # combined gradients
                 elif isinstance(object_data[key], list):
-                    new_grad_list = []
-                    for grad in object_data[key]:
-                        new_grad_list.append(
-                            {grad: prep_recipe_data["gradients"][grad]}
-                        )
-                    object_data[key] = new_grad_list
+                    self.create_combined_gradient_list(
+                        key, object_data, prep_recipe_data["gradients"]
+                    )
 
     def resolve_local_regions(self, local_data, recipe_data, db):
         """
@@ -506,10 +516,9 @@ class DBUploader(object):
                 obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
             # combined gradients
             elif isinstance(obj_data[obj_name]["gradient"], list):
-                new_grad_list = []
-                for grad in obj_data[obj_name]["gradient"]:
-                    new_grad_list.append({grad: self.grad_to_path_map[grad]})
-                obj_data[obj_name]["gradient"] = new_grad_list
+                CompositionDoc.create_combined_gradient_list(
+                    "gradient", obj_data[obj_name], self.grad_to_path_map
+                )
         object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
         _, doc_id = object_doc.should_write(self.db)
         if doc_id:
