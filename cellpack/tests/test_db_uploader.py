@@ -104,7 +104,7 @@ def test_upload_compositions():
         "space": {"id": "test_id", "path": "firebase:composition/test_id"},
     }
     assert references_to_update == {
-        "space": {"comp_id": "test_id", "index": "regions.interior", "name": "A"}
+        "space": [{"comp_id": "test_id", "index": "regions.interior", "name": "A"}]
     }
 
 
