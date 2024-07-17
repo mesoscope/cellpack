@@ -152,7 +152,7 @@ class CompositionDoc(DataDoc):
             prep_recipe_data["gradients"] = gradient_dict
 
     @staticmethod
-    def create_combined_gradient_list(key, obj_data, prep_data):
+    def resolve_combined_gradient(key, obj_data, prep_data):
         """
         When the gradients are combined, fetch and replace gradient data in a list.
         key --> the key in the object data that we want to modify its value
@@ -176,7 +176,7 @@ class CompositionDoc(DataDoc):
                     object_data[key] = prep_recipe_data[target_dict][object_data[key]]
                 # combined gradients
                 elif isinstance(object_data[key], list):
-                    self.create_combined_gradient_list(
+                    self.resolve_combined_gradient(
                         key, object_data, prep_recipe_data["gradients"]
                     )
 
@@ -516,7 +516,7 @@ class DBUploader(object):
                 obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
             # combined gradients
             elif isinstance(obj_data[obj_name]["gradient"], list):
-                CompositionDoc.create_combined_gradient_list(
+                CompositionDoc.resolve_combined_gradient(
                     "gradient", obj_data[obj_name], self.grad_to_path_map
                 )
         object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
