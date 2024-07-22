@@ -472,7 +472,7 @@ class MarkdownWriter(object):
         self.report_md.new_table(
             columns=table.shape[1],
             rows=table.shape[0],
-            text=self.text_list,
+            text=text_list,
             text_align=text_align,
         )
 
@@ -493,7 +493,7 @@ class MarkdownWriter(object):
         self.report_md.new_table(
             columns=table.shape[1],
             rows=table.shape[0],
-            text=self.text_list,
+            text=text_list,
             text_align=text_align,
         )
 
