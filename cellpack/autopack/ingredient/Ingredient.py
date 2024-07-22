@@ -161,6 +161,7 @@ class Ingredient(Agent):
         "distance_function",
         "force_random",
         "gradient",
+        "gradient_weights",
         "is_attractor",
         "max_jitter",
         "molarity",
@@ -199,6 +200,7 @@ class Ingredient(Agent):
         distance_function=None,
         force_random=False,  # avoid any binding
         gradient=None,
+        gradient_weights=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         molarity=0.0,
@@ -231,6 +233,7 @@ class Ingredient(Agent):
             distance_function=distance_function,
             force_random=force_random,
             gradient=gradient,
+            gradient_weights=gradient_weights,
             is_attractor=is_attractor,
             overwrite_distance_function=overwrite_distance_function,
             packing_mode=packing_mode,
@@ -406,6 +409,38 @@ class Ingredient(Agent):
             ingredient_info["size_options"] = Ingredient.validate_distribution_options(
                 ingredient_info["size_options"]
             )
+
+        # check if gradient information is entered correctly
+        if "gradient" in ingredient_info:
+            if not isinstance(ingredient_info["gradient"], (list, str)):
+                raise Exception(
+                    (
+                        f"Invalid gradient: {ingredient_info['gradient']} "
+                        f"for ingredient {ingredient_info['name']}"
+                    )
+                )
+            if (
+                ingredient_info["gradient"] == ""
+                or ingredient_info["gradient"] == "None"
+            ):
+                raise Exception(
+                    f"Missing gradient for ingredient {ingredient_info['name']}"
+                )
+
+            # if multiple gradients are provided with weights, check if weights are correct
+            if isinstance(ingredient_info["gradient"], list):
+                if "gradient_weights" in ingredient_info:
+                    # check if gradient_weights are missing
+                    if not isinstance(ingredient_info["gradient_weights"], list):
+                        raise Exception(
+                            f"Invalid gradient weights for ingredient {ingredient_info['name']}"
+                        )
+                    if len(ingredient_info["gradient"]) != len(
+                        ingredient_info["gradient_weights"]
+                    ):
+                        raise Exception(
+                            f"Missing gradient weights for ingredient {ingredient_info['name']}"
+                        )
 
         return ingredient_info
 

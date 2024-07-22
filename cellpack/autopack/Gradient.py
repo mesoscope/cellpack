@@ -92,6 +92,18 @@ class Gradient:
         self.function = self.defaultFunction  # lambda ?
 
     @staticmethod
+    def update_ingredient_gradient(ingr, arguments):
+        """
+        Update the ingredient gradient
+        """
+        ingr.gradient = arguments["gradient"]
+        ingr.gradient_weights = None
+        if "gradient_weights" in arguments:
+            ingr.gradient_weights = arguments["gradient_weights"]
+
+        return ingr
+
+    @staticmethod
     def scale_between_0_and_1(values):
         """
         Scale values between 0 and 1
@@ -101,7 +113,7 @@ class Gradient:
         return (values - min_value) / (max_value - min_value)
 
     @staticmethod
-    def get_combined_gradient_weight(gradient_list):
+    def get_combined_gradient_weight(gradient_list, gradient_weights=None):
         """
         Combine the gradient weights
 
@@ -115,11 +127,13 @@ class Gradient:
         numpy.ndarray
             the combined gradient weight
         """
+        assert len(gradient_list) > 1, "Need at least two gradients to combine"
+
         weight_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
         for i in range(len(gradient_list)):
             weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
 
-        combined_weight = numpy.mean(weight_list, axis=0)
+        combined_weight = numpy.average(weight_list, axis=0, weights=gradient_weights)
         combined_weight = Gradient.scale_between_0_and_1(combined_weight)
 
         return combined_weight
@@ -143,8 +157,8 @@ class Gradient:
             the index of the picked point
         """
         weights_to_use = numpy.take(weight, points)
-        weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
         weights_to_use[numpy.isnan(weights_to_use)] = 0
+        weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
 
         point_probabilities = weights_to_use / numpy.sum(weights_to_use)
 
@@ -176,13 +190,16 @@ class Gradient:
         if isinstance(ingr.gradient, list):
             if len(ingr.gradient) > 1:
                 if not hasattr(ingr, "combined_weight"):
-                    gradient_list = [
-                        gradient
-                        for gradient_name, gradient in all_gradients.items()
-                        if gradient_name in ingr.gradient
-                    ]
+                    gradient_list = []
+                    for gradient_name in ingr.gradient:
+                        if gradient_name not in all_gradients:
+                            raise ValueError(
+                                f"Gradient {gradient_name} not found in gradient list"
+                            )
+                        gradient_list.append(all_gradients[gradient_name])
+
                     combined_weight = Gradient.get_combined_gradient_weight(
-                        gradient_list
+                        gradient_list, ingr.gradient_weights
                     )
                     ingr.combined_weight = combined_weight
 
