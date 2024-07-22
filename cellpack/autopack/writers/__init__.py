@@ -497,9 +497,6 @@ class MarkdownWriter(object):
             text_align=text_align,
         )
 
-    def write_file(self):
-        self.report_md.create_md_file()
-
     # Image text must be a list, if list is not same length as list of filepaths, only 1st item in image_text is used
     def add_images(self, header, image_text, filepaths):
         self.report_md.new_header(
@@ -524,3 +521,15 @@ class MarkdownWriter(object):
                     )
                 )
         self.report_md.new_line()
+
+    def add_line(self, line):
+        self.report_md.new_line(line)
+
+    def add_list(self, list_items):
+        self.report_md.new_list(list_items)
+
+    def add_inline_image(self, text, filepath):
+        return self.report_md.new_inline_image(text=text, path=str(filepath))
+
+    def write_file(self):
+        self.report_md.create_md_file()

@@ -20,8 +20,7 @@ import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
-from cellpack.autopack.writers import Writer, MarkdownWriter
-from cellpack.autopack.writers.ImageWriter import ImageWriter
+from cellpack.autopack.writers import Writer, MarkdownWriter, ImageWriter
 
 
 class Analysis:
@@ -294,20 +293,18 @@ class Analysis:
             )
 
             md_object.add_header(level=1, header="Distance analysis")
-            # TODO: add new method to add new line in markdown writer
-            md_object.report_md.new_line(
+            md_object.add_line(
                 f"Expected minimum distance: {expected_minimum_distance:.2f}"
             )
-            md_object.report_md.new_line(
+            md_object.add_line(
                 f"Actual minimum distance: {packed_minimum_distance:.2f}\n"
             )
 
             if expected_minimum_distance > packed_minimum_distance:
-                # TODO: add new method to add new list in markdown writer, check `add_table_of_contents`
                 md_object.add_header(
                     level=2, header="Possible errors", add_table_of_contents="n"
                 )
-                md_object.report_md.new_list(
+                md_object.add_list(
                     [
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
                         " is less than the "
@@ -325,7 +322,7 @@ class Analysis:
                 )
                 for img_path in ingr_distance_histo_path:
                     img_list.append(
-                        md_object.report_md.new_inline_image(
+                        md_object.add_inline_image(
                             text=f"Distance distribution {ingr_key}",
                             path=f"{output_image_location}/{img_path.name}",
                         )
