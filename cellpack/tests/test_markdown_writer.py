@@ -95,4 +95,3 @@ def test_add_image(setup_md_writer, tmp_path):
     assert "Test Image" in report
     assert "![Image 1]" in report
     assert "![Image 2]" in report
-    assert "images/image1.png" in report

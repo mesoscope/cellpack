@@ -324,7 +324,7 @@ class Analysis:
                     img_list.append(
                         md_object.add_inline_image(
                             text=f"Distance distribution {ingr_key}",
-                            path=f"{output_image_location}/{img_path.name}",
+                            filepath=f"{output_image_location}/{img_path.name}",
                         )
                     )
 
