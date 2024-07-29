@@ -464,14 +464,17 @@ class MarkdownWriter(object):
             add_table_of_contents="n",
         )
 
-        text_list = []
-        for row in table.values.tolist():
-            for item in row:
-                text_list.append(item)
+        header_row = table.columns.tolist()
+        text_list = header_row + [
+            item for sublist in table.values.tolist() for item in sublist
+        ]
+
+        total_rows = table.shape[0] + 1  # Adding 1 for the header row
+        total_columns = table.shape[1]
 
         self.report_md.new_table(
-            columns=table.shape[1],
-            rows=table.shape[0],
+            columns=total_columns,
+            rows=total_rows,
             text=text_list,
             text_align=text_align,
         )
@@ -485,14 +488,16 @@ class MarkdownWriter(object):
 
         table = pd.read_csv(filepath)
 
-        text_list = []
-        for row in table.values.tolist():
-            for item in row:
-                text_list.append(item)
+        header_row = table.columns.tolist()
+        text_list = header_row + [
+            item for sublist in table.values.tolist() for item in sublist
+        ]
+        total_rows = table.shape[0] + 1  # Adding 1 for the header row
+        total_columns = table.shape[1]
 
         self.report_md.new_table(
-            columns=table.shape[1],
-            rows=table.shape[0],
+            columns=total_columns,
+            rows=total_rows,
             text=text_list,
             text_align=text_align,
         )
@@ -504,10 +509,8 @@ class MarkdownWriter(object):
             title=header,
             add_table_of_contents="n",
         )
-        print("Output image location: {self.output_image_location}")
         if len(image_text) == len(filepaths):
             for i in range(len(filepaths)):
-                print("Adding image:", str(self.output_image_location / filepaths[i]))
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
@@ -516,14 +519,13 @@ class MarkdownWriter(object):
                 )
         else:
             for i in range(len(filepaths)):
-                print("Adding image:", str(self.output_image_location / filepaths[i]))
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
                         path=str(self.output_image_location / filepaths[i]),
                     )
                 )
-        self.report_md.new_line()
+        self.report_md.new_line("")
 
     def add_line(self, line):
         self.report_md.new_line(line)
