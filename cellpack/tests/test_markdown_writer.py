@@ -82,10 +82,10 @@ def test_add_image(setup_md_writer, tmp_path):
     writer, report_path = setup_md_writer
     header = "Test Image"
     image_text = ["Image 1", "Image 2"]
-    filepaths = ["image1.png", "image2.png"]
+    filepaths = [tmp_path / "image1.png", tmp_path / "image2.png"]
 
     for image in filepaths:
-        (tmp_path / image).touch()
+        image.touch()
 
     writer.add_images(header, image_text, filepaths)
     writer.write_file()
