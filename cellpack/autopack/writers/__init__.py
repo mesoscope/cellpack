@@ -504,10 +504,10 @@ class MarkdownWriter(object):
             title=header,
             add_table_of_contents="n",
         )
-        print(f"Output image location: {self.output_image_location}")
+        print("Output image location: {self.output_image_location}")
         if len(image_text) == len(filepaths):
             for i in range(len(filepaths)):
-                print(f"Adding image:", str(self.output_image_location / filepaths[i]))
+                print("Adding image:", str(self.output_image_location / filepaths[i]))
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
@@ -516,7 +516,7 @@ class MarkdownWriter(object):
                 )
         else:
             for i in range(len(filepaths)):
-                print(f"Adding image:", str(self.output_image_location / filepaths[i]))
+                print("Adding image:", str(self.output_image_location / filepaths[i]))
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
