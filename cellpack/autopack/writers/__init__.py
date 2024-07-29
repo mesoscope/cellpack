@@ -514,7 +514,7 @@ class MarkdownWriter(object):
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
-                        path=str(self.output_image_location / filepaths[i]),
+                        path=str(self.output_image_location / filepaths[i].name),
                     )
                 )
         else:
@@ -522,7 +522,7 @@ class MarkdownWriter(object):
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
-                        path=str(self.output_image_location / filepaths[i]),
+                        path=str(self.output_image_location / filepaths[i].name),
                     )
                 )
         self.report_md.new_line("")
