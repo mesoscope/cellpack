@@ -312,9 +312,6 @@ class Analysis:
                     ]
                 )
 
-            df = pd.DataFrame()
-            df["Ingredient key"] = []
-            df["Pairwise distance distribution"] = []
             img_list = []
             for ingr_key in all_pairwise_distances:
                 ingr_distance_histo_path = figure_path.glob(
@@ -328,9 +325,13 @@ class Analysis:
                         )
                     )
 
-            df = pd.DataFrame()
-            df["Ingredient key"] = all_pairwise_distances.keys()
-            df["Pairwise distance distribution"] = img_list
+            df = pd.DataFrame(
+                {
+                    "Ingredient key": list(all_pairwise_distances.keys()),
+                    "Pairwise distance distribution": img_list,
+                }
+            )
+
             md_object.add_table(header="", table=df)
 
     def get_ingredient_key_from_object_or_comp_name(
@@ -484,10 +485,13 @@ class Analysis:
                 "pairwise_distances_*.json"
             )
 
-        df = pd.DataFrame()
-        df["Ingredient name"] = list(ingredient_keys)
-        df["Encapsulating radius"] = list(ingredient_radii.values())
-        df["Average number packed"] = list(avg_num_packed.values())
+        df = pd.DataFrame(
+            {
+                "Ingredient name": list(ingredient_keys),
+                "Encapsulating radius": list(ingredient_radii.values()),
+                "Average number packed": list(avg_num_packed.values()),
+            }
+        )
 
         # path to save report and other outputs
         if output_image_location is None:
@@ -504,10 +508,7 @@ class Analysis:
             header=f"Analysis for packing results located at {self.packing_results_path}"
         )
 
-        # TODO: check if this is needed
-        # path to save report and other outputs
-        if output_image_location is None:
-            output_image_location = self.output_path
+        md_object.add_table(header="", table=df)
 
         # path where packing results are stored
         packing_results_path = self.packing_results_path

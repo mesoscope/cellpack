@@ -471,8 +471,8 @@ class MarkdownWriter(object):
 
         self.report_md.new_table(
             columns=table.shape[1],
-            rows=table.shape[0] + 1,
-            text=[header] + text_list,
+            rows=table.shape[0],
+            text=text_list,
             text_align=text_align,
         )
 
@@ -492,8 +492,8 @@ class MarkdownWriter(object):
 
         self.report_md.new_table(
             columns=table.shape[1],
-            rows=table.shape[0] + 1,
-            text=[header] + text_list,
+            rows=table.shape[0],
+            text=text_list,
             text_align=text_align,
         )
 
@@ -504,8 +504,10 @@ class MarkdownWriter(object):
             title=header,
             add_table_of_contents="n",
         )
+        print(f"Output image location: {self.output_image_location}")
         if len(image_text) == len(filepaths):
             for i in range(len(filepaths)):
+                print(f"Adding image:", str(self.output_image_location / filepaths[i]))
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
@@ -514,6 +516,7 @@ class MarkdownWriter(object):
                 )
         else:
             for i in range(len(filepaths)):
+                print(f"Adding image:", str(self.output_image_location / filepaths[i]))
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
