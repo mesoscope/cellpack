@@ -409,11 +409,7 @@ class Analysis:
         )
         if len(partner_pair_dict):
             md_object.add_header(header="Partner Analysis")
-
-            paired_keys = []
-            touching_radii = []
-            binding_probabilities = []
-            close_fractions = []
+            partner_data = []
             for paired_key, partner_values in partner_pair_dict.items():
                 pairwise_distances = numpy.array(
                     combined_pairwise_distance_dict[paired_key]
@@ -423,16 +419,16 @@ class Analysis:
                     numpy.count_nonzero(pairwise_distances < padded_radius)
                     / partner_values["num_packed"]
                 )
-                paired_keys.append(paired_key)
-                touching_radii.append(partner_values["touching_radius"])
-                binding_probabilities.append(partner_values["binding_probability"])
-                close_fractions.append(close_fraction)
+                partner_data.append(
+                    {
+                        "Ingredient pair": paired_key,
+                        "Touching radius": partner_values["touching_radius"],
+                        "Binding probability": partner_values["binding_probability"],
+                        "Close packed fraction": close_fraction,
+                    }
+                )
 
-            df = pd.DataFrame()
-            df["Paired keys"] = paired_keys
-            df["Touching radii"] = touching_radii
-            df["Binding probabilities"] = binding_probabilities
-            df["Close packing fractions"] = close_fractions
+            df = pd.DataFrame(partner_data)
 
             md_object.add_table(header="", table=df)
 
@@ -465,7 +461,10 @@ class Analysis:
             report_output_path = self.output_path
         report_output_path = Path(report_output_path)
 
-        self.ingredient_key_dict = self.read_dict_from_glob_file("ingredient_keys_*")
+        if not hasattr(self, "ingredient_key_dict"):
+            self.ingredient_key_dict = self.read_dict_from_glob_file(
+                "ingredient_keys_*"
+            )
 
         if ingredient_keys is None:
             ingredient_keys = list(self.ingredient_key_dict.keys())
@@ -474,16 +473,14 @@ class Analysis:
             ingredient_keys=ingredient_keys
         )
         ingredient_radii = self.get_ingredient_radii(recipe_data=recipe_data)
-        pairwise_distance_dict = self.read_dict_from_glob_file(
-            "pairwise_distances_*.json"
-        )
-        combined_pairwise_distance_dict = self.combine_results_from_seeds(
-            pairwise_distance_dict
-        )
+
         if not hasattr(self, "pairwise_distance_dict"):
             self.pairwise_distance_dict = self.read_dict_from_glob_file(
                 "pairwise_distances_*.json"
             )
+        combined_pairwise_distance_dict = self.combine_results_from_seeds(
+            self.pairwise_distance_dict
+        )
 
         df = pd.DataFrame(
             {
