@@ -10,9 +10,6 @@
 #     exit 
 # fi
 
-# Configure AWS CLI
-/usr/local/bin/configure-aws.sh
-
 cd /cellpack
 # pack -r ${recipe} -c ${config}
 pack -r examples/recipes/v2/one_sphere.json -c examples/packing-configs/run.json
