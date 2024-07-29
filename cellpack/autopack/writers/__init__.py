@@ -511,7 +511,7 @@ class MarkdownWriter(object):
         )
         if len(image_text) == len(filepaths):
             for i in range(len(filepaths)):
-                img_path = f"{self.output_image_location} / {filepaths[i].name}"
+                img_path = f"{self.output_image_location}/{filepaths[i].name}"
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[i],
@@ -520,7 +520,7 @@ class MarkdownWriter(object):
                 )
         else:
             for i in range(len(filepaths)):
-                img_path = f"{self.output_image_location} / {filepaths[i].name}"
+                img_path = f"{self.output_image_location}/{filepaths[i].name}"
                 self.report_md.new_line(
                     self.report_md.new_inline_image(
                         text=image_text[0],
