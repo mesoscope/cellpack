@@ -52,9 +52,9 @@
 
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Circle</span>
-<span class="kn">from</span> <span class="nn">mdutils.mdutils</span> <span class="kn">import</span> <span class="n">MdUtils</span>
 
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.ldSequence</span> <span class="kn">import</span> <span class="n">halton</span>
@@ -62,6 +62,7 @@
 <span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">check_paired_key</span><span class="p">,</span> <span class="n">get_paired_key</span><span class="p">,</span> <span class="n">get_seed_list</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.writers</span> <span class="kn">import</span> <span class="n">Writer</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.writers.ImageWriter</span> <span class="kn">import</span> <span class="n">ImageWriter</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.writers.MarkdownWriter</span> <span class="kn">import</span> <span class="n">MarkdownWriter</span>
 
 
 <div class="viewcode-block" id="Analysis">
@@ -357,7 +358,7 @@
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.run_distance_analysis">[docs]</a>
     <span class="k">def</span> <span class="nf">run_distance_analysis</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">report_md</span><span class="p">,</span>
+        <span class="n">md_object</span><span class="p">:</span> <span class="n">MarkdownWriter</span><span class="p">,</span>
         <span class="n">recipe_data</span><span class="p">,</span>
         <span class="n">pairwise_distance_dict</span><span class="p">,</span>
         <span class="n">figure_path</span><span class="p">,</span>
@@ -379,19 +380,19 @@
                 <span class="n">pairwise_distance_dict</span>
             <span class="p">)</span>
 
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distance analysis&quot;</span><span class="p">)</span>
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span>
+            <span class="n">md_object</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Distance analysis&quot;</span><span class="p">)</span>
+            <span class="n">md_object</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Expected minimum distance: </span><span class="si">{</span><span class="n">expected_minimum_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span>
+            <span class="n">md_object</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Actual minimum distance: </span><span class="si">{</span><span class="n">packed_minimum_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">expected_minimum_distance</span> <span class="o">&gt;</span> <span class="n">packed_minimum_distance</span><span class="p">:</span>
-                <span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span>
-                    <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Possible errors&quot;</span><span class="p">,</span> <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span>
+                <span class="n">md_object</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span>
+                    <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Possible errors&quot;</span><span class="p">,</span> <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span>
                 <span class="p">)</span>
-                <span class="n">report_md</span><span class="o">.</span><span class="n">new_list</span><span class="p">(</span>
+                <span class="n">md_object</span><span class="o">.</span><span class="n">add_list</span><span class="p">(</span>
                     <span class="p">[</span>
                         <span class="sa">f</span><span class="s2">&quot;Packed minimum distance </span><span class="si">{</span><span class="n">packed_minimum_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="s2">&quot; is less than the &quot;</span>
@@ -399,7 +400,6 @@
                     <span class="p">]</span>
                 <span class="p">)</span>
 
-            <span class="n">num_keys</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_pairwise_distances</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
             <span class="n">img_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">ingr_key</span> <span class="ow">in</span> <span class="n">all_pairwise_distances</span><span class="p">:</span>
                 <span class="n">ingr_distance_histo_path</span> <span class="o">=</span> <span class="n">figure_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
@@ -407,24 +407,20 @@
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">img_path</span> <span class="ow">in</span> <span class="n">ingr_distance_histo_path</span><span class="p">:</span>
                     <span class="n">img_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                        <span class="n">report_md</span><span class="o">.</span><span class="n">new_inline_image</span><span class="p">(</span>
+                        <span class="n">md_object</span><span class="o">.</span><span class="n">add_inline_image</span><span class="p">(</span>
                             <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distance distribution </span><span class="si">{</span><span class="n">ingr_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_image_location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">img_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">filepath</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_image_location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">img_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
-            <span class="n">text_list</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s2">&quot;Ingredient key&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Pairwise distance distribution&quot;</span><span class="p">,</span>
-                <span class="o">*</span><span class="p">[</span>
-                    <span class="n">val</span>
-                    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_pairwise_distances</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">img_list</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">pair</span>
-                <span class="p">],</span>
-            <span class="p">]</span>
 
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_table</span><span class="p">(</span>
-                <span class="n">columns</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="p">(</span><span class="n">num_keys</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">text</span><span class="o">=</span><span class="n">text_list</span><span class="p">,</span> <span class="n">text_align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
-            <span class="p">)</span></div>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;Ingredient key&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_pairwise_distances</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                    <span class="s2">&quot;Pairwise distance distribution&quot;</span><span class="p">:</span> <span class="n">img_list</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="n">md_object</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">df</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.get_ingredient_key_from_object_or_comp_name">
@@ -493,7 +489,7 @@
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.Analysis.run_partner_analysis">[docs]</a>
     <span class="k">def</span> <span class="nf">run_partner_analysis</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">report_md</span><span class="p">,</span>
+        <span class="n">md_object</span><span class="p">:</span> <span class="n">MarkdownWriter</span><span class="p">,</span>
         <span class="n">recipe_data</span><span class="p">,</span>
         <span class="n">combined_pairwise_distance_dict</span><span class="p">,</span>
         <span class="n">ingredient_radii</span><span class="p">,</span>
@@ -509,9 +505,8 @@
             <span class="n">avg_num_packed</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">partner_pair_dict</span><span class="p">):</span>
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Partner Analysis&quot;</span><span class="p">)</span>
-
-            <span class="n">val_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">md_object</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="s2">&quot;Partner Analysis&quot;</span><span class="p">)</span>
+            <span class="n">partner_data</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">paired_key</span><span class="p">,</span> <span class="n">partner_values</span> <span class="ow">in</span> <span class="n">partner_pair_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">pairwise_distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                     <span class="n">combined_pairwise_distance_dict</span><span class="p">[</span><span class="n">paired_key</span><span class="p">]</span>
@@ -521,28 +516,18 @@
                     <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">pairwise_distances</span> <span class="o">&lt;</span> <span class="n">padded_radius</span><span class="p">)</span>
                     <span class="o">/</span> <span class="n">partner_values</span><span class="p">[</span><span class="s2">&quot;num_packed&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
-                <span class="n">val_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="n">paired_key</span><span class="p">,</span>
-                        <span class="n">partner_values</span><span class="p">[</span><span class="s2">&quot;touching_radius&quot;</span><span class="p">],</span>
-                        <span class="n">partner_values</span><span class="p">[</span><span class="s2">&quot;binding_probability&quot;</span><span class="p">],</span>
-                        <span class="n">close_fraction</span><span class="p">,</span>
-                    <span class="p">]</span>
+                <span class="n">partner_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;Ingredient pair&quot;</span><span class="p">:</span> <span class="n">paired_key</span><span class="p">,</span>
+                        <span class="s2">&quot;Touching radius&quot;</span><span class="p">:</span> <span class="n">partner_values</span><span class="p">[</span><span class="s2">&quot;touching_radius&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;Binding probability&quot;</span><span class="p">:</span> <span class="n">partner_values</span><span class="p">[</span><span class="s2">&quot;binding_probability&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;Close packed fraction&quot;</span><span class="p">:</span> <span class="n">close_fraction</span><span class="p">,</span>
+                    <span class="p">}</span>
                 <span class="p">)</span>
 
-            <span class="n">text_list</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s2">&quot;Partner pair&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Touching radius&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Binding probability&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Close packed fraction&quot;</span><span class="p">,</span>
-                <span class="o">*</span><span class="n">val_list</span><span class="p">,</span>
-            <span class="p">]</span>
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_table</span><span class="p">(</span>
-                <span class="n">columns</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                <span class="n">rows</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">partner_pair_dict</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="n">text</span><span class="o">=</span><span class="n">text_list</span><span class="p">,</span>
-                <span class="n">text_align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
-            <span class="p">)</span></div>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">partner_data</span><span class="p">)</span>
+
+            <span class="n">md_object</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">df</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Analysis.create_report">
@@ -576,16 +561,6 @@
             <span class="n">report_output_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
         <span class="n">report_output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">report_output_path</span><span class="p">)</span>
 
-        <span class="n">report_md</span> <span class="o">=</span> <span class="n">MdUtils</span><span class="p">(</span>
-            <span class="n">file_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">report_output_path</span><span class="si">}</span><span class="s2">/analysis_report&quot;</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Packing analysis report&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span>
-            <span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Analysis for packing results located at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packing_results_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;ingredient_key_dict&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ingredient_key_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_dict_from_glob_file</span><span class="p">(</span>
                 <span class="s2">&quot;ingredient_keys_*&quot;</span>
@@ -603,52 +578,49 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pairwise_distance_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_dict_from_glob_file</span><span class="p">(</span>
                 <span class="s2">&quot;pairwise_distances_*.json&quot;</span>
             <span class="p">)</span>
-
         <span class="n">combined_pairwise_distance_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">combine_results_from_seeds</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pairwise_distance_dict</span>
         <span class="p">)</span>
 
-        <span class="n">val_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">num_packed</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-            <span class="n">ingredient_keys</span><span class="p">,</span> <span class="n">ingredient_radii</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">avg_num_packed</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="p">):</span>
-            <span class="n">val_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">key</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">num_packed</span><span class="p">])</span>
-        <span class="n">text_list</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;Ingredient name&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Encapsulating radius&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Average number packed&quot;</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">val_list</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="n">report_md</span><span class="o">.</span><span class="n">new_table</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-            <span class="n">rows</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingredient_keys</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="n">text</span><span class="o">=</span><span class="n">text_list</span><span class="p">,</span>
-            <span class="n">text_align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;Ingredient name&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">ingredient_keys</span><span class="p">),</span>
+                <span class="s2">&quot;Encapsulating radius&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">ingredient_radii</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+                <span class="s2">&quot;Average number packed&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">avg_num_packed</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="p">}</span>
         <span class="p">)</span>
 
         <span class="c1"># path to save report and other outputs</span>
         <span class="k">if</span> <span class="n">output_image_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">output_image_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span>
 
+        <span class="n">md_object</span> <span class="o">=</span> <span class="n">MarkdownWriter</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Packing analysis report&quot;</span><span class="p">,</span>
+            <span class="n">output_path</span><span class="o">=</span><span class="n">report_output_path</span><span class="p">,</span>
+            <span class="n">output_image_location</span><span class="o">=</span><span class="n">output_image_location</span><span class="p">,</span>
+            <span class="n">report_name</span><span class="o">=</span><span class="s2">&quot;analysis_report&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">md_object</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span>
+            <span class="n">header</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Analysis for packing results located at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packing_results_path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">md_object</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
         <span class="c1"># path where packing results are stored</span>
         <span class="n">packing_results_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_results_path</span>
         <span class="n">figure_path</span> <span class="o">=</span> <span class="n">packing_results_path</span> <span class="o">/</span> <span class="s2">&quot;figures&quot;</span>
 
-        <span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Packing image&quot;</span><span class="p">)</span>
-        <span class="n">glob_to_packing_image</span> <span class="o">=</span> <span class="n">figure_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;packing_image_*.png&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">img_path</span> <span class="ow">in</span> <span class="n">glob_to_packing_image</span><span class="p">:</span>
-            <span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span>
-                <span class="n">report_md</span><span class="o">.</span><span class="n">new_inline_image</span><span class="p">(</span>
-                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Packing image&quot;</span><span class="p">,</span>
-                    <span class="n">path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_image_location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">img_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">md_object</span><span class="o">.</span><span class="n">add_images</span><span class="p">(</span>
+            <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Packing image&quot;</span><span class="p">,</span>
+            <span class="n">image_text</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Packing image&quot;</span><span class="p">],</span>
+            <span class="n">filepaths</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">figure_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;packing_image_*.png&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">run_distance_analysis</span><span class="p">:</span>
             <span class="c1"># TODO: take packing distance dict as direct input for live mode</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_distance_analysis</span><span class="p">(</span>
-                <span class="n">report_md</span><span class="p">,</span>
+                <span class="n">md_object</span><span class="p">,</span>
                 <span class="n">recipe_data</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pairwise_distance_dict</span><span class="p">,</span>
                 <span class="n">figure_path</span><span class="p">,</span>
@@ -657,14 +629,14 @@
 
         <span class="k">if</span> <span class="n">run_partner_analysis</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_partner_analysis</span><span class="p">(</span>
-                <span class="n">report_md</span><span class="p">,</span>
+                <span class="n">md_object</span><span class="p">,</span>
                 <span class="n">recipe_data</span><span class="p">,</span>
                 <span class="n">combined_pairwise_distance_dict</span><span class="p">,</span>
                 <span class="n">ingredient_radii</span><span class="p">,</span>
                 <span class="n">avg_num_packed</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="n">report_md</span><span class="o">.</span><span class="n">create_md_file</span><span class="p">()</span></div>
+        <span class="n">md_object</span><span class="o">.</span><span class="n">write_file</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Analysis.run_analysis_workflow">
@@ -1609,7 +1581,7 @@
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>

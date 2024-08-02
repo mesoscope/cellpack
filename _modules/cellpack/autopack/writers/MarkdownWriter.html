@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cellpack.autopack.writers.MarkdownWriter &#8212; cellPack 1.0.8 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
+    
+    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="../writers.html" accesskey="U">cellpack.autopack.writers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.writers.MarkdownWriter</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cellpack.autopack.writers.MarkdownWriter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">mdutils.mdutils</span> <span class="kn">import</span> <span class="n">MdUtils</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">MarkdownWriter provides a class to write markdown files</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="MarkdownWriter">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter">[docs]</a>
+<span class="k">class</span> <span class="nc">MarkdownWriter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">output_image_location</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">report_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_image_location</span> <span class="o">=</span> <span class="n">output_image_location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span> <span class="o">=</span> <span class="n">MdUtils</span><span class="p">(</span>
+            <span class="n">file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">/</span> <span class="n">report_name</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># level is the header style, can only be 1 or 2</span>
+<div class="viewcode-block" id="MarkdownWriter.add_header">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_header">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">header</span><span class="p">,</span> <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownWriter.add_table">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_table">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">text_align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span>
+            <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+            <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">header_row</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">text_list</span> <span class="o">=</span> <span class="n">header_row</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span>
+        <span class="p">]</span>
+
+        <span class="n">total_rows</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Adding 1 for the header row</span>
+        <span class="n">total_columns</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_table</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">total_columns</span><span class="p">,</span>
+            <span class="n">rows</span><span class="o">=</span><span class="n">total_rows</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="n">text_list</span><span class="p">,</span>
+            <span class="n">text_align</span><span class="o">=</span><span class="n">text_align</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownWriter.add_table_from_csv">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_table_from_csv">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_table_from_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">text_align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span>
+            <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+            <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="n">header_row</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">text_list</span> <span class="o">=</span> <span class="n">header_row</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span>
+        <span class="p">]</span>
+        <span class="n">total_rows</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Adding 1 for the header row</span>
+        <span class="n">total_columns</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_table</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">total_columns</span><span class="p">,</span>
+            <span class="n">rows</span><span class="o">=</span><span class="n">total_rows</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="n">text_list</span><span class="p">,</span>
+            <span class="n">text_align</span><span class="o">=</span><span class="n">text_align</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="c1"># Image text must be a list, if list is not same length as list of filepaths, only 1st item in image_text is used</span>
+<div class="viewcode-block" id="MarkdownWriter.add_images">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_images">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">image_text</span><span class="p">,</span> <span class="n">filepaths</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_header</span><span class="p">(</span>
+            <span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+            <span class="n">add_table_of_contents</span><span class="o">=</span><span class="s2">&quot;n&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_text</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">filepaths</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filepaths</span><span class="p">)):</span>
+                <span class="n">img_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_image_location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filepaths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_inline_image</span><span class="p">(</span>
+                        <span class="n">text</span><span class="o">=</span><span class="n">image_text</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                        <span class="n">path</span><span class="o">=</span><span class="n">img_path</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filepaths</span><span class="p">)):</span>
+                <span class="n">img_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_image_location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filepaths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_inline_image</span><span class="p">(</span>
+                        <span class="n">text</span><span class="o">=</span><span class="n">image_text</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">path</span><span class="o">=</span><span class="n">img_path</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownWriter.add_line">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_line">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownWriter.add_list">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_list">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_items</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_list</span><span class="p">(</span><span class="n">list_items</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownWriter.add_inline_image">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_inline_image">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_inline_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">new_inline_image</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MarkdownWriter.write_file">
+<a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.write_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_md</span><span class="o">.</span><span class="n">create_md_file</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>
+          <li class="nav-item nav-item-4"><a href="../writers.html" >cellpack.autopack.writers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cellpack.autopack.writers.MarkdownWriter</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

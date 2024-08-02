@@ -12,6 +12,14 @@ cellpack.autopack.writers.ImageWriter module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.writers.MarkdownWriter module
+-----------------------------------------------
+
+.. automodule:: cellpack.autopack.writers.MarkdownWriter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

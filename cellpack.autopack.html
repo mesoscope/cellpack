@@ -762,6 +762,20 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.writers.html#module-cellpack.autopack.writers.MarkdownWriter">cellpack.autopack.writers.MarkdownWriter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_header"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_images"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_inline_image"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_inline_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_line"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_list"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_table"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.add_table_from_csv"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.add_table_from_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter.write_file"><code class="docutils literal notranslate"><span class="pre">MarkdownWriter.write_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.writers.html#module-cellpack.autopack.writers">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool"><code class="docutils literal notranslate"><span class="pre">IOingredientTool</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.IOingredientTool.ingrJsonNode"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.ingrJsonNode()</span></code></a></li>
@@ -1070,14 +1084,14 @@ across seeds</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.run_distance_analysis">
-<span class="sig-name descname"><span class="pre">run_distance_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_md</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_image_location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.run_distance_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.run_distance_analysis" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run_distance_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">md_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter" title="cellpack.autopack.writers.MarkdownWriter.MarkdownWriter"><span class="pre">MarkdownWriter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_image_location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.run_distance_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.run_distance_analysis" title="Link to this definition">¶</a></dt>
 <dd><p>Runs distance analysis on the given packing and adds it to
 the analysis report</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.Analysis.run_partner_analysis">
-<span class="sig-name descname"><span class="pre">run_partner_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report_md</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combined_pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_num_packed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.run_partner_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.run_partner_analysis" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run_partner_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">md_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="cellpack.autopack.writers.html#cellpack.autopack.writers.MarkdownWriter.MarkdownWriter" title="cellpack.autopack.writers.MarkdownWriter.MarkdownWriter"><span class="pre">MarkdownWriter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combined_pairwise_distance_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ingredient_radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_num_packed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#Analysis.run_partner_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.Analysis.run_partner_analysis" title="Link to this definition">¶</a></dt>
 <dd><p>runs an analysis of partner packings</p>
 </dd></dl>
 
@@ -6487,7 +6501,7 @@ destination: str</p>
     </div>
     <div class="footer" role="contentinfo">
     &#169; Copyright 2021, Megan Riel-Mehan.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.5.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     </div>
   </body>
 </html>
