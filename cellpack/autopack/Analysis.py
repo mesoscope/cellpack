@@ -20,7 +20,8 @@ import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
-from cellpack.autopack.writers import Writer, ImageWriter
+from cellpack.autopack.writers import Writer
+from cellpack.autopack.writers.ImageWriter import ImageWriter
 from cellpack.autopack.writers.MarkdownWriter import MarkdownWriter
 
 
