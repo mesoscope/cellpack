@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from cellpack.autopack.writers import MarkdownWriter
+from cellpack.autopack.writers.MarkdownWriter import MarkdownWriter
 
 
 @pytest.fixture
