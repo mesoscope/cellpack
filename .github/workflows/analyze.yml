@@ -45,7 +45,7 @@ jobs:
         needs: [Analyze]
         steps:
             - uses: actions/checkout@v4
-            - name: Configure AWS credentials
+            - name: Configure AWS credentials for dependabot
               if: ${{ github.actor == 'dependabot[bot]' }}
               uses: aws-actions/configure-aws-credentials@v4
               with:
