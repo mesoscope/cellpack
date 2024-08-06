@@ -3,7 +3,7 @@ name: Analyze
 on:
     push:
         branches:
-            - feature/dependabot-creds
+            - main
     pull_request:
 
 jobs:
@@ -45,10 +45,6 @@ jobs:
         needs: [Analyze]
         steps:
             - uses: actions/checkout@v4
-
-            - name: Print GitHub Actor
-              run: echo ${{ github.actor }}
-
             - name: Configure AWS credentials
               if: ${{ github.actor == 'dependabot[bot]' }}
               uses: aws-actions/configure-aws-credentials@v4
