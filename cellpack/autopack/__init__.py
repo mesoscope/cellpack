@@ -62,7 +62,7 @@ os.environ["NUMEXPR_MAX_THREADS"] = "32"
 log_file_path = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "../logging.conf"
 )
-logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
+logging.config.fileConfig(log_file_path, disable_existing_loggers=True)
 log = logging.getLogger("autopack")
 log.propagate = False
 ###############################################################################

@@ -92,6 +92,7 @@ setup(
         "console_scripts": [
             "analyze=cellpack.bin.analyze:main",
             "convert=cellpack.bin.simularium_converter:main",
+            "clean=cellpack.bin.clean:main",
             "upload=cellpack.bin.upload:main",
             "pack=cellpack.bin.pack:main",
         ]
