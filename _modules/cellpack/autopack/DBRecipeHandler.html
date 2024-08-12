@@ -154,8 +154,15 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_reference_in_obj</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">KEY_TO_DICT_MAPPING</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">downloaded_data</span> <span class="ow">and</span> <span class="n">db</span><span class="o">.</span><span class="n">is_reference</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
-                <span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_ref</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">downloaded_data</span><span class="p">:</span>
+                <span class="c1"># single gradient and inherited object</span>
+                <span class="k">if</span> <span class="n">db</span><span class="o">.</span><span class="n">is_reference</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
+                    <span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_ref</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="c1"># combined gradients</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">gradient</span> <span class="ow">in</span> <span class="n">downloaded_data</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                        <span class="k">for</span> <span class="n">gradient_name</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gradient</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="n">gradient</span><span class="p">[</span><span class="n">gradient_name</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_ref</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CompositionDoc.get_reference_data">
@@ -222,6 +229,22 @@
             <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient_dict</span></div>
 
 
+<div class="viewcode-block" id="CompositionDoc.resolve_combined_gradient">
+<a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_combined_gradient">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">resolve_combined_gradient</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">,</span> <span class="n">prep_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When the gradients are combined, fetch and replace gradient data in a list.</span>
+<span class="sd">        key --&gt; the key in the object data that we want to modify its value</span>
+<span class="sd">        obj_data --&gt; the object data that contains the gradient list</span>
+<span class="sd">        prep_data --&gt; the data that contains the gradients (raw data or path) we want to fetch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_grad_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="n">new_grad_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">grad</span><span class="p">:</span> <span class="n">prep_data</span><span class="p">[</span><span class="n">grad</span><span class="p">]})</span>
+        <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_grad_list</span></div>
+
+
 <div class="viewcode-block" id="CompositionDoc.resolve_object_data">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_object_data">[docs]</a>
     <span class="k">def</span> <span class="nf">resolve_object_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_data</span><span class="p">,</span> <span class="n">prep_recipe_data</span><span class="p">):</span>
@@ -229,9 +252,16 @@
 <span class="sd">        Resolve the object data from the local data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">KEY_TO_DICT_MAPPING</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">object_data</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="n">target_dict</span> <span class="o">=</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">KEY_TO_DICT_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                <span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="n">target_dict</span><span class="p">][</span><span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span></div>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">object_data</span><span class="p">:</span>
+                <span class="c1"># single gradient and inherited object</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">target_dict</span> <span class="o">=</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">KEY_TO_DICT_MAPPING</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="n">target_dict</span><span class="p">][</span><span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+                <span class="c1"># combined gradients</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">object_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">resolve_combined_gradient</span><span class="p">(</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="n">object_data</span><span class="p">,</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span>
+                    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CompositionDoc.resolve_local_regions">
@@ -619,8 +649,15 @@
     <span class="k">def</span> <span class="nf">upload_single_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">):</span>
         <span class="c1"># replace gradient name with path to check if gradient exists in db</span>
         <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]:</span>
-            <span class="n">grad_name</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
-            <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span><span class="p">[</span><span class="n">grad_name</span><span class="p">]</span>
+            <span class="c1"># single gradient</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">grad_name</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+                <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span><span class="p">[</span><span class="n">grad_name</span><span class="p">]</span>
+            <span class="c1"># combined gradients</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">resolve_combined_gradient</span><span class="p">(</span>
+                    <span class="s2">&quot;gradient&quot;</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_to_path_map</span>
+                <span class="p">)</span>
         <span class="n">object_doc</span> <span class="o">=</span> <span class="n">ObjectDoc</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">])</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">doc_id</span> <span class="o">=</span> <span class="n">object_doc</span><span class="o">.</span><span class="n">should_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">doc_id</span><span class="p">:</span>
@@ -852,10 +889,20 @@
         <span class="n">obj_name</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">target_dict</span> <span class="ow">in</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">KEY_TO_DICT_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj_data</span><span class="p">:</span>
-                <span class="n">item_name</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-                <span class="n">target_dict</span> <span class="o">=</span> <span class="n">grad_dict</span> <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span> <span class="k">else</span> <span class="n">obj_dict</span>
-                <span class="n">target_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                <span class="n">obj_dict</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">item_name</span>
+                <span class="c1"># single gradient and inherited object</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">item_name</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+                    <span class="n">target_dict</span> <span class="o">=</span> <span class="n">grad_dict</span> <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span> <span class="k">else</span> <span class="n">obj_dict</span>
+                    <span class="n">target_dict</span><span class="p">[</span><span class="n">item_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">obj_dict</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">item_name</span>
+                <span class="c1"># combined gradients</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">new_grad_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">grad</span><span class="p">:</span>
+                            <span class="n">grad_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">grad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                            <span class="n">new_grad_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                    <span class="n">obj_dict</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_grad_list</span>
         <span class="k">return</span> <span class="n">obj_dict</span><span class="p">,</span> <span class="n">grad_dict</span>
 
 <div class="viewcode-block" id="DBRecipeLoader.collect_and_sort_data">

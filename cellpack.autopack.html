@@ -1891,6 +1891,15 @@ Dict –&gt; the object data</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_combined_gradient">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolve_combined_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prep_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.resolve_combined_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_combined_gradient" title="Link to this definition">¶</a></dt>
+<dd><p>When the gradients are combined, fetch and replace gradient data in a list.
+key –&gt; the key in the object data that we want to modify its value
+obj_data –&gt; the object data that contains the gradient list
+prep_data –&gt; the data that contains the gradients (raw data or path) we want to fetch</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_db_regions">
 <span class="sig-name descname"><span class="pre">resolve_db_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/DBRecipeHandler.html#CompositionDoc.resolve_db_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_db_regions" title="Link to this definition">¶</a></dt>
 <dd><p>Recursively resolves the regions of a composition from db.</p>
@@ -5802,6 +5811,7 @@ destination: str</p>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.get_reference_data()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_in_obj"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.get_reference_in_obj()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.gradient_list_to_dict"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.gradient_list_to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_combined_gradient"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_combined_gradient()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_db_regions"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_db_regions()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_local_regions"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_local_regions()</span></code></a></li>
 <li><a class="reference internal" href="#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_object_data"><code class="docutils literal notranslate"><span class="pre">CompositionDoc.resolve_object_data()</span></code></a></li>
