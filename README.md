@@ -109,14 +109,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 5. To run packings in the container, run: `docker run -v ~/.aws:/root/.aws -e recipe=examples/recipes/v2/one_sphere.json -e config=examples/packing-configs/run.json [CONTAINER-NAME]`
 6. Verify that the packing results are saved in the `cellpack-results` S3 bucket. You should see a botocore logging message indicating that the credentials were successfully loaded.
 
-### Docker
-
-1. Install [docker](https://docs.docker.com/v17.09/engine/installation/)
-2. Clone the repository locally, if you haven't already: `git clone https://github.com/mesoscope/cellpack.git`
-3. Ensure that you have valid AWS access key and secret to access the `cellpack-results` S3 bucket, usually stored in a `~/.aws/credentials` file. 
-4. To build the container, run: `docker build -t [CONTAINER-NAME] .`
-5. To run packings in the container, run: `docker run -v ~/.aws:/root/.aws -e recipe=examples/recipes/v2/one_sphere.json -e config=examples/packing-configs/run.json [CONTAINER-NAME]`
-6. Verify that the packing results are saved in the `cellpack-results` S3 bucket. You should see a botocore logging message indicating that the credentials were successfully loaded.
-
 **MIT license**
 
