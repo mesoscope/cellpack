@@ -89,15 +89,23 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
      * Create a Firebase project in test mode with your google account, select `firebase_admin` as the SDK. [Firebase Firestore tutorial](https://firebase.google.com/docs/firestore)
      * Generate a new private key by navigating to "Project settings">"Service account" in the project's dashboard.
    * For staging database:
-       * Reach out to the code owner for the necessary credentials.
-       * Set up an `.env` file as instructed.
+       * Obtain credentials:
+          * Reach out to the code owner for the necessary credentials.
+       * Configure the environment variables:
+          * Create a `.env` file in the root directory.
+          * Populate the `.env` file with the following variables:
+           ```
+               FIREBASE_TOKEN=KEY_JSON_FILE["private_key"]
+               FIREBASE_EMAIL=KEY_JSON_FILE["client_email"]
+           ```
+          note: `KEY_JSON_FILE` is the content of the private key JSON file generated in the staging Firebase.
 
 ### Docker
 
 1. Install [docker](https://docs.docker.com/v17.09/engine/installation/)
 2. Clone the repository locally, if you haven't already: `git clone https://github.com/mesoscope/cellpack.git`
 3. Ensure that you have valid AWS access key and secret to access the `cellpack-results` S3 bucket, usually stored in a `~/.aws/credentials` file. 
-4. To build the container, run: `docker build -t [CONTAINER-NAME] .`
+4. To build the container, run: `docker build -t [CONTAINER-NAME] .` Rebuild the container if new files are added or changes are made to the codebase.
 5. To run packings in the container, run: `docker run -v ~/.aws:/root/.aws -e recipe=examples/recipes/v2/one_sphere.json -e config=examples/packing-configs/run.json [CONTAINER-NAME]`
 6. Verify that the packing results are saved in the `cellpack-results` S3 bucket. You should see a botocore logging message indicating that the credentials were successfully loaded.
 
