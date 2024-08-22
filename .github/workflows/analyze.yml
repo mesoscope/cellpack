@@ -1,10 +1,10 @@
 name: Analyze
 
-on: 
-  push:
-    branches:
-      - main
-  pull_request:
+on:
+    push:
+        branches:
+            - main
+    pull_request:
 
 jobs:
     Analyze:
@@ -45,7 +45,15 @@ jobs:
         needs: [Analyze]
         steps:
             - uses: actions/checkout@v4
+            - name: Configure AWS credentials for dependabot
+              if: ${{ github.actor == 'dependabot[bot]' }}
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.DEPENDABOT_AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.DEPENDABOT_AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-west-2
             - name: Configure AWS credentials
+              if: ${{ github.actor != 'dependabot[bot]' }}
               uses: aws-actions/configure-aws-credentials@v4
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
