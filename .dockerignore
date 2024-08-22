@@ -1,0 +1,37 @@
+# Distribution / packaging
+build/
+develop-eggs/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+__pycache__
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+*.cover
+cellpack/tests/
+cellpack/bin/tests/
+
+# Documentation
+docs/
+
+# virtualenv
+.venv
+venv/
+ENV/
+
+# Generated data
+out/
+*.simularium
+**/converted/*
+data/
+results/
+
+# git
+.github/
