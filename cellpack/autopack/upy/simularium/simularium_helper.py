@@ -1403,6 +1403,7 @@ class simulariumHelper(hostHelper.Helper):
         )
         if file_name and url:
             simulariumHelper.store_metadata(file_name, url, db="firebase")
+            print(f"View in Simularium: https://simularium.allencell.org/viewer?trajUrl={url}")
             if open_results_in_browser:
                 simulariumHelper.open_in_simularium(url)
 
@@ -1411,7 +1412,7 @@ class simulariumHelper(hostHelper.Helper):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
             initialized_handler = handler(
-                bucket_name="cellpack-results",
+                bucket_name="cellpack-demo",
                 sub_folder_name="simularium",
                 region_name="us-west-2",
             )
