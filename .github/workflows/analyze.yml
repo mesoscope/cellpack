@@ -63,7 +63,15 @@ jobs:
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
             - uses: iterative/setup-cml@v1
-            - name: Update comment
+            - name: Update comment for dependabot
+              if: ${{ github.actor == 'dependabot[bot]' }}
+              env:
+                  REPO_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
+              run: |
+                  cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --target=pr
+                  cat ./results/analysis_report.md
+            - name: Update comment for PR
+              if: ${{ github.actor != 'dependabot[bot]' }}
               env:
                   REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
