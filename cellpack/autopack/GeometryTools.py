@@ -165,12 +165,7 @@ class GeometryTools:
 
     def region_2(self, rho, d):
         # require scipy
-        i4 = (
-            d**3
-            / 6.0
-            * (rho**2 / d**2 - 1)
-            * (pi / 4 - self.region_1_2_theta(rho, d))
-        )
+        i4 = d**3 / 6.0 * (rho**2 / d**2 - 1) * (pi / 4 - self.region_1_2_theta(rho, d))
         i3 = (
             d**2
             * rho
