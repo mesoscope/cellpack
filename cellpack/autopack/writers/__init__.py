@@ -292,10 +292,10 @@ class Writer(object):
                         "include": ing_filename,
                     }
                 else:
-                    env.jsondic["cytoplasme"]["ingredients"][
-                        ingr.composition_name
-                    ] = io_ingr.ingrJsonNode(
-                        ingr, result=result, kwds=kwds, transpose=transpose
+                    env.jsondic["cytoplasme"]["ingredients"][ingr.composition_name] = (
+                        io_ingr.ingrJsonNode(
+                            ingr, result=result, kwds=kwds, transpose=transpose
+                        )
                     )  # {"name":ingr.composition_name}
                     env.jsondic["cytoplasme"]["ingredients"][ingr.composition_name][
                         "name"
