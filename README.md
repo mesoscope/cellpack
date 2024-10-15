@@ -1,28 +1,73 @@
-# cellPack
+# cellPACK
 
 [![Continuous Integration](https://github.com/mesoscope/cellpack/actions/workflows/ci.yml/badge.svg)](https://github.com/mesoscope/cellpack/actions/workflows/ci.yml)
 [![Documentation](https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg)](https://mesoscope.github.io/cellpack/)
 [![Code Coverage](https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg)](https://codecov.io/gh/mesoscope/cellpack)
 
-algorithm to pack molecular recipes
+An algorithm to pack molecular recipes
 
-### Prerequisite 
-1. Install Conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
+## Installation
 
-### Setup 
-1. create a virtual env: `conda create -n autopack python=3.9`
-2. `conda activate autopack`
-3. `pip install -e .[dev]`
+### Install pyenv
+1. Install pyenv: Follow the `pyenv` installation instructions [here](https://github.com/pyenv/pyenv#installation). There are just two steps.
+1.  Download and install `pyenv`
+2. Add `pyenv` functions to your shell configuration.
 
-### Run pack code
+### Install python 3.9
+Navigate to the `cellPACK` folder and install the required python version.
+```bash
+pyenv install $(cat .python-version)
+```
+The `.python-version` file in this repo tells `pyenv` to load Python 3.9 when you are inside the `cellPACK` directory.
+Check that this is working with `which python && python --version`.
+
+### Install `pdm`
+Detailed installation instructions are available [here](https://pdm.fming.dev/latest/#installation).
+For Linux or MacOS, install `pdm` for your user as follows.
+
+1. Download the installer
+
+```bash
+curl -sSLO https://pdm.fming.dev/install-pdm.py
+```
+
+2. Validate that the installer has not been tampered with
+
+```bash
+curl -sSL https://pdm.fming.dev/install-pdm.py.sha256 | shasum -a 256 -c -
+```
+
+3. Using Python 3.9, run the installer.
+
+```bash
+python install-pdm.py
+```
+> [!WARNING]
+> With this installation method `pdm` will be tied to the exact python version used to install it. If you installed with Python 3.9.13, for example, and you later transition to Python 3.9.17, do not uninstall Python 3.9.13.
+
+`pdm` will be installed into `$HOME/.local/bin`. Check that your version is at least 2.10.
+```bash
+$ pdm --version
+PDM, version 2.10.4
+```
+
+### Install the project dependencies
+From the `cellPACK` directory, use `pdm` to install the dependencies.
+```bash
+pdm sync -d
+```
+
+This will create a virtual environment at `cellPACK/.venv`. You can activate it with `eval $(pdm venv activate)` or `source .venv/bin/activate`.
+
+
+## Run pack code
 1. example pack v1 recipe : `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json -c examples/packing-configs/run.json`
 2. example pack v2 recipe :  `pack -r examples/recipes/v2/one_sphere.json -c examples/packing-configs/run.json`
 3. example pack from remote : `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c examples/packing-configs/run.json`
 
-### Run conversion code 
+## Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer
 `convert -r [FULL_PATH_TO_INPUT_RECIPE_FILE] -p [FULL_PATH_TO_PACKING_RESULT] -o [OUTPUT_PATH]`
-## Installation
 
 **Stable Release:** `pip install cellpack`<br>
 **Development Head:** `pip install git+https://github.com/mesoscope/cellpack.git`
