@@ -50,7 +50,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
 ### Contributing cheat sheet
 
-1. `pdm sync -d`
+1. `pip install -e .[dev]`
 
     This will install your package in editable mode with all the required development
     dependencies (i.e. `tox`).
