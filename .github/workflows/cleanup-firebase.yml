@@ -19,4 +19,4 @@ jobs:
                     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
                     FIREBASE_EMAIL: ${{ secrets.FIREBASE_EMAIL }}
                 run: |
-                    python cellpack/bin/cleanup_tasks.py
+                    pdm run python cellpack/bin/cleanup_tasks.py
