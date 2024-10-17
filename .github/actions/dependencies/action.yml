@@ -8,5 +8,6 @@ runs:
     - name: Install dependencies
       shell: bash
       # --only-keep flag in case the environment is restored from a stale cache.
-      run: pdm sync -d --only-keep
-      run: source .venv/bin/activate
+      run: |
+          pdm sync -d --only-keep
+          source .venv/bin/activate
