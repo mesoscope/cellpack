@@ -10,4 +10,3 @@ runs:
       # --only-keep flag in case the environment is restored from a stale cache.
       run: |
           pdm sync -d --only-keep
-          source .venv/bin/activate
