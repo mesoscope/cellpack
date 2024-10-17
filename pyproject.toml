@@ -60,7 +60,7 @@ test = [
     "pytest>=5.4.3",
 ]
 lint = [
-    "black>=19.10b0, <=23.0",
+    "black>=19.10b0, <=24.8.0",
     "flake8-debugger>=3.2.1",
     "flake8>=3.8.3, <=6.0.0",
 ]
@@ -78,6 +78,9 @@ dev = [
 
 [tool.pdm.scripts]
 requirements = "pdm export -f requirements --without-hashes -o"
+
+[tool.black]
+line-length = 88
 
 [build-system]
 requires = ["pdm-backend"]

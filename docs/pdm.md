@@ -27,4 +27,4 @@ pdm update {package-name}
 
 6. Make a pull request on Github with your changes and (after approval) merge it.
 
-7. A Github action will make a second pull request [like this one](https://github.com/aics-int/nuc-morph-analysis/pull/124) to update all three `requirements/{platform}/requirements.txt` files based on your changes. This second PR must be merged before any further changes are made to `pdm.lock`.
+7. A Github action will make a second pull request to update all three `requirements/{platform}/requirements.txt` files based on your changes. This second PR must be merged before any further changes are made to `pdm.lock`.
