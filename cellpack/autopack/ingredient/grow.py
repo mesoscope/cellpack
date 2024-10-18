@@ -1659,7 +1659,7 @@ class ActinIngredient(GrowIngredient):
         meshObject=None,
         orientation=(1, 0, 0),
         count=0,
-        **kw
+        **kw,
     ):
         GrowIngredient.__init__(
             self,
@@ -1687,7 +1687,7 @@ class ActinIngredient(GrowIngredient):
             orientation,
             count,
             type,
-            **kw
+            **kw,
         )
         if name is None:
             name = "Actine_%s_%f" % (str(radii), molarity)

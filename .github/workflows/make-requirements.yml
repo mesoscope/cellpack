@@ -1,0 +1,105 @@
+name: Make requirements files
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "pdm.lock"
+
+jobs:
+  make-requirements:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/pdm
+
+      - name: Generate requirements.txt
+        shell: bash
+        run: |
+          case "${{ matrix.os }}" in
+              "ubuntu-latest")
+                  export PLATFORM="linux"
+                  ;;
+              "macOS-latest")
+                  export PLATFORM="macos"
+                  ;;
+              "windows-latest")
+                  export PLATFORM="windows"
+                  ;;
+          esac
+
+          rm -rf requirements/*
+          mkdir -p requirements/$PLATFORM
+          pdm requirements requirements/$PLATFORM/requirements.txt
+
+      - name: Get platform variable
+        id: platform
+        shell: bash
+        run: |
+          case "${{ matrix.os }}" in
+              "ubuntu-latest")
+                  echo "::set-output name=platform::linux"
+                  ;;
+              "macOS-latest")
+                  echo "::set-output name=platform::macos"
+                  ;;
+              "windows-latest")
+                  echo "::set-output name=platform::windows"
+                  ;;
+          esac
+
+      - name: Upload requirements files
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.platform.outputs.platform }}-requirements
+          path: requirements/${{ steps.platform.outputs.platform }}
+
+  open-PR:
+    needs: [make-requirements]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download linux requirements files
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-requirements
+          path: requirements/linux
+
+      - name: Download windows requirements files
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-requirements
+          path: requirements/windows
+
+      - name: Download macOS requirements files
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-requirements
+          path: requirements/macos
+
+      - name: Clean-up CRLF
+        shell: bash
+        run: find requirements -type f -exec sed -i 's/\r//g' {} \;
+
+      - name: Get timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d_%H-%M')"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          base: main
+          title: admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}
+          body: Updating requirements.txt.
+
+            Due to some [challenges](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs),
+            with getting this PR to trigger the tests, please manually close and re-open this PR.
+          branch: admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}
+          commit-message: Updating requirements.txt after change to `pdm.lock` was pushed to `main`
+          delete-branch: true

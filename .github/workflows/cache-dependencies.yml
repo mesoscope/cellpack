@@ -1,0 +1,18 @@
+# The purpose of this workflow is to get more cache hits when other workflows build dependencies.
+# Github actions do not share caches between branches, except that all branches can pull results
+# from the default (main) branch. Therefore, this workflow runs on the main branch to keep the
+# latest dependencies cached for other branches to use.
+# Branches that change the dependencies will still get cache misses.
+name: Build and cache dependencies on main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/dependencies
