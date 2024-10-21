@@ -201,13 +201,13 @@ class CompositionDoc(DataDoc):
                 if not DataDoc.is_key(key_or_dict):
                     obj_item = local_data["regions"][region_name][index]["object"]
                     if DataDoc.is_key(obj_item):
-                        local_data["regions"][region_name][index][
-                            "object"
-                        ] = prep_recipe_data["objects"][obj_item]
+                        local_data["regions"][region_name][index]["object"] = (
+                            prep_recipe_data["objects"][obj_item]
+                        )
                     else:
-                        local_data["regions"][region_name][index][
-                            "object"
-                        ] = prep_recipe_data["objects"][obj_item["name"]]
+                        local_data["regions"][region_name][index]["object"] = (
+                            prep_recipe_data["objects"][obj_item["name"]]
+                        )
                     # replace reference in obj with actual data
                     obj_data = local_data["regions"][region_name][index]["object"]
                     self.resolve_object_data(obj_data, prep_recipe_data)
@@ -362,9 +362,9 @@ class ObjectDoc(DataDoc):
                 and doc_value["packing"] is not None
             ):
                 position_value = doc_value["packing"]["positions"]
-                convert_doc["representations"]["packing"][
-                    "positions"
-                ] = ObjectDoc.convert_positions_in_representation(position_value)
+                convert_doc["representations"]["packing"]["positions"] = (
+                    ObjectDoc.convert_positions_in_representation(position_value)
+                )
         return convert_doc
 
     @staticmethod

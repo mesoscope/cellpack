@@ -755,7 +755,10 @@ class Analysis:
                 )
                 # plot the sphere
                 if ingr.use_rbsphere:
-                    (ext_recipe, pts,) = ingr.getInterpolatedSphere(
+                    (
+                        ext_recipe,
+                        pts,
+                    ) = ingr.getInterpolatedSphere(
                         seed_ingredient_positions[-i - 1],
                         seed_ingredient_positions[-i],
                     )
@@ -857,9 +860,9 @@ class Analysis:
                 ingr.name,
                 ingr2.name,
             ):
-                pairwise_distance_dict[seed_index][
-                    f"{ingr.name}_{ingr2.name}"
-                ] = self.env.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
+                pairwise_distance_dict[seed_index][f"{ingr.name}_{ingr2.name}"] = (
+                    self.env.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
+                )
 
         return pairwise_distance_dict
 
