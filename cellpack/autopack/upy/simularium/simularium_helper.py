@@ -1399,6 +1399,7 @@ class simulariumHelper(hostHelper.Helper):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
+        print("job_id", job_id)
         file_name, url = simulariumHelper.store_result_file(
             simularium_file, storage="aws"
         )
