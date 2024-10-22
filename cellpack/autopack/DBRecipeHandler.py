@@ -644,7 +644,7 @@ class DBUploader(object):
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
 
-    def upload_result_metadata(self, file_name, url):
+    def upload_result_metadata(self, file_name, url, job_id=None):
         """
         Upload the metadata of the result file to the database.
         """
@@ -654,7 +654,7 @@ class DBUploader(object):
             self.db.update_or_create(
                 "results",
                 file_name,
-                {"user": username, "timestamp": timestamp, "url": url},
+                {"user": username, "timestamp": timestamp, "url": url, "batch_job_id": job_id},
             )
 
 

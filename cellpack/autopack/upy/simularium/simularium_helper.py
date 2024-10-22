@@ -1398,11 +1398,14 @@ class simulariumHelper(hostHelper.Helper):
     def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
+        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
+        if job_id:
+            print(f"Batch Job ID: {job_id}")
         file_name, url = simulariumHelper.store_result_file(
             simularium_file, storage="aws"
         )
         if file_name and url:
-            simulariumHelper.store_metadata(file_name, url, db="firebase")
+            simulariumHelper.store_metadata(file_name, url, db="firebase", job_id=job_id)
             if open_results_in_browser:
                 simulariumHelper.open_in_simularium(url)
 
@@ -1424,7 +1427,7 @@ class simulariumHelper(hostHelper.Helper):
         return file_name, url
 
     @staticmethod
-    def store_metadata(file_name, url, db=None):
+    def store_metadata(file_name, url, db=None, job_id=None):
         if db == "firebase":
             handler = DATABASE_IDS.handlers().get(db)
             initialized_db = handler(
@@ -1432,7 +1435,7 @@ class simulariumHelper(hostHelper.Helper):
             )  # default to staging for metadata uploads
             if initialized_db._initialized:
                 db_uploader = DBUploader(initialized_db)
-                db_uploader.upload_result_metadata(file_name, url)
+                db_uploader.upload_result_metadata(file_name, url, job_id)
             else:
                 db_maintainer = DBMaintenance(initialized_db)
                 print(
