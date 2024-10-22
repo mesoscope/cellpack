@@ -1405,7 +1405,9 @@ class simulariumHelper(hostHelper.Helper):
             simularium_file, storage="aws"
         )
         if file_name and url:
-            simulariumHelper.store_metadata(file_name, url, db="firebase", job_id=job_id)
+            simulariumHelper.store_metadata(
+                file_name, url, db="firebase", job_id=job_id
+            )
             if open_results_in_browser:
                 simulariumHelper.open_in_simularium(url)
 

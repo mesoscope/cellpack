@@ -157,7 +157,9 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name = autopack.load_file(self.file_path, cache="recipes", use_docker=use_docker)
+        new_values, database_name = autopack.load_file(
+            self.file_path, cache="recipes", use_docker=use_docker
+        )
         if database_name == "firebase":
             objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
                 new_values["composition"]
@@ -252,9 +254,9 @@ class RecipeLoader(object):
                         ):
                             node = {"include": compartment["from"]}
                             sub_recipe = self._request_sub_recipe(inode=node)
-                            recipe_data["compartments"][
-                                compartment["from"]
-                            ] = sub_recipe["compartments"]
+                            recipe_data["compartments"][compartment["from"]] = (
+                                sub_recipe["compartments"]
+                            )
                         continue
                     compartment_dict = recipe_data["compartments"][cname]
                     rep = None
