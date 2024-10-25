@@ -1402,7 +1402,7 @@ class simulariumHelper(hostHelper.Helper):
         if job_id:
             print(f"Batch Job ID: {job_id}")
         file_name, url = simulariumHelper.store_result_file(
-            simularium_file, storage="aws"
+            simularium_file, storage="aws", batch_job_id=job_id
         )
         if file_name and url:
             simulariumHelper.store_metadata(
@@ -1412,14 +1412,21 @@ class simulariumHelper(hostHelper.Helper):
                 simulariumHelper.open_in_simularium(url)
 
     @staticmethod
-    def store_result_file(file_path, storage=None):
+    def store_result_file(file_path, storage=None, batch_job_id=None):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
-            initialized_handler = handler(
-                bucket_name="cellpack-results",
-                sub_folder_name="simularium",
-                region_name="us-west-2",
-            )
+            if batch_job_id:  # save results to batch job bucket
+                initialized_handler = handler(
+                    bucket_name="cellpack-demo",
+                    sub_folder_name="simularium",
+                    region_name="us-west-2",
+                )
+            else:
+                initialized_handler = handler(
+                    bucket_name="cellpack-results",
+                    sub_folder_name="simularium",
+                    region_name="us-west-2",
+                )
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
             if not file_name or not url:
                 db_maintainer = DBMaintenance(initialized_handler)
