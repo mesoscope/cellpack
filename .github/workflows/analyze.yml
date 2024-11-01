@@ -15,7 +15,7 @@ jobs:
                 python-version: [3.9]
                 os: [ubuntu-latest]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v4.2.2
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v5
               with:
@@ -44,7 +44,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [Analyze]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v4.2.2
             - name: Configure AWS credentials for dependabot
               if: ${{ github.actor == 'dependabot[bot]' }}
               uses: aws-actions/configure-aws-credentials@v4
