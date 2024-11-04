@@ -1399,8 +1399,6 @@ class simulariumHelper(hostHelper.Helper):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
-        if job_id:
-            print(f"Batch Job ID: {job_id}")
         file_name, url = simulariumHelper.store_result_file(
             simularium_file, storage="aws", batch_job_id=job_id
         )
@@ -1415,7 +1413,9 @@ class simulariumHelper(hostHelper.Helper):
     def store_result_file(file_path, storage=None, batch_job_id=None):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
-            if batch_job_id:  # save results to batch job bucket
+            # if batch_job_id is not None, then we are in a batch job and should use the temp bucket
+            # TODO: use cellpack-results bucket for batch jobs once we have the correct permissions
+            if batch_job_id:
                 initialized_handler = handler(
                     bucket_name="cellpack-demo",
                     sub_folder_name="simularium",
