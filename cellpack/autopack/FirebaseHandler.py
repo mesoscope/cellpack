@@ -181,6 +181,11 @@ class FirebaseHandler(object):
             return None
         return doc[field]
 
+    def get_doc_by_field(self, collection, field, value):
+        docs = self.db.collection(collection).where(field, "==", value).stream()
+        if docs:
+            return list(docs)
+
     # Update methods
     def update_doc(self, collection, id, data):
         doc_ref = self.db.collection(collection).document(id)

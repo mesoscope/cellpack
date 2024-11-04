@@ -804,6 +804,20 @@ class DBRecipeLoader(object):
             recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
         return recipe_data
 
+    def get_result_url_for_batch_job(self, job_id):
+        """
+        Get the URL of the result file for a batch job from metadata stored in db.
+        """
+        try:
+            result_metadata = self.db.get_doc_by_field(
+                "results", "batch_job_id", job_id
+            )
+            if result_metadata and len(result_metadata) == 1:
+                result_data = self.db.doc_to_dict(result_metadata[0])
+                return result_data["url"]
+        except Exception as e:
+            return e
+
 
 class DBMaintenance(object):
     """
