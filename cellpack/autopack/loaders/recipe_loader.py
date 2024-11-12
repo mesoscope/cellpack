@@ -157,7 +157,9 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name = autopack.load_file(self.file_path, cache="recipes", use_docker=use_docker)
+        new_values, database_name = autopack.load_file(
+            self.file_path, cache="recipes", use_docker=use_docker
+        )
         if database_name == "firebase":
             objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
                 new_values["composition"]
