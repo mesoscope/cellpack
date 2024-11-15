@@ -1398,23 +1398,35 @@ class simulariumHelper(hostHelper.Helper):
     def post_and_open_file(self, file_name, open_results_in_browser=True):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
+        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
         file_name, url = simulariumHelper.store_result_file(
-            simularium_file, storage="aws"
+            simularium_file, storage="aws", batch_job_id=job_id
         )
         if file_name and url:
-            simulariumHelper.store_metadata(file_name, url, db="firebase")
+            simulariumHelper.store_metadata(
+                file_name, url, db="firebase", job_id=job_id
+            )
             if open_results_in_browser:
                 simulariumHelper.open_in_simularium(url)
 
     @staticmethod
-    def store_result_file(file_path, storage=None):
+    def store_result_file(file_path, storage=None, batch_job_id=None):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
-            initialized_handler = handler(
-                bucket_name="cellpack-results",
-                sub_folder_name="simularium",
-                region_name="us-west-2",
-            )
+            # if batch_job_id is not None, then we are in a batch job and should use the temp bucket
+            # TODO: use cellpack-results bucket for batch jobs once we have the correct permissions
+            if batch_job_id:
+                initialized_handler = handler(
+                    bucket_name="cellpack-demo",
+                    sub_folder_name="simularium",
+                    region_name="us-west-2",
+                )
+            else:
+                initialized_handler = handler(
+                    bucket_name="cellpack-results",
+                    sub_folder_name="simularium",
+                    region_name="us-west-2",
+                )
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
             if not file_name or not url:
                 db_maintainer = DBMaintenance(initialized_handler)
@@ -1424,7 +1436,7 @@ class simulariumHelper(hostHelper.Helper):
         return file_name, url
 
     @staticmethod
-    def store_metadata(file_name, url, db=None):
+    def store_metadata(file_name, url, db=None, job_id=None):
         if db == "firebase":
             handler = DATABASE_IDS.handlers().get(db)
             initialized_db = handler(
@@ -1432,7 +1444,7 @@ class simulariumHelper(hostHelper.Helper):
             )  # default to staging for metadata uploads
             if initialized_db._initialized:
                 db_uploader = DBUploader(initialized_db)
-                db_uploader.upload_result_metadata(file_name, url)
+                db_uploader.upload_result_metadata(file_name, url, job_id)
             else:
                 db_maintainer = DBMaintenance(initialized_db)
                 print(
