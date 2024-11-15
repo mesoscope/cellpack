@@ -1,15 +1,20 @@
 #!/bin/bash -e
 
-# if [ -z "$recipe" ]; then
-#     echo "Required recipe parameter is missing, please include recipe in Docker run script, ie: -e r=path/to/recipe"
-#     exit 
-# fi
-
-# if [ -z "$config" ]; then
-#     echo "Required config parameter is missing, please include packing config in Docker run script, ie: -e c=path/to/config"
-#     exit 
-# fi
+if [ -z "$recipe" ]; then
+    echo "Required recipe parameter is missing, please include recipe in Docker run script, ie: -e recipe=path/to/recipe"
+    exit;
+else
+    echo "recipe passed in: '$recipe'"
+fi
 
 cd /cellpack
-# pack -r ${recipe} -c ${config}
-pack -r examples/recipes/v2/one_sphere.json -c examples/packing-configs/run.json
+
+if [ -z "$config" ]; then
+    echo "Config parameter not included, using default value"
+    pack -r $recipe -d
+    exit;
+else
+    echo "config passed in: '$config'"
+fi
+
+pack -r $recipe -c $config -d
