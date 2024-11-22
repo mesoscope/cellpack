@@ -49,6 +49,7 @@ analyze = "cellpack.bin.analyze:main"
 convert = "cellpack.bin.simularium_converter:main"
 pack = "cellpack.bin.pack:main"
 upload = "cellpack.bin.upload:main"
+clean = "cellpack.bin.clean:main"
 
 [tool.pdm.dev-dependencies]
 setup = [
