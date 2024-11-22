@@ -3,8 +3,9 @@ import os
 import numpy
 import trimesh
 from cellpack import autopack
+from tqdm import tqdm
 
-CHUNK_SIZE = 50000
+CHUNK_SIZE = 10000
 
 
 class MeshStore:
@@ -267,7 +268,10 @@ class MeshStore:
                 return mesh.contains(points)  # TODO: check for memory leak
             else:
                 # chunk the points
-                for i in range(0, len(points), CHUNK_SIZE):
+                for i in tqdm(
+                    range(0, len(points), CHUNK_SIZE),
+                    desc="Checking inside outside chunk",
+                ):
                     chunk = points[i : i + CHUNK_SIZE]
                     inside[i : i + CHUNK_SIZE] = mesh.contains(chunk)
                 return inside
