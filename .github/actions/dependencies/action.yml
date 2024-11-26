@@ -1,0 +1,12 @@
+name: PDM & Dependencies
+description: Install PDM and dependencies
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/pdm
+
+    - name: Install dependencies
+      shell: bash
+      # --only-keep flag in case the environment is restored from a stale cache.
+      run: |
+          pdm sync -d --only-keep

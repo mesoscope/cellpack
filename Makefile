@@ -33,6 +33,11 @@ clean:  ## clean all build, python, and testing files
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
+	rm -fr .tox/
+	rm -fr .coverage
+	rm -fr coverage.xml
+	rm -fr htmlcov/
+	rm -fr .pytest_cache
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -f {} +
 	find . -name '*.pyc' -exec rm -f {} +
@@ -40,11 +45,6 @@ clean:  ## clean all build, python, and testing files
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 	find . -name '*.py.bak' -exec rm -f {} +
-	rm -fr .tox/
-	rm -fr .coverage
-	rm -fr coverage.xml
-	rm -fr htmlcov/
-	rm -fr .pytest_cache
 
 build: ## run tox / run tests and lint
 	tox

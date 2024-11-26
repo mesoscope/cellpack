@@ -793,7 +793,7 @@ class Helper:
         shadow=False,
         center=[0.0, 0.0, 0.0],
         scene=None,
-        **kw
+        **kw,
     ):
         """
         Add a light to the scene
@@ -1651,7 +1651,7 @@ class Helper:
         pos=None,
         font=None,
         lookAt=False,
-        **kw
+        **kw,
     ):
         """
         Create a hostobject of type Text.
@@ -1809,7 +1809,7 @@ class Helper:
         size=[1.0, 1.0, 1.0],
         cornerPoints=None,
         visible=1,
-        **kw
+        **kw,
     ):
         """
         Create a hostobject of type cube.
@@ -1852,7 +1852,7 @@ class Helper:
         cornerPoints=None,
         visible=1,
         mat=None,
-        **kw
+        **kw,
     ):
         """
         Update the given box.
@@ -1958,7 +1958,7 @@ class Helper:
         size=[1.0, 1.0],
         cornerPoints=None,
         visible=1,
-        **kw
+        **kw,
     ):
         """
         Create a hostobject of type cube.
@@ -2577,7 +2577,7 @@ class Helper:
         color=[
             [1, 0, 0],
         ],
-        **kw
+        **kw,
     ):
         """
         Function that generate a Polygon object from the given vertices, face and normal.
@@ -2644,7 +2644,7 @@ class Helper:
         boneParent=None,
         name=None,
         editMode=True,
-        **kw
+        **kw,
     ):
         """
         Add one bone to an armature.
@@ -2746,7 +2746,7 @@ class Helper:
         radius=None,
         color=None,
         hostmatrice=None,
-        **kw
+        **kw,
     ):
         """
         Create a particle system along the given coordinates
@@ -4293,7 +4293,7 @@ class Helper:
         dynamicsAngularDamp=0.0,
         massClamp=0.0,
         rotMassClamp=1.0,
-        **kw
+        **kw,
     ):
         """
         Set the curren objec as a rigid body
@@ -4326,7 +4326,7 @@ class Helper:
         rlength=0.0,
         stifness=1.0,
         damping=1.0,
-        **kw
+        **kw,
     ):
         """
         Update the spring control
@@ -4348,7 +4348,7 @@ class Helper:
         stifness=1.0,
         damping=1.0,
         parent=None,
-        **kw
+        **kw,
     ):
         """
         Create a sprin between two physics objects
@@ -4386,7 +4386,7 @@ class Helper:
         offset=1.0,
         octaves=6,
         gain=1.0,
-        **kw
+        **kw,
     ):
         # multi_fractal(position, H, lacunarity, octaves, noise_basis=noise.types.STDPERLIN)
         # NotePlease use InitFbm() before you use one of the following noise types:

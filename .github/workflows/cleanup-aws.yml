@@ -1,4 +1,4 @@
-name: cleanup
+name: Cleanup AWS S3 Bucket
 
 on: 
   pull_request:
