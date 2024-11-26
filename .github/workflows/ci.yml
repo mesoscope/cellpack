@@ -30,7 +30,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.2
     - uses: ./.github/actions/dependencies
     - name: Test with pytest
       run: |
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, 'Bump version') }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.2
     - uses: ./.github/actions/dependencies
     - name: Lint with flake8
       run: |
@@ -62,7 +62,7 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.2
     - uses: ./.github/actions/dependencies
     - name: Publish to PyPI
       run: pdm publish
