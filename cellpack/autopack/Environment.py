@@ -853,6 +853,10 @@ class Environment(CompartmentList):
         comp_objs = []
         mesh_store_objs = []
 
+        grid_objs = []
+        comp_objs = []
+        mesh_store_objs = []
+
         with open(grid_file_path, "rb") as file_obj:
             while True:
                 try:
