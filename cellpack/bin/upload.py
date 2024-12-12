@@ -29,6 +29,7 @@ def get_recipe_metadata(loader):
 
 def upload(
     recipe_path,
+    upload_raw_data=False,
     db_id=DATABASE_IDS.FIREBASE,
 ):
     """
@@ -44,7 +45,10 @@ def upload(
             recipe_full_data = recipe_loader._read(resolve_inheritance=False)
             recipe_meta_data = get_recipe_metadata(recipe_loader)
             recipe_db_handler = DBUploader(db_handler)
-            recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
+            if upload_raw_data:
+                recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data, upload_raw_data=True, original_location=recipe_path)
+            else:
+                recipe_db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
         else:
             db_maintainer = DBMaintenance(db_handler)
             sys.exit(
