@@ -70,7 +70,6 @@ from cellpack.autopack.utils import (
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
-    load_object_from_pickle,
 )
 from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
@@ -847,31 +846,51 @@ class Environment(CompartmentList):
         """
         print(f"Loading grid from {grid_file_path}")
 
+        grid_objs = []
+        comp_objs = []
+        mesh_store_objs = []
+
         with open(grid_file_path, "rb") as file_obj:
-            # load env grid
-            grid_obj = load_object_from_pickle(file_obj)
+            while True:
+                try:
+                    obj = pickle.load(file_obj)
+                    if isinstance(obj, BaseGrid):
+                        # load env grid
+                        grid_objs.append(obj)
+                    elif isinstance(obj, Compartment):
+                        # load compartment grids
+                        comp_objs.append(obj)
+                    elif isinstance(obj, MeshStore):
+                        # load mesh store
+                        mesh_store_objs.append(obj)
+                except EOFError:
+                    break
+
+        # setup env grid
+        for grid_obj in grid_objs:
             self.grid = grid_obj
 
-            # load compartment grids
-            for ct, _ in enumerate(self.compartments):
-                comp_obj = load_object_from_pickle(file_obj)
-                for update_attr in self.get_attributes_to_update():
-                    setattr(
-                        self.compartments[ct],
-                        update_attr,
-                        getattr(comp_obj, update_attr),
-                    )
+        # setup compartment grids
+        for ct, _ in enumerate(self.compartments):
+            for comp_obj in comp_objs:
+                if hasattr(comp_obj, "name") and comp_obj.name == self.compartments[ct].name:
+                    for update_attr in self.get_attributes_to_update():
+                        setattr(
+                            self.compartments[ct],
+                            update_attr,
+                            getattr(comp_obj, update_attr),
+                        )
 
-            # load mesh store
-            mesh_store_obj = load_object_from_pickle(file_obj)
+        # setup mesh store
+        for mesh_store_obj in mesh_store_objs:
             self.mesh_store = mesh_store_obj
 
-            # clear the triangles_tree cache
-            for _, geom in self.mesh_store.scene.geometry.items():
-                geom._cache.delete("triangles_tree")
+        # clear the triangles_tree cache
+        for _, geom in self.mesh_store.scene.geometry.items():
+            geom._cache.delete("triangles_tree")
 
-            # reset grid
-            self.grid.reset()
+        # reset grid
+        self.grid.reset()
 
     def save_grids_to_pickle(self, grid_file_path):
         """
