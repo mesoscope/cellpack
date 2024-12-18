@@ -630,14 +630,20 @@ class DBUploader(object):
                     )
         return recipe_to_save
 
-    def upload_recipe(self, recipe_meta_data, recipe_data, upload_raw_data=False, original_location=None):
+    def upload_recipe(
+        self,
+        recipe_meta_data,
+        recipe_data,
+        upload_raw_data=False,
+        original_location=None,
+    ):
         """
         After all other collections are checked or uploaded, upload the recipe with references into db
         """
         if upload_raw_data:
             recipe_data["original_location"] = original_location
             self.upload_data("available_recipes", recipe_data)
-            return 
+            return
         recipe_id = self._get_recipe_id(recipe_data)
         # if the recipe is already exists in db, just return
         recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
@@ -647,6 +653,14 @@ class DBUploader(object):
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
+
+    def upload_config(self, config_data, original_location):
+        """
+        Upload the config data to the database.
+        """
+        config_data["original_location"] = original_location
+        self.upload_data("configs", config_data)
+        return
 
     def upload_result_metadata(self, file_name, url, job_id=None):
         """
