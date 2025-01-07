@@ -642,7 +642,7 @@ class DBUploader(object):
         """
         if upload_raw_data:
             recipe_data["original_location"] = original_location
-            self.upload_data("available_recipes", recipe_data)
+            self.upload_data("example_recipes", recipe_data)
             return
         recipe_id = self._get_recipe_id(recipe_data)
         # if the recipe is already exists in db, just return
