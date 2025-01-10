@@ -83,6 +83,16 @@ requirements = "pdm export -f requirements --without-hashes -o"
 [tool.black]
 line-length = 88
 
+[tool.flake8]
+include = "**/*.py"
+ignore = 
+    E203
+    E402
+    E501
+    W291
+    W503
+max-line-length = 88
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
