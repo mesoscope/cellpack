@@ -6,7 +6,7 @@ __author__ = "Megan Riel-Mehan"
 __email__ = "meganr@alleninstitute.org"
 # Do not edit this string manually, always use bumpversion
 # Details in CONTRIBUTING.md
-__version__ = "1.0.8"
+__version__ = "1.1.0"
 
 from .autopack.loaders.recipe_loader import RecipeLoader  # noqa: F401
 
