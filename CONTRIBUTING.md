@@ -56,8 +56,7 @@ Make sure all your changes are committed.
 Then run:
 
 ```bash
-bump2version patch # possible: major / minor / patch
-git push
+bumpver update --patch # possible: major / minor / patch
 git push --tags
 ```
 
