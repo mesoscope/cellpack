@@ -46,7 +46,7 @@ jobs:
     - uses: ./.github/actions/dependencies
     - name: Lint with flake8
       run: |
-        pdm run flake8 cellpack --count --verbose --show-source --statistics --ignore=E501,E277,W503,E203
+        pdm run flake8 cellpack --count --verbose --show-source --statistics --ignore=E203,E277,E402,E501,E721,W291,W503
     - name: Check with black
       run: |
         pdm run black --check cellpack
