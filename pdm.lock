@@ -5,7 +5,7 @@
 groups = ["default", "dev", "lint", "setup", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:f71ad7da9bc87e5c16469eeb76b4782c3539933a0bf2fa43f91675d37eb8bdc8"
+content_hash = "sha256:05870db005ca02f1fa841ecaeb85bdde8d793691524185ffa8aca91a1a9baf20"
 
 [[metadata.targets]]
 requires_python = "==3.9.*"
@@ -612,13 +612,13 @@ files = [
 
 [[package]]
 name = "docutils"
-version = "0.21.2"
-requires_python = ">=3.9"
+version = "0.20.1"
+requires_python = ">=3.7"
 summary = "Docutils -- Python Documentation Utilities"
 groups = ["dev"]
 files = [
-    {file = "docutils-0.21.2-py3-none-any.whl", hash = "sha256:dafca5b9e384f0e419294eb4d2ff9fa826435bf15f15b7bd45723e8ad76811b2"},
-    {file = "docutils-0.21.2.tar.gz", hash = "sha256:3a6b18732edf182daa3cd12775bbb338cf5691468f91eeeb109deff6ebfa986f"},
+    {file = "docutils-0.20.1-py3-none-any.whl", hash = "sha256:96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6"},
+    {file = "docutils-0.20.1.tar.gz", hash = "sha256:f08a4e276c3a1583a86dce3e34aba3fe04d02bba2dd51ed16106244e8a923e3b"},
 ]
 
 [[package]]

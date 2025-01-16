@@ -49,20 +49,7 @@ pack = "cellpack.bin.pack:main"
 upload = "cellpack.bin.upload:main"
 clean = "cellpack.bin.clean:main"
 
-[tool.pdm.dev-dependencies]
-setup = [
-    "pytest-runner>=6.0.1",
-]
-test = [
-    "pytest-cov>=6.0.0",
-    "pytest-raises>=0.11",
-    "pytest>=8.3.4",
-]
-lint = [
-    "black>=24.10.0",
-    "flake8-debugger>=4.1.2",
-    "flake8>=7.1.1",
-]
+[dependency-groups]
 dev = [
     "Sphinx>=7.4.7",
     "coverage>=7.6.10",
@@ -73,6 +60,15 @@ dev = [
     "wheel>=0.45.1",
     "tox-pdm>=0.7.2",
     "bumpver>=2024.1130",
+    "docutils<0.21,>=0.18.1",
+]
+setup = ["pytest-runner>=6.0.1"]
+test = ["pytest-cov>=6.0.0", "pytest-raises>=0.11", "pytest>=8.3.4"]
+lint = [
+    "black>=24.10.0",
+    "flake8-debugger>=4.1.2",
+    "flake8>=7.1.1",
+    "docutils<0.21,>=0.18.1",
 ]
 
 [tool.pdm.scripts]
