@@ -1,6 +1,6 @@
 [project]
 name = "cellpack"
-version = "1.1.1"
+version = "v1.1.1"
 description = "algorithm to pack molecular recipes"
 keywords = ["cellpack"]
 readme = "README.md"
@@ -122,8 +122,8 @@ commands = [
 ]
 
 [tool.bumpver]
-current_version = "1.1.1"
-version_pattern = "MAJOR.MINOR.PATCH"
+current_version = "v1.1.1"
+version_pattern = "vMAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 tag_message = "{new_version}"
 tag_scope = "default"
