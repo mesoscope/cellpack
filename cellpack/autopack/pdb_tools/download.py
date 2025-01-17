@@ -54,7 +54,7 @@ def pdbDownload(
     ftp = ftplib.FTP()
     ftp.connect(hostname)
     ftp.login()
-
+    print("FILE LIST ", file_list)
     # Remove .pdb extensions from file_list
     for file_index, file in enumerate(file_list):
         try:
@@ -68,8 +68,8 @@ def pdbDownload(
         for file_name in file_list
     ]
 
-    # to_get = ["%s/%s%s%s" % (directory, prefix, f, suffix) for f in file_list]
     to_write = [f"{out}{f}{suffix}" for f in file_list]
+    print("TO WRITE", to_write)
     for i in range(len(to_get)):
         try:
             ftp.retrbinary("RETR %s" % to_get[i], open(to_write[i], "wb").write)

@@ -90,6 +90,7 @@ setup(
     description="algorithm to pack molecular recipes",
     entry_points={
         "console_scripts": [
+            "create_sphere_tree=cellpack.bin.create_pdb_sphere_tree:main",
             "analyze=cellpack.bin.analyze:main",
             "convert=cellpack.bin.simularium_converter:main",
             "upload=cellpack.bin.upload:main",
