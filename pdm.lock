@@ -5,7 +5,7 @@
 groups = ["default", "dev", "lint", "setup", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:05870db005ca02f1fa841ecaeb85bdde8d793691524185ffa8aca91a1a9baf20"
+content_hash = "sha256:f81b25160dd592b2e1afae5cb560b1fb0d0c7704e4a912e7508a435f836dc09c"
 
 [[metadata.targets]]
 requires_python = "==3.9.*"
