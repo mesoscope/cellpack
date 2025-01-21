@@ -1,4 +1,4 @@
-name: cleanup
+name: Cleanup AWS S3 Bucket
 
 on: 
   pull_request:
@@ -9,7 +9,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.2.2
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:

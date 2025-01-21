@@ -60,9 +60,11 @@ class Partners:
                 partner["name"],
                 partner["position"] if "position" in partner else [0, 0, 0],
                 partner["weight"] if "weight" in partner else weight,
-                partner["binding_probability"]
-                if "binding_probability" in partner
-                else 1.0,
+                (
+                    partner["binding_probability"]
+                    if "binding_probability" in partner
+                    else 1.0
+                ),
             )
             self.all_partners.append(partner)
 

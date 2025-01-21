@@ -1523,9 +1523,9 @@ class AutopackViewer:
                         elif self.vi.host == "dejavu":
                             self.orgaToMasterGeom[ingr] = ingr.mesh
                         elif self.vi.host == "softimage":
-                            self.orgaToMasterGeom[
-                                ingr
-                            ] = ingr.mesh  # self.getMasterInstance(polygon)
+                            self.orgaToMasterGeom[ingr] = (
+                                ingr.mesh
+                            )  # self.getMasterInstance(polygon)
                             # polygon already an instance from a different object\
 
                     j += 1
@@ -2104,7 +2104,7 @@ class AutopackViewer:
         data=None,
         objects=None,
         colors=[upyColors.red, upyColors.black],
-        **options
+        **options,
     ):
         mini = None
         maxi = None
@@ -2133,7 +2133,7 @@ class AutopackViewer:
                     objects=objects,
                     ramp=ramp,
                     colors=colors,
-                    **options
+                    **options,
                 )
             elif mode == "order":
                 # the order is in the name
@@ -2143,7 +2143,7 @@ class AutopackViewer:
                     objects=objects,
                     ramp=ramp,
                     colors=colors,
-                    **options
+                    **options,
                 )
         print("datas", len(datas))
         print("objs", len(listeObjs))
@@ -2166,7 +2166,7 @@ class AutopackViewer:
         objects=None,
         ramp=None,
         colors=[upyColors.red, upyColors.black],
-        **options
+        **options,
     ):
         """
         target : name or host object target
@@ -2240,7 +2240,7 @@ class AutopackViewer:
         objects=None,
         ramp=None,
         colors=[upyColors.red, upyColors.black],
-        **options
+        **options,
     ):
         """
         target : name or host object target

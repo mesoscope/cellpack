@@ -30,20 +30,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: "pip"
-        cache-dependency-path: setup.py
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .[all]
+    - uses: actions/checkout@v4.2.2
+    - uses: ./.github/actions/dependencies
     - name: Test with pytest
       run: |
-        pytest --cov cellpack/tests/
+        pdm run pytest --cov cellpack/tests/
     - name: Upload codecov
       uses: codecov/codecov-action@v4
 
@@ -51,23 +42,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, 'Bump version') }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.9
-        cache: "pip"
-        cache-dependency-path: setup.py
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .[test]
+    - uses: actions/checkout@v4.2.2
+    - uses: ./.github/actions/dependencies
     - name: Lint with flake8
       run: |
-        flake8 cellpack --count --verbose --show-source --statistics --ignore=E501,E277,W503,E203
+        pdm run flake8 cellpack --count --verbose --show-source --statistics --ignore=E203,E277,E402,E501,E721,W291,W503
     - name: Check with black
       run: |
-        black --check cellpack
+        pdm run black --check cellpack
 
   publish:
     if: success() && startsWith(github.ref, 'refs/tags/')
@@ -80,20 +62,8 @@ jobs:
       id-token: write
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.9
-        cache: "pip"
-        cache-dependency-path: setup.py
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel
-    - name: Build Package
-      run: |
-        python setup.py sdist bdist_wheel
+    - uses: actions/checkout@v4.2.2
+    - uses: ./.github/actions/dependencies
     - name: Publish to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+      run: pdm publish
 

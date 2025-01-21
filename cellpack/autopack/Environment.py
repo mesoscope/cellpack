@@ -627,10 +627,10 @@ class Environment(CompartmentList):
         """
         # TODO: check if other modes need to be resolved
         if gradient_data["mode"] == "surface":
-            gradient_data["mode_settings"][
-                "object"
-            ] = self.get_compartment_object_by_name(
-                gradient_data["mode_settings"]["object"]
+            gradient_data["mode_settings"]["object"] = (
+                self.get_compartment_object_by_name(
+                    gradient_data["mode_settings"]["object"]
+                )
             )
         return gradient_data
 
@@ -2586,9 +2586,9 @@ class Environment(CompartmentList):
         if r:
             self.result_json["exteriorRecipe"] = OrderedDict()
             for ingr in r.ingredients:
-                self.result_json["exteriorRecipe"][
-                    ingr.composition_name
-                ] = self.dropOneIngrJson(ingr, self.result_json["exteriorRecipe"])
+                self.result_json["exteriorRecipe"][ingr.composition_name] = (
+                    self.dropOneIngrJson(ingr, self.result_json["exteriorRecipe"])
+                )
 
         # compartment ingr
         for orga in self.compartments:

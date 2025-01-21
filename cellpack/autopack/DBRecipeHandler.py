@@ -86,8 +86,15 @@ class CompositionDoc(DataDoc):
     @staticmethod
     def get_reference_in_obj(downloaded_data, db):
         for key in CompositionDoc.KEY_TO_DICT_MAPPING:
-            if key in downloaded_data and db.is_reference(downloaded_data[key]):
-                downloaded_data[key], _ = db.get_doc_by_ref(downloaded_data[key])
+            if key in downloaded_data:
+                # single gradient and inherited object
+                if db.is_reference(downloaded_data[key]):
+                    downloaded_data[key], _ = db.get_doc_by_ref(downloaded_data[key])
+                # combined gradients
+                elif isinstance(downloaded_data[key], list):
+                    for gradient in downloaded_data[key]:
+                        for gradient_name, path in gradient.items():
+                            gradient[gradient_name], _ = db.get_doc_by_ref(path)
 
     @staticmethod
     def get_reference_data(key_or_dict, db):
@@ -144,14 +151,34 @@ class CompositionDoc(DataDoc):
                 gradient_dict[gradient["name"]] = gradient
             prep_recipe_data["gradients"] = gradient_dict
 
+    @staticmethod
+    def resolve_combined_gradient(key, obj_data, prep_data):
+        """
+        When the gradients are combined, fetch and replace gradient data in a list.
+        key --> the key in the object data that we want to modify its value
+        obj_data --> the object data that contains the gradient list
+        prep_data --> the data that contains the gradients (raw data or path) we want to fetch
+        """
+        new_grad_list = []
+        for grad in obj_data[key]:
+            new_grad_list.append({grad: prep_data[grad]})
+        obj_data[key] = new_grad_list
+
     def resolve_object_data(self, object_data, prep_recipe_data):
         """
         Resolve the object data from the local data.
         """
         for key in CompositionDoc.KEY_TO_DICT_MAPPING:
-            if key in object_data and isinstance(object_data[key], str):
-                target_dict = CompositionDoc.KEY_TO_DICT_MAPPING[key]
-                object_data[key] = prep_recipe_data[target_dict][object_data[key]]
+            if key in object_data:
+                # single gradient and inherited object
+                if isinstance(object_data[key], str):
+                    target_dict = CompositionDoc.KEY_TO_DICT_MAPPING[key]
+                    object_data[key] = prep_recipe_data[target_dict][object_data[key]]
+                # combined gradients
+                elif isinstance(object_data[key], list):
+                    self.resolve_combined_gradient(
+                        key, object_data, prep_recipe_data["gradients"]
+                    )
 
     def resolve_local_regions(self, local_data, recipe_data, db):
         """
@@ -174,13 +201,13 @@ class CompositionDoc(DataDoc):
                 if not DataDoc.is_key(key_or_dict):
                     obj_item = local_data["regions"][region_name][index]["object"]
                     if DataDoc.is_key(obj_item):
-                        local_data["regions"][region_name][index][
-                            "object"
-                        ] = prep_recipe_data["objects"][obj_item]
+                        local_data["regions"][region_name][index]["object"] = (
+                            prep_recipe_data["objects"][obj_item]
+                        )
                     else:
-                        local_data["regions"][region_name][index][
-                            "object"
-                        ] = prep_recipe_data["objects"][obj_item["name"]]
+                        local_data["regions"][region_name][index]["object"] = (
+                            prep_recipe_data["objects"][obj_item["name"]]
+                        )
                     # replace reference in obj with actual data
                     obj_data = local_data["regions"][region_name][index]["object"]
                     self.resolve_object_data(obj_data, prep_recipe_data)
@@ -335,9 +362,9 @@ class ObjectDoc(DataDoc):
                 and doc_value["packing"] is not None
             ):
                 position_value = doc_value["packing"]["positions"]
-                convert_doc["representations"]["packing"][
-                    "positions"
-                ] = ObjectDoc.convert_positions_in_representation(position_value)
+                convert_doc["representations"]["packing"]["positions"] = (
+                    ObjectDoc.convert_positions_in_representation(position_value)
+                )
         return convert_doc
 
     @staticmethod
@@ -482,8 +509,15 @@ class DBUploader(object):
     def upload_single_object(self, obj_name, obj_data):
         # replace gradient name with path to check if gradient exists in db
         if "gradient" in obj_data[obj_name]:
-            grad_name = obj_data[obj_name]["gradient"]
-            obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
+            # single gradient
+            if isinstance(obj_data[obj_name]["gradient"], str):
+                grad_name = obj_data[obj_name]["gradient"]
+                obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
+            # combined gradients
+            elif isinstance(obj_data[obj_name]["gradient"], list):
+                CompositionDoc.resolve_combined_gradient(
+                    "gradient", obj_data[obj_name], self.grad_to_path_map
+                )
         object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
         _, doc_id = object_doc.should_write(self.db)
         if doc_id:
@@ -687,10 +721,20 @@ class DBRecipeLoader(object):
         obj_name = obj_data["name"]
         for key, target_dict in CompositionDoc.KEY_TO_DICT_MAPPING.items():
             if key in obj_data:
-                item_name = obj_data[key]["name"]
-                target_dict = grad_dict if key == "gradient" else obj_dict
-                target_dict[item_name] = obj_data[key]
-                obj_dict[obj_name][key] = item_name
+                # single gradient and inherited object
+                if isinstance(obj_data[key], dict):
+                    item_name = obj_data[key]["name"]
+                    target_dict = grad_dict if key == "gradient" else obj_dict
+                    target_dict[item_name] = obj_data[key]
+                    obj_dict[obj_name][key] = item_name
+                # combined gradients
+                elif key == "gradient" and isinstance(obj_data[key], list):
+                    new_grad_list = []
+                    for grad in obj_data[key]:
+                        for name in grad:
+                            grad_dict[name] = grad[name]
+                            new_grad_list.append(name)
+                    obj_dict[obj_name][key] = new_grad_list
         return obj_dict, grad_dict
 
     @staticmethod

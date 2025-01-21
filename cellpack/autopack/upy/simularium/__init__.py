@@ -16,5 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 """
+
 # CRITICAL_DEPENDENCIES = ['blender','c4d']
 __revision__ = "01"
