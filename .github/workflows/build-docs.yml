@@ -16,7 +16,7 @@ jobs:
     - uses: ./.github/actions/dependencies
     - name: Generate Docs
       run: |
-        make gen-docs
+        pdm run make gen-docs
         touch docs/_build/html/.nojekyll
     - name: Publish Docs
       uses: JamesIves/github-pages-deploy-action@v4.6.8
