@@ -1,9 +1,6 @@
 name: Cleanup AWS S3 Bucket
 
 on: 
-  push:
-    branches:
-      - fix/cleanup-aws-workflow
   pull_request:
     types: [closed]
   
