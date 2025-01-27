@@ -14,7 +14,7 @@ An algorithm to pack molecular recipes
 1. Install Python 3.9 and `git`.  Update pip at least to `24.0.0`.
 2. Clone this git repository.
 ```bash
-git clone git@github.com:AllenCell/cellpack.git
+git clone git@github.com:mesoscope/cellpack.git
 cd cellpack
 ```
 3. Create a new virtual environment and activate it.
@@ -24,6 +24,7 @@ source .venv/bin/activate
 ```
 4. Install the required packages for your operating system. Replace `linux` with `macos` or `windows` as appropriate.
 ```bash
+pip install --upgrade pip
 pip install -r requirements/linux/requirements.txt
 pip install -e .
 ```
