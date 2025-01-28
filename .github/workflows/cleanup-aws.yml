@@ -1,9 +1,6 @@
 name: Cleanup AWS S3 Bucket
 
 on: 
-  push:
-    branches:
-      - fix/cleanup-aws-workflow
   pull_request:
     types: [closed]
   
@@ -19,12 +16,6 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2
-    # - name: Install AWS CLI
-    # #install AWS CLI directly from AWS
-    #   run: |
-    #     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    #     unzip awscliv2.zip
-    #     sudo ./aws/install --update
     - name: Check AWS CLI version
       run: aws --version
     - name: Remove files in results sub_dir
