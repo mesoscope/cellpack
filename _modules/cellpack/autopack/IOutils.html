@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.IOutils &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.IOutils &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -44,27 +44,27 @@
 
 <span class="sd">@author: Ludovic Autin</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">encoder</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">encoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
-<span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
-<span class="kn">import</span> <span class="nn">cellpack.autopack.transformation</span> <span class="k">as</span> <span class="nn">tr</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Recipe</span> <span class="kn">import</span> <span class="n">Recipe</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.writers</span> <span class="kn">import</span> <span class="n">Writer</span>
-<span class="kn">from</span> <span class="nn">.ingredient.Ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Serializable</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">autopack</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack.transformation</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.Recipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recipe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.writers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Writer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ingredient.Ingredient</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ingredient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.Serializable</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">sCompartment</span><span class="p">,</span>
     <span class="n">sIngredientGroup</span><span class="p">,</span>
     <span class="n">sIngredient</span><span class="p">,</span>
     <span class="n">sIngredientFiber</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.ingredient.grow</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ingredient.grow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ActinIngredient</span><span class="p">,</span>
     <span class="n">GrowIngredient</span><span class="p">,</span>
 <span class="p">)</span>
@@ -74,7 +74,7 @@
 
 <div class="viewcode-block" id="setValueToPythonStr">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.setValueToPythonStr">[docs]</a>
-<span class="k">def</span> <span class="nf">setValueToPythonStr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setValueToPythonStr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">attrname</span><span class="p">,</span> <span class="s2">&quot; is None !&quot;</span><span class="p">)</span>
         <span class="k">return</span>
@@ -103,7 +103,7 @@
 
 <div class="viewcode-block" id="getStringValueOptions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.getStringValueOptions">[docs]</a>
-<span class="k">def</span> <span class="nf">getStringValueOptions</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getStringValueOptions</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function to return the given environment option as a string to</span>
 <span class="sd">    be write in the xml file.</span>
@@ -134,7 +134,7 @@
 
 <div class="viewcode-block" id="updatePositionsRadii">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.updatePositionsRadii">[docs]</a>
-<span class="k">def</span> <span class="nf">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">):</span>
     <span class="n">toupdate</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;positions&quot;</span><span class="p">:</span> <span class="p">[]}</span>
     <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">nLOD</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span>
@@ -149,22 +149,22 @@
 
 <div class="viewcode-block" id="GrabResult">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.GrabResult">[docs]</a>
-<span class="k">class</span> <span class="nc">GrabResult</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GrabResult</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for callbacks&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collision</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># self.lock = thread.allocate_lock()</span>
 
 <div class="viewcode-block" id="GrabResult.reset">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.GrabResult.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collision</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="GrabResult.grab">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.GrabResult.grab">[docs]</a>
-    <span class="k">def</span> <span class="nf">grab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        the callback function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -178,24 +178,24 @@
 
 <div class="viewcode-block" id="ExportCollada">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.ExportCollada">[docs]</a>
-<span class="k">class</span> <span class="nc">ExportCollada</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExportCollada</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span></div>
 
 
 
 <div class="viewcode-block" id="IOingredientTool">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool">[docs]</a>
-<span class="k">class</span> <span class="nc">IOingredientTool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IOingredientTool</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="c1"># parser that can return an ingredient</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IOingredientTool</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_quaternion</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="IOingredientTool.read">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.read">[docs]</a>
-    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;.xml&quot;</span><span class="p">:</span>
             <span class="k">pass</span>  <span class="c1"># self.load_XML(setupfile)</span>
@@ -207,7 +207,7 @@
 
 <div class="viewcode-block" id="IOingredientTool.makeIngredientFromJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">makeIngredientFromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="s2">&quot;Generic&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">makeIngredientFromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="s2">&quot;Generic&quot;</span><span class="p">):</span>
         <span class="n">overwrite_dic</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">ingr_dic</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -238,7 +238,7 @@
 
 <div class="viewcode-block" id="IOingredientTool.ingrJsonNode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrJsonNode">[docs]</a>
-    <span class="k">def</span> <span class="nf">ingrJsonNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ingrJsonNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># force position instead of sphereFile</span>
         <span class="n">ingdic</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -297,7 +297,7 @@
 
 <div class="viewcode-block" id="IOingredientTool.ingrPythonNode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrPythonNode">[docs]</a>
-    <span class="k">def</span> <span class="nf">ingrPythonNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="s2">&quot;recipe&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ingrPythonNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="s2">&quot;recipe&quot;</span><span class="p">):</span>
         <span class="n">inrStr</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;#include as follow : execfile(&#39;pathto/&quot;</span>
             <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
@@ -324,7 +324,7 @@
 <div class="viewcode-block" id="IOingredientTool.clean_arguments">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.clean_arguments">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">clean_arguments</span><span class="p">(</span><span class="n">arguments_to_include</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clean_arguments</span><span class="p">(</span><span class="n">arguments_to_include</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">):</span>
         <span class="n">new_arguments</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arguments</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">arguments_to_include</span><span class="p">:</span>
@@ -334,7 +334,7 @@
 
 <div class="viewcode-block" id="IOingredientTool.makeIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">makeIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">makeIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">ingr</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -351,7 +351,7 @@
 
 <div class="viewcode-block" id="IOingredientTool.set_recipe_ingredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.set_recipe_ingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_recipe_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmlnode</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_recipe_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmlnode</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
         <span class="c1"># get the defined ingredient</span>
         <span class="n">ingrnodes</span> <span class="o">=</span> <span class="n">xmlnode</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ingrnode</span> <span class="ow">in</span> <span class="n">ingrnodes</span><span class="p">:</span>
@@ -379,7 +379,7 @@
 
 <div class="viewcode-block" id="addCompartments">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.addCompartments">[docs]</a>
-<span class="k">def</span> <span class="nf">addCompartments</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">compdic</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">io_ingr</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">addCompartments</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">compdic</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">io_ingr</span><span class="p">):</span>
     <span class="c1"># compdic on the form : {u&#39;positions&#39;: [[]], u&#39;from&#39;: u&#39;HIV-1_0.1.6-7.json&#39;, u&#39;rotations&#39;: [[]]}</span>
 
     <span class="n">fname</span> <span class="o">=</span> <span class="n">compdic</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">]</span>
@@ -464,7 +464,7 @@
 
 <div class="viewcode-block" id="save_asPython">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_asPython">[docs]</a>
-<span class="k">def</span> <span class="nf">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save the current environment setup as a python script file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -627,7 +627,7 @@
 
 <div class="viewcode-block" id="checkRotFormat">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.checkRotFormat">[docs]</a>
-<span class="k">def</span> <span class="nf">checkRotFormat</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">transpose</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkRotFormat</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">transpose</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,):</span>
         <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># transpose ?</span>
@@ -640,7 +640,7 @@
 
 <div class="viewcode-block" id="gatherResult">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.gatherResult">[docs]</a>
-<span class="k">def</span> <span class="nf">gatherResult</span><span class="p">(</span><span class="n">ingr_result</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gatherResult</span><span class="p">(</span><span class="n">ingr_result</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">all_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_rot</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ingr_result</span><span class="p">:</span>
@@ -671,7 +671,7 @@
 
 <div class="viewcode-block" id="serializedRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe">[docs]</a>
-<span class="k">def</span> <span class="nf">serializedRecipe</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">serializedRecipe</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># specify the  keyword ?</span>
     <span class="n">sCompartment</span><span class="o">.</span><span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">sIngredientFiber</span><span class="o">.</span><span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
@@ -819,7 +819,7 @@
 
 <div class="viewcode-block" id="serializedFromResult">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.serializedFromResult">[docs]</a>
-<span class="k">def</span> <span class="nf">serializedFromResult</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">serializedFromResult</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">all_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_rot</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">sCompartment</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">)</span>
@@ -938,7 +938,7 @@
 
 <div class="viewcode-block" id="serializedRecipe_group_dic">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe_group_dic">[docs]</a>
-<span class="k">def</span> <span class="nf">serializedRecipe_group_dic</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">serializedRecipe_group_dic</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># all_pos = []</span>
     <span class="c1"># all_rot = []</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">sCompartment</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">)</span>
@@ -992,7 +992,7 @@
 
 <div class="viewcode-block" id="serializedRecipe_group">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe_group">[docs]</a>
-<span class="k">def</span> <span class="nf">serializedRecipe_group</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">serializedRecipe_group</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">all_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_rot</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">sCompartment</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">)</span>
@@ -1075,7 +1075,7 @@
 <span class="c1"># saveResultBinary(env,&quot;C:\\Users\\ludov\\OneDrive\\Documents\\myRecipes\\test_lh&quot;,False,True,True)</span>
 <div class="viewcode-block" id="saveResultBinaryDic">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.saveResultBinaryDic">[docs]</a>
-<span class="k">def</span> <span class="nf">saveResultBinaryDic</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saveResultBinaryDic</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># should follow the order of the serialized class order?</span>
     <span class="n">all_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_rot</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1118,7 +1118,7 @@
 
 <div class="viewcode-block" id="toBinary">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.toBinary">[docs]</a>
-<span class="k">def</span> <span class="nf">toBinary</span><span class="p">(</span><span class="n">all_pos</span><span class="p">,</span> <span class="n">all_rot</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">toBinary</span><span class="p">(</span><span class="n">all_pos</span><span class="p">,</span> <span class="n">all_rot</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="n">fptr</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
     <span class="n">fptr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_pos</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
     <span class="n">fptr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_rot</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
@@ -1128,7 +1128,7 @@
 
 <div class="viewcode-block" id="saveResultBinary">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.saveResultBinary">[docs]</a>
-<span class="k">def</span> <span class="nf">saveResultBinary</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saveResultBinary</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># should follow the order of the serialized class order?</span>
     <span class="n">all_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_rot</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1173,7 +1173,7 @@
 
 <div class="viewcode-block" id="getAllPosRot">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.getAllPosRot">[docs]</a>
-<span class="k">def</span> <span class="nf">getAllPosRot</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getAllPosRot</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">use_quaternion</span><span class="p">,</span> <span class="n">lefthand</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># should follow the order of the serialized class order?</span>
     <span class="n">all_pos</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">all_rot</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1209,7 +1209,7 @@
 
 <div class="viewcode-block" id="load_JsonString">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.load_JsonString">[docs]</a>
-<span class="k">def</span> <span class="nf">load_JsonString</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">astring</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_JsonString</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">astring</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setup the environment according the given json file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1222,7 +1222,7 @@
 
 <div class="viewcode-block" id="load_Json">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.load_Json">[docs]</a>
-<span class="k">def</span> <span class="nf">load_Json</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_Json</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setup the environment according the given json file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1245,7 +1245,7 @@
 
 <div class="viewcode-block" id="setupFromJsonDic">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.setupFromJsonDic">[docs]</a>
-<span class="k">def</span> <span class="nf">setupFromJsonDic</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setupFromJsonDic</span><span class="p">(</span>
     <span class="n">env</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">env</span><span class="o">.</span><span class="n">current_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
@@ -1383,7 +1383,7 @@
 
 <div class="viewcode-block" id="load_MixedasJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.load_MixedasJson">[docs]</a>
-<span class="k">def</span> <span class="nf">load_MixedasJson</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_MixedasJson</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="c1">#        from upy.hostHelper import Helper as helper</span>
     <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">result_file</span>
@@ -1585,7 +1585,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

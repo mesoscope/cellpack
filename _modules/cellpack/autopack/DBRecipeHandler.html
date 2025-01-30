@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.DBRecipeHandler &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.DBRecipeHandler &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -38,47 +38,47 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.DBRecipeHandler</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 
-<span class="kn">from</span> <span class="nn">deepdiff</span> <span class="kn">import</span> <span class="n">DeepDiff</span>
-<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">deepdiff</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeepDiff</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">deep_merge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">deep_merge</span>
 
 
 <div class="viewcode-block" id="DataDoc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc">[docs]</a>
-<span class="k">class</span> <span class="nc">DataDoc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataDoc</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="DataDoc.as_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc.as_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">():</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="DataDoc.should_write">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc.should_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">should_write</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_write</span><span class="p">():</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="DataDoc.is_key">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc.is_key">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_key</span><span class="p">(</span><span class="n">string_or_dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_key</span><span class="p">(</span><span class="n">string_or_dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataDoc.is_nested_list">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc.is_nested_list">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_nested_list</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_nested_list</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
@@ -90,7 +90,7 @@
 <div class="viewcode-block" id="DataDoc.is_db_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc.is_db_dict">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_db_dict</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_db_dict</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -101,7 +101,7 @@
 <div class="viewcode-block" id="DataDoc.is_obj">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DataDoc.is_obj">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_obj</span><span class="p">(</span><span class="n">comp_or_obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_obj</span><span class="p">(</span><span class="n">comp_or_obj</span><span class="p">):</span>
         <span class="c1"># in resolved DB data, if the top level of a downloaded comp doesn&#39;t have the key `name`, it&#39;s an obj</span>
         <span class="c1"># TODO: true for all cases? better approaches?</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="n">comp_or_obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;object&quot;</span> <span class="ow">in</span> <span class="n">comp_or_obj</span></div>
@@ -111,7 +111,7 @@
 
 <div class="viewcode-block" id="CompositionDoc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc">[docs]</a>
-<span class="k">class</span> <span class="nc">CompositionDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompositionDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Declares required attributes for comps in the constructor, set default values.</span>
 <span class="sd">    Handles the logic for comparing the local and db data to determine the uploading process.</span>
@@ -121,7 +121,7 @@
     <span class="n">DEFAULT_VALUES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;regions&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;molarity&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
     <span class="n">KEY_TO_DICT_MAPPING</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="s2">&quot;gradients&quot;</span><span class="p">,</span> <span class="s2">&quot;inherit&quot;</span><span class="p">:</span> <span class="s2">&quot;objects&quot;</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">object_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -139,7 +139,7 @@
 
 <div class="viewcode-block" id="CompositionDoc.as_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.as_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span>
@@ -152,7 +152,7 @@
 <div class="viewcode-block" id="CompositionDoc.get_reference_in_obj">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_in_obj">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_reference_in_obj</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_reference_in_obj</span><span class="p">(</span><span class="n">downloaded_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">CompositionDoc</span><span class="o">.</span><span class="n">KEY_TO_DICT_MAPPING</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">downloaded_data</span><span class="p">:</span>
                 <span class="c1"># single gradient and inherited object</span>
@@ -168,7 +168,7 @@
 <div class="viewcode-block" id="CompositionDoc.get_reference_data">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.get_reference_data">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_reference_data</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_reference_data</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the db data for a reference, and the key if it exists.</span>
 <span class="sd">        Key --&gt; the name of a composition</span>
@@ -191,7 +191,7 @@
 
 <div class="viewcode-block" id="CompositionDoc.resolve_db_regions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_db_regions">[docs]</a>
-    <span class="k">def</span> <span class="nf">resolve_db_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_db_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively resolves the regions of a composition from db.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -216,7 +216,7 @@
 <div class="viewcode-block" id="CompositionDoc.gradient_list_to_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.gradient_list_to_dict">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">gradient_list_to_dict</span><span class="p">(</span><span class="n">prep_recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gradient_list_to_dict</span><span class="p">(</span><span class="n">prep_recipe_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert gradient list to dict for resolve_local_regions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -232,7 +232,7 @@
 <div class="viewcode-block" id="CompositionDoc.resolve_combined_gradient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_combined_gradient">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">resolve_combined_gradient</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">,</span> <span class="n">prep_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_combined_gradient</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">,</span> <span class="n">prep_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        When the gradients are combined, fetch and replace gradient data in a list.</span>
 <span class="sd">        key --&gt; the key in the object data that we want to modify its value</span>
@@ -247,7 +247,7 @@
 
 <div class="viewcode-block" id="CompositionDoc.resolve_object_data">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_object_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">resolve_object_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_data</span><span class="p">,</span> <span class="n">prep_recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_object_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_data</span><span class="p">,</span> <span class="n">prep_recipe_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resolve the object data from the local data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -266,7 +266,7 @@
 
 <div class="viewcode-block" id="CompositionDoc.resolve_local_regions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.resolve_local_regions">[docs]</a>
-    <span class="k">def</span> <span class="nf">resolve_local_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_local_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively resolves the regions of a composition from local data.</span>
 <span class="sd">        Restructure the local data to match the db data.</span>
@@ -287,13 +287,13 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">DataDoc</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">):</span>
                     <span class="n">obj_item</span> <span class="o">=</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
                     <span class="k">if</span> <span class="n">DataDoc</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span><span class="n">obj_item</span><span class="p">):</span>
-                        <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span>
-                            <span class="s2">&quot;object&quot;</span>
-                        <span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">obj_item</span><span class="p">]</span>
+                        <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">obj_item</span><span class="p">]</span>
+                        <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span>
-                            <span class="s2">&quot;object&quot;</span>
-                        <span class="p">]</span> <span class="o">=</span> <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">obj_item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+                        <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">prep_recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">obj_item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+                        <span class="p">)</span>
                     <span class="c1"># replace reference in obj with actual data</span>
                     <span class="n">obj_data</span> <span class="o">=</span> <span class="n">local_data</span><span class="p">[</span><span class="s2">&quot;regions&quot;</span><span class="p">][</span><span class="n">region_name</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">resolve_object_data</span><span class="p">(</span><span class="n">obj_data</span><span class="p">,</span> <span class="n">prep_recipe_data</span><span class="p">)</span>
@@ -315,7 +315,7 @@
 
 <div class="viewcode-block" id="CompositionDoc.check_and_replace_references">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.check_and_replace_references">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_and_replace_references</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_and_replace_references</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">objects_to_path_map</span><span class="p">,</span> <span class="n">references_to_update</span><span class="p">,</span> <span class="n">db</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -350,7 +350,7 @@
 <div class="viewcode-block" id="CompositionDoc.update_reference">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.update_reference">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_reference</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_reference</span><span class="p">(</span>
         <span class="n">db</span><span class="p">,</span>
         <span class="n">composition_id</span><span class="p">,</span>
         <span class="n">referring_comp_id</span><span class="p">,</span>
@@ -376,7 +376,7 @@
 
 <div class="viewcode-block" id="CompositionDoc.should_write">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.CompositionDoc.should_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compares the resolved local composition to the resolved db composition.</span>
 <span class="sd">        To determine whether the composition data already exists or if it needs to be written to the database.</span>
@@ -418,15 +418,15 @@
 
 <div class="viewcode-block" id="ObjectDoc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc">[docs]</a>
-<span class="k">class</span> <span class="nc">ObjectDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjectDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">settings</span>
 
 <div class="viewcode-block" id="ObjectDoc.as_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.as_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">:</span>
@@ -437,7 +437,7 @@
 <div class="viewcode-block" id="ObjectDoc.convert_positions_in_representation">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_positions_in_representation">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">convert_positions_in_representation</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_positions_in_representation</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="n">convert_data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -452,7 +452,7 @@
 <div class="viewcode-block" id="ObjectDoc.convert_representation">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.convert_representation">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">convert_representation</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_representation</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get object doc from database, convert it back to the original text</span>
 <span class="sd">        i.e. in object, convert lists back to tuples in representations/packing/positions</span>
@@ -469,21 +469,21 @@
                 <span class="ow">and</span> <span class="n">doc_value</span><span class="p">[</span><span class="s2">&quot;packing&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="p">):</span>
                 <span class="n">position_value</span> <span class="o">=</span> <span class="n">doc_value</span><span class="p">[</span><span class="s2">&quot;packing&quot;</span><span class="p">][</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span>
-                <span class="n">convert_doc</span><span class="p">[</span><span class="s2">&quot;representations&quot;</span><span class="p">][</span><span class="s2">&quot;packing&quot;</span><span class="p">][</span>
-                    <span class="s2">&quot;positions&quot;</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="n">ObjectDoc</span><span class="o">.</span><span class="n">convert_positions_in_representation</span><span class="p">(</span><span class="n">position_value</span><span class="p">)</span>
+                <span class="n">convert_doc</span><span class="p">[</span><span class="s2">&quot;representations&quot;</span><span class="p">][</span><span class="s2">&quot;packing&quot;</span><span class="p">][</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">ObjectDoc</span><span class="o">.</span><span class="n">convert_positions_in_representation</span><span class="p">(</span><span class="n">position_value</span><span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="n">convert_doc</span></div>
 
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_object_contains_grad_or_inherit</span><span class="p">(</span><span class="n">obj_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_object_contains_grad_or_inherit</span><span class="p">(</span><span class="n">obj_data</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">obj_data</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_data</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
         <span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;inherit&quot;</span> <span class="ow">in</span> <span class="n">obj_data</span>
 
 <div class="viewcode-block" id="ObjectDoc.should_write">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ObjectDoc.should_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
         <span class="n">docs</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_name</span><span class="p">(</span><span class="s2">&quot;objects&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">docs</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
@@ -501,14 +501,14 @@
 
 <div class="viewcode-block" id="GradientDoc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.GradientDoc">[docs]</a>
-<span class="k">class</span> <span class="nc">GradientDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GradientDoc</span><span class="p">(</span><span class="n">DataDoc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">settings</span>
 
 <div class="viewcode-block" id="GradientDoc.should_write">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.GradientDoc.should_write">[docs]</a>
-    <span class="k">def</span> <span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">grad_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">grad_name</span><span class="p">):</span>
         <span class="n">docs</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_name</span><span class="p">(</span><span class="s2">&quot;gradients&quot;</span><span class="p">,</span> <span class="n">grad_name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">docs</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
@@ -524,13 +524,13 @@
 
 <div class="viewcode-block" id="ResultDoc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc">[docs]</a>
-<span class="k">class</span> <span class="nc">ResultDoc</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ResultDoc</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db</span>
 
 <div class="viewcode-block" id="ResultDoc.handle_expired_results">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc.handle_expired_results">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_expired_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_expired_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the results in the database are expired and delete them if the linked object expired.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -551,7 +551,7 @@
 
 <div class="viewcode-block" id="ResultDoc.validate_existence">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.ResultDoc.validate_existence">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_existence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_existence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate the existence of an S3 object by checking if the URL is accessible.</span>
 <span class="sd">        Returns True if the URL is accessible.</span>
@@ -563,12 +563,12 @@
 
 <div class="viewcode-block" id="DBUploader">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader">[docs]</a>
-<span class="k">class</span> <span class="nc">DBUploader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DBUploader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Handles the uploading of data to the database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">objects_to_path_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">comp_to_path_map</span> <span class="o">=</span> <span class="p">{}</span>
@@ -578,7 +578,7 @@
 <div class="viewcode-block" id="DBUploader.prep_data_for_db">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.prep_data_for_db">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">prep_data_for_db</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prep_data_for_db</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively convert data to a format that can be written to the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -607,7 +607,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_data">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If should_write is true, upload the data to the database</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -629,7 +629,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_gradients">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_gradients">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradients</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradients</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">gradient</span> <span class="ow">in</span> <span class="n">gradients</span><span class="p">:</span>
             <span class="n">gradient_name</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
             <span class="n">gradient_doc</span> <span class="o">=</span> <span class="n">GradientDoc</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">gradient</span><span class="p">)</span>
@@ -646,7 +646,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_single_object">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_single_object">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_single_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_single_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj_data</span><span class="p">):</span>
         <span class="c1"># replace gradient name with path to check if gradient exists in db</span>
         <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">obj_data</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]:</span>
             <span class="c1"># single gradient</span>
@@ -671,7 +671,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_objects">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
         <span class="c1"># modify a copy of objects to avoid key error when resolving local regions</span>
         <span class="n">modify_objects</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">obj_name</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
@@ -692,7 +692,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_compositions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_compositions">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_compositions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compositions</span><span class="p">,</span> <span class="n">recipe_to_save</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_compositions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compositions</span><span class="p">,</span> <span class="n">recipe_to_save</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
         <span class="n">references_to_update</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">comp_name</span> <span class="ow">in</span> <span class="n">compositions</span><span class="p">:</span>
             <span class="n">comp_obj</span> <span class="o">=</span> <span class="n">compositions</span><span class="p">[</span><span class="n">comp_name</span><span class="p">]</span>
@@ -738,7 +738,7 @@
         <span class="k">return</span> <span class="n">references_to_update</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_get_recipe_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_recipe_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        We use customized recipe id to declare recipe&#39;s name and version</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -749,7 +749,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_collections">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_collections">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Separate collections from recipe data and upload them to db</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -782,7 +782,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_recipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_recipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_recipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_recipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_meta_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        After all other collections are checked or uploaded, upload the recipe with references into db</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -799,7 +799,7 @@
 
 <div class="viewcode-block" id="DBUploader.upload_result_metadata">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBUploader.upload_result_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_result_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_result_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload the metadata of the result file to the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -817,17 +817,17 @@
 
 <div class="viewcode-block" id="DBRecipeLoader">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader">[docs]</a>
-<span class="k">class</span> <span class="nc">DBRecipeLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DBRecipeLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Handles the logic for downloading and parsing the recipe data from the database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_handler</span>
 
 <div class="viewcode-block" id="DBRecipeLoader.prep_db_doc_for_download">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.prep_db_doc_for_download">[docs]</a>
-    <span class="k">def</span> <span class="nf">prep_db_doc_for_download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_doc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prep_db_doc_for_download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_doc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        convert data from db and resolve references.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -861,13 +861,13 @@
 
 <div class="viewcode-block" id="DBRecipeLoader.collect_docs_by_id">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_docs_by_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">collect_docs_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect_docs_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DBRecipeLoader.validate_input_recipe_path">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.validate_input_recipe_path">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_input_recipe_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_input_recipe_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates if the input path corresponds to a recipe path in the database.</span>
 <span class="sd">        Format of a recipe path: firebase:recipes/[RECIPE-ID]</span>
@@ -881,7 +881,7 @@
 
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_grad_and_obj</span><span class="p">(</span><span class="n">obj_data</span><span class="p">,</span> <span class="n">obj_dict</span><span class="p">,</span> <span class="n">grad_dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_grad_and_obj</span><span class="p">(</span><span class="n">obj_data</span><span class="p">,</span> <span class="n">obj_dict</span><span class="p">,</span> <span class="n">grad_dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Collect gradient and inherited object data from the downloaded object data</span>
 <span class="sd">        return object data dict and gradient data dict with name as key</span>
@@ -908,7 +908,7 @@
 <div class="viewcode-block" id="DBRecipeLoader.collect_and_sort_data">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.collect_and_sort_data">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">collect_and_sort_data</span><span class="p">(</span><span class="n">comp_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect_and_sort_data</span><span class="p">(</span><span class="n">comp_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Collect all object and gradient info from the downloaded composition data</span>
 <span class="sd">        Return autopack object data dict and gradient data dict with name as key</span>
@@ -956,7 +956,7 @@
 <div class="viewcode-block" id="DBRecipeLoader.compile_db_recipe_data">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBRecipeLoader.compile_db_recipe_data">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">compile_db_recipe_data</span><span class="p">(</span><span class="n">db_recipe_data</span><span class="p">,</span> <span class="n">obj_dict</span><span class="p">,</span> <span class="n">grad_dict</span><span class="p">,</span> <span class="n">comp_dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile_db_recipe_data</span><span class="p">(</span><span class="n">db_recipe_data</span><span class="p">,</span> <span class="n">obj_dict</span><span class="p">,</span> <span class="n">grad_dict</span><span class="p">,</span> <span class="n">comp_dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compile recipe data from db recipe data into a ready-to-pack structure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -977,18 +977,18 @@
 
 <div class="viewcode-block" id="DBMaintenance">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance">[docs]</a>
-<span class="k">class</span> <span class="nc">DBMaintenance</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DBMaintenance</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Handles the maintenance of the database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_doc</span> <span class="o">=</span> <span class="n">ResultDoc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DBMaintenance.cleanup_results">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance.cleanup_results">[docs]</a>
-    <span class="k">def</span> <span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the results in the database are expired and delete them if the linked object expired.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -997,7 +997,7 @@
 
 <div class="viewcode-block" id="DBMaintenance.readme_url">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.DBRecipeHandler.DBMaintenance.readme_url">[docs]</a>
-    <span class="k">def</span> <span class="nf">readme_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">readme_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the URL to the README file for the database setup section.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1035,7 +1035,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

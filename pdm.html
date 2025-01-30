@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using PDM &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
+    
+    <script src="_static/documentation_options.js?v=a34f1657"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack v1.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using PDM</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="using-pdm">
+<h1>Using PDM<a class="headerlink" href="#using-pdm" title="Link to this heading">¶</a></h1>
+<p>These instructions are intended to get you started managing dependencies with PDM. Consult the <a class="reference external" href="https://pdm.fming.dev/latest/usage/dependency/">PDM documentation</a> for more detailed help.</p>
+<section id="workflow-for-adding-updating-removing-a-package">
+<h2>Workflow for adding/updating/removing a package<a class="headerlink" href="#workflow-for-adding-updating-removing-a-package" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>To add/update/remove a package, use a Linux machine. The <code class="docutils literal notranslate"><span class="pre">pdm.lock</span></code> file is <em>usually</em> compatible across operating systems, but in some cases <code class="docutils literal notranslate"><span class="pre">pdm</span></code> can generate a lock file that is only compatible with the operating system family used to generate it. Ours should always be compatible with Linux.</p></li>
+<li><p>Start a new branch from <code class="docutils literal notranslate"><span class="pre">main</span></code> (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">main</span> <span class="pre">&amp;&amp;</span> <span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">{branch-name}</span></code>), or if you are already on a branch, get the latest changes from the <code class="docutils literal notranslate"><span class="pre">main</span></code> to avoid merge conflicts with <code class="docutils literal notranslate"><span class="pre">pdm.lock</span></code> (<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span> <span class="pre">main</span></code>).</p></li>
+<li><p>Synchronize the current installed dependencies with the lock file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pdm<span class="w"> </span>sync
+</pre></div>
+</div>
+</li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">pdm.lock</span></code>. This will install/update/uninstall the package from your current virtual environment.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add package(s) to pyproject.toml and install them</span>
+pdm<span class="w"> </span>add<span class="w"> </span><span class="o">{</span>package-name<span class="o">}</span>
+<span class="c1"># Remove packages from pyproject.toml</span>
+pdm<span class="w"> </span>remove<span class="w"> </span><span class="o">{</span>package-name<span class="o">}</span>
+<span class="c1"># Update all packages according to pyproject.toml</span>
+pdm<span class="w"> </span>update
+<span class="c1"># Update one package</span>
+pdm<span class="w"> </span>update<span class="w"> </span><span class="o">{</span>package-name<span class="o">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Test and commit your changes to <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">pdm.lock</span></code>.</p></li>
+<li><p>Make a pull request on Github with your changes and (after approval) merge it.</p></li>
+<li><p>A Github action will make a second pull request to update all three <code class="docutils literal notranslate"><span class="pre">requirements/{platform}/requirements.txt</span></code> files based on your changes. This second PR must be merged before any further changes are made to <code class="docutils literal notranslate"><span class="pre">pdm.lock</span></code>.</p></li>
+</ol>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Using PDM</a><ul>
+<li><a class="reference internal" href="#workflow-for-adding-updating-removing-a-package">Workflow for adding/updating/removing a package</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pdm.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack v1.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using PDM</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

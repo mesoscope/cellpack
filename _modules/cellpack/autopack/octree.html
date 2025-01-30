@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.octree &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.octree &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -72,9 +72,9 @@
 
 <div class="viewcode-block" id="OctNode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.OctNode">[docs]</a>
-<span class="k">class</span> <span class="nc">OctNode</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OctNode</span><span class="p">:</span>
     <span class="c1"># New Octnode Class, can be appended to as well i think</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="c1"># OctNode Cubes have a position and size</span>
         <span class="c1"># position is related to, but not the same as the objects the node contains.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
@@ -106,8 +106,8 @@
 
 <div class="viewcode-block" id="Octree">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.Octree">[docs]</a>
-<span class="k">class</span> <span class="nc">Octree</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">worldSize</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Octree</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">worldSize</span><span class="p">):</span>
         <span class="c1"># Init the world bounding root cube</span>
         <span class="c1"># all world geometry is inside this</span>
         <span class="c1"># it will first be created as a leaf node (ie, without branches)</span>
@@ -118,14 +118,14 @@
 
 <div class="viewcode-block" id="Octree.addNode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.Octree.addNode">[docs]</a>
-    <span class="k">def</span> <span class="nf">addNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
         <span class="c1"># This creates the actual OctNode itself.</span>
         <span class="k">return</span> <span class="n">OctNode</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">objects</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Octree.insertNode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.Octree.insertNode">[docs]</a>
-    <span class="k">def</span> <span class="nf">insertNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">objData</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insertNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">objData</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># we&#39;re inserting a single object, so if we reach an empty node, insert it here</span>
             <span class="c1"># Our new node will be a leaf with one object, our object</span>
@@ -215,7 +215,7 @@
 
 <div class="viewcode-block" id="Octree.findPosition">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.Octree.findPosition">[docs]</a>
-    <span class="k">def</span> <span class="nf">findPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
         <span class="c1"># Basic collision lookup that finds the leaf node containing the specified position</span>
         <span class="c1"># Returns the child objects of the leaf, or None if the leaf is empty or none</span>
         <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -229,7 +229,7 @@
 
 <div class="viewcode-block" id="Octree.findBranch">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.Octree.findBranch">[docs]</a>
-    <span class="k">def</span> <span class="nf">findBranch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findBranch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
         <span class="c1"># helper function</span>
         <span class="c1"># returns an index corresponding to a branch</span>
         <span class="c1"># pointing in the direction we want to go</span>
@@ -256,12 +256,12 @@
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="c1"># Object Insertion Test ###</span>
     <span class="c1"># So lets test the adding:</span>
-    <span class="kn">import</span> <span class="nn">random</span>
-    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
     <span class="c1"># Dummy object class to test with</span>
-    <span class="k">class</span> <span class="nc">TestObject</span><span class="p">:</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">TestObject</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
 
@@ -346,7 +346,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

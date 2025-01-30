@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.bin.pack &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.bin.pack &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" accesskey="U">cellpack</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">cellpack.bin.pack</a></li> 
@@ -37,20 +37,20 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.bin.pack</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">fire</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">logging.config</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">fire</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging.config</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">cellpack</span> <span class="kn">import</span> <span class="n">autopack</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">upy</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Analysis</span> <span class="kn">import</span> <span class="n">Analysis</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.Environment</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">autopack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="kn">import</span> <span class="n">upy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.Analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Analysis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.Environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.config_loader</span> <span class="kn">import</span> <span class="n">ConfigLoader</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.analysis_config_loader</span> <span class="kn">import</span> <span class="n">AnalysisConfigLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.config_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.recipe_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecipeLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.analysis_config_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisConfigLoader</span>
 
 <span class="c1">###############################################################################</span>
 <span class="n">log_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;logging.conf&quot;</span>
@@ -61,7 +61,7 @@
 
 <div class="viewcode-block" id="pack">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.pack.pack">[docs]</a>
-<span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">analysis_config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pack</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">analysis_config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initializes an autopack packing from the command line</span>
 <span class="sd">    :param recipe: string argument, path to recipe</span>
@@ -111,7 +111,7 @@
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.pack.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="n">fire</span><span class="o">.</span><span class="n">Fire</span><span class="p">(</span><span class="n">pack</span><span class="p">)</span>
     <span class="n">execution_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
@@ -152,7 +152,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">cellpack.bin.pack</a></li> 

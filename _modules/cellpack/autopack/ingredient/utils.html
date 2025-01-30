@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.ingredient.utils &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.ingredient.utils &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -38,15 +38,15 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.ingredient.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">asin</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.transformation</span> <span class="kn">import</span> <span class="n">angle_between_vectors</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">asin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.transformation</span><span class="w"> </span><span class="kn">import</span> <span class="n">angle_between_vectors</span>
 
 
 <span class="c1"># should use transform.py instead</span>
 <div class="viewcode-block" id="getNormedVectorOnes">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVectorOnes">[docs]</a>
-<span class="k">def</span> <span class="nf">getNormedVectorOnes</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getNormedVectorOnes</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
@@ -54,21 +54,21 @@
 
 <div class="viewcode-block" id="getNormedVectorU">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVectorU">[docs]</a>
-<span class="k">def</span> <span class="nf">getNormedVectorU</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getNormedVectorU</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="getNormedVector">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getNormedVector">[docs]</a>
-<span class="k">def</span> <span class="nf">getNormedVector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getNormedVector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="getDihedral">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.getDihedral">[docs]</a>
-<span class="k">def</span> <span class="nf">getDihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getDihedral</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
     <span class="n">v1</span> <span class="o">=</span> <span class="n">getNormedVector</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">getNormedVector</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
     <span class="n">v3</span> <span class="o">=</span> <span class="n">getNormedVector</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
@@ -80,7 +80,7 @@
 
 <div class="viewcode-block" id="rotax">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.rotax">[docs]</a>
-<span class="k">def</span> <span class="nf">rotax</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotax</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build 4x4 matrix of clockwise rotation about axis a--&gt;b</span>
 <span class="sd">    by angle tau (radians).</span>
@@ -150,7 +150,7 @@
 
 <div class="viewcode-block" id="rotVectToVect">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.rotVectToVect">[docs]</a>
-<span class="k">def</span> <span class="nf">rotVectToVect</span><span class="p">(</span><span class="n">vect1</span><span class="p">,</span> <span class="n">vect2</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotVectToVect</span><span class="p">(</span><span class="n">vect1</span><span class="p">,</span> <span class="n">vect2</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;returns a 4x4 transformation that will align vect1 with vect2</span>
 <span class="sd">    vect1 and vect2 can be any vector (non-normalized)&quot;&quot;&quot;</span>
     <span class="n">v1x</span><span class="p">,</span> <span class="n">v1y</span><span class="p">,</span> <span class="n">v1z</span> <span class="o">=</span> <span class="n">vect1</span>
@@ -234,7 +234,7 @@
 
 <div class="viewcode-block" id="ApplyMatrix">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.ApplyMatrix">[docs]</a>
-<span class="k">def</span> <span class="nf">ApplyMatrix</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ApplyMatrix</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply the 4x4 transformation matrix to the given list of 3d points.</span>
 
@@ -257,7 +257,7 @@
 
 <div class="viewcode-block" id="bullet_checkCollision_mp">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.bullet_checkCollision_mp">[docs]</a>
-<span class="k">def</span> <span class="nf">bullet_checkCollision_mp</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bullet_checkCollision_mp</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">):</span>
     <span class="c1">#    world =</span>
     <span class="c1">#    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.type},)</span>
     <span class="c1">#    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.type},)</span>
@@ -267,7 +267,7 @@
 
 <div class="viewcode-block" id="get_reflected_point">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.get_reflected_point">[docs]</a>
-<span class="k">def</span> <span class="nf">get_reflected_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_reflected_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># returns the reflection of a point across a bounding box</span>
     <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span>
@@ -324,7 +324,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>

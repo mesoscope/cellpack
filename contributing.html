@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Contributing &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <title>Contributing &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
     
-    <script src="_static/documentation_options.js?v=aec50437"></script>
+    <script src="_static/documentation_options.js?v=a34f1657"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -29,7 +29,7 @@
         <li class="right" >
           <a href="recipe-schema.html" title="Cellpack Recipe Schema 1.0"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack v1.1.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Contributing</a></li> 
       </ul>
     </div>  
@@ -53,8 +53,9 @@ helps, and credit will always be given.</p>
 </pre></div>
 </div>
 </li>
-<li><p>Install the project in editable mode. (It is also recommended to work in a virtualenv or anaconda environment):</p>
+<li><p>Install the project in editable mode by following installation instructions <a class="reference external" href="docs/INSTALL.md">here</a>. (It is also recommended to work in a virtual environment):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>cellpack/
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/linux/requirements.txt
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
 </pre></div>
 </div>
@@ -88,8 +89,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <p>A reminder for the maintainers on how to deploy.
 Make sure all your changes are committed.
 Then run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bump2version<span class="w"> </span>patch<span class="w"> </span><span class="c1"># possible: major / minor / patch</span>
-git<span class="w"> </span>push
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bumpver<span class="w"> </span>update<span class="w"> </span>--patch<span class="w"> </span><span class="c1"># possible: major / minor / patch</span>
 git<span class="w"> </span>push<span class="w"> </span>--tags
 </pre></div>
 </div>
@@ -153,7 +153,7 @@ git<span class="w"> </span>push<span class="w"> </span>--tags
         <li class="right" >
           <a href="recipe-schema.html" title="Cellpack Recipe Schema 1.0"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack v1.1.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Contributing</a></li> 
       </ul>
     </div>

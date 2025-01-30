@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.ldSequence &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.ldSequence &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -52,7 +52,7 @@
 <span class="sd">@author: Ludovic Autin, Graham Johnson,  &amp; Michel Sanner</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># First implementation came from QuasiRandom.py</span>
@@ -70,7 +70,7 @@
 
 <div class="viewcode-block" id="haltonterm">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.haltonterm">[docs]</a>
-<span class="k">def</span> <span class="nf">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">fac</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">base</span>
 
@@ -85,7 +85,7 @@
 
 <div class="viewcode-block" id="halton">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton">[docs]</a>
-<span class="k">def</span> <span class="nf">halton</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">halton</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">terms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base</span><span class="p">))</span>
@@ -95,7 +95,7 @@
 
 <div class="viewcode-block" id="halton2">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton2">[docs]</a>
-<span class="k">def</span> <span class="nf">halton2</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">base2</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">halton2</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">base2</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">terms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base1</span><span class="p">),</span> <span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base2</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
@@ -105,7 +105,7 @@
 
 <div class="viewcode-block" id="halton3">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton3">[docs]</a>
-<span class="k">def</span> <span class="nf">halton3</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">base2</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base3</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">halton3</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">base2</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base3</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">terms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base1</span><span class="p">),</span> <span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base2</span><span class="p">),</span> <span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base3</span><span class="p">)))</span>
@@ -159,11 +159,11 @@
 
 <div class="viewcode-block" id="HaltonSequence">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.HaltonSequence">[docs]</a>
-<span class="k">class</span> <span class="nc">HaltonSequence</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HaltonSequence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Another algorithm to compute a d-dimensional Halton Sequence.</span>
 <span class="sd">    This one gives the same results as the other.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">atmost</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">atmost</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">prime</span><span class="p">):</span>
             <span class="k">raise</span> <span class="s2">&quot;dim &lt; </span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
@@ -177,7 +177,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
             <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">f</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -197,7 +197,7 @@
 
 <div class="viewcode-block" id="SphereHalton">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.SphereHalton">[docs]</a>
-<span class="k">def</span> <span class="nf">SphereHalton</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">45.0</span><span class="p">)):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">SphereHalton</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">45.0</span><span class="p">)):</span>
     <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">st</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -249,7 +249,7 @@
 <span class="c1">#</span>
 <div class="viewcode-block" id="halton_sequence">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton_sequence">[docs]</a>
-<span class="k">def</span> <span class="nf">halton_sequence</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">halton_sequence</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># /// return term i of the base b Halton sequence</span>
     <span class="c1"># /// You can think of this as, for example, just a generalization of Heckbert&#39;s bit-</span>
     <span class="c1"># /// reversal distribution trick.</span>
@@ -274,11 +274,11 @@
 <span class="c1"># ==============================================================================</span>
 <div class="viewcode-block" id="cHaltonSequence3">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3">[docs]</a>
-<span class="k">class</span> <span class="nc">cHaltonSequence3</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">cHaltonSequence3</span><span class="p">:</span>
     <span class="c1"># /// This calculates the Halton sequence incrementally</span>
     <span class="c1"># /// for a base 2/3/5 triplet.</span>
     <span class="c1"># //    cFXVector3 mPoint;  ///&lt; Current sample point.</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mX</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mY</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mZ</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -289,7 +289,7 @@
 
 <div class="viewcode-block" id="cHaltonSequence3.inc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3.inc">[docs]</a>
-    <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">#    ///&lt; Advance to next point in the sequence. Returns the index of this point.</span>
         <span class="c1">#    /////////////////////////////////////</span>
         <span class="c1">#    // base 2</span>
@@ -367,7 +367,7 @@
 
 <div class="viewcode-block" id="cHaltonSequence3.reset">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">#    ///&lt; Move back to first point in the sequence (i.e. the origin.)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mBase3</span> <span class="o">=</span> <span class="mi">0</span>
@@ -408,7 +408,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

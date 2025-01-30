@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.Compartment &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.Compartment &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -95,25 +95,25 @@
 
 <span class="c1"># NOTE changing smallest molecule radius changes grid spacing and invalidates</span>
 <span class="c1">#      arrays saved to file</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">trimesh.voxel</span> <span class="kn">import</span> <span class="n">creation</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trimesh.voxel</span><span class="w"> </span><span class="kn">import</span> <span class="n">creation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial</span>
 
-<span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">transformation</span> <span class="k">as</span> <span class="n">tr</span><span class="p">,</span> <span class="n">binvox_rw</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">gridPoint</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.packed_objects</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">autopack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="kn">import</span> <span class="n">transformation</span> <span class="k">as</span> <span class="n">tr</span><span class="p">,</span> <span class="n">binvox_rw</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.BaseGrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">gridPoint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.packed_objects</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PackedObject</span><span class="p">,</span>
     <span class="n">PackedObjects</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.Recipe</span> <span class="kn">import</span> <span class="n">Recipe</span>
-<span class="kn">from</span> <span class="nn">.ray</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Recipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recipe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ray</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">makeMarchingCube</span><span class="p">,</span>
     <span class="n">vcross</span><span class="p">,</span>
     <span class="n">vlen</span><span class="p">,</span>
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="CompartmentList">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.CompartmentList">[docs]</a>
-<span class="k">class</span> <span class="nc">CompartmentList</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompartmentList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The CompartmentList class</span>
 <span class="sd">    ==========================</span>
@@ -138,14 +138,14 @@
 <div class="viewcode-block" id="CompartmentList.add_compartment">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.CompartmentList.add_compartment">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">add_compartment</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_compartment</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;add a new compartment to the list&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">compartment</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compartment</span><span class="p">,</span> <span class="n">Compartment</span><span class="p">)</span>
         <span class="n">compartment</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;compartment&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -159,7 +159,7 @@
 
 <div class="viewcode-block" id="Compartment">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment">[docs]</a>
-<span class="k">class</span> <span class="nc">Compartment</span><span class="p">(</span><span class="n">CompartmentList</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Compartment</span><span class="p">(</span><span class="n">CompartmentList</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Compartment class</span>
 <span class="sd">    ==========================</span>
@@ -167,7 +167,7 @@
 <span class="sd">    surface. Compartment can be nested</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">object_info</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">object_info</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># calculated centroid of the mesh</span>
@@ -246,7 +246,7 @@
 
 <div class="viewcode-block" id="Compartment.reset">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;reset the inner compartment data, surface and inner points&quot;&quot;&quot;</span>
         <span class="c1"># list of grid point indices inside compartment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insidePoints</span> <span class="o">=</span> <span class="kc">None</span>
@@ -257,7 +257,7 @@
 
 <div class="viewcode-block" id="Compartment.transformMesh">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.transformMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">transformMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transformMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
         <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">m</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">rot</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
@@ -272,7 +272,7 @@
 
 <div class="viewcode-block" id="Compartment.buildSphere">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.buildSphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">buildSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buildSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnormals</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">decompose_mesh</span><span class="p">(</span>
@@ -282,7 +282,7 @@
 
 <div class="viewcode-block" id="Compartment.buildMesh">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.buildMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a polygon mesh object from a dictionary verts,faces,normals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -295,13 +295,13 @@
         <span class="k">return</span> <span class="n">geom</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_get_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sphere</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="o">**</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">3</span>
 
 <div class="viewcode-block" id="Compartment.initialize_shape">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.initialize_shape">[docs]</a>
-    <span class="k">def</span> <span class="nf">initialize_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sphere</span><span class="p">:</span>
             <span class="c1"># one sphere, geom is a dictionary</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buildSphere</span><span class="p">(</span><span class="n">mesh_store</span><span class="p">)</span>
@@ -326,7 +326,7 @@
 
 <div class="viewcode-block" id="Compartment.store_packed_object">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.store_packed_object">[docs]</a>
-    <span class="k">def</span> <span class="nf">store_packed_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_packed_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="n">packed_object</span> <span class="o">=</span> <span class="n">PackedObject</span><span class="p">(</span>
             <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
             <span class="n">rotation</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
@@ -340,7 +340,7 @@
 
 <div class="viewcode-block" id="Compartment.setGeomFaces">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setGeomFaces">[docs]</a>
-    <span class="k">def</span> <span class="nf">setGeomFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tris</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setGeomFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tris</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
         <span class="c1"># have to add vertices one by one since they are not in order</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">face</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">face</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">face</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">face</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
@@ -351,14 +351,14 @@
 
 <div class="viewcode-block" id="Compartment.create_rbnode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create_rbnode">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_rbnode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_rbnode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Sphere</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Compartment.get_rb_model">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_rb_model">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_rb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_rb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbnode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rbnode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_rbnode</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rbnode</span></div>
@@ -366,7 +366,7 @@
 
 <div class="viewcode-block" id="Compartment.getMesh">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the compartment 3d representation from the given filename</span>
 
@@ -388,7 +388,7 @@
 
 <div class="viewcode-block" id="Compartment.setMesh">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">setMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vnormals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vnormals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the 3d mesh from the given filename or the given mesh data (v,f,n)</span>
 
@@ -419,7 +419,7 @@
 
 <div class="viewcode-block" id="Compartment.saveGridToFile">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.saveGridToFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save insidePoints and surfacePoints to file&quot;&quot;&quot;</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surfacePoints</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
@@ -429,7 +429,7 @@
 
 <div class="viewcode-block" id="Compartment.readGridFromFile">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.readGridFromFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">readGridFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">readGridFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;read insidePoints and surfacePoints from file&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insidePoints</span> <span class="o">=</span> <span class="n">insidePoints</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfacePoints</span> <span class="o">=</span> <span class="n">surfacePoints</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -445,14 +445,14 @@
 
 <div class="viewcode-block" id="Compartment.setNumber">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setNumber">[docs]</a>
-    <span class="k">def</span> <span class="nf">setNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;set compartment uniq id&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">num</span></div>
 
 
 <div class="viewcode-block" id="Compartment.setInnerRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setInnerRecipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">setInnerRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setInnerRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;set the inner recipe that define the ingredient to pack inside&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">Recipe</span><span class="p">)</span>
@@ -468,7 +468,7 @@
 
 <div class="viewcode-block" id="Compartment.setSurfaceRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setSurfaceRecipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">setSurfaceRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setSurfaceRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;set the inner recipe that define the ingredient to pack at the surface&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">Recipe</span><span class="p">)</span>
@@ -481,7 +481,7 @@
 
 <div class="viewcode-block" id="Compartment.getCenter">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getCenter">[docs]</a>
-    <span class="k">def</span> <span class="nf">getCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCenter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the center of the mesh (vertices barycenter)&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>  <span class="c1"># self.allAtoms.coords</span>
@@ -494,9 +494,9 @@
 
 <div class="viewcode-block" id="Compartment.getRadius">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getRadius">[docs]</a>
-    <span class="k">def</span> <span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the radius as the distance between vertices center and bottom left bounding box&quot;&quot;&quot;</span>
-        <span class="kn">import</span> <span class="nn">math</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span>
@@ -505,7 +505,7 @@
 
 <div class="viewcode-block" id="Compartment.getBoundingBox">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getBoundingBox">[docs]</a>
-    <span class="k">def</span> <span class="nf">getBoundingBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getBoundingBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the bounding box&quot;&quot;&quot;</span>
         <span class="n">mini</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">maxi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -517,7 +517,7 @@
 
 <div class="viewcode-block" id="Compartment.getSizeXYZ">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSizeXYZ">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSizeXYZ</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSizeXYZ</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the size per axe&quot;&quot;&quot;</span>
         <span class="n">sizexyz</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
@@ -527,7 +527,7 @@
 
 <div class="viewcode-block" id="Compartment.checkPointInsideBB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.checkPointInsideBB">[docs]</a>
-    <span class="k">def</span> <span class="nf">checkPointInsideBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkPointInsideBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;check if the given 3d coordinate is inside the compartment bounding box&quot;&quot;&quot;</span>
         <span class="n">origin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">E</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -552,7 +552,7 @@
 
 <div class="viewcode-block" id="Compartment.inBox">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.inBox">[docs]</a>
-    <span class="k">def</span> <span class="nf">inBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        check if bounding box of this compartment fits inside the give box</span>
 <span class="sd">        returns true or false and the extended bounding box if this compartment</span>
@@ -602,7 +602,7 @@
 
 <div class="viewcode-block" id="Compartment.inGrid">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.inGrid">[docs]</a>
-    <span class="k">def</span> <span class="nf">inGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">fillBB</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">fillBB</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        check if bounding box of this compartment fits inside the give box</span>
 <span class="sd">        returns true or false and the extended bounding box if this compartment</span>
@@ -620,7 +620,7 @@
 
 <div class="viewcode-block" id="Compartment.get_normal_for_point">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_normal_for_point">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_normal_for_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_normal_for_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">pt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">:</span>
             <span class="n">normal</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_normal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">normal</span>
@@ -631,7 +631,7 @@
 
 <div class="viewcode-block" id="Compartment.getMinMaxProteinSize">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getMinMaxProteinSize">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMinMaxProteinSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMinMaxProteinSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;retrieve minimum and maximum ingredient size for inner and surface recipe ingredients&quot;&quot;&quot;</span>
         <span class="c1"># for compartment in self.compartments:</span>
         <span class="c1">#    mini, maxi = compartment.getSmallestProteinSize(size)</span>
@@ -646,7 +646,7 @@
 
 <div class="viewcode-block" id="Compartment.getVertexNormals">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getVertexNormals">[docs]</a>
-    <span class="k">def</span> <span class="nf">getVertexNormals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getVertexNormals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
         <span class="n">vnormals</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[:]</span>
         <span class="n">face</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
         <span class="n">v</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
@@ -673,7 +673,7 @@
 
 <div class="viewcode-block" id="Compartment.getFaceNormals">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getFaceNormals">[docs]</a>
-    <span class="k">def</span> <span class="nf">getFaceNormals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">fillBB</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFaceNormals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">fillBB</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute the face normal of the compartment mesh&quot;&quot;&quot;</span>
         <span class="n">normals</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">areas</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added by Graham</span>
@@ -705,7 +705,7 @@
 
 <div class="viewcode-block" id="Compartment.getInterpolatedNormal">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getInterpolatedNormal">[docs]</a>
-    <span class="k">def</span> <span class="nf">getInterpolatedNormal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">tri</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getInterpolatedNormal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">tri</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute an interpolated normal for te given triangle at the given point&quot;&quot;&quot;</span>
         <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="n">tri</span><span class="p">]</span>
         <span class="n">verts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
@@ -730,7 +730,7 @@
 
 <div class="viewcode-block" id="Compartment.createSurfacePoints">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.createSurfacePoints">[docs]</a>
-    <span class="k">def</span> <span class="nf">createSurfacePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxl</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createSurfacePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxl</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create points inside edges and faces with max distance between then maxl</span>
 <span class="sd">        creates self.surfacePoints and self.surfacePointsNormals</span>
@@ -891,7 +891,7 @@
 
 <div class="viewcode-block" id="Compartment.is_point_inside_mesh">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.is_point_inside_mesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_point_inside_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">diag</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_point_inside_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">diag</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">insideBB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointInsideBB</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>  <span class="c1"># cutoff?</span>
         <span class="k">if</span> <span class="n">insideBB</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
@@ -901,7 +901,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">mesh_store</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">mesh_store</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_orthogonal_bounding_box</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prepare_buildgrid_box</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ghost</span><span class="p">:</span>
@@ -1045,7 +1045,7 @@
 
 <div class="viewcode-block" id="Compartment.build_grid_sphere">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.build_grid_sphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_grid_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_grid_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="n">grid_pts_in_sphere_indexes</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span>
         <span class="p">)</span>  <span class="c1"># This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.</span>
@@ -1064,7 +1064,7 @@
 
 <div class="viewcode-block" id="Compartment.prepare_buildgrid_box">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.prepare_buildgrid_box">[docs]</a>
-    <span class="k">def</span> <span class="nf">prepare_buildgrid_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_buildgrid_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
         <span class="p">)</span>  <span class="c1"># This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.</span>
@@ -1091,7 +1091,7 @@
 
 <div class="viewcode-block" id="Compartment.set_surface_distances">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.set_surface_distances">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_surface_distances</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_surface_distances</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">,</span> <span class="n">calc_distance_between_surfaces</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
         <span class="n">surface_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">)</span>
@@ -1139,7 +1139,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_box">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_box">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">):</span>
         <span class="n">nbGridPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">)</span>
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bb</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">addSP</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">insidePoints</span><span class="p">:</span>
@@ -1166,7 +1166,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_ray">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_ray">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_ray</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_ray</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">grdPos</span><span class="p">,</span>
@@ -1242,7 +1242,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_binvox">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_binvox">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_binvox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">grdPos</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">,</span> <span class="n">srfPts</span><span class="p">,</span> <span class="n">idarray</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_binvox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">grdPos</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">,</span> <span class="n">srfPts</span><span class="p">,</span> <span class="n">idarray</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># create surface points</span>
         <span class="c1"># check if file already exist, otherwise rebuild it</span>
         <span class="n">number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span>
@@ -1318,7 +1318,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_trimesh">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_trimesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_trimesh</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_trimesh</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">master_grid_positions</span><span class="p">,</span>
@@ -1399,7 +1399,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_scanline">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_scanline">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_scanline</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_scanline</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">grdPos</span><span class="p">,</span>
@@ -1473,7 +1473,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_pyray">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_pyray">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_pyray</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_pyray</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">ctree</span><span class="p">,</span>
@@ -1589,7 +1589,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_bhtree">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_bhtree">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_bhtree</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_bhtree</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">ctree</span><span class="p">,</span>
@@ -1687,7 +1687,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_kevin">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_kevin">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_kevin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">superFine</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_kevin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">superFine</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the compartment grid ie surface and inside point using flood filling algo from kevin&quot;&quot;&quot;</span>
 
         <span class="c1"># Graham Sum the SurfaceArea for each polyhedron</span>
@@ -1991,7 +1991,7 @@
 
 <div class="viewcode-block" id="Compartment.extendGridArrays">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.extendGridArrays">[docs]</a>
-    <span class="k">def</span> <span class="nf">extendGridArrays</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extendGridArrays</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">nbGridPoints</span><span class="p">,</span>
         <span class="n">off_grid_surface_pts</span><span class="p">,</span>
@@ -2040,7 +2040,7 @@
 
 <div class="viewcode-block" id="Compartment.filter_surface_pts_to_fill_box">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.filter_surface_pts_to_fill_box">[docs]</a>
-    <span class="k">def</span> <span class="nf">filter_surface_pts_to_fill_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">off_grid_pos</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_surface_pts_to_fill_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">off_grid_pos</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the bounding box from the environment grid that encapsulated the mesh&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">highresVertices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">off_grid_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">highresVertices</span>
@@ -2060,7 +2060,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGridEnviroOnly">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGridEnviroOnly">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGridEnviroOnly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGridEnviroOnly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the compartment grid ie surface and inside only environment&quot;&quot;&quot;</span>
         <span class="c1"># create surface points</span>
         <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
@@ -2091,7 +2091,7 @@
         <span class="c1">#        returnNullIfFail = 0</span>
         <span class="n">closest</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># bht.closestPointsArray(grdPos, diag, returnNullIfFail)</span>
 
-        <span class="k">def</span> <span class="nf">distanceLoop</span><span class="p">(</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">distanceLoop</span><span class="p">(</span>
             <span class="n">ptInd</span><span class="p">,</span>
             <span class="n">distances</span><span class="p">,</span>
             <span class="n">grdPos</span><span class="p">,</span>
@@ -2195,7 +2195,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_utsdf">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_utsdf">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_utsdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_utsdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build the compartment grid ie surface and inside point using signed distance fields</span>
 <span class="sd">        from the UT package</span>
@@ -2210,7 +2210,7 @@
         <span class="c1"># FIXME .. dimensions on SDF should addapt to compartment size</span>
         <span class="n">sizex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSizeXYZ</span><span class="p">()</span>
 
-        <span class="kn">from</span> <span class="nn">UTpackages.UTsdf</span> <span class="kn">import</span> <span class="n">utsdf</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">UTpackages.UTsdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">utsdf</span>
 
         <span class="c1"># can be 16,32,64,128,256,512,1024</span>
         <span class="c1">#        if spacing not in [16,32,64,128,256,512,1024]:</span>
@@ -2237,7 +2237,7 @@
         <span class="n">volarr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">volarr</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
 
         <span class="c1"># get grid points distances to compartment surface</span>
-        <span class="kn">from</span> <span class="nn">Volume.Operators.trilinterp</span> <span class="kn">import</span> <span class="n">trilinterp</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">Volume.Operators.trilinterp</span><span class="w"> </span><span class="kn">import</span> <span class="n">trilinterp</span>
 
         <span class="n">invstep</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">sizex</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">dim</span><span class="p">),</span>
@@ -2284,9 +2284,9 @@
 
 <div class="viewcode-block" id="Compartment.get_bbox">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_bbox">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vert_list</span><span class="p">,</span> <span class="n">BB_SCALE</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vert_list</span><span class="p">,</span> <span class="n">BB_SCALE</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get bounding box for the given list of vertices&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">multisdf</span> <span class="kn">import</span> <span class="n">multisdf</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">multisdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">multisdf</span>
 
         <span class="n">multisdf</span><span class="o">.</span><span class="n">cvar</span><span class="o">.</span><span class="n">BB_SCALE</span> <span class="o">=</span> <span class="n">BB_SCALE</span>
         <span class="n">HUGE</span> <span class="o">=</span> <span class="mi">999999</span>
@@ -2328,7 +2328,7 @@
 
 <div class="viewcode-block" id="Compartment.BuildGrid_multisdf">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_multisdf">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildGrid_multisdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildGrid_multisdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the compartment grid ie surface and inside point using multisdf&quot;&quot;&quot;</span>
         <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span>
         <span class="n">faces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
@@ -2344,7 +2344,7 @@
         <span class="n">zmax</span> <span class="o">=</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
 
         <span class="c1"># compute SDF</span>
-        <span class="kn">from</span> <span class="nn">multisdf</span> <span class="kn">import</span> <span class="n">multisdf</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">multisdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">multisdf</span>
 
         <span class="n">gridSpacing</span> <span class="o">=</span> <span class="mf">30.0</span>
         <span class="n">dimx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">gridSpacing</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
@@ -2368,7 +2368,7 @@
         <span class="n">volarr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">volarr</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
 
         <span class="c1"># get grid points distances to compartment surface</span>
-        <span class="kn">from</span> <span class="nn">Volume.Operators.trilinterp</span> <span class="kn">import</span> <span class="n">trilinterp</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">Volume.Operators.trilinterp</span><span class="w"> </span><span class="kn">import</span> <span class="n">trilinterp</span>
 
         <span class="n">invstep</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">gridSpacing</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">gridSpacing</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">gridSpacing</span><span class="p">)</span>
         <span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">zmin</span><span class="p">)</span>
@@ -2421,7 +2421,7 @@
 
 <div class="viewcode-block" id="Compartment.getSurfacePoint">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfacePoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSurfacePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSurfacePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute point between p1 and p2 with weight w1 and w2&quot;&quot;&quot;</span>
         <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
         <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
@@ -2433,7 +2433,7 @@
 
 <div class="viewcode-block" id="Compartment.compute_volume_and_set_count">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.compute_volume_and_set_count">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_volume_and_set_count</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_volume_and_set_count</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">surfacePoints</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">areas</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2462,7 +2462,7 @@
 
 <div class="viewcode-block" id="Compartment.setCount">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setCount">[docs]</a>
-    <span class="k">def</span> <span class="nf">setCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># compute number of molecules and save in recipes</span>
         <span class="n">rs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaceRecipe</span>
         <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
@@ -2477,7 +2477,7 @@
 
 <div class="viewcode-block" id="Compartment.getFacesNfromV">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getFacesNfromV">[docs]</a>
-    <span class="k">def</span> <span class="nf">getFacesNfromV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vindice</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFacesNfromV</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vindice</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the face normal from the indice of a vertice</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2496,7 +2496,7 @@
 
 <div class="viewcode-block" id="Compartment.getVNfromF">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getVNfromF">[docs]</a>
-    <span class="k">def</span> <span class="nf">getVNfromF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getVNfromF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the vertice normal from the indice of a vertice</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2515,7 +2515,7 @@
 
 <div class="viewcode-block" id="Compartment.create3DPointLookup">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create3DPointLookup">[docs]</a>
-    <span class="k">def</span> <span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbGridPoints</span><span class="p">,</span> <span class="n">gridSpacing</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbGridPoints</span><span class="p">,</span> <span class="n">gridSpacing</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fill the orthogonal bounding box described by two global corners</span>
 <span class="sd">         with an array of points spaces pGridSpacing apart. Duplicate from grid class</span>
@@ -2546,7 +2546,7 @@
 
 <div class="viewcode-block" id="Compartment.find_nearest">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.find_nearest">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_nearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_nearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;find nearest point indice of value in array using numpy&quot;&quot;&quot;</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span> <span class="o">-</span> <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">array</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
@@ -2556,14 +2556,14 @@
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints_sdf">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints_sdf</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSurfaceInnerPoints_sdf</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
 <span class="sd">        This is independant from the packing. Help build ingredient sphere tree and representation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">autopack.Environment</span> <span class="kn">import</span> <span class="n">Grid</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">autopack.Environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">()</span>
         <span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">boundingBox</span>
@@ -2582,7 +2582,7 @@
         <span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="p">[</span><span class="n">diag</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbPoints</span>
         <span class="n">diag</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">diag</span>
 
-        <span class="kn">from</span> <span class="nn">UTpackages.UTsdf</span> <span class="kn">import</span> <span class="n">utsdf</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">UTpackages.UTsdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">utsdf</span>
 
         <span class="c1"># can be 16,32,64,128,256,512,1024</span>
         <span class="k">if</span> <span class="n">spacing</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">]:</span>
@@ -2631,7 +2631,7 @@
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints_kevin">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_kevin">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints_kevin</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSurfaceInnerPoints_kevin</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">superFine</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2655,7 +2655,7 @@
         <span class="c1"># Make a copy of faces, vertices, and vnormals.</span>
         <span class="n">faces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">[:]</span>
         <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:]</span>
-        <span class="kn">from</span> <span class="nn">cellpack.autopack.Environment</span> <span class="kn">import</span> <span class="n">Grid</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.Environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
 
         <span class="c1"># Grid initialization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">()</span>  <span class="c1"># setup=False)</span>
@@ -2953,14 +2953,14 @@
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints_sdf_interpolate">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf_interpolate">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints_sdf_interpolate</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSurfaceInnerPoints_sdf_interpolate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
 <span class="sd">        This is independant from the packing. Help build ingredient sphere tree and representation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">autopack.Environment</span> <span class="kn">import</span> <span class="n">Grid</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">autopack.Environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">()</span>
         <span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">boundingBox</span>
@@ -2981,7 +2981,7 @@
         <span class="n">dim</span> <span class="o">=</span> <span class="mi">16</span>
         <span class="n">dim1</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">size</span> <span class="o">=</span> <span class="n">dim1</span> <span class="o">*</span> <span class="n">dim1</span> <span class="o">*</span> <span class="n">dim1</span>
-        <span class="kn">from</span> <span class="nn">UTpackages.UTsdf</span> <span class="kn">import</span> <span class="n">utsdf</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">UTpackages.UTsdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">utsdf</span>
 
         <span class="n">verts</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
         <span class="n">tris</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
@@ -2998,7 +2998,7 @@
         <span class="n">volarr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">volarr</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
 
         <span class="c1"># get grid points distances to compartment surface</span>
-        <span class="kn">from</span> <span class="nn">Volume.Operators.trilinterp</span> <span class="kn">import</span> <span class="n">trilinterp</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">Volume.Operators.trilinterp</span><span class="w"> </span><span class="kn">import</span> <span class="n">trilinterp</span>
 
         <span class="n">sizex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSizeXYZ</span><span class="p">()</span>
         <span class="n">invstep</span> <span class="o">=</span> <span class="p">(</span>
@@ -3023,12 +3023,12 @@
 
 <div class="viewcode-block" id="Compartment.getSurfaceInnerPoints">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSurfaceInnerPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSurfaceInnerPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">useFix</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only compute the inner point. No grid.</span>
 <span class="sd">        This is independant from the packing. Help build ingredient sphere tree and representation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">autopack.Environment</span> <span class="kn">import</span> <span class="n">Grid</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">autopack.Environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">()</span>
         <span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">boundingBox</span>
@@ -3232,7 +3232,7 @@
 
 <div class="viewcode-block" id="Compartment.create_voxelized_mask">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create_voxelized_mask">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_voxelized_mask</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_voxelized_mask</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">x_width</span><span class="p">,</span>
         <span class="n">y_width</span><span class="p">,</span>
@@ -3288,7 +3288,7 @@
 
 <div class="viewcode-block" id="Compartment.create_voxelization">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create_voxelization">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_voxelization</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image_data</span><span class="p">,</span>
         <span class="n">bounding_box</span><span class="p">,</span>
@@ -3323,7 +3323,7 @@
 
 <div class="viewcode-block" id="Compartment.printFillInfo">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.printFillInfo">[docs]</a>
-    <span class="k">def</span> <span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;print some info about the compartment and its recipe&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;compartment </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfaceRecipe</span>
@@ -3368,7 +3368,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

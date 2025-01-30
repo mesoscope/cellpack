@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.ray &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.ray &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -73,13 +73,13 @@
 <span class="sd">@author: Graham Johnson, Michel Sanner, Ludovic Autin, Kevin Wu</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
 
 
 <div class="viewcode-block" id="vdiff">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vdiff">[docs]</a>
-<span class="k">def</span> <span class="nf">vdiff</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vdiff</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
     <span class="c1"># returns p1 - p2</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
@@ -89,7 +89,7 @@
 
 <div class="viewcode-block" id="vcross">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vcross">[docs]</a>
-<span class="k">def</span> <span class="nf">vcross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vcross</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">z2</span> <span class="o">*</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">y1</span><span class="p">)</span></div>
@@ -98,7 +98,7 @@
 
 <div class="viewcode-block" id="dot">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.dot">[docs]</a>
-<span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">)</span></div>
@@ -107,7 +107,7 @@
 
 <div class="viewcode-block" id="vnorm">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vnorm">[docs]</a>
-<span class="k">def</span> <span class="nf">vnorm</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vnorm</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z1</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span></div>
@@ -116,7 +116,7 @@
 
 <div class="viewcode-block" id="vlen">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.vlen">[docs]</a>
-<span class="k">def</span> <span class="nf">vlen</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vlen</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
     <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z1</span><span class="p">)</span></div>
 
@@ -124,7 +124,7 @@
 
 <div class="viewcode-block" id="ray_intersect_polygon">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polygon">[docs]</a>
-<span class="k">def</span> <span class="nf">ray_intersect_polygon</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ray_intersect_polygon</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span>
     <span class="n">pRayEndPos</span><span class="p">,</span>
     <span class="n">pQuadranglePointPositions</span><span class="p">,</span>
@@ -238,7 +238,7 @@
 
 <div class="viewcode-block" id="ray_intersect_polyhedron">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polyhedron">[docs]</a>
-<span class="k">def</span> <span class="nf">ray_intersect_polyhedron</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ray_intersect_polyhedron</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span> <span class="n">pRayEndPos</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">pTruncateToSegment</span>
 <span class="p">):</span>
     <span class="c1"># This function returns TRUE if a ray intersects a triangle.</span>
@@ -361,7 +361,7 @@
 
 <div class="viewcode-block" id="f_ray_intersect_polyhedron">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_ray_intersect_polyhedron">[docs]</a>
-<span class="k">def</span> <span class="nf">f_ray_intersect_polyhedron</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f_ray_intersect_polyhedron</span><span class="p">(</span>
     <span class="n">pRayStartPos</span><span class="p">,</span> <span class="n">pRayEndPos</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">pTruncateToSegment</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This function returns TRUE if a ray intersects a triangle.</span>
@@ -487,14 +487,14 @@
 
 <div class="viewcode-block" id="makeMarchingCube">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.makeMarchingCube">[docs]</a>
-<span class="k">def</span> <span class="nf">makeMarchingCube</span><span class="p">(</span><span class="n">gridSpacing</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">makeMarchingCube</span><span class="p">(</span><span class="n">gridSpacing</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a numpy array that represents the precomputed distances to each point</span>
 <span class="sd">    for the cube of points surrounding our center point.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_pythagorean</span><span class="p">(</span><span class="o">*</span><span class="n">edgeLengths</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pythagorean</span><span class="p">(</span><span class="o">*</span><span class="n">edgeLengths</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
 
         <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">edgeLengths</span><span class="p">:</span>
@@ -502,7 +502,7 @@
         <span class="n">distance</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">distance</span>
 
-    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">ceil</span>
 
     <span class="n">pointsForRadius</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
         <span class="n">ceil</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="n">gridSpacing</span><span class="p">)</span>
@@ -534,7 +534,7 @@
 
 <div class="viewcode-block" id="findPointsCenter">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.findPointsCenter">[docs]</a>
-<span class="k">def</span> <span class="nf">findPointsCenter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">findPointsCenter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="c1"># Average down the column, such that we&#39;re averaging across all measurements in one dimension</span>
     <span class="n">center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">center</span></div>
@@ -546,7 +546,7 @@
 
 <div class="viewcode-block" id="f_dot_product">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ray.f_dot_product">[docs]</a>
-<span class="k">def</span> <span class="nf">f_dot_product</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f_dot_product</span><span class="p">(</span><span class="n">vector1</span><span class="p">,</span> <span class="n">vector2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the dot product of two 3D vectors.&quot;&quot;&quot;</span>
     <span class="n">dottedVectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vector1</span><span class="p">))]</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dottedVectors</span><span class="p">)</span></div>
@@ -582,7 +582,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

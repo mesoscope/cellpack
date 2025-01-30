@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.ingredient.Ingredient &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.ingredient.Ingredient &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -83,31 +83,31 @@
 <span class="c1"># Updated with Correct Sept 25, 2011 thesis version on July 5, 2012</span>
 
 <span class="c1"># TODO: Describe Ingredient class here at high level</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">collada</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">random</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">collada</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.ingredient_types</span> <span class="kn">import</span> <span class="n">INGREDIENT_TYPE</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.packed_objects</span> <span class="kn">import</span> <span class="n">PackedObject</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">get_distance</span><span class="p">,</span> <span class="n">get_value_from_distribution</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.ingredient_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">INGREDIENT_TYPE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.packed_objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">PackedObject</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_distance</span><span class="p">,</span> <span class="n">get_value_from_distribution</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ApplyMatrix</span><span class="p">,</span>
     <span class="n">getNormedVectorOnes</span><span class="p">,</span>
     <span class="n">rotVectToVect</span><span class="p">,</span>
     <span class="n">rotax</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.upy.simularium.simularium_helper</span> <span class="kn">import</span> <span class="n">simulariumHelper</span>
-<span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.meta_enum</span> <span class="kn">import</span> <span class="n">MetaEnum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.upy.simularium.simularium_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">simulariumHelper</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">autopack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.ingredient.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.meta_enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetaEnum</span>
 
 <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
 <span class="n">reporthook</span> <span class="o">=</span> <span class="kc">None</span>
@@ -117,7 +117,7 @@
 
 <div class="viewcode-block" id="DistributionTypes">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.DistributionTypes">[docs]</a>
-<span class="k">class</span> <span class="nc">DistributionTypes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DistributionTypes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
     <span class="c1"># All available distribution types</span>
     <span class="n">UNIFORM</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span>
     <span class="n">NORMAL</span> <span class="o">=</span> <span class="s2">&quot;normal&quot;</span>
@@ -127,7 +127,7 @@
 
 <div class="viewcode-block" id="DistributionOptions">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.DistributionOptions">[docs]</a>
-<span class="k">class</span> <span class="nc">DistributionOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DistributionOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
     <span class="c1"># All available distribution options</span>
     <span class="n">MIN</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span>
     <span class="n">MAX</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span>
@@ -146,8 +146,8 @@
 
 <div class="viewcode-block" id="IngredientInstanceDrop">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.IngredientInstanceDrop">[docs]</a>
-<span class="k">class</span> <span class="nc">IngredientInstanceDrop</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptId</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">rb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IngredientInstanceDrop</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptId</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">rb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ptId</span> <span class="o">=</span> <span class="n">ptId</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation</span>
@@ -169,7 +169,7 @@
 <span class="c1"># the ingredient should derive from a class of Agent</span>
 <div class="viewcode-block" id="Ingredient">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient">[docs]</a>
-<span class="k">class</span> <span class="nc">Ingredient</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ingredient</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
     <span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for Ingredients that can be added to a Recipe.</span>
@@ -239,7 +239,7 @@
         <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
     <span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;single_sphere&quot;</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -423,7 +423,7 @@
 <div class="viewcode-block" id="Ingredient.validate_distribution_options">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.validate_distribution_options">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">validate_distribution_options</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_distribution_options</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates distribution options and returns validated distribution options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -446,7 +446,7 @@
 <div class="viewcode-block" id="Ingredient.validate_ingredient_info">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.validate_ingredient_info">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">validate_ingredient_info</span><span class="p">(</span><span class="n">ingredient_info</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_ingredient_info</span><span class="p">(</span><span class="n">ingredient_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates ingredient info and returns validated ingredient info</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -503,7 +503,7 @@
 
 <div class="viewcode-block" id="Ingredient.reset">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;reset the states of an ingredient&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -512,47 +512,47 @@
 
 <div class="viewcode-block" id="Ingredient.has_pdb">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.has_pdb">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_pdb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_pdb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">has_pdb</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Ingredient.has_mesh">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.has_mesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">has_mesh</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Ingredient.use_mesh">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.use_mesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">use_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">use_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">set_active</span><span class="p">(</span><span class="s2">&quot;mesh&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_mesh_path</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Ingredient.use_pdb">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.use_pdb">[docs]</a>
-    <span class="k">def</span> <span class="nf">use_pdb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">use_pdb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">set_active</span><span class="p">(</span><span class="s2">&quot;atomic&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_pdb_path</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Ingredient.setTilling">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.setTilling">[docs]</a>
-    <span class="k">def</span> <span class="nf">setTilling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setTilling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;hexatile&quot;</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cellpack.autopack.hexagonTile</span> <span class="kn">import</span> <span class="n">tileHexaIngredient</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.hexagonTile</span><span class="w"> </span><span class="kn">import</span> <span class="n">tileHexaIngredient</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span> <span class="o">=</span> <span class="n">tileHexaIngredient</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">,</span> <span class="n">init_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;squaretile&quot;</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cellpack.autopack.hexagonTile</span> <span class="kn">import</span> <span class="n">tileSquareIngredient</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.hexagonTile</span><span class="w"> </span><span class="kn">import</span> <span class="n">tileSquareIngredient</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span> <span class="o">=</span> <span class="n">tileSquareIngredient</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">,</span> <span class="n">init_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;triangletile&quot;</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cellpack.autopack.hexagonTile</span> <span class="kn">import</span> <span class="n">tileTriangleIngredient</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.hexagonTile</span><span class="w"> </span><span class="kn">import</span> <span class="n">tileTriangleIngredient</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span> <span class="o">=</span> <span class="n">tileTriangleIngredient</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">,</span> <span class="n">init_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span>
@@ -561,7 +561,7 @@
 
 <div class="viewcode-block" id="Ingredient.initialize_mesh">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.initialize_mesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="c1"># get the collision mesh</span>
         <span class="n">mesh_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_mesh_path</span><span class="p">()</span>
         <span class="n">meshName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_mesh_name</span><span class="p">()</span>
@@ -585,7 +585,7 @@
 
 <div class="viewcode-block" id="Ingredient.DecomposeMesh">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.DecomposeMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">DecomposeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">DecomposeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
         <span class="n">m</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
@@ -604,7 +604,7 @@
 
 <div class="viewcode-block" id="Ingredient.getEncapsulatingRadius">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getEncapsulatingRadius">[docs]</a>
-    <span class="k">def</span> <span class="nf">getEncapsulatingRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getEncapsulatingRadius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">:</span>
                 <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
@@ -633,7 +633,7 @@
 
 <div class="viewcode-block" id="Ingredient.getData">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getData">[docs]</a>
-    <span class="k">def</span> <span class="nf">getData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_normals</span></div>
@@ -641,7 +641,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_rb_model">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rb_model">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_rb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_rb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">alt</span><span class="p">:</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="mi">1</span>
@@ -654,7 +654,7 @@
 
 <div class="viewcode-block" id="Ingredient.getMesh">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a mesh representation from a filename for the ingredient</span>
 
@@ -790,7 +790,7 @@
 
 <div class="viewcode-block" id="Ingredient.buildMesh">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.buildMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a polygon mesh object from a dictionary verts,faces,normals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -805,7 +805,7 @@
 
 <div class="viewcode-block" id="Ingredient.jitterPosition">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.jitterPosition">[docs]</a>
-    <span class="k">def</span> <span class="nf">jitterPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jitterPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        position are the 3d coordiantes of the grid point</span>
 <span class="sd">        spacing is the grid spacing</span>
@@ -839,7 +839,7 @@
 
 <div class="viewcode-block" id="Ingredient.getMaxJitter">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getMaxJitter">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMaxJitter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMaxJitter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
         <span class="c1"># self.max_jitter: each value is the max it can move</span>
         <span class="c1"># along that axis, but not cocurrently, ie, can&#39;t move</span>
         <span class="c1"># in the max x AND max y direction at the same time</span>
@@ -848,7 +848,7 @@
 
 <div class="viewcode-block" id="Ingredient.swap">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.swap">[docs]</a>
-    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="n">d</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="p">)</span>
         <span class="n">d</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
         <span class="n">d</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
@@ -856,13 +856,13 @@
 
 <div class="viewcode-block" id="Ingredient.deleteblist">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.deleteblist">[docs]</a>
-    <span class="k">def</span> <span class="nf">deleteblist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deleteblist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">n</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Ingredient.get_cuttoff_value">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_cuttoff_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_cuttoff_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cuttoff_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the min value a grid point needs to be away from a surfance</span>
 <span class="sd">        in order for this ingredient to pack. Only needs to be calculated once</span>
 <span class="sd">        per ingredient once the jitter is set.&quot;&quot;&quot;</span>
@@ -881,7 +881,7 @@
 
 <div class="viewcode-block" id="Ingredient.checkIfUpdate">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkIfUpdate">[docs]</a>
-    <span class="k">def</span> <span class="nf">checkIfUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkIfUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if we need to update the distance array. Part of the hack free points&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;nbPts&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;firstTimeUpdate&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">firstTimeUpdate</span><span class="p">:</span>
@@ -908,7 +908,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_list_of_free_indices">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_list_of_free_indices">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_list_of_free_indices</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_list_of_free_indices</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">distances</span><span class="p">,</span>
         <span class="n">free_points</span><span class="p">,</span>
@@ -972,7 +972,7 @@
 
 <div class="viewcode-block" id="Ingredient.perturbAxis">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.perturbAxis">[docs]</a>
-    <span class="k">def</span> <span class="nf">perturbAxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">perturbAxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">):</span>
         <span class="c1"># modify axis using gaussian distribution but clamp</span>
         <span class="c1"># at amplitutde</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">principal_vector</span>
@@ -998,7 +998,7 @@
 
 <div class="viewcode-block" id="Ingredient.transformPoints">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints">[docs]</a>
-    <span class="k">def</span> <span class="nf">transformPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transformPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
@@ -1008,7 +1008,7 @@
 
 <div class="viewcode-block" id="Ingredient.transformPoints_mult">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints_mult">[docs]</a>
-    <span class="k">def</span> <span class="nf">transformPoints_mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transformPoints_mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
         <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">tz</span> <span class="o">=</span> <span class="n">trans</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
@@ -1021,7 +1021,7 @@
 
 <div class="viewcode-block" id="Ingredient.apply_rotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.apply_rotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">apply_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">([</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">3</span><span class="p">],</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">3</span><span class="p">],</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">][:</span><span class="mi">3</span><span class="p">]])</span>
         <span class="n">new_pos</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_pos</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span></div>
@@ -1029,7 +1029,7 @@
 
 <div class="viewcode-block" id="Ingredient.alignRotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.alignRotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">alignRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">gradients</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">alignRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">gradients</span><span class="p">):</span>
         <span class="c1"># for surface points we compute the rotation which</span>
         <span class="c1"># aligns the principal_vector with the surface normal</span>
         <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">principal_vector</span>
@@ -1046,7 +1046,7 @@
 
 <div class="viewcode-block" id="Ingredient.getAxisRotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getAxisRotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">getAxisRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getAxisRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        combines a rotation about axis to incoming rot.</span>
 <span class="sd">        rot aligns the principal_vector with the surface normal</span>
@@ -1064,7 +1064,7 @@
 
 <div class="viewcode-block" id="Ingredient.getBiasedRotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getBiasedRotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">getBiasedRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getBiasedRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        combines a rotation about axis to incoming rot</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1082,7 +1082,7 @@
 
 <div class="viewcode-block" id="Ingredient.correctBB">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.correctBB">[docs]</a>
-    <span class="k">def</span> <span class="nf">correctBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">radc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">correctBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">radc</span><span class="p">):</span>
         <span class="c1"># unprecised</span>
         <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
         <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
@@ -1098,7 +1098,7 @@
 
 <div class="viewcode-block" id="Ingredient.getListCompFromMask">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getListCompFromMask">[docs]</a>
-    <span class="k">def</span> <span class="nf">getListCompFromMask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cId</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getListCompFromMask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cId</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">):</span>
         <span class="c1"># cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]</span>
         <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span>
         <span class="k">if</span> <span class="n">current</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># inside</span>
@@ -1117,7 +1117,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_new_distances_and_inside_points">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_distances_and_inside_points">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_new_distances_and_inside_points</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_distances_and_inside_points</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">packing_location</span><span class="p">,</span>
@@ -1156,7 +1156,7 @@
 
 <div class="viewcode-block" id="Ingredient.is_point_in_correct_region">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.is_point_in_correct_region">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_point_in_correct_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_point_in_correct_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="c1"># crude location check (using nearest grid point)</span>
         <span class="n">nearest_grid_point_compartment_id</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartment_id_for_nearest_grid_point</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
@@ -1199,7 +1199,7 @@
 
 <div class="viewcode-block" id="Ingredient.far_enough_from_surfaces">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.far_enough_from_surfaces">[docs]</a>
-    <span class="k">def</span> <span class="nf">far_enough_from_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">far_enough_from_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
         <span class="c1"># check if clear of all other compartment surfaces</span>
         <span class="n">ingredient_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
         <span class="n">ingredient_compartment_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span>
@@ -1221,7 +1221,7 @@
 
 <div class="viewcode-block" id="Ingredient.point_is_available">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.point_is_available">[docs]</a>
-    <span class="k">def</span> <span class="nf">point_is_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newPt</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">point_is_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">newPt</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes in a vector returns a boolean&quot;&quot;&quot;</span>
         <span class="n">point_in_correct_region</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">far_from_surfaces</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1247,7 +1247,7 @@
 
 <div class="viewcode-block" id="Ingredient.oneJitter">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.oneJitter">[docs]</a>
-    <span class="k">def</span> <span class="nf">oneJitter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">oneJitter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">):</span>
         <span class="n">jtrans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomize_translation</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">)</span>
         <span class="n">rotMatj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">randomize_rotation</span><span class="p">(</span><span class="n">rotMat</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span></div>
@@ -1255,7 +1255,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_new_jitter_location_and_rotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_jitter_location_and_rotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_new_jitter_location_and_rotation</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_jitter_location_and_rotation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">starting_pos</span><span class="p">,</span> <span class="n">starting_rotation</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;tile&quot;</span><span class="p">:</span>
@@ -1268,7 +1268,7 @@
 
 <div class="viewcode-block" id="Ingredient.getIngredientsInBox">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInBox">[docs]</a>
-    <span class="k">def</span> <span class="nf">getIngredientsInBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getIngredientsInBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">windowsSize_overwrite</span><span class="p">:</span>
             <span class="n">radius</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">windowsSize</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1330,7 +1330,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_partners">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_partners">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_partners</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">):</span>
         <span class="n">closest_ingredients</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_closest_ingredients</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">closest_ingredients</span><span class="p">[</span><span class="s2">&quot;indices&quot;</span><span class="p">]):</span>
             <span class="n">near_by_ingredients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientsInBox</span><span class="p">(</span>
@@ -1381,7 +1381,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_new_pos">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_pos">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_new_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">positions_to_adjust</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">positions_to_adjust</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Takes positions_to_adjust, such as an array of spheres at a level in a</span>
 <span class="sd">        sphere tree, and adjusts them relative to the given position and rotation</span>
@@ -1393,7 +1393,7 @@
 
 <div class="viewcode-block" id="Ingredient.check_against_one_packed_ingr">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.check_against_one_packed_ingr">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_against_one_packed_ingr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">search_tree</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_against_one_packed_ingr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">search_tree</span><span class="p">):</span>
         <span class="n">ingredient_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_ingredients</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span>
         <span class="n">ingredient_class</span> <span class="o">=</span> <span class="n">ingredient_instance</span><span class="o">.</span><span class="n">ingredient</span>
         <span class="n">positions_of_packed_ingr_spheres</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_pos</span><span class="p">(</span>
@@ -1420,7 +1420,7 @@
 
 <div class="viewcode-block" id="Ingredient.np_check_collision">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.np_check_collision">[docs]</a>
-    <span class="k">def</span> <span class="nf">np_check_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">np_check_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
         <span class="n">has_collision</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1"># no ingredients packed yet</span>
         <span class="n">packed_objects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_ingredients</span><span class="p">()</span>
@@ -1481,7 +1481,7 @@
 
 <div class="viewcode-block" id="Ingredient.checkDistance">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkDistance">[docs]</a>
-    <span class="k">def</span> <span class="nf">checkDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">liste_nodes</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">liste_nodes</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">liste_nodes</span><span class="p">:</span>
             <span class="n">rTrans</span><span class="p">,</span> <span class="n">rRot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">getRotTransRB</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
             <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">rTrans</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
@@ -1490,7 +1490,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_rbNodes">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rbNodes">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_rbNodes</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_rbNodes</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">close_indice</span><span class="p">,</span> <span class="n">currentpt</span><span class="p">,</span> <span class="n">removelast</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prevpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">getInfo</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
         <span class="c1"># move around the rbnode and return it</span>
@@ -1587,7 +1587,7 @@
 
 <div class="viewcode-block" id="Ingredient.update_data_tree">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.update_data_tree">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_data_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_data_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_ingredients</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">close_ingr_bhtree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_positions</span><span class="p">(),</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span>
@@ -1596,7 +1596,7 @@
 
 <div class="viewcode-block" id="Ingredient.pack_at_grid_pt_location">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pack_at_grid_pt_location">[docs]</a>
-    <span class="k">def</span> <span class="nf">pack_at_grid_pt_location</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pack_at_grid_pt_location</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">jtrans</span><span class="p">,</span>
@@ -1636,14 +1636,14 @@
 
 <div class="viewcode-block" id="Ingredient.remove_from_realtime_display">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.remove_from_realtime_display">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_from_realtime_display</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">moving</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_from_realtime_display</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">moving</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
         <span class="c1"># env.afvi.vi.deleteObject(moving)</span>
 
 <div class="viewcode-block" id="Ingredient.reject">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.reject">[docs]</a>
-    <span class="k">def</span> <span class="nf">reject</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reject</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># got rejected</span>
@@ -1659,7 +1659,7 @@
 
 <div class="viewcode-block" id="Ingredient.store_packed_object">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.store_packed_object">[docs]</a>
-    <span class="k">def</span> <span class="nf">store_packed_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_packed_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="n">packed_object</span> <span class="o">=</span> <span class="n">PackedObject</span><span class="p">(</span>
             <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
             <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">,</span>
@@ -1675,7 +1675,7 @@
 
 <div class="viewcode-block" id="Ingredient.place">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.place">[docs]</a>
-    <span class="k">def</span> <span class="nf">place</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">dropped_position</span><span class="p">,</span>
@@ -1704,7 +1704,7 @@
 
 <div class="viewcode-block" id="Ingredient.update_ingredient_size">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.update_ingredient_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_ingredient_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_ingredient_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># update the size of the ingredient based on input options</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;size_options&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span><span class="p">:</span>
@@ -1718,7 +1718,7 @@
 
 <div class="viewcode-block" id="Ingredient.attempt_to_pack_at_grid_location">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.attempt_to_pack_at_grid_location">[docs]</a>
-    <span class="k">def</span> <span class="nf">attempt_to_pack_at_grid_location</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">attempt_to_pack_at_grid_location</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
@@ -1860,7 +1860,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_rotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
         <span class="c1"># compute rotation matrix rotMat</span>
         <span class="n">comp_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span>
 
@@ -1900,7 +1900,7 @@
 
 <div class="viewcode-block" id="Ingredient.randomize_rotation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.randomize_rotation">[docs]</a>
-    <span class="k">def</span> <span class="nf">randomize_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">randomize_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="c1"># randomize rotation about axis</span>
         <span class="n">jitter_rotation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1932,7 +1932,7 @@
 
 <div class="viewcode-block" id="Ingredient.randomize_translation">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.randomize_translation">[docs]</a>
-    <span class="k">def</span> <span class="nf">randomize_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">randomize_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
         <span class="c1"># jitter points location</span>
         <span class="n">spacing</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span>
         <span class="n">jitter</span> <span class="o">=</span> <span class="n">spacing</span> <span class="o">/</span> <span class="mf">2.0</span>
@@ -1965,7 +1965,7 @@
 
 <div class="viewcode-block" id="Ingredient.update_display_rt">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.update_display_rt">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_display_rt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_instance</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_display_rt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_instance</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
         <span class="n">mat</span> <span class="o">=</span> <span class="n">rotation</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">mat</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">translation</span>
         <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">move_object</span><span class="p">(</span><span class="n">current_instance</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
@@ -1975,7 +1975,7 @@
 
 <div class="viewcode-block" id="Ingredient.rigid_place">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.rigid_place">[docs]</a>
-    <span class="k">def</span> <span class="nf">rigid_place</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rigid_place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
@@ -2145,7 +2145,7 @@
 
 <div class="viewcode-block" id="Ingredient.merge_place_results">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.merge_place_results">[docs]</a>
-    <span class="k">def</span> <span class="nf">merge_place_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_results</span><span class="p">,</span> <span class="n">accum_results</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">merge_place_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_results</span><span class="p">,</span> <span class="n">accum_results</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">new_results</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">pt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accum_results</span><span class="p">:</span>
                 <span class="n">accum_results</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_results</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
@@ -2165,7 +2165,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_all_positions_to_check">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_all_positions_to_check">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_all_positions_to_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_positions_to_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a starting position in the packing space, and returns all the points that</span>
 <span class="sd">        need to be tested for a collision as an array.</span>
 
@@ -2188,7 +2188,7 @@
 
 <div class="viewcode-block" id="Ingredient.jitter_place">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.jitter_place">[docs]</a>
-    <span class="k">def</span> <span class="nf">jitter_place</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jitter_place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">targeted_master_grid_point</span><span class="p">,</span>
@@ -2293,7 +2293,7 @@
 
 <div class="viewcode-block" id="Ingredient.lookForNeighbours">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.lookForNeighbours">[docs]</a>
-    <span class="k">def</span> <span class="nf">lookForNeighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lookForNeighbours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span><span class="p">):</span>
         <span class="n">near_by_ingredients</span><span class="p">,</span> <span class="n">placed_partners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partners</span><span class="p">(</span>
             <span class="n">env</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">organelle</span>
         <span class="p">)</span>
@@ -2338,7 +2338,7 @@
 
 <div class="viewcode-block" id="Ingredient.get_compartment">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_compartment">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">env</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2347,7 +2347,7 @@
 
 <div class="viewcode-block" id="Ingredient.close_partner_check">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.close_partner_check">[docs]</a>
-    <span class="k">def</span> <span class="nf">close_partner_check</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close_partner_check</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">translation</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">afvi</span><span class="p">,</span> <span class="n">moving</span>
     <span class="p">):</span>
         <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_matrix</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookForNeighbours</span><span class="p">(</span>
@@ -2368,7 +2368,7 @@
 
 <div class="viewcode-block" id="Ingredient.handle_real_time_visualization">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.handle_real_time_visualization">[docs]</a>
-    <span class="k">def</span> <span class="nf">handle_real_time_visualization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">helper</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_real_time_visualization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">helper</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="n">instance_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptInd</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># copy of the ingredient being packed</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># parent object of all the instances</span>
@@ -2384,7 +2384,7 @@
 
 <div class="viewcode-block" id="Ingredient.spheres_SST_place">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.spheres_SST_place">[docs]</a>
-    <span class="k">def</span> <span class="nf">spheres_SST_place</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spheres_SST_place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">compartment</span><span class="p">,</span>
@@ -2540,7 +2540,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>

@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.Serializable &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.Serializable &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -45,7 +45,7 @@
 <span class="sd">@author: ludo</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># serializabl;e class for auopack recipe</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
 
 <span class="c1"># toDO class Assambly for nesting of protein quaternary structure.</span>
@@ -65,10 +65,10 @@
 
 <div class="viewcode-block" id="sCompartment">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment">[docs]</a>
-<span class="k">class</span> <span class="nc">sCompartment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">sCompartment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local_id</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># // The id of the compartment relative only to the parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">sCompartment</span><span class="o">.</span><span class="n">static_id</span>
@@ -82,21 +82,21 @@
 
 <div class="viewcode-block" id="sCompartment.addCompartment">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.addCompartment">[docs]</a>
-    <span class="k">def</span> <span class="nf">addCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Compartments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
         <span class="n">compartment</span><span class="o">.</span><span class="n">local_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Compartments</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="sCompartment.addIngredientGroup">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.addIngredientGroup">[docs]</a>
-    <span class="k">def</span> <span class="nf">addIngredientGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingrgroup</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addIngredientGroup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingrgroup</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">IngredientGroups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingrgroup</span><span class="p">)</span>
         <span class="n">ingrgroup</span><span class="o">.</span><span class="n">local_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">IngredientGroups</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="sCompartment.to_JSON">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.to_JSON">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 </div>
 
@@ -104,10 +104,10 @@
 
 <div class="viewcode-block" id="sIngredientGroup">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup">[docs]</a>
-<span class="k">class</span> <span class="nc">sIngredientGroup</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">sIngredientGroup</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">groupType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">groupType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local_id</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># // The id of the group relative only to the parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">sIngredientGroup</span><span class="o">.</span><span class="n">static_id</span>
@@ -121,13 +121,13 @@
 
 <div class="viewcode-block" id="sIngredientGroup.addIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup.addIngredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">addIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Ingredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sIngredientGroup.to_JSON">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup.to_JSON">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 </div>
 
@@ -135,10 +135,10 @@
 
 <div class="viewcode-block" id="sIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredient">[docs]</a>
-<span class="k">class</span> <span class="nc">sIngredient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">sIngredient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">static_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">groupType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">groupType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ingredient_id</span> <span class="o">=</span> <span class="n">sIngredient</span><span class="o">.</span><span class="n">static_id</span><span class="p">[</span><span class="n">groupType</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># // The path is made out of the local id of each parent nodes starting from the root</span>
@@ -148,7 +148,7 @@
 
 <div class="viewcode-block" id="sIngredient.to_JSON">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredient.to_JSON">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 </div>
 
@@ -156,10 +156,10 @@
 
 <div class="viewcode-block" id="sIngredientFiber">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientFiber">[docs]</a>
-<span class="k">class</span> <span class="nc">sIngredientFiber</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">sIngredientFiber</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">static_id</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ingredient_id</span> <span class="o">=</span> <span class="n">sIngredientFiber</span><span class="o">.</span><span class="n">static_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># // The path is made out of the local id of each parent nodes starting from the root</span>
@@ -169,7 +169,7 @@
 
 <div class="viewcode-block" id="sIngredientFiber.to_JSON">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientFiber.to_JSON">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_JSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="n">o</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 </div>
 
@@ -238,7 +238,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.utils &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.utils &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -38,29 +38,29 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
 
 <div class="viewcode-block" id="get_distance">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_distance">[docs]</a>
-<span class="k">def</span> <span class="nf">get_distance</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_distance</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pt2</span> <span class="o">-</span> <span class="n">pt1</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="get_distances_from_point">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_distances_from_point">[docs]</a>
-<span class="k">def</span> <span class="nf">get_distances_from_point</span><span class="p">(</span><span class="n">np_array_of_pts</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_distances_from_point</span><span class="p">(</span><span class="n">np_array_of_pts</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np_array_of_pts</span> <span class="o">-</span> <span class="n">pt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="ingredient_compare1">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare1">[docs]</a>
-<span class="k">def</span> <span class="nf">ingredient_compare1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ingredient_compare1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sort ingredients using decreasing priority and decreasing radii for</span>
 <span class="sd">    priority ties and decreasing completion for radii ties</span>
@@ -93,7 +93,7 @@
 
 <div class="viewcode-block" id="ingredient_compare0">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare0">[docs]</a>
-<span class="k">def</span> <span class="nf">ingredient_compare0</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ingredient_compare0</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sort ingredients using decreasing priority and decreasing radii for</span>
 <span class="sd">    priority ties and decreasing completion for radii ties</span>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="ingredient_compare2">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare2">[docs]</a>
-<span class="k">def</span> <span class="nf">ingredient_compare2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ingredient_compare2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    sort ingredients using decreasing radii and decresing completion</span>
 <span class="sd">    for radii matches:</span>
@@ -152,29 +152,29 @@
 
 <div class="viewcode-block" id="cmp_to_key">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.cmp_to_key">[docs]</a>
-<span class="k">def</span> <span class="nf">cmp_to_key</span><span class="p">(</span><span class="n">mycmp</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cmp_to_key</span><span class="p">(</span><span class="n">mycmp</span><span class="p">):</span>
     <span class="s2">&quot;Convert a cmp= function into a key= function&quot;</span>
 
-    <span class="k">class</span> <span class="nc">K</span><span class="p">:</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">K</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
 
-        <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mycmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
 
-        <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mycmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
-        <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mycmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 
-        <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mycmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span>
 
-        <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mycmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span>
 
-        <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mycmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
 
     <span class="k">return</span> <span class="n">K</span></div>
@@ -183,7 +183,7 @@
 
 <div class="viewcode-block" id="deep_merge">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.deep_merge">[docs]</a>
-<span class="k">def</span> <span class="nf">deep_merge</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">merge_dct</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">deep_merge</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">merge_dct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursive dict merge</span>
 
 <span class="sd">    This mutates dct - the contents of merge_dct are added to dct (which is also returned).</span>
@@ -208,7 +208,7 @@
 
 <div class="viewcode-block" id="expand_object_using_key">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.expand_object_using_key">[docs]</a>
-<span class="k">def</span> <span class="nf">expand_object_using_key</span><span class="p">(</span><span class="n">current_object</span><span class="p">,</span> <span class="n">expand_on</span><span class="p">,</span> <span class="n">lookup_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">expand_object_using_key</span><span class="p">(</span><span class="n">current_object</span><span class="p">,</span> <span class="n">expand_on</span><span class="p">,</span> <span class="n">lookup_dict</span><span class="p">):</span>
     <span class="n">object_key</span> <span class="o">=</span> <span class="n">current_object</span><span class="p">[</span><span class="n">expand_on</span><span class="p">]</span>
     <span class="n">base_object</span> <span class="o">=</span> <span class="n">lookup_dict</span><span class="p">[</span><span class="n">object_key</span><span class="p">]</span>
     <span class="n">new_object</span> <span class="o">=</span> <span class="n">deep_merge</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">base_object</span><span class="p">),</span> <span class="n">current_object</span><span class="p">)</span>
@@ -219,7 +219,7 @@
 
 <div class="viewcode-block" id="check_paired_key">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.check_paired_key">[docs]</a>
-<span class="k">def</span> <span class="nf">check_paired_key</span><span class="p">(</span><span class="n">val_dict</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_paired_key</span><span class="p">(</span><span class="n">val_dict</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if the key pair exists in dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -232,7 +232,7 @@
 
 <div class="viewcode-block" id="get_paired_key">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_paired_key">[docs]</a>
-<span class="k">def</span> <span class="nf">get_paired_key</span><span class="p">(</span><span class="n">val_dict</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_paired_key</span><span class="p">(</span><span class="n">val_dict</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the combined key from dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -244,7 +244,7 @@
 
 <div class="viewcode-block" id="load_object_from_pickle">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.load_object_from_pickle">[docs]</a>
-<span class="k">def</span> <span class="nf">load_object_from_pickle</span><span class="p">(</span><span class="n">pickle_file_object</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_object_from_pickle</span><span class="p">(</span><span class="n">pickle_file_object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update an object from a pickle file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -258,7 +258,7 @@
 
 <div class="viewcode-block" id="get_min_value_from_distribution">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_min_value_from_distribution">[docs]</a>
-<span class="k">def</span> <span class="nf">get_min_value_from_distribution</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_min_value_from_distribution</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a low bound on the value from a distribution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -283,7 +283,7 @@
 
 <div class="viewcode-block" id="get_max_value_from_distribution">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_max_value_from_distribution">[docs]</a>
-<span class="k">def</span> <span class="nf">get_max_value_from_distribution</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_max_value_from_distribution</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a high bound on the value from a distribution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -308,7 +308,7 @@
 
 <div class="viewcode-block" id="get_value_from_distribution">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_value_from_distribution">[docs]</a>
-<span class="k">def</span> <span class="nf">get_value_from_distribution</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_value_from_distribution</span><span class="p">(</span><span class="n">distribution_options</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a value from the distribution options</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -343,7 +343,7 @@
 
 <div class="viewcode-block" id="get_seed_list">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_seed_list">[docs]</a>
-<span class="k">def</span> <span class="nf">get_seed_list</span><span class="p">(</span><span class="n">packing_config_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_seed_list</span><span class="p">(</span><span class="n">packing_config_data</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
     <span class="c1"># Returns a list of seeds to use for packing</span>
     <span class="k">if</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;randomness_seed&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">seed_list</span> <span class="o">=</span> <span class="n">packing_config_data</span><span class="p">[</span><span class="s2">&quot;randomness_seed&quot;</span><span class="p">]</span>
@@ -396,7 +396,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

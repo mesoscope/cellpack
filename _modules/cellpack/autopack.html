@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cellpack.html" accesskey="U">cellpack</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">cellpack.autopack</a></li> 
@@ -73,23 +73,23 @@
 <span class="sd">AF</span>
 <span class="sd">@author: Ludovic Autin with editing by Graham Johnson</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">getpass</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">logging.config</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">ssl</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">getpass</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging.config</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ssl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">urllib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBRecipeLoader</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.database_ids</span> <span class="kn">import</span> <span class="n">DATABASE_IDS</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.DBRecipeHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">DBRecipeLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.database_ids</span><span class="w"> </span><span class="kn">import</span> <span class="n">DATABASE_IDS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
 
 <span class="n">packageContainsVFCommands</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">ssl</span><span class="o">.</span><span class="n">_create_default_https_context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">_create_unverified_context</span>
@@ -109,7 +109,7 @@
 
 <div class="viewcode-block" id="make_directory_if_needed">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.make_directory_if_needed">[docs]</a>
-<span class="k">def</span> <span class="nf">make_directory_if_needed</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_directory_if_needed</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span></div>
 
@@ -127,7 +127,7 @@
 
 <div class="viewcode-block" id="url_exists">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.url_exists">[docs]</a>
-<span class="k">def</span> <span class="nf">url_exists</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">url_exists</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -192,7 +192,7 @@
 
 <div class="viewcode-block" id="checkPath">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.checkPath">[docs]</a>
-<span class="k">def</span> <span class="nf">checkPath</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkPath</span><span class="p">():</span>
     <span class="n">fileName</span> <span class="o">=</span> <span class="n">filespath</span>  <span class="c1"># autoPACKserver+&quot;/autoPACK_filePaths.json&quot;</span>
     <span class="k">if</span> <span class="n">fileName</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">fileName</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">url_exists</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
@@ -266,7 +266,7 @@
 
 <div class="viewcode-block" id="resetDefault">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.resetDefault">[docs]</a>
-<span class="k">def</span> <span class="nf">resetDefault</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resetDefault</span><span class="p">():</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">autopack_user_path_pref_file</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">autopack_user_path_pref_file</span><span class="p">)</span></div>
 
@@ -274,7 +274,7 @@
 
 <div class="viewcode-block" id="checkErrorInPath">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.checkErrorInPath">[docs]</a>
-<span class="k">def</span> <span class="nf">checkErrorInPath</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">toreplace</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkErrorInPath</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">toreplace</span><span class="p">):</span>
     <span class="c1"># if in p we already have part of the replace path</span>
     <span class="n">part</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
     <span class="n">newpath</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -290,7 +290,7 @@
 
 <div class="viewcode-block" id="fixOnePath">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.fixOnePath">[docs]</a>
-<span class="k">def</span> <span class="nf">fixOnePath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fixOnePath</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">REPLACE_PATH</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="c1"># fix before</span>
@@ -302,7 +302,7 @@
 
 <div class="viewcode-block" id="updateReplacePath">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updateReplacePath">[docs]</a>
-<span class="k">def</span> <span class="nf">updateReplacePath</span><span class="p">(</span><span class="n">newPaths</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">updateReplacePath</span><span class="p">(</span><span class="n">newPaths</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">newPaths</span><span class="p">:</span>
         <span class="n">REPLACE_PATH</span><span class="p">[</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
@@ -310,7 +310,7 @@
 
 <div class="viewcode-block" id="parse_s3_uri">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.parse_s3_uri">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_s3_uri</span><span class="p">(</span><span class="n">s3_uri</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_s3_uri</span><span class="p">(</span><span class="n">s3_uri</span><span class="p">):</span>
     <span class="c1"># Remove the &quot;s3://&quot; prefix and split the remaining string into bucket name and key</span>
     <span class="n">s3_uri</span> <span class="o">=</span> <span class="n">s3_uri</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;s3://&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="n">s3_uri</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
@@ -324,14 +324,14 @@
 
 <div class="viewcode-block" id="is_s3_url">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.is_s3_url">[docs]</a>
-<span class="k">def</span> <span class="nf">is_s3_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_s3_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">file_path</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;s3://&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span></div>
 
 
 
 <div class="viewcode-block" id="download_file">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.download_file">[docs]</a>
-<span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">,</span> <span class="n">reporthook</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">local_file_path</span><span class="p">,</span> <span class="n">reporthook</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="s2">&quot;aws&quot;</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">is_s3_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
         <span class="n">db</span> <span class="o">=</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">database_name</span><span class="p">)</span>
         <span class="n">bucket_name</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">parse_s3_uri</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -351,7 +351,7 @@
 
 <div class="viewcode-block" id="is_full_url">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.is_full_url">[docs]</a>
-<span class="k">def</span> <span class="nf">is_full_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_full_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
     <span class="n">url_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
         <span class="sa">r</span><span class="s2">&quot;^(?:http|https|ftp|s3)://&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span>
     <span class="p">)</span>  <span class="c1"># check http, https, ftp, s3</span>
@@ -361,7 +361,7 @@
 
 <div class="viewcode-block" id="is_remote_path">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.is_remote_path">[docs]</a>
-<span class="k">def</span> <span class="nf">is_remote_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_remote_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    @param file_path: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -373,7 +373,7 @@
 
 <div class="viewcode-block" id="convert_db_shortname_to_url">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.convert_db_shortname_to_url">[docs]</a>
-<span class="k">def</span> <span class="nf">convert_db_shortname_to_url</span><span class="p">(</span><span class="n">file_location</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_db_shortname_to_url</span><span class="p">(</span><span class="n">file_location</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    @param file_path: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -387,7 +387,7 @@
 
 <div class="viewcode-block" id="get_cache_location">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.get_cache_location">[docs]</a>
-<span class="k">def</span> <span class="nf">get_cache_location</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cache_location</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    name: str</span>
 <span class="sd">    destination: str</span>
@@ -401,7 +401,7 @@
 
 <div class="viewcode-block" id="get_local_file_location">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.get_local_file_location">[docs]</a>
-<span class="k">def</span> <span class="nf">get_local_file_location</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_local_file_location</span><span class="p">(</span>
     <span class="n">input_file_location</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -457,7 +457,7 @@
 
 <div class="viewcode-block" id="read_text_file">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.read_text_file">[docs]</a>
-<span class="k">def</span> <span class="nf">read_text_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;collisionTrees&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_text_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;collisionTrees&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">is_remote_path</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
         <span class="n">database_name</span><span class="p">,</span> <span class="n">file_path</span> <span class="o">=</span> <span class="n">convert_db_shortname_to_url</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">database_name</span> <span class="o">==</span> <span class="s2">&quot;firebase&quot;</span><span class="p">:</span>
@@ -481,7 +481,7 @@
 
 <div class="viewcode-block" id="load_file">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.load_file">[docs]</a>
-<span class="k">def</span> <span class="nf">load_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">is_remote_path</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
         <span class="n">database_name</span><span class="p">,</span> <span class="n">file_path</span> <span class="o">=</span> <span class="n">convert_db_shortname_to_url</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="c1"># command example: `pack -r firebase:recipes/[FIREBASE-RECIPE-ID] -c [CONFIG-FILE-PATH]`</span>
@@ -515,7 +515,7 @@
 
 <div class="viewcode-block" id="fixPath">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.fixPath">[docs]</a>
-<span class="k">def</span> <span class="nf">fixPath</span><span class="p">(</span><span class="n">adict</span><span class="p">):</span>  <span class="c1"># , k, v):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fixPath</span><span class="p">(</span><span class="n">adict</span><span class="p">):</span>  <span class="c1"># , k, v):</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">adict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">adict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">dict</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">adict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="ow">is</span> <span class="n">OrderedDict</span><span class="p">:</span>
             <span class="n">fixPath</span><span class="p">(</span><span class="n">adict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
@@ -527,7 +527,7 @@
 
 <div class="viewcode-block" id="updatePathJSON">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updatePathJSON">[docs]</a>
-<span class="k">def</span> <span class="nf">updatePathJSON</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">updatePathJSON</span><span class="p">():</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">autopack_path_pref_file</span><span class="p">):</span>
         <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">autopack_path_pref_file</span> <span class="o">+</span> <span class="s2">&quot; file is not found&quot;</span><span class="p">)</span>
         <span class="k">return</span>
@@ -552,7 +552,7 @@
 
 <div class="viewcode-block" id="updatePath">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updatePath">[docs]</a>
-<span class="k">def</span> <span class="nf">updatePath</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">updatePath</span><span class="p">():</span>
     <span class="c1"># now get it</span>
     <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">autopack_path_pref_file</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fileExtension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.xml&quot;</span><span class="p">:</span>
@@ -564,17 +564,17 @@
 
 <div class="viewcode-block" id="checkRecipeAvailable">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.checkRecipeAvailable">[docs]</a>
-<span class="k">def</span> <span class="nf">checkRecipeAvailable</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">checkRecipeAvailable</span><span class="p">():</span>
     <span class="n">load_file</span><span class="p">(</span><span class="n">list_of_available_recipes</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="updateRecipAvailableXML">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updateRecipAvailableXML">[docs]</a>
-<span class="k">def</span> <span class="nf">updateRecipAvailableXML</span><span class="p">(</span><span class="n">recipesfile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">updateRecipAvailableXML</span><span class="p">(</span><span class="n">recipesfile</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">recipesfile</span><span class="p">):</span>
         <span class="k">return</span>
-    <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">parse</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xml.dom.minidom</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
     <span class="n">XML</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">recipesfile</span><span class="p">)</span>  <span class="c1"># parse an XML file by name</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">XML</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;recipe&quot;</span><span class="p">)</span>
@@ -624,8 +624,8 @@
 
 <div class="viewcode-block" id="saveRecipeAvailable">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.saveRecipeAvailable">[docs]</a>
-<span class="k">def</span> <span class="nf">saveRecipeAvailable</span><span class="p">(</span><span class="n">recipe_dictionary</span><span class="p">,</span> <span class="n">recipefile</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">getDOMImplementation</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saveRecipeAvailable</span><span class="p">(</span><span class="n">recipe_dictionary</span><span class="p">,</span> <span class="n">recipefile</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xml.dom.minidom</span><span class="w"> </span><span class="kn">import</span> <span class="n">getDOMImplementation</span>
 
     <span class="n">impl</span> <span class="o">=</span> <span class="n">getDOMImplementation</span><span class="p">()</span>
     <span class="n">XML</span> <span class="o">=</span> <span class="n">impl</span><span class="o">.</span><span class="n">createDocument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;autoPACK_recipe&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -649,7 +649,7 @@
 
 <div class="viewcode-block" id="saveRecipeAvailableJSON">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.saveRecipeAvailableJSON">[docs]</a>
-<span class="k">def</span> <span class="nf">saveRecipeAvailableJSON</span><span class="p">(</span><span class="n">recipe_dictionary</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">saveRecipeAvailableJSON</span><span class="p">(</span><span class="n">recipe_dictionary</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
             <span class="n">recipe_dictionary</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">)</span>
@@ -659,7 +659,7 @@
 
 <div class="viewcode-block" id="clearCaches">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.clearCaches">[docs]</a>
-<span class="k">def</span> <span class="nf">clearCaches</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clearCaches</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="c1"># can&#39;t work if file are open!</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">CACHE_DIR</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -672,7 +672,7 @@
 
 <div class="viewcode-block" id="write_username_to_creds">
 <a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.write_username_to_creds">[docs]</a>
-<span class="k">def</span> <span class="nf">write_username_to_creds</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_username_to_creds</span><span class="p">():</span>
     <span class="n">username</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getuser</span><span class="p">()</span>
     <span class="n">creds</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="s2">&quot;./.creds&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">creds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;username&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">creds</span><span class="p">:</span>
@@ -734,7 +734,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../cellpack.html" >cellpack</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">cellpack.autopack</a></li> 

@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.interface_objects.gradient_data &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.interface_objects.gradient_data &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -38,10 +38,10 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.interface_objects.gradient_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">deep_merge</span>
-<span class="kn">from</span> <span class="nn">.meta_enum</span> <span class="kn">import</span> <span class="n">MetaEnum</span>
-<span class="kn">from</span> <span class="nn">.default_values</span> <span class="kn">import</span> <span class="n">DEFAULT_GRADIENT_MODE_SETTINGS</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">deep_merge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.meta_enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetaEnum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.default_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_GRADIENT_MODE_SETTINGS</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">GradientData provides a class to pass sanitized arguments to create gradients</span>
@@ -50,7 +50,7 @@
 
 <div class="viewcode-block" id="GradientModes">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientModes">[docs]</a>
-<span class="k">class</span> <span class="nc">GradientModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GradientModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All available gradient modes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -66,7 +66,7 @@
 
 <div class="viewcode-block" id="WeightModes">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.WeightModes">[docs]</a>
-<span class="k">class</span> <span class="nc">WeightModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WeightModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All available weight modes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -81,7 +81,7 @@
 
 <div class="viewcode-block" id="PickModes">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.PickModes">[docs]</a>
-<span class="k">class</span> <span class="nc">PickModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PickModes</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All available pick modes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -98,7 +98,7 @@
 
 <div class="viewcode-block" id="ModeOptions">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.ModeOptions">[docs]</a>
-<span class="k">class</span> <span class="nc">ModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All available options for individual modes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -114,7 +114,7 @@
 
 <div class="viewcode-block" id="InvertOptions">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.InvertOptions">[docs]</a>
-<span class="k">class</span> <span class="nc">InvertOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvertOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All available options for individual invert modes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="WeightModeOptions">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.WeightModeOptions">[docs]</a>
-<span class="k">class</span> <span class="nc">WeightModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WeightModeOptions</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All available options for individual weight modes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -155,10 +155,10 @@
 
 <div class="viewcode-block" id="GradientData">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData">[docs]</a>
-<span class="k">class</span> <span class="nc">GradientData</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GradientData</span><span class="p">:</span>
     <span class="n">default_values</span> <span class="o">=</span> <span class="n">DEFAULT_GRADIENT_MODE_SETTINGS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_options</span><span class="p">,</span> <span class="n">gradient_name</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_options</span><span class="p">,</span> <span class="n">gradient_name</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Takes in gradient dictionary from the recipe file to create a</span>
 <span class="sd">        GradientData instance</span>
@@ -172,7 +172,7 @@
 
 <div class="viewcode-block" id="GradientData.validate_gradient_data">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_gradient_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_gradient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_gradient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">GradientModes</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid gradient mode: </span><span class="si">{</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">WeightModes</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weight_mode&quot;</span><span class="p">)):</span>
@@ -194,7 +194,7 @@
 
 <div class="viewcode-block" id="GradientData.validate_mode_settings">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_mode_settings">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_mode_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_name</span><span class="p">,</span> <span class="n">mode_settings_dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_mode_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode_name</span><span class="p">,</span> <span class="n">mode_settings_dict</span><span class="p">):</span>
         <span class="n">required_options</span> <span class="o">=</span> <span class="n">REQUIRED_MODE_OPTIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mode_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">required_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -212,7 +212,7 @@
 
 <div class="viewcode-block" id="GradientData.validate_weight_mode_settings">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_weight_mode_settings">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_weight_mode_settings</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_weight_mode_settings</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">weight_mode_name</span><span class="p">,</span> <span class="n">weight_mode_settings_dict</span>
     <span class="p">):</span>
         <span class="n">required_options</span> <span class="o">=</span> <span class="n">REQUIRED_WEIGHT_MODE_OPTIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">weight_mode_name</span><span class="p">)</span>
@@ -232,7 +232,7 @@
 
 <div class="viewcode-block" id="GradientData.validate_invert_settings">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.validate_invert_settings">[docs]</a>
-    <span class="k">def</span> <span class="nf">validate_invert_settings</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_invert_settings</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">invert_option</span><span class="p">,</span>
     <span class="p">):</span>
@@ -245,7 +245,7 @@
 
 <div class="viewcode-block" id="GradientData.set_mode_properties">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.gradient_data.GradientData.set_mode_properties">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_mode_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_mode_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">gradient_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">):</span>
             <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -292,7 +292,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>

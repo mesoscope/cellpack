@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.loaders.migrate_v2_to_v2_1 &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.loaders.migrate_v2_to_v2_1 &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -38,14 +38,14 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.loaders.migrate_v2_to_v2_1</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 
-<span class="kn">from</span> <span class="nn">..interface_objects.gradient_data</span> <span class="kn">import</span> <span class="n">GradientData</span><span class="p">,</span> <span class="n">ModeOptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..interface_objects.gradient_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradientData</span><span class="p">,</span> <span class="n">ModeOptions</span>
 
 
 <div class="viewcode-block" id="convert_partners">
 <a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v2_to_v2_1.convert_partners">[docs]</a>
-<span class="k">def</span> <span class="nf">convert_partners</span><span class="p">(</span><span class="n">object_data</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_partners</span><span class="p">(</span><span class="n">object_data</span><span class="p">):</span>
     <span class="n">partners_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;names&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">object_data</span><span class="p">[</span><span class="s2">&quot;partners&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">partners_list</span>
@@ -76,7 +76,7 @@
 
 <div class="viewcode-block" id="convert_gradients">
 <a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v2_to_v2_1.convert_gradients">[docs]</a>
-<span class="k">def</span> <span class="nf">convert_gradients</span><span class="p">(</span><span class="n">old_gradients_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_gradients</span><span class="p">(</span><span class="n">old_gradients_dict</span><span class="p">):</span>
     <span class="n">new_gradients_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">gradient_name</span><span class="p">,</span> <span class="n">gradient_dict</span> <span class="ow">in</span> <span class="n">old_gradients_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">gradient_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">GradientData</span><span class="o">.</span><span class="n">default_values</span><span class="p">)</span>
@@ -94,7 +94,7 @@
 
 <div class="viewcode-block" id="convert">
 <a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.migrate_v2_to_v2_1.convert">[docs]</a>
-<span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="n">recipe_data_2_0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="n">recipe_data_2_0</span><span class="p">):</span>
     <span class="n">new_recipe</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">recipe_data_2_0</span><span class="p">)</span>
     <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.1&quot;</span>
     <span class="k">for</span> <span class="n">object_name</span> <span class="ow">in</span> <span class="n">recipe_data_2_0</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]:</span>
@@ -138,7 +138,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>

@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.FirebaseHandler &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.FirebaseHandler &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -38,22 +38,22 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.FirebaseHandler</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">firebase_admin</span>
-<span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">firestore</span>
-<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
-<span class="kn">from</span> <span class="nn">google.cloud.exceptions</span> <span class="kn">import</span> <span class="n">NotFound</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.default_values</span> <span class="kn">import</span> <span class="p">(</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">firebase_admin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">firebase_admin</span><span class="w"> </span><span class="kn">import</span> <span class="n">credentials</span><span class="p">,</span> <span class="n">firestore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.cloud.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">NotFound</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_json_file</span><span class="p">,</span> <span class="n">write_json_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.default_values</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">default_firebase_collection_names</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="FirebaseHandler">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler">[docs]</a>
-<span class="k">class</span> <span class="nc">FirebaseHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FirebaseHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve data and perform common tasks when working with firebase.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -62,7 +62,7 @@
     <span class="n">_initialized</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">_db</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># check if firebase is already initialized</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
             <span class="n">db_choice</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">which_db</span><span class="p">(</span><span class="n">default_db</span><span class="o">=</span><span class="n">default_db</span><span class="p">)</span>
@@ -80,7 +80,7 @@
 <div class="viewcode-block" id="FirebaseHandler.which_db">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.which_db">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">which_db</span><span class="p">(</span><span class="n">default_db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">which_db</span><span class="p">(</span><span class="n">default_db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;staging&quot;</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">default_db</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{</span><span class="n">default_db</span><span class="si">}</span><span class="s2"> database -------------&quot;</span><span class="p">)</span>
@@ -95,7 +95,7 @@
 <div class="viewcode-block" id="FirebaseHandler.get_creds">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_creds">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_creds</span><span class="p">(</span><span class="n">db_choice</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_creds</span><span class="p">(</span><span class="n">db_choice</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">db_choice</span> <span class="o">==</span> <span class="s2">&quot;staging&quot;</span><span class="p">:</span>
             <span class="n">cred</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">get_staging_creds</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -106,42 +106,42 @@
 <div class="viewcode-block" id="FirebaseHandler.doc_to_dict">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_to_dict">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">doc_to_dict</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">doc_to_dict</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.doc_id">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.doc_id">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">doc_id</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">doc_id</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">doc</span><span class="o">.</span><span class="n">id</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.create_path">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_path">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_path</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_path</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;firebase:</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.create_timestamp">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.create_timestamp">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_timestamp</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_timestamp</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">firestore</span><span class="o">.</span><span class="n">SERVER_TIMESTAMP</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.get_path_from_ref">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_path_from_ref">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_path_from_ref</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_path_from_ref</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">doc</span><span class="o">.</span><span class="n">path</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.get_collection_id_from_path">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_collection_id_from_path">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_collection_id_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_collection_id_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
             <span class="n">collection</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -160,7 +160,7 @@
     <span class="c1"># Create methods</span>
 <div class="viewcode-block" id="FirebaseHandler.set_doc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.set_doc">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">doc</span><span class="p">,</span> <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">doc</span><span class="p">:</span>
             <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
@@ -176,7 +176,7 @@
 
 <div class="viewcode-block" id="FirebaseHandler.upload_doc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.upload_doc">[docs]</a>
-    <span class="k">def</span> <span class="nf">upload_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upload_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
@@ -184,7 +184,7 @@
 <div class="viewcode-block" id="FirebaseHandler.get_dev_creds">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_dev_creds">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_dev_creds</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dev_creds</span><span class="p">():</span>
         <span class="n">creds</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="s2">&quot;./.creds&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">creds</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s2">&quot;firebase&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">creds</span><span class="p">:</span>
             <span class="n">creds</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">write_creds_path</span><span class="p">()</span>
@@ -194,7 +194,7 @@
 <div class="viewcode-block" id="FirebaseHandler.get_staging_creds">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_staging_creds">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_staging_creds</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_staging_creds</span><span class="p">():</span>
         <span class="c1"># set override=True to refresh the .env file if softwares or tokens updated</span>
         <span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;./.env&quot;</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">FIREBASE_TOKEN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FIREBASE_TOKEN&quot;</span><span class="p">)</span>
@@ -214,7 +214,7 @@
 <div class="viewcode-block" id="FirebaseHandler.get_username">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_username">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_username</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_username</span><span class="p">():</span>
         <span class="n">creds</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="s2">&quot;./.creds&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">creds</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span>
@@ -224,13 +224,13 @@
 
 <div class="viewcode-block" id="FirebaseHandler.db_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.db_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">db_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">db_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.get_doc_by_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_doc_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_doc_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span>
         <span class="n">data_ref</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
         <span class="n">docs</span> <span class="o">=</span> <span class="n">data_ref</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>  <span class="c1"># docs is an array</span>
@@ -239,7 +239,7 @@
 
 <div class="viewcode-block" id="FirebaseHandler.get_doc_by_id">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_doc_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_doc_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="c1"># `doc` is a DocumentSnapshot object</span>
         <span class="c1"># `doc_ref` is a DocumentReference object to perform operations on the doc</span>
         <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
@@ -252,14 +252,14 @@
 
 <div class="viewcode-block" id="FirebaseHandler.get_doc_by_ref">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_doc_by_ref">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_doc_by_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_doc_by_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">FirebaseHandler</span><span class="o">.</span><span class="n">get_collection_id_from_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.get_all_docs">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_all_docs">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_all_docs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_docs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">docs_stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">stream</span><span class="p">()</span>
             <span class="n">docs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">docs_stream</span><span class="p">)</span>
@@ -273,7 +273,7 @@
 
 <div class="viewcode-block" id="FirebaseHandler.get_value">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.get_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
         <span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_doc_by_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -283,7 +283,7 @@
     <span class="c1"># Update methods</span>
 <div class="viewcode-block" id="FirebaseHandler.update_doc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.update_doc">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">doc_ref</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully updated to path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -293,21 +293,21 @@
 <div class="viewcode-block" id="FirebaseHandler.update_reference_on_doc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.update_reference_on_doc">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_reference_on_doc</span><span class="p">(</span><span class="n">doc_ref</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">new_item_ref</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_reference_on_doc</span><span class="p">(</span><span class="n">doc_ref</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">new_item_ref</span><span class="p">):</span>
         <span class="n">doc_ref</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">index</span><span class="p">:</span> <span class="n">new_item_ref</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.update_elements_in_array">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.update_elements_in_array">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_elements_in_array</span><span class="p">(</span><span class="n">doc_ref</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">new_item_ref</span><span class="p">,</span> <span class="n">remove_item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_elements_in_array</span><span class="p">(</span><span class="n">doc_ref</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">new_item_ref</span><span class="p">,</span> <span class="n">remove_item</span><span class="p">):</span>
         <span class="n">doc_ref</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">index</span><span class="p">:</span> <span class="n">firestore</span><span class="o">.</span><span class="n">ArrayRemove</span><span class="p">([</span><span class="n">remove_item</span><span class="p">])})</span>
         <span class="n">doc_ref</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">index</span><span class="p">:</span> <span class="n">firestore</span><span class="o">.</span><span class="n">ArrayUnion</span><span class="p">([</span><span class="n">new_item_ref</span><span class="p">])})</span></div>
 
 
 <div class="viewcode-block" id="FirebaseHandler.update_or_create">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.update_or_create">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If the input id exists, update the doc. If not, create a new file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -320,7 +320,7 @@
     <span class="c1"># Delete methods</span>
 <div class="viewcode-block" id="FirebaseHandler.delete_doc">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.delete_doc">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="n">doc_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span><span class="o">.</span><span class="n">document</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
         <span class="n">doc_ref</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;successfully deleted path: </span><span class="si">{</span><span class="n">doc_ref</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -331,7 +331,7 @@
 <div class="viewcode-block" id="FirebaseHandler.write_creds_path">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.write_creds_path">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">write_creds_path</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_creds_path</span><span class="p">():</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;provide path to firebase credentials: &quot;</span><span class="p">))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -349,7 +349,7 @@
 <div class="viewcode-block" id="FirebaseHandler.is_reference">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.is_reference">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_reference</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_reference</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -362,7 +362,7 @@
 <div class="viewcode-block" id="FirebaseHandler.is_firebase_obj">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.FirebaseHandler.FirebaseHandler.is_firebase_obj">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_firebase_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_firebase_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">firestore</span><span class="o">.</span><span class="n">DocumentReference</span><span class="p">,</span> <span class="n">firestore</span><span class="o">.</span><span class="n">DocumentSnapshot</span><span class="p">)</span>
         <span class="p">)</span></div>
@@ -399,7 +399,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

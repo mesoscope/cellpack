@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation with pyenv and pdm &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
+    
+    <script src="_static/documentation_options.js?v=a34f1657"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack v1.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installation with <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> and <code class="docutils literal notranslate"><span class="pre">pdm</span></code></a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="installation-with-pyenv-and-pdm">
+<h1>Installation with <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> and <code class="docutils literal notranslate"><span class="pre">pdm</span></code><a class="headerlink" href="#installation-with-pyenv-and-pdm" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">pyenv</span></code> allows you to install multiple python versions side by side in your local user environment. This installation method is preferred over using <code class="docutils literal notranslate"><span class="pre">conda</span></code> to install <code class="docutils literal notranslate"><span class="pre">pdm</span></code></p>
+<section id="install-pyenv">
+<h2>Install pyenv<a class="headerlink" href="#install-pyenv" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Install pyenv: Follow the <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> installation instructions <a class="reference external" href="https://github.com/pyenv/pyenv#installation">here</a>. There are just two steps.</p></li>
+<li><p>Download and install <code class="docutils literal notranslate"><span class="pre">pyenv</span></code></p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> functions to your shell configuration.</p></li>
+</ol>
+</section>
+<section id="install-python-3-9">
+<h2>Install python 3.9<a class="headerlink" href="#install-python-3-9" title="Link to this heading">¶</a></h2>
+<p>Navigate to the <code class="docutils literal notranslate"><span class="pre">cellPACK</span></code> folder and install the required python version.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span>install<span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span>.python-version<span class="k">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">.python-version</span></code> file in this repo tells <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> to load Python 3.9 when you are inside the <code class="docutils literal notranslate"><span class="pre">cellPACK</span></code> directory.
+Check that this is working with <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python</span> <span class="pre">&amp;&amp;</span> <span class="pre">python</span> <span class="pre">--version</span></code>.</p>
+</section>
+<section id="install-pdm">
+<h2>Install <code class="docutils literal notranslate"><span class="pre">pdm</span></code><a class="headerlink" href="#install-pdm" title="Link to this heading">¶</a></h2>
+<p>Detailed installation instructions are available <a class="reference external" href="https://pdm.fming.dev/latest/#installation">here</a>.
+For Linux or MacOS, install <code class="docutils literal notranslate"><span class="pre">pdm</span></code> for your user as follows.</p>
+<ol class="arabic simple">
+<li><p>Download the installer</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-sSLO<span class="w"> </span>https://pdm.fming.dev/install-pdm.py
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Validate that the installer has not been tampered with</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-sSL<span class="w"> </span>https://pdm.fming.dev/install-pdm.py.sha256<span class="w"> </span><span class="p">|</span><span class="w"> </span>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>-c<span class="w"> </span>-
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Using Python 3.9, run the installer.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>install-pdm.py
+</pre></div>
+</div>
+<blockquote>
+<div><p>[!WARNING]
+With this installation method <code class="docutils literal notranslate"><span class="pre">pdm</span></code> will be tied to the exact python version used to install it. If you installed with Python 3.9.13, for example, and you later transition to Python 3.9.17, do not uninstall Python 3.9.13.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">pdm</span></code> will be installed into <code class="docutils literal notranslate"><span class="pre">$HOME/.local/bin</span></code>. Check that your version is at least 2.10.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pdm<span class="w"> </span>--version
+PDM,<span class="w"> </span>version<span class="w"> </span><span class="m">2</span>.10.4
+</pre></div>
+</div>
+</section>
+<section id="install-the-project-dependencies">
+<h2>Install the project dependencies<a class="headerlink" href="#install-the-project-dependencies" title="Link to this heading">¶</a></h2>
+<p>From the <code class="docutils literal notranslate"><span class="pre">cellPACK</span></code> directory, use <code class="docutils literal notranslate"><span class="pre">pdm</span></code> to install the dependencies.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pdm<span class="w"> </span>sync<span class="w"> </span>-d
+</pre></div>
+</div>
+<p>This will create a virtual environment at <code class="docutils literal notranslate"><span class="pre">cellPACK/.venv</span></code>. You can activate it with <code class="docutils literal notranslate"><span class="pre">eval</span> <span class="pre">$(pdm</span> <span class="pre">venv</span> <span class="pre">activate)</span></code> or <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">.venv/bin/activate</span></code>.</p>
+</section>
+<section id="managing-dependencies-with-pdm">
+<h2>Managing dependencies with <code class="docutils literal notranslate"><span class="pre">pdm</span></code><a class="headerlink" href="#managing-dependencies-with-pdm" title="Link to this heading">¶</a></h2>
+<p>To modify the project dependencies, see <a class="reference external" href="pdm.md">our instructions for using pdm</a>.</p>
+</section>
+</section>
+<section id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h1>
+<p>To run the tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pdm<span class="w"> </span>run<span class="w"> </span>pytest
+</pre></div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Installation with <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> and <code class="docutils literal notranslate"><span class="pre">pdm</span></code></a><ul>
+<li><a class="reference internal" href="#install-pyenv">Install pyenv</a></li>
+<li><a class="reference internal" href="#install-python-3-9">Install python 3.9</a></li>
+<li><a class="reference internal" href="#install-pdm">Install <code class="docutils literal notranslate"><span class="pre">pdm</span></code></a></li>
+<li><a class="reference internal" href="#install-the-project-dependencies">Install the project dependencies</a></li>
+<li><a class="reference internal" href="#managing-dependencies-with-pdm">Managing dependencies with <code class="docutils literal notranslate"><span class="pre">pdm</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/INSTALL.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cellPack v1.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installation with <code class="docutils literal notranslate"><span class="pre">pyenv</span></code> and <code class="docutils literal notranslate"><span class="pre">pdm</span></code></a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2021, Megan Riel-Mehan.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
+</html>

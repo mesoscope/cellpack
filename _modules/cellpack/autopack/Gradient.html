@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.Gradient &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.Gradient &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -86,15 +86,15 @@
 <span class="sd"># TODO: fix the save/restore grid</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
-<span class="kn">import</span> <span class="nn">bisect</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">get_distances_from_point</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bisect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_distances_from_point</span>
 
 
 <div class="viewcode-block" id="Gradient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient">[docs]</a>
-<span class="k">class</span> <span class="nc">Gradient</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Gradient</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Gradient class</span>
 <span class="sd">    ==========================</span>
@@ -103,7 +103,7 @@
 <span class="sd">    as well as the sampling function</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span>
@@ -136,7 +136,7 @@
 <div class="viewcode-block" id="Gradient.update_ingredient_gradient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.update_ingredient_gradient">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_ingredient_gradient</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_ingredient_gradient</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the ingredient gradient</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -151,7 +151,7 @@
 <div class="viewcode-block" id="Gradient.scale_between_0_and_1">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.scale_between_0_and_1">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">scale_between_0_and_1</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scale_between_0_and_1</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scale values between 0 and 1</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -163,7 +163,7 @@
 <div class="viewcode-block" id="Gradient.get_combined_gradient_weight">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_combined_gradient_weight">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_combined_gradient_weight</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">,</span> <span class="n">gradient_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_combined_gradient_weight</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">,</span> <span class="n">gradient_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine the gradient weights</span>
 
@@ -192,7 +192,7 @@
 <div class="viewcode-block" id="Gradient.pick_point_from_weight">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.pick_point_from_weight">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">pick_point_from_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pick_point_from_weight</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Picks a point from a list of points according to the given weight</span>
 
@@ -223,7 +223,7 @@
 <div class="viewcode-block" id="Gradient.pick_point_for_ingredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.pick_point_for_ingredient">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">pick_point_for_ingredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">allIngrPts</span><span class="p">,</span> <span class="n">all_gradients</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pick_point_for_ingredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">allIngrPts</span><span class="p">,</span> <span class="n">all_gradients</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Picks a point for an ingredient according to the gradient</span>
 
@@ -272,7 +272,7 @@
 
 <div class="viewcode-block" id="Gradient.get_center">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_center">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;get the center of the gradient grid&quot;&quot;&quot;</span>
         <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
@@ -282,7 +282,7 @@
 
 <div class="viewcode-block" id="Gradient.defaultFunction">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.defaultFunction">[docs]</a>
-    <span class="k">def</span> <span class="nf">defaultFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">defaultFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        #linear function 0-&gt;0.1</span>
 <span class="sd">        #project xyz on direction</span>
@@ -294,7 +294,7 @@
 
 <div class="viewcode-block" id="Gradient.normalize_vector">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.normalize_vector">[docs]</a>
-    <span class="k">def</span> <span class="nf">normalize_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Normalize to unit vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -303,7 +303,7 @@
 
 <div class="viewcode-block" id="Gradient.pickPoint">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.pickPoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">pickPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pickPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        pick next random point according to the chosen function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -312,7 +312,7 @@
 
 <div class="viewcode-block" id="Gradient.build_weight_map">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_weight_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        build the actual gradient value according the gradient mode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -328,7 +328,7 @@
 
 <div class="viewcode-block" id="Gradient.get_gauss_weights">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_gauss_weights">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_gauss_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_points</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_gauss_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_points</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        given a number of points compute the gaussian weight for each</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -345,7 +345,7 @@
 
 <div class="viewcode-block" id="Gradient.build_radial_weight_map">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_radial_weight_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_radial_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_radial_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="n">bb</span>
         <span class="n">diag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_center</span><span class="p">())</span>
@@ -357,7 +357,7 @@
 
 <div class="viewcode-block" id="Gradient.build_surface_distance_weight_map">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_surface_distance_weight_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_surface_distance_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_surface_distance_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        build a map of weights based on the distance from a surface</span>
 <span class="sd">        assumes self.distances include surface distances</span>
@@ -375,7 +375,7 @@
 
 <div class="viewcode-block" id="Gradient.build_directional_weight_map">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_directional_weight_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_directional_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_directional_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from a given direction build a linear weight according the chosen mode</span>
 <span class="sd">        (linear, gauss, etc...)</span>
@@ -391,7 +391,7 @@
 
 <div class="viewcode-block" id="Gradient.build_axis_weight_map">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.build_axis_weight_map">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_axis_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_axis_weight_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">master_grid_positions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from a given axe (X,Y,Z) build a linear weight according the chosen mode</span>
 <span class="sd">        (linear, gauss, etc...)</span>
@@ -406,7 +406,7 @@
 
 <div class="viewcode-block" id="Gradient.set_weights_by_mode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.set_weights_by_mode">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_weights_by_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_weights_by_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scaled_distances</span> <span class="o">=</span> <span class="n">Gradient</span><span class="o">.</span><span class="n">scale_between_0_and_1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distances</span><span class="p">)</span>
 
@@ -453,7 +453,7 @@
 
 <div class="viewcode-block" id="Gradient.getMaxWeight">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getMaxWeight">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMaxWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMaxWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from the given list of grid point indice, get the point with the maximum weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -470,7 +470,7 @@
 
 <div class="viewcode-block" id="Gradient.getMinWeight">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getMinWeight">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMinWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMinWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        from the given list of grid point indice, get the point with the minimum weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -487,7 +487,7 @@
 
 <div class="viewcode-block" id="Gradient.getRndWeighted">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getRndWeighted">[docs]</a>
-    <span class="k">def</span> <span class="nf">getRndWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_pts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getRndWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_of_pts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From http://glowingpython.blogspot.com/2012/09/weighted-random-choice.html</span>
 <span class="sd">        Weighted random selection</span>
@@ -504,7 +504,7 @@
 
 <div class="viewcode-block" id="Gradient.getLinearWeighted">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getLinearWeighted">[docs]</a>
-    <span class="k">def</span> <span class="nf">getLinearWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getLinearWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From:</span>
 <span class="sd">        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
@@ -533,7 +533,7 @@
 
 <div class="viewcode-block" id="Gradient.getBinaryWeighted">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getBinaryWeighted">[docs]</a>
-    <span class="k">def</span> <span class="nf">getBinaryWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getBinaryWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From</span>
 <span class="sd">        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
@@ -557,7 +557,7 @@
 
 <div class="viewcode-block" id="Gradient.getForwWeight">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getForwWeight">[docs]</a>
-    <span class="k">def</span> <span class="nf">getForwWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getForwWeight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
         <span class="n">dice</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span>
         <span class="c1"># sorted ?</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listPts</span><span class="p">:</span>
@@ -567,7 +567,7 @@
 
 <div class="viewcode-block" id="Gradient.getSubWeighted">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getSubWeighted">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSubWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSubWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listPts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        From</span>
 <span class="sd">        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
@@ -591,7 +591,7 @@
 
 <div class="viewcode-block" id="Gradient.create_voxelization">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.create_voxelization">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_writer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_writer</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a voxelized representation of the gradient distances and weights</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -646,7 +646,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

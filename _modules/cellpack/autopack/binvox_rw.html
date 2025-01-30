@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.binvox_rw &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.binvox_rw &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -129,12 +129,12 @@
 <span class="sd">True</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <div class="viewcode-block" id="Voxels">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels">[docs]</a>
-<span class="k">class</span> <span class="nc">Voxels</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Voxels</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds a binvox model.</span>
 <span class="sd">    data is either a three-dimensional numpy boolean array (dense representation)</span>
 <span class="sd">    or a two-dimensional numpy float array (coordinate representation).</span>
@@ -156,7 +156,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">translate</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">axis_order</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">translate</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">axis_order</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">translate</span> <span class="o">=</span> <span class="n">translate</span>
@@ -172,7 +172,7 @@
 
 <div class="viewcode-block" id="Voxels.clone">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.clone">[docs]</a>
-    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[:]</span>
         <span class="n">translate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">[:]</span>
@@ -181,13 +181,13 @@
 
 <div class="viewcode-block" id="Voxels.write">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.write">[docs]</a>
-    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
         <span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fp</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Voxels.ijkToxyz">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.ijkToxyz">[docs]</a>
-    <span class="k">def</span> <span class="nf">ijkToxyz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ijkToxyz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># depends on axis_order</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
             <span class="n">x_n</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -208,7 +208,7 @@
 
 <div class="viewcode-block" id="Voxels.xyzToijk">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.xyzToijk">[docs]</a>
-    <span class="k">def</span> <span class="nf">xyzToijk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">xyzToijk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xyz</span><span class="p">):</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -224,7 +224,7 @@
 
 <div class="viewcode-block" id="Voxels.ijkToIndex">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.ijkToIndex">[docs]</a>
-    <span class="k">def</span> <span class="nf">ijkToIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ijk</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ijkToIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ijk</span><span class="p">):</span>
         <span class="n">ijk</span> <span class="o">=</span> <span class="n">ijk</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
         <span class="n">wxh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -235,7 +235,7 @@
 
 <div class="viewcode-block" id="Voxels.getIndex">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.getIndex">[docs]</a>
-    <span class="k">def</span> <span class="nf">getIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ijk</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ijk</span><span class="p">):</span>
         <span class="n">wxh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">index</span> <span class="o">=</span> <span class="n">ijk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">wxh</span> <span class="o">+</span> <span class="n">ijk</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">ijk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -259,7 +259,7 @@
 
 <div class="viewcode-block" id="Voxels.getIndexData">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.getIndexData">[docs]</a>
-    <span class="k">def</span> <span class="nf">getIndexData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ijk</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getIndexData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ijk</span><span class="p">):</span>
         <span class="n">wxh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">index</span> <span class="o">=</span> <span class="n">ijk</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">wxh</span> <span class="o">+</span> <span class="n">ijk</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">ijk</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -269,7 +269,7 @@
 
 <div class="viewcode-block" id="Voxels.cartesian">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.cartesian">[docs]</a>
-    <span class="k">def</span> <span class="nf">cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrays</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cartesian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arrays</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        #http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays</span>
 <span class="sd">        Generate a cartesian product of input arrays.</span>
@@ -325,7 +325,7 @@
 
 <div class="viewcode-block" id="read_header">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read_header">[docs]</a>
-<span class="k">def</span> <span class="nf">read_header</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_header</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binvox header. Mostly meant for internal use.&quot;&quot;&quot;</span>
     <span class="n">line</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;#binvox&quot;</span><span class="p">):</span>
@@ -340,7 +340,7 @@
 
 <div class="viewcode-block" id="read">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read">[docs]</a>
-<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="n">fp</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binary binvox format as array.</span>
 
 <span class="sd">    Returns the model with accompanying metadata.</span>
@@ -373,7 +373,7 @@
 
 <div class="viewcode-block" id="read_as_3d_array">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read_as_3d_array">[docs]</a>
-<span class="k">def</span> <span class="nf">read_as_3d_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">fix_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_as_3d_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">fix_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binary binvox format as array.</span>
 
 <span class="sd">    Returns the model with accompanying metadata.</span>
@@ -412,7 +412,7 @@
 
 <div class="viewcode-block" id="read_as_coord_array">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.read_as_coord_array">[docs]</a>
-<span class="k">def</span> <span class="nf">read_as_coord_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">fix_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_as_coord_array</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">fix_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read binary binvox format as coordinates.</span>
 
 <span class="sd">    Returns binvox model with voxels in a &quot;coordinate&quot; representation, i.e.  an</span>
@@ -465,7 +465,7 @@
 
 <div class="viewcode-block" id="dense_to_sparse">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.dense_to_sparse">[docs]</a>
-<span class="k">def</span> <span class="nf">dense_to_sparse</span><span class="p">(</span><span class="n">voxel_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dense_to_sparse</span><span class="p">(</span><span class="n">voxel_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;From dense representation to sparse (coordinate) representation.</span>
 <span class="sd">    No coordinate reordering.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -477,7 +477,7 @@
 
 <div class="viewcode-block" id="sparse_to_dense">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.sparse_to_dense">[docs]</a>
-<span class="k">def</span> <span class="nf">sparse_to_dense</span><span class="p">(</span><span class="n">voxel_data</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sparse_to_dense</span><span class="p">(</span><span class="n">voxel_data</span><span class="p">,</span> <span class="n">dims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">voxel_data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">voxel_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;voxel_data is wrong shape; should be 3xN array.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dims</span><span class="p">):</span>
@@ -503,7 +503,7 @@
 
 <div class="viewcode-block" id="write">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.binvox_rw.write">[docs]</a>
-<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">voxel_model</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="n">voxel_model</span><span class="p">,</span> <span class="n">fp</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write binary binvox format.</span>
 
 <span class="sd">    Note that when saving a model in sparse (coordinate) format, it is first</span>
@@ -556,7 +556,7 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">doctest</span>
 
     <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
 </pre></div>
@@ -590,7 +590,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

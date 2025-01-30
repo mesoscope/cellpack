@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.Environment &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.Environment &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -86,22 +86,22 @@
 <span class="sd"># TODO: fix the save/restore grid</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">seed</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.packed_objects</span> <span class="kn">import</span> <span class="n">PackedObjects</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">encoder</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.MeshStore</span> <span class="kn">import</span> <span class="n">MeshStore</span>
-<span class="kn">import</span> <span class="nn">cellpack.autopack.ingredient</span> <span class="k">as</span> <span class="nn">ingredient</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">create_output_dir</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">random</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">seed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.packed_objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">PackedObjects</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="kn">import</span> <span class="n">encoder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">autopack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.MeshStore</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshStore</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack.ingredient</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ingredient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_output_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">cmp_to_key</span><span class="p">,</span>
     <span class="n">expand_object_using_key</span><span class="p">,</span>
     <span class="n">get_value_from_distribution</span><span class="p">,</span>
@@ -112,20 +112,20 @@
     <span class="n">ingredient_compare2</span><span class="p">,</span>
     <span class="n">load_object_from_pickle</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.writers</span> <span class="kn">import</span> <span class="n">Writer</span>
-<span class="kn">from</span> <span class="nn">.Compartment</span> <span class="kn">import</span> <span class="n">CompartmentList</span><span class="p">,</span> <span class="n">Compartment</span>
-<span class="kn">from</span> <span class="nn">.Recipe</span> <span class="kn">import</span> <span class="n">Recipe</span>
-<span class="kn">from</span> <span class="nn">.ingredient</span> <span class="kn">import</span> <span class="n">GrowIngredient</span><span class="p">,</span> <span class="n">ActinIngredient</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">IOutils</span><span class="p">,</span> <span class="n">get_cache_location</span><span class="p">,</span> <span class="n">get_local_file_location</span>
-<span class="kn">from</span> <span class="nn">.octree</span> <span class="kn">import</span> <span class="n">Octree</span>
-<span class="kn">from</span> <span class="nn">.Gradient</span> <span class="kn">import</span> <span class="n">Gradient</span>
-<span class="kn">from</span> <span class="nn">.transformation</span> <span class="kn">import</span> <span class="n">signed_angle_between_vectors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.writers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Writer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Compartment</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompartmentList</span><span class="p">,</span> <span class="n">Compartment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Recipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recipe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ingredient</span><span class="w"> </span><span class="kn">import</span> <span class="n">GrowIngredient</span><span class="p">,</span> <span class="n">ActinIngredient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="kn">import</span> <span class="n">IOutils</span><span class="p">,</span> <span class="n">get_cache_location</span><span class="p">,</span> <span class="n">get_local_file_location</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.octree</span><span class="w"> </span><span class="kn">import</span> <span class="n">Octree</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Gradient</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gradient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transformation</span><span class="w"> </span><span class="kn">import</span> <span class="n">signed_angle_between_vectors</span>
 
 <span class="c1"># backward compatibility with kevin method</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">BaseGrid</span>
-<span class="kn">from</span> <span class="nn">.randomRot</span> <span class="kn">import</span> <span class="n">RandomRot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.BaseGrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">BaseGrid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.randomRot</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomRot</span>
 
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
@@ -145,7 +145,7 @@
 
 <div class="viewcode-block" id="Environment">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment">[docs]</a>
-<span class="k">class</span> <span class="nc">Environment</span><span class="p">(</span><span class="n">CompartmentList</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Environment</span><span class="p">(</span><span class="n">CompartmentList</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Environment class</span>
 <span class="sd">    ==========================</span>
@@ -158,7 +158,7 @@
 <span class="sd">        each recipe are made of a list of ingredients</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">CompartmentList</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="p">()</span>
 
@@ -314,7 +314,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;composition&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">:</span>
             <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">root_compartment</span><span class="p">,</span>
@@ -329,7 +329,7 @@
 
 <div class="viewcode-block" id="Environment.clean_grid_cache">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.clean_grid_cache">[docs]</a>
-    <span class="k">def</span> <span class="nf">clean_grid_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clean_grid_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean the grid cache</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -343,7 +343,7 @@
 
 <div class="viewcode-block" id="Environment.get_compartment_object_by_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_compartment_object_by_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_compartment_object_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_compartment_object_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns compartment object by name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -354,7 +354,7 @@
 
 <div class="viewcode-block" id="Environment.get_bounding_box_limits">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_bounding_box_limits">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_bounding_box_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_bounding_box_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the min and max limits for the bounding box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -366,7 +366,7 @@
 
 <div class="viewcode-block" id="Environment.setSeed">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setSeed">[docs]</a>
-    <span class="k">def</span> <span class="nf">setSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">):</span>
         <span class="n">SEED</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seedNum</span><span class="p">)</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>  <span class="c1"># for gradient</span>
         <span class="n">seed</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
@@ -375,7 +375,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">seed_used</span> <span class="o">=</span> <span class="n">SEED</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_prep_ingredient_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composition_info</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prep_ingredient_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composition_info</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">objects_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span>
         <span class="n">object_key</span> <span class="o">=</span> <span class="n">composition_info</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
         <span class="n">ingredient_info</span> <span class="o">=</span> <span class="n">expand_object_using_key</span><span class="p">(</span>
@@ -390,7 +390,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">ingredient_info</span>
 
-    <span class="k">def</span> <span class="nf">_step_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_key</span><span class="p">,</span> <span class="n">prev_compartment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_step_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_key</span><span class="p">,</span> <span class="n">prev_compartment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="n">prev_compartment</span> <span class="k">if</span> <span class="n">prev_compartment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span>
         <span class="n">composition_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span>
         <span class="n">compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span><span class="n">compartment_key</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
@@ -415,7 +415,7 @@
 
 <div class="viewcode-block" id="Environment.create_objects">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate compartments and ingredients contained within the recipe data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -448,14 +448,14 @@
 
 <div class="viewcode-block" id="Environment.reportprogress">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.reportprogress">[docs]</a>
-    <span class="k">def</span> <span class="nf">reportprogress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reportprogress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="p">,</span> <span class="s2">&quot;vi&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">progressBar</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Environment.set_partners_ingredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_partners_ingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_partners_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_partners_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">partner</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">all_partners</span><span class="p">:</span>
                 <span class="n">partner_ingr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ingredient_by_name</span><span class="p">(</span><span class="n">partner</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -468,7 +468,7 @@
 
 <div class="viewcode-block" id="Environment.get_all_distances">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_all_distances">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_all_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
@@ -480,7 +480,7 @@
 
 <div class="viewcode-block" id="Environment.get_distances">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_distances">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
 
         <span class="n">ingredient_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_positions_for_ingredient</span><span class="p">(</span>
             <span class="n">ingredient_name</span>
@@ -504,7 +504,7 @@
 
 <div class="viewcode-block" id="Environment.get_ingredient_angles">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_ingredient_angles">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ingredient_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">ingredient_positions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ingredient_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">ingredient_positions</span><span class="p">):</span>
         <span class="n">ingredient_rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_rotations_for_ingredient</span><span class="p">(</span>
             <span class="n">ingredient_name</span><span class="o">=</span><span class="n">ingredient_name</span><span class="p">,</span>
         <span class="p">)</span>
@@ -544,7 +544,7 @@
 
 <div class="viewcode-block" id="Environment.get_distances_and_angles">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_distances_and_angles">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_distances_and_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">get_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_distances_and_angles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">get_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="p">(</span>
             <span class="n">ingredient_positions</span><span class="p">,</span>
             <span class="n">distances_from_center</span><span class="p">,</span>
@@ -567,7 +567,7 @@
 
 <div class="viewcode-block" id="Environment.calc_pairwise_distances">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.calc_pairwise_distances">[docs]</a>
-    <span class="k">def</span> <span class="nf">calc_pairwise_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr1name</span><span class="p">,</span> <span class="n">ingr2name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calc_pairwise_distances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr1name</span><span class="p">,</span> <span class="n">ingr2name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns pairwise distances between ingredients of different types</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -582,7 +582,7 @@
 
 <div class="viewcode-block" id="Environment.save_result">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_result</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">free_points</span><span class="p">,</span>
         <span class="n">distances</span><span class="p">,</span>
@@ -613,7 +613,7 @@
 
 <div class="viewcode-block" id="Environment.loadResult">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadResult">[docs]</a>
-    <span class="k">def</span> <span class="nf">loadResult</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadResult</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">restore_grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">backward</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -649,7 +649,7 @@
 
 <div class="viewcode-block" id="Environment.includeIngrRecipes">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.includeIngrRecipes">[docs]</a>
-    <span class="k">def</span> <span class="nf">includeIngrRecipes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">include</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">includeIngrRecipes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">include</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Include or Exclude the given ingredient from the recipe.</span>
 <span class="sd">        (similar to an active state toggle)</span>
@@ -668,7 +668,7 @@
 
 <div class="viewcode-block" id="Environment.includeIngrRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.includeIngrRecipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">includeIngrRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">rs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">includeIngrRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">include</span><span class="p">,</span> <span class="n">rs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Include or Exclude the given ingredient from the given recipe.</span>
 <span class="sd">        (similar to an active state toggle)</span>
@@ -691,7 +691,7 @@
 
 <div class="viewcode-block" id="Environment.includeIngredientRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.includeIngredientRecipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">includeIngredientRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">include</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">includeIngredientRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">include</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;lue</span>
 <span class="sd">        Include or Exclude the given ingredient from the recipe.</span>
 <span class="sd">        (similar to an active state toggle)</span>
@@ -705,7 +705,7 @@
 
 <div class="viewcode-block" id="Environment.sortIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.sortIngredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">sortIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sortIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># make sure all recipes are sorted from large to small radius</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -720,23 +720,23 @@
 
 <div class="viewcode-block" id="Environment.resolve_gradient_data_objects">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.resolve_gradient_data_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">resolve_gradient_data_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_gradient_data_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resolves gradient data objects for some modes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO: check if other modes need to be resolved</span>
         <span class="k">if</span> <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;surface&quot;</span><span class="p">:</span>
-            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span>
-                <span class="s2">&quot;object&quot;</span>
-            <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment_object_by_name</span><span class="p">(</span>
-                <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+            <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment_object_by_name</span><span class="p">(</span>
+                    <span class="n">gradient_data</span><span class="p">[</span><span class="s2">&quot;mode_settings&quot;</span><span class="p">][</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">gradient_data</span></div>
 
 
 <div class="viewcode-block" id="Environment.set_gradient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_gradient">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradient_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        create a grdaient</span>
 <span class="sd">        assign weight to point</span>
@@ -751,7 +751,7 @@
 
 <div class="viewcode-block" id="Environment.callFunction">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.callFunction">[docs]</a>
-    <span class="k">def</span> <span class="nf">callFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">kw</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">callFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">kw</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        helper function to callback another function with the</span>
 <span class="sd">        given arguments and keywords.</span>
@@ -767,7 +767,7 @@
 
 <div class="viewcode-block" id="Environment.is_two_d">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.is_two_d">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_two_d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_two_d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">grid_spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span>
         <span class="n">bounding_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="n">box_size</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounding_box</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -777,7 +777,7 @@
 
 <div class="viewcode-block" id="Environment.timeFunction">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.timeFunction">[docs]</a>
-    <span class="k">def</span> <span class="nf">timeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">timeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mesure the time for performing the provided function.</span>
 
@@ -802,7 +802,7 @@
 
 <div class="viewcode-block" id="Environment.SetRBOptions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.SetRBOptions">[docs]</a>
-    <span class="k">def</span> <span class="nf">SetRBOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="s2">&quot;moving&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SetRBOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="s2">&quot;moving&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the rigid body options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -823,7 +823,7 @@
 
 <div class="viewcode-block" id="Environment.SetSpringOptions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.SetSpringOptions">[docs]</a>
-    <span class="k">def</span> <span class="nf">SetSpringOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">SetSpringOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Change the spring options, mainly used by C4D.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -836,7 +836,7 @@
 
 <div class="viewcode-block" id="Environment.setupRBOptions">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setupRBOptions">[docs]</a>
-    <span class="k">def</span> <span class="nf">setupRBOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setupRBOptions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set default value for rigid body options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -879,7 +879,7 @@
 
 <div class="viewcode-block" id="Environment.writeArraysToFile">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.writeArraysToFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">writeArraysToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">writeArraysToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;write self.compartment_ids and self.distToClosestSurf to file. (pickle)&quot;&quot;&quot;</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
@@ -888,7 +888,7 @@
 
 <div class="viewcode-block" id="Environment.readArraysFromFile">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.readArraysFromFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">readArraysFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">readArraysFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;write self.compartment_ids and self.distToClosestSurf to file. (pickle)&quot;&quot;&quot;</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">pos</span>
@@ -905,7 +905,7 @@
 
 <div class="viewcode-block" id="Environment.saveGridToFile">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveGridToFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current grid and the compartment grid information in a file. (pickle)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -924,7 +924,7 @@
 
 <div class="viewcode-block" id="Environment.saveGridLogsAsJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveGridLogsAsJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">saveGridLogsAsJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saveGridLogsAsJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current grid and the compartment grid information in a file. (pickle)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -954,7 +954,7 @@
 <div class="viewcode-block" id="Environment.get_attributes_to_update">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_attributes_to_update">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_attributes_to_update</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_attributes_to_update</span><span class="p">():</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="s2">&quot;faces&quot;</span><span class="p">,</span>
             <span class="s2">&quot;vertices&quot;</span><span class="p">,</span>
@@ -978,7 +978,7 @@
 
 <div class="viewcode-block" id="Environment.restore_grids_from_pickle">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore_grids_from_pickle">[docs]</a>
-    <span class="k">def</span> <span class="nf">restore_grids_from_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore_grids_from_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read and setup the grid from the given filename. (pickle)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1013,7 +1013,7 @@
 
 <div class="viewcode-block" id="Environment.save_grids_to_pickle">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_grids_to_pickle">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_grids_to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_grids_to_pickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current grid and compartment grids to file. (pickle)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1034,7 +1034,7 @@
 
 <div class="viewcode-block" id="Environment.restoreGridFromFile">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restoreGridFromFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">restoreGridFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileName</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restoreGridFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileName</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read and setup the grid from the given filename. (pickle)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1062,7 +1062,7 @@
 
 <div class="viewcode-block" id="Environment.extractMeshComponent">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.extractMeshComponent">[docs]</a>
-    <span class="k">def</span> <span class="nf">extractMeshComponent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extractMeshComponent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Require host helper. Return the v,f,n of the given object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1111,7 +1111,7 @@
 
 <div class="viewcode-block" id="Environment.update_largest_smallest_size">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.update_largest_smallest_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_largest_smallest_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_largest_smallest_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">min_radius</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">:</span>
@@ -1120,7 +1120,7 @@
 
 <div class="viewcode-block" id="Environment.create_ingredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_ingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;place_method&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
             <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
@@ -1137,7 +1137,7 @@
 
 <div class="viewcode-block" id="Environment.create_compartment">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_compartment">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_key</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_key</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="n">comp_dic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span>
         <span class="n">obj_dic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span>
 
@@ -1156,7 +1156,7 @@
         <span class="k">return</span> <span class="n">compartment</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_add_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the given compartment to the environment.</span>
 <span class="sd">        Extend the main bounding box if needed</span>
@@ -1168,7 +1168,7 @@
 
 <div class="viewcode-block" id="Environment.compartment_id_for_nearest_grid_point">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.compartment_id_for_nearest_grid_point">[docs]</a>
-    <span class="k">def</span> <span class="nf">compartment_id_for_nearest_grid_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compartment_id_for_nearest_grid_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="c1"># check if point inside  of the compartments</span>
         <span class="c1"># closest grid point is</span>
         <span class="n">d</span><span class="p">,</span> <span class="n">pid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getClosestGridPoint</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
@@ -1178,7 +1178,7 @@
 
 <div class="viewcode-block" id="Environment.loopThroughIngr">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loopThroughIngr">[docs]</a>
-    <span class="k">def</span> <span class="nf">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cb_function</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cb_function</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function that loops through all ingredients of all recipes and applies the given</span>
 <span class="sd">        callback function on each ingredients.</span>
@@ -1202,7 +1202,7 @@
 
 <div class="viewcode-block" id="Environment.getIngrFromNameInRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getIngrFromNameInRecipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">getIngrFromNameInRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getIngrFromNameInRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given an ingredient name and a recipe, retrieve the ingredient object instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1232,7 +1232,7 @@
 
 <div class="viewcode-block" id="Environment.get_ingredient_by_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_ingredient_by_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ingredient_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">compartment_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ingredient_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">compartment_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given an ingredient name and optionally the compartment number, retrieve the ingredient object instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1277,7 +1277,7 @@
 
 <div class="viewcode-block" id="Environment.get_ingredients_in_tree">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_ingredients_in_tree">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ingredients_in_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closest_ingredients</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ingredients_in_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">closest_ingredients</span><span class="p">):</span>
         <span class="n">ingredients</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">packed_objects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_objects</span><span class="o">.</span><span class="n">get_ingredients</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">packed_objects</span><span class="p">):</span>
@@ -1291,7 +1291,7 @@
 
 <div class="viewcode-block" id="Environment.get_closest_ingredients">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_closest_ingredients">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_closest_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_closest_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
         <span class="n">to_return</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;indices&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;distances&quot;</span><span class="p">:</span> <span class="p">[]}</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalNbIngr</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
         <span class="n">nb</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1319,7 +1319,7 @@
 
 <div class="viewcode-block" id="Environment.setExteriorRecipe">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setExteriorRecipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">setExteriorRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setExteriorRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the exterior recipe with the given one. Create the weakref.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1332,7 +1332,7 @@
 
 <div class="viewcode-block" id="Environment.BuildCompartmentsGrids">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.BuildCompartmentsGrids">[docs]</a>
-    <span class="k">def</span> <span class="nf">BuildCompartmentsGrids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">BuildCompartmentsGrids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build the compartments grid (interior and surface points) to be merged with the main grid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1362,7 +1362,7 @@
 
 <div class="viewcode-block" id="Environment.build_compartment_grids">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.build_compartment_grids">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_compartment_grids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_compartment_grids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;file is None thus re/building grid distance&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">BuildCompartmentsGrids</span><span class="p">()</span>
 
@@ -1377,7 +1377,7 @@
 
 <div class="viewcode-block" id="Environment.extend_bounding_box_for_compartments">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.extend_bounding_box_for_compartments">[docs]</a>
-    <span class="k">def</span> <span class="nf">extend_bounding_box_for_compartments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend_bounding_box_for_compartments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">):</span>
             <span class="n">fits</span><span class="p">,</span> <span class="n">bb</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">inBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fits</span><span class="p">:</span>
@@ -1386,14 +1386,14 @@
 
 <div class="viewcode-block" id="Environment.get_size_of_bounding_box">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_size_of_bounding_box">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_size_of_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_size_of_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">box_boundary</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">box_boundary</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">box_boundary</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="Environment.buildGrid">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.buildGrid">[docs]</a>
-    <span class="k">def</span> <span class="nf">buildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rebuild</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rebuild</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The main build grid function. Setup the main grid and merge the</span>
 <span class="sd">        compartment grid. The setup is de novo or using previously built grid</span>
@@ -1404,11 +1404,11 @@
 
         <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_halton</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">HaltonGrid</span> <span class="k">as</span> <span class="n">Grid</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.BaseGrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">HaltonGrid</span> <span class="k">as</span> <span class="n">Grid</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">innerGridMethod</span> <span class="o">==</span> <span class="s2">&quot;floodfill&quot;</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cellpack.autopack.Environment</span> <span class="kn">import</span> <span class="n">Grid</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.Environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">Grid</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.BaseGrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">Grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sortIngredient</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">nFill</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1491,7 +1491,7 @@
 
 <div class="viewcode-block" id="Environment.onePrevIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.onePrevIngredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">onePrevIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">mingrs</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">marray</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">onePrevIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">mingrs</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">marray</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unused</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1537,7 +1537,7 @@
 
 <div class="viewcode-block" id="Environment.getSortedActiveIngredients">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getSortedActiveIngredients">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSortedActiveIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getSortedActiveIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sort the active ingredient according their pirority and radius.</span>
 <span class="sd">        # first get the ones with a packing priority</span>
@@ -1638,7 +1638,7 @@
 
 <div class="viewcode-block" id="Environment.clearRBingredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.clearRBingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">clearRBingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clearRBingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">bullet_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">delRB</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">bullet_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">bullet_nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1647,14 +1647,14 @@
 
 <div class="viewcode-block" id="Environment.clear">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.clear">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># before closing remoeall rigidbody</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clearRBingredient</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Environment.reset">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset everything to empty and not done&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fbox_bb</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">totnbJitter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1677,7 +1677,7 @@
 
 <div class="viewcode-block" id="Environment.resetIngrRecip">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.resetIngrRecip">[docs]</a>
-    <span class="k">def</span> <span class="nf">resetIngrRecip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recip</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resetIngrRecip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recip</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all ingredient of the given recipe&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">recip</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recip</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
@@ -1714,7 +1714,7 @@
 
 <div class="viewcode-block" id="Environment.getActiveIng">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getActiveIng">[docs]</a>
-    <span class="k">def</span> <span class="nf">getActiveIng</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getActiveIng</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return all remaining active ingredients&quot;&quot;&quot;</span>
         <span class="n">allIngredients</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">recipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
@@ -1752,7 +1752,7 @@
 
 <div class="viewcode-block" id="Environment.pickIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.pickIngredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">pickIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vThreshStart</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pickIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vThreshStart</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Main function that decide the next ingredient the packing will try to</span>
 <span class="sd">        drop. The picking is weighted or random</span>
@@ -1790,7 +1790,7 @@
 
 <div class="viewcode-block" id="Environment.get_dpad">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_dpad">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_dpad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dpad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the largest encapsulating_radius and use it for padding&quot;&quot;&quot;</span>
         <span class="n">mr</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="n">compartment_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># cytoplasm -&gt; use cyto and all surfaces</span>
@@ -1819,7 +1819,7 @@
 
 <div class="viewcode-block" id="Environment.getPointToDrop">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getPointToDrop">[docs]</a>
-    <span class="k">def</span> <span class="nf">getPointToDrop</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getPointToDrop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ingr</span><span class="p">,</span>
         <span class="n">free_points</span><span class="p">,</span>
@@ -1959,7 +1959,7 @@
 
 <div class="viewcode-block" id="Environment.removeOnePoint">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.removeOnePoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">removeOnePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeOnePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># New system replaced by Graham on Aug 18, 2012</span>
             <span class="n">nbFreePoints</span> <span class="o">-=</span> <span class="mi">1</span>
@@ -1975,7 +1975,7 @@
 
 <div class="viewcode-block" id="Environment.getTotalNbObject">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getTotalNbObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">getTotalNbObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">,</span> <span class="n">update_partner</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTotalNbObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">,</span> <span class="n">update_partner</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">totalNbIngr</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">allIngredients</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
@@ -1991,7 +1991,7 @@
 
 <div class="viewcode-block" id="Environment.prep_molecules_for_save">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.prep_molecules_for_save">[docs]</a>
-    <span class="k">def</span> <span class="nf">prep_molecules_for_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prep_molecules_for_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distancesAfterFill</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="n">nbFreePoints</span>
@@ -2004,7 +2004,7 @@
 
 <div class="viewcode-block" id="Environment.check_new_placement">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.check_new_placement">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_new_placement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_new_placement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">):</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_distances</span><span class="p">(</span><span class="n">new_position</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># nothing has been packed yet</span>
@@ -2018,7 +2018,7 @@
 
 <div class="viewcode-block" id="Environment.distance_check_failed">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.distance_check_failed">[docs]</a>
-    <span class="k">def</span> <span class="nf">distance_check_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">distance_check_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_distances</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># nothing has been packed yet</span>
@@ -2030,7 +2030,7 @@
 
 <div class="viewcode-block" id="Environment.update_variable_ingredient_attributes">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.update_variable_ingredient_attributes">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_variable_ingredient_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_variable_ingredient_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        updates variable attributes for all ingredients based on input options</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2061,13 +2061,13 @@
 
 <div class="viewcode-block" id="Environment.add_seed_number_to_base_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.add_seed_number_to_base_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_seed_number_to_base_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed_number</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_seed_number_to_base_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed_number</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_name</span><span class="si">}</span><span class="s2">_seed_</span><span class="si">{</span><span class="n">seed_number</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="Environment.set_result_file_name">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_result_file_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_result_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed_basename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_result_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed_basename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the result file name using the output folder path and a given seed basename</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2076,7 +2076,7 @@
 
 <div class="viewcode-block" id="Environment.update_after_place">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.update_after_place">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_after_place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_point_index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_after_place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_point_index</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lastrank</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lastrank</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nb_ingredient</span> <span class="o">+=</span> <span class="mi">1</span></div>
@@ -2084,7 +2084,7 @@
 
 <div class="viewcode-block" id="Environment.pack_grid">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.pack_grid">[docs]</a>
-    <span class="k">def</span> <span class="nf">pack_grid</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pack_grid</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">seedNum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2456,7 +2456,7 @@
 
 <div class="viewcode-block" id="Environment.restore_molecules_array">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore_molecules_array">[docs]</a>
-    <span class="k">def</span> <span class="nf">restore_molecules_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore_molecules_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
         <span class="c1"># if len(ingr.results):</span>
@@ -2473,7 +2473,7 @@
 
 <div class="viewcode-block" id="Environment.restore">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore">[docs]</a>
-    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">orgaresult</span><span class="p">,</span> <span class="n">freePoint</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">orgaresult</span><span class="p">,</span> <span class="n">freePoint</span><span class="p">,</span> <span class="n">tree</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># should we used the grid ? the freePoint can be computed</span>
         <span class="c1"># result is [pos,rot,ingr.name,ingr.compartment_id,ptInd]</span>
         <span class="c1"># orgaresult is [[pos,rot,ingr.name,ingr.compartment_id,ptInd],[pos,rot,ingr.name,ingr.compartment_id,ptInd]...]</span>
@@ -2530,7 +2530,7 @@
 
 <div class="viewcode-block" id="Environment.restoreFreePoints">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restoreFreePoints">[docs]</a>
-    <span class="k">def</span> <span class="nf">restoreFreePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freePoint</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restoreFreePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freePoint</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="n">freePoint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">freePoint</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span>
@@ -2539,7 +2539,7 @@
 
 <div class="viewcode-block" id="Environment.loadFreePoint">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadFreePoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">loadFreePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadFreePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="p">):</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;_free_points&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
         <span class="n">freePoint</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -2548,7 +2548,7 @@
 
 <div class="viewcode-block" id="Environment.store">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.store">[docs]</a>
-    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>
@@ -2561,7 +2561,7 @@
 <div class="viewcode-block" id="Environment.dropOneIngr">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.dropOneIngr">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">dropOneIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">ingrcompNum</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">rad</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dropOneIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">ingrcompNum</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">rad</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">line</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot;&lt;</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">&gt;,&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">rot</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
@@ -2576,7 +2576,7 @@
 <div class="viewcode-block" id="Environment.getOneIngr">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getOneIngr">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">getOneIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getOneIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="n">elem</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
         <span class="n">rot</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">elem</span><span class="p">[</span><span class="mi">2</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
@@ -2590,7 +2590,7 @@
     <span class="c1">#    @classmethod</span>
 <div class="viewcode-block" id="Environment.getOneIngrJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getOneIngrJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">getOneIngrJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ingrdic</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getOneIngrJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ingrdic</span><span class="p">):</span>
         <span class="c1">#        name_ingr = ingr.name</span>
         <span class="c1">#        if name_ingr not in ingrdic:</span>
         <span class="c1">#            name_ingr = ingr.composition_name</span>
@@ -2614,7 +2614,7 @@
 
 <div class="viewcode-block" id="Environment.load_asTxt">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_asTxt">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_asTxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_asTxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
@@ -2663,8 +2663,8 @@
 
 <div class="viewcode-block" id="Environment.collectResultPerIngredient">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.collectResultPerIngredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">collectResultPerIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">cb</span><span class="p">(</span><span class="n">ingr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collectResultPerIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">cb</span><span class="p">(</span><span class="n">ingr</span><span class="p">):</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
@@ -2678,7 +2678,7 @@
 
 <div class="viewcode-block" id="Environment.load_asJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_asJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
@@ -2817,7 +2817,7 @@
 
 <div class="viewcode-block" id="Environment.dropOneIngrJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.dropOneIngrJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">dropOneIngrJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">rdic</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dropOneIngrJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">rdic</span><span class="p">):</span>
         <span class="n">adic</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># [ingr.name]</span>
         <span class="n">adic</span><span class="p">[</span><span class="s2">&quot;compartment_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">compartment_id</span>
         <span class="n">adic</span><span class="p">[</span><span class="s2">&quot;encapsulating_radius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">)</span>
@@ -2840,7 +2840,7 @@
 
 <div class="viewcode-block" id="Environment.store_asJson">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.store_asJson">[docs]</a>
-    <span class="k">def</span> <span class="nf">store_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>  <span class="c1"># retireve?</span>
@@ -2857,9 +2857,9 @@
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">][</span>
-                    <span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngrJson</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">composition_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngrJson</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">])</span>
+                <span class="p">)</span>
 
         <span class="c1"># compartment ingr</span>
         <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
@@ -2898,7 +2898,7 @@
 <div class="viewcode-block" id="Environment.convertPickleToText">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.convertPickleToText">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">convertPickleToText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norga</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convertPickleToText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norga</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>
@@ -2931,7 +2931,7 @@
 
 <div class="viewcode-block" id="Environment.printFillInfo">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.printFillInfo">[docs]</a>
-    <span class="k">def</span> <span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Environment exterior recipe:&quot;</span><span class="p">)</span>
@@ -2943,7 +2943,7 @@
 
 <div class="viewcode-block" id="Environment.finishWithWater">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.finishWithWater">[docs]</a>
-    <span class="k">def</span> <span class="nf">finishWithWater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">free_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finishWithWater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">free_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># self.freePointsAfterFill[:self.nbFreePointsAfterFill]</span>
         <span class="c1"># sphere sphere of 2.9A</span>
         <span class="k">if</span> <span class="n">free_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2961,7 +2961,7 @@
 
 <div class="viewcode-block" id="Environment.setupOctree">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setupOctree">[docs]</a>
-    <span class="k">def</span> <span class="nf">setupOctree</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setupOctree</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">octree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2972,56 +2972,56 @@
 
 <div class="viewcode-block" id="Environment.delRB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.delRB">[docs]</a>
-    <span class="k">def</span> <span class="nf">delRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.setGeomFaces">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.setGeomFaces">[docs]</a>
-    <span class="k">def</span> <span class="nf">setGeomFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tris</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setGeomFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tris</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.addMeshRBOrganelle">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.addMeshRBOrganelle">[docs]</a>
-    <span class="k">def</span> <span class="nf">addMeshRBOrganelle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addMeshRBOrganelle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.addRB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.addRB">[docs]</a>
-    <span class="k">def</span> <span class="nf">addRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">rtype</span><span class="o">=</span><span class="s2">&quot;single_sphere&quot;</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">rtype</span><span class="o">=</span><span class="s2">&quot;single_sphere&quot;</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.moveRBnode">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.moveRBnode">[docs]</a>
-    <span class="k">def</span> <span class="nf">moveRBnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">moveRBnode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.getRotTransRB">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getRotTransRB">[docs]</a>
-    <span class="k">def</span> <span class="nf">getRotTransRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getRotTransRB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.runBullet">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.runBullet">[docs]</a>
-    <span class="k">def</span> <span class="nf">runBullet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">simulationTimes</span><span class="p">,</span> <span class="n">runTimeDisplay</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">runBullet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">simulationTimes</span><span class="p">,</span> <span class="n">runTimeDisplay</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Environment.exportToBD_BOX">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToBD_BOX">[docs]</a>
-    <span class="k">def</span> <span class="nf">exportToBD_BOX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bd_type</span><span class="o">=</span><span class="s2">&quot;flex&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportToBD_BOX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bd_type</span><span class="o">=</span><span class="s2">&quot;flex&quot;</span><span class="p">):</span>
         <span class="c1"># , call the BD_BOX exporter, plugin ? better if result store somewhere.</span>
         <span class="c1"># only sphere + boudary ?</span>
         <span class="c1"># sub ATM 216 225.0000 150.0000 525.0000 25.0000 -5.0000 50.0000 0.5922 1</span>
         <span class="k">if</span> <span class="n">bd_type</span> <span class="o">==</span> <span class="s2">&quot;flex&quot;</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">bd_box</span> <span class="kn">import</span> <span class="n">flex_box</span> <span class="k">as</span> <span class="n">bd_box</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">bd_box</span><span class="w"> </span><span class="kn">import</span> <span class="n">flex_box</span> <span class="k">as</span> <span class="n">bd_box</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">bd_box</span> <span class="kn">import</span> <span class="n">rigid_box</span> <span class="k">as</span> <span class="n">bd_box</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">bd_box</span><span class="w"> </span><span class="kn">import</span> <span class="n">rigid_box</span> <span class="k">as</span> <span class="n">bd_box</span>
         <span class="k">if</span> <span class="n">res_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">res_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bd</span> <span class="o">=</span> <span class="n">bd_box</span><span class="p">(</span><span class="n">res_filename</span><span class="p">,</span> <span class="n">bounding_box</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
@@ -3050,8 +3050,8 @@
 
 <div class="viewcode-block" id="Environment.exportToTEM_SIM">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToTEM_SIM">[docs]</a>
-    <span class="k">def</span> <span class="nf">exportToTEM_SIM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">tem_sim</span> <span class="kn">import</span> <span class="n">tem_sim</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportToTEM_SIM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">tem_sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">tem_sim</span>
 
         <span class="k">if</span> <span class="n">res_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">res_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
@@ -3080,7 +3080,7 @@
 
 <div class="viewcode-block" id="Environment.exportToTEM">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToTEM">[docs]</a>
-    <span class="k">def</span> <span class="nf">exportToTEM</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportToTEM</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># limited to 20 ingredients, call the TEM exporter plugin ?</span>
@@ -3102,7 +3102,7 @@
 
 <div class="viewcode-block" id="Environment.exportToReaDDy">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToReaDDy">[docs]</a>
-    <span class="k">def</span> <span class="nf">exportToReaDDy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exportToReaDDy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># wehn I will get it running ... plugin ?</span>
         <span class="k">return</span></div>
 
@@ -3114,7 +3114,7 @@
 
 <div class="viewcode-block" id="Environment.linkTraj">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.linkTraj">[docs]</a>
-    <span class="k">def</span> <span class="nf">linkTraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">linkTraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># link the traj usin upy for creating a new synchronized calleback?</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">traj_linked</span><span class="p">:</span>
             <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">synchronize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applyStep</span><span class="p">)</span>
@@ -3123,7 +3123,7 @@
 
 <div class="viewcode-block" id="Environment.unlinkTraj">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.unlinkTraj">[docs]</a>
-    <span class="k">def</span> <span class="nf">unlinkTraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unlinkTraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># link the traj usin upy for creating a new synchronized calleback?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">traj_linked</span><span class="p">:</span>
             <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">unsynchronize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">applyStep</span><span class="p">)</span>
@@ -3132,7 +3132,7 @@
 
 <div class="viewcode-block" id="Environment.applyStep">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.applyStep">[docs]</a>
-    <span class="k">def</span> <span class="nf">applyStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">applyStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
         <span class="c1"># apply the coordinate from a trajectory at step step.</span>
         <span class="c1"># correspondance ingredients instance &lt;-&gt; coordinates file</span>
         <span class="c1"># trajectory class to handle</span>
@@ -3144,7 +3144,7 @@
 
 <div class="viewcode-block" id="Environment.create_voxelization">
 <a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_voxelization">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_writer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_voxelization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_writer</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the image data for all molecules in the recipe by creating voxelized</span>
 <span class="sd">        representations.</span>
@@ -3221,7 +3221,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../autopack.html" >cellpack.autopack</a> &#187;</li>

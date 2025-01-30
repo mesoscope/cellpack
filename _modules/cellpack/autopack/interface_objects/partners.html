@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.interface_objects.partners &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.interface_objects.partners &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -40,8 +40,8 @@
   <h1>Source code for cellpack.autopack.interface_objects.partners</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="Partner">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partner">[docs]</a>
-<span></span><span class="k">class</span> <span class="nc">Partner</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">binding_probability</span><span class="p">):</span>
+<span></span><span class="k">class</span><span class="w"> </span><span class="nc">Partner</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">binding_probability</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
@@ -56,14 +56,14 @@
 
 <div class="viewcode-block" id="Partner.set_ingredient">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partner.set_ingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ingredient</span> <span class="o">=</span> <span class="n">ingredient</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">weight</span></div>
 
 
 <div class="viewcode-block" id="Partner.get_point">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partner.get_point">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
@@ -71,7 +71,7 @@
 
 <div class="viewcode-block" id="Partner.distanceFunction">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partner.distanceFunction">[docs]</a>
-    <span class="k">def</span> <span class="nf">distanceFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">distanceFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># default function that can be overwrite or</span>
         <span class="c1"># can provide an experssion which 1/d or 1/d^2 or d^2etc.w*expression</span>
         <span class="c1"># can provide directly a function that take as</span>
@@ -89,8 +89,8 @@
 
 <div class="viewcode-block" id="Partners">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partners">[docs]</a>
-<span class="k">class</span> <span class="nc">Partners</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partners</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Partners</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partners</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This object holds the partner data</span>
 <span class="sd">        ----------</span>
@@ -114,15 +114,17 @@
                 <span class="n">partner</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
                 <span class="n">partner</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;position&quot;</span> <span class="ow">in</span> <span class="n">partner</span> <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                 <span class="n">partner</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;weight&quot;</span> <span class="ow">in</span> <span class="n">partner</span> <span class="k">else</span> <span class="n">weight</span><span class="p">,</span>
-                <span class="n">partner</span><span class="p">[</span><span class="s2">&quot;binding_probability&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;binding_probability&quot;</span> <span class="ow">in</span> <span class="n">partner</span>
-                <span class="k">else</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="n">partner</span><span class="p">[</span><span class="s2">&quot;binding_probability&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s2">&quot;binding_probability&quot;</span> <span class="ow">in</span> <span class="n">partner</span>
+                    <span class="k">else</span> <span class="mf">1.0</span>
+                <span class="p">),</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">all_partners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">partner</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Partners.add_partner">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partners.add_partner">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">probability_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">probability_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
         <span class="n">partner</span> <span class="o">=</span> <span class="n">Partner</span><span class="p">(</span>
             <span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">probability_binding</span>
         <span class="p">)</span>
@@ -132,7 +134,7 @@
 
 <div class="viewcode-block" id="Partners.is_partner">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partners.is_partner">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_ingredient_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_ingredient_name</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">partner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_partners</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">partner</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">full_ingredient_name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
@@ -142,7 +144,7 @@
 
 <div class="viewcode-block" id="Partners.get_partner_by_ingr_name">
 <a class="viewcode-back" href="../../../../cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.partners.Partners.get_partner_by_ingr_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_partner_by_ingr_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_partner_by_ingr_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">partner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_partners</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">partner</span><span class="o">.</span><span class="n">ingredient</span> <span class="ow">and</span> <span class="n">partner</span><span class="o">.</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">partner</span>
@@ -181,7 +183,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>

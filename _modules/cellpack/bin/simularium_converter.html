@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.bin.simularium_converter &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.bin.simularium_converter &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" accesskey="U">cellpack</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">cellpack.bin.simularium_converter</a></li> 
@@ -37,17 +37,17 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.bin.simularium_converter</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
 
-<span class="kn">from</span> <span class="nn">simulariumio</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simulariumio</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TrajectoryConverter</span><span class="p">,</span>
     <span class="n">TrajectoryData</span><span class="p">,</span>
     <span class="n">AgentData</span><span class="p">,</span>
@@ -56,9 +56,9 @@
     <span class="n">CameraData</span><span class="p">,</span>
     <span class="n">DisplayData</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">simulariumio.constants</span> <span class="kn">import</span> <span class="n">DISPLAY_TYPE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simulariumio.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISPLAY_TYPE</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.loaders.recipe_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecipeLoader</span>
 
 <span class="c1">###############################################################################</span>
 
@@ -72,14 +72,14 @@
 
 <div class="viewcode-block" id="ConvertToSimularium">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium">[docs]</a>
-<span class="k">class</span> <span class="nc">ConvertToSimularium</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConvertToSimularium</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">):</span>
     <span class="n">DEFAULT_PACKING_RESULT</span> <span class="o">=</span> <span class="s2">&quot;/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json&quot;</span>
     <span class="n">DEFAULT_OUTPUT_DIRECTORY</span> <span class="o">=</span> <span class="s2">&quot;/Users/meganriel-mehan/Dropbox/cellPack/&quot;</span>
     <span class="n">DEFAULT_INPUT_RECIPE</span> <span class="o">=</span> <span class="s2">&quot;/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/examples/recipes/v1/NM_Analysis_FigureC1.json&quot;</span>
     <span class="n">DEFAULT_GEO_TYPE</span> <span class="o">=</span> <span class="s2">&quot;PDB&quot;</span>  <span class="c1"># Other options: SPHERE or PDB</span>
     <span class="n">DEFAULT_SCALE_FACTOR</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">100.0</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Arguments that could be passed in through the command line</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_recipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_INPUT_RECIPE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">packing_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PACKING_RESULT</span>
@@ -110,7 +110,7 @@
         <span class="c1"># defaults for missing data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">__parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
             <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;convert_to_simularium&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Convert cellpack result to simularium&quot;</span><span class="p">,</span>
@@ -162,7 +162,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_bounding_box">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_bounding_box">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
         <span class="n">options</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span>
         <span class="n">bb</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;boundingBox&quot;</span><span class="p">]</span>
         <span class="n">x_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -178,7 +178,7 @@
 <div class="viewcode-block" id="ConvertToSimularium.get_mesh_data">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_mesh_data">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_mesh_data</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_mesh_data</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">):</span>
         <span class="n">meshType</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;meshType&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;meshType&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;file&quot;</span>
         <span class="p">)</span>
@@ -198,7 +198,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_ingredient_display_data">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_display_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ingredient_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ingredient_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geo_type</span> <span class="o">==</span> <span class="s2">&quot;OBJ&quot;</span> <span class="ow">and</span> <span class="s2">&quot;meshFile&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ConvertToSimularium</span><span class="o">.</span><span class="n">get_mesh_data</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">)</span>
 
@@ -236,7 +236,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_ingredient_data">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_ingredient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cytoplasm</span><span class="p">,</span> <span class="n">main_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_ingredient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cytoplasm</span><span class="p">,</span> <span class="n">main_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
         <span class="n">ingredient_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">cytoplasm_data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">container_data</span> <span class="o">=</span> <span class="kc">None</span>
@@ -264,7 +264,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_euler_from_matrix">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler_from_matrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_euler_from_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_euler_from_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_in</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">data_in</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">data_in</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]]</span>
         <span class="n">euler</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s2">&quot;XYZ&quot;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">euler</span></div>
@@ -272,14 +272,14 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_euler_from_quat">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler_from_quat">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_euler_from_quat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_euler_from_quat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="n">euler</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_quat</span><span class="p">(</span><span class="n">data_in</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s2">&quot;ZYX&quot;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">euler</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">euler</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span></div>
 
 
 <div class="viewcode-block" id="ConvertToSimularium.is_matrix">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.is_matrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
@@ -288,7 +288,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.unpack_curve">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.unpack_curve">[docs]</a>
-    <span class="k">def</span> <span class="nf">unpack_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unpack_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">):</span>
         <span class="n">curve</span> <span class="o">=</span> <span class="s2">&quot;curve&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -313,7 +313,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.unpack_positions">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.unpack_positions">[docs]</a>
-    <span class="k">def</span> <span class="nf">unpack_positions</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unpack_positions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">,</span>
         <span class="n">time_step_index</span><span class="p">,</span>
@@ -363,7 +363,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_euler">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_matrix</span><span class="p">(</span><span class="n">data_in</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euler_from_matrix</span><span class="p">(</span><span class="n">data_in</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -372,7 +372,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.process_one_ingredient">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.process_one_ingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">process_one_ingredient</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_one_ingredient</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ingredient_data</span><span class="p">,</span>
         <span class="n">time_step_index</span><span class="p">,</span>
@@ -414,7 +414,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.get_positions_per_ingredient">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_positions_per_ingredient">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_positions_per_ingredient</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_positions_per_ingredient</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">all_ingredients</span><span class="p">,</span> <span class="n">results_data_in</span><span class="p">,</span> <span class="n">time_step_index</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">results_data_in</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_name</span><span class="p">:</span>
@@ -432,7 +432,7 @@
 
 <div class="viewcode-block" id="ConvertToSimularium.fill_in_empty_fiber_data">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.fill_in_empty_fiber_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">fill_in_empty_fiber_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_in_empty_fiber_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">viz_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">viz_types</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">viz_type</span> <span class="o">==</span> <span class="mi">1000</span><span class="p">:</span>
                 <span class="n">blank_value</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">)]</span>
@@ -453,7 +453,7 @@
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">converter</span> <span class="o">=</span> <span class="n">ConvertToSimularium</span><span class="p">()</span>
     <span class="n">dbg</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">debug</span>
     <span class="k">try</span><span class="p">:</span>
@@ -550,7 +550,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../cellpack.html" >cellpack</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">cellpack.bin.simularium_converter</a></li> 

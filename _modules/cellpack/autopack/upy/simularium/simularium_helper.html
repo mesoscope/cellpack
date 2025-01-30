@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.upy.simularium.simularium_helper &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.upy.simularium.simularium_helper &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../../autopack.html" >cellpack.autopack</a> &#187;</li>
@@ -41,15 +41,15 @@
   <h1>Source code for cellpack.autopack.upy.simularium.simularium_helper</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># standardmodule</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">webbrowser</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">webbrowser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">trimesh</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">trimesh</span>
 
-<span class="kn">from</span> <span class="nn">simulariumio</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simulariumio</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TrajectoryConverter</span><span class="p">,</span>
     <span class="n">TrajectoryData</span><span class="p">,</span>
     <span class="n">AgentData</span><span class="p">,</span>
@@ -59,20 +59,20 @@
     <span class="n">CameraData</span><span class="p">,</span>
     <span class="n">DisplayData</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">simulariumio.cellpack</span> <span class="kn">import</span> <span class="n">CellpackConverter</span><span class="p">,</span> <span class="n">HAND_TYPE</span>
-<span class="kn">from</span> <span class="nn">simulariumio.constants</span> <span class="kn">import</span> <span class="n">DISPLAY_TYPE</span><span class="p">,</span> <span class="n">VIZ_TYPE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simulariumio.cellpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellpackConverter</span><span class="p">,</span> <span class="n">HAND_TYPE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simulariumio.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISPLAY_TYPE</span><span class="p">,</span> <span class="n">VIZ_TYPE</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.upy</span> <span class="kn">import</span> <span class="n">hostHelper</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.upy.simularium.plots</span> <span class="kn">import</span> <span class="n">PlotData</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.DBRecipeHandler</span> <span class="kn">import</span> <span class="n">DBUploader</span><span class="p">,</span> <span class="n">DBMaintenance</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.database_ids</span> <span class="kn">import</span> <span class="n">DATABASE_IDS</span>
-<span class="kn">import</span> <span class="nn">collada</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.upy</span><span class="w"> </span><span class="kn">import</span> <span class="n">hostHelper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.upy.simularium.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.DBRecipeHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">DBUploader</span><span class="p">,</span> <span class="n">DBMaintenance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.interface_objects.database_ids</span><span class="w"> </span><span class="kn">import</span> <span class="n">DATABASE_IDS</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">collada</span>
 
 
 <div class="viewcode-block" id="Instance">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance">[docs]</a>
-<span class="k">class</span> <span class="nc">Instance</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">viz_type</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Instance</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">viz_type</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">instance_id</span> <span class="o">=</span> <span class="n">instance_id</span>
@@ -85,7 +85,7 @@
 
 <div class="viewcode-block" id="Instance.set_static">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.set_static">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_static</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_static</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_static</span> <span class="o">=</span> <span class="n">is_static</span>
         <span class="k">if</span> <span class="n">is_static</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viz_type</span> <span class="o">==</span> <span class="n">VIZ_TYPE</span><span class="o">.</span><span class="n">FIBER</span><span class="p">:</span>
@@ -101,7 +101,7 @@
 
 <div class="viewcode-block" id="Instance.move">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.move">[docs]</a>
-    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_point</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_point</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viz_type</span> <span class="o">==</span> <span class="n">VIZ_TYPE</span><span class="o">.</span><span class="n">FIBER</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time_mapping</span><span class="p">[</span><span class="n">time_point</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;sub_points&quot;</span><span class="p">:</span> <span class="n">sub_points</span><span class="p">,</span>
@@ -114,7 +114,7 @@
 
 <div class="viewcode-block" id="Instance.increment_static">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.increment_static">[docs]</a>
-    <span class="k">def</span> <span class="nf">increment_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_point</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increment_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_point</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_static</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viz_type</span> <span class="o">==</span> <span class="n">VIZ_TYPE</span><span class="o">.</span><span class="n">FIBER</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_mapping</span><span class="p">[</span><span class="n">time_point</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -132,7 +132,7 @@
 
 <div class="viewcode-block" id="simulariumHelper">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper">[docs]</a>
-<span class="k">class</span> <span class="nc">simulariumHelper</span><span class="p">(</span><span class="n">hostHelper</span><span class="o">.</span><span class="n">Helper</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">simulariumHelper</span><span class="p">(</span><span class="n">hostHelper</span><span class="o">.</span><span class="n">Helper</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The Simularium helper abstract class</span>
 <span class="sd">    ============================</span>
@@ -155,7 +155,7 @@
     <span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;simularium&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">hostHelper</span><span class="o">.</span><span class="n">Helper</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># we can define here some function alias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nogui</span> <span class="o">=</span> <span class="kc">False</span>
@@ -173,7 +173,7 @@
 <div class="viewcode-block" id="simulariumHelper.format_rgb_color">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.format_rgb_color">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">format_rgb_color</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_rgb_color</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">need_to_divide</span> <span class="o">=</span> <span class="kc">False</span>
@@ -187,68 +187,68 @@
 
 <div class="viewcode-block" id="simulariumHelper.clear">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.clear">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.updateAppli">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateAppli">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateAppli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateAppli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Cube">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Cube">[docs]</a>
-    <span class="k">def</span> <span class="nf">Cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Box">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Box">[docs]</a>
-    <span class="k">def</span> <span class="nf">Box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Polylines">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Polylines">[docs]</a>
-    <span class="k">def</span> <span class="nf">Polylines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Polylines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Spheres">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Spheres">[docs]</a>
-    <span class="k">def</span> <span class="nf">Spheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Spheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Cylinders">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Cylinders">[docs]</a>
-    <span class="k">def</span> <span class="nf">Cylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Cylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cylinder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Geom">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Geom">[docs]</a>
-    <span class="k">def</span> <span class="nf">Geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Geom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.Labels">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Labels">[docs]</a>
-    <span class="k">def</span> <span class="nf">Labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.IndexedPolygons">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.IndexedPolygons">[docs]</a>
-    <span class="k">def</span> <span class="nf">IndexedPolygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">IndexedPolygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.setViewer">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setViewer">[docs]</a>
-    <span class="k">def</span> <span class="nf">setViewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vi</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setViewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vi</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="n">vi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">AddObject</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">AddObject</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">Labels</span></div>
@@ -256,13 +256,13 @@
 
 <div class="viewcode-block" id="simulariumHelper.getCurrentScene">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getCurrentScene">[docs]</a>
-    <span class="k">def</span> <span class="nf">getCurrentScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCurrentScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.progressBar">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.progressBar">[docs]</a>
-    <span class="k">def</span> <span class="nf">progressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">progressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;update the progress bar status by progress value and label string</span>
 <span class="sd">        @type  progress: Int/Float</span>
 <span class="sd">        @param progress: the new progress</span>
@@ -276,26 +276,26 @@
 
 <div class="viewcode-block" id="simulariumHelper.resetProgressBar">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.resetProgressBar">[docs]</a>
-    <span class="k">def</span> <span class="nf">resetProgressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resetProgressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;reset the Progress Bar, using value&quot;&quot;&quot;</span>
         <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.update">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update">[docs]</a>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increment_time</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getType">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getType">[docs]</a>
-    <span class="k">def</span> <span class="nf">getType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__module__</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMesh">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">==</span> <span class="s2">&quot;nogui&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
@@ -308,7 +308,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.getName">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getName">[docs]</a>
-    <span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">==</span> <span class="s2">&quot;nogui&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
@@ -319,7 +319,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.increment_static_objects">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.increment_static_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">increment_static_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increment_static_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">is_static</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">increment_static</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span></div>
@@ -327,21 +327,21 @@
 
 <div class="viewcode-block" id="simulariumHelper.set_object_static">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.set_object_static">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_object_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_object_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">set_static</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.increment_time">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.increment_time">[docs]</a>
-    <span class="k">def</span> <span class="nf">increment_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">increment_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increment_static_objects</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.move_object">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.move_object">[docs]</a>
-    <span class="k">def</span> <span class="nf">move_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">move_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">increment_time</span><span class="p">()</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">sub_points</span><span class="p">)</span></div>
@@ -349,26 +349,26 @@
 
 <div class="viewcode-block" id="simulariumHelper.place_object">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.place_object">[docs]</a>
-    <span class="k">def</span> <span class="nf">place_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">place_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sub_points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">sub_points</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getObject">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">getObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getChilds">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getChilds">[docs]</a>
-    <span class="k">def</span> <span class="nf">getChilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getChilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">children</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.deleteObject">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.deleteObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">deleteObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deleteObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">vi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCurrentScene</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;isinstance&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">deleteInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
@@ -381,7 +381,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.newEmpty">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.newEmpty">[docs]</a>
-    <span class="k">def</span> <span class="nf">newEmpty</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newEmpty</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parentCenter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
         <span class="c1"># empty = Geom(name, visible=display)</span>
@@ -399,7 +399,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.updateMasterInstance">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateMasterInstance">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateMasterInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master</span><span class="p">,</span> <span class="n">newMesh</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateMasterInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">master</span><span class="p">,</span> <span class="n">newMesh</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="c1"># get the instancematrix frommaster</span>
         <span class="c1"># apply them to new newMesh</span>
         <span class="k">pass</span></div>
@@ -407,7 +407,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.deleteInstance">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.deleteInstance">[docs]</a>
-    <span class="k">def</span> <span class="nf">deleteInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deleteInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="c1"># pop the instance from the instanceMatrice</span>
         <span class="c1"># delete the object</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">geom</span><span class="o">.</span><span class="n">instanceMatricesFortran</span><span class="p">[:]</span>
@@ -421,7 +421,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.add_new_instance_and_update_time">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_new_instance_and_update_time">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_new_instance_and_update_time</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_new_instance_and_update_time</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">ingredient</span><span class="p">,</span>
@@ -448,7 +448,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.add_instance">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_instance">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_instance</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_instance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">ingredient</span><span class="p">,</span>
@@ -481,7 +481,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.setObjectMatrix">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setObjectMatrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">setObjectMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">matrice</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setObjectMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">matrice</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;transpose&quot;</span> <span class="ow">in</span> <span class="n">kw</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;isinstance&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;transpose&quot;</span><span class="p">]:</span>
                 <span class="n">matrice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrice</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
@@ -490,20 +490,20 @@
 
 <div class="viewcode-block" id="simulariumHelper.concatObjectMatrix">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.concatObjectMatrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">concatObjectMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">concatObjectMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.GetAbsPosUntilRoot">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.GetAbsPosUntilRoot">[docs]</a>
-    <span class="k">def</span> <span class="nf">GetAbsPosUntilRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">GetAbsPosUntilRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.remove_nans">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.remove_nans">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">remove_nans</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_nans</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="n">naninds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="o">~</span><span class="n">naninds</span><span class="p">]</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span><span class="p">[</span><span class="o">~</span><span class="n">naninds</span><span class="p">]</span>
@@ -513,7 +513,7 @@
 <div class="viewcode-block" id="simulariumHelper.sort_values">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.sort_values">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">sort_values</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sort_values</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">inds</span><span class="p">]</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span><span class="p">[</span><span class="n">inds</span><span class="p">]</span>
@@ -522,7 +522,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.add_grid_data_to_scene">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_grid_data_to_scene">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_grid_data_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_name</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_grid_data_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_name</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
 
         <span class="n">positions</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_nans</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -558,7 +558,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.add_compartment_to_scene">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_compartment_to_scene">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_compartment_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_compartment_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
         <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">radius</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">encapsulating_radius</span>
@@ -590,7 +590,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.add_object_to_scene">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_object_to_scene">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_object_to_scene</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_object_to_scene</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">doc</span><span class="p">,</span>
         <span class="n">ingredient</span><span class="p">,</span>
@@ -619,7 +619,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.update_instance_positions_and_rotations">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update_instance_positions_and_rotations">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_instance_positions_and_rotations</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_instance_positions_and_rotations</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">objects</span><span class="p">,</span>
     <span class="p">):</span>
@@ -630,7 +630,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.get_display_data">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.get_display_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
         <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;single_cube&quot;</span><span class="p">:</span>
@@ -654,7 +654,7 @@
 <div class="viewcode-block" id="simulariumHelper.is_fiber">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.is_fiber">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_fiber</span><span class="p">(</span><span class="n">ingr_type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_fiber</span><span class="p">(</span><span class="n">ingr_type</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ingr_type</span> <span class="ow">in</span> <span class="p">[</span>
             <span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Actine&quot;</span><span class="p">,</span>
@@ -665,7 +665,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.init_scene_with_objects">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">init_scene_with_objects</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_scene_with_objects</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">objects</span><span class="p">,</span>
         <span class="n">grid_point_positions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -764,19 +764,19 @@
 
 <div class="viewcode-block" id="simulariumHelper.addCameraToScene">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addCameraToScene">[docs]</a>
-    <span class="k">def</span> <span class="nf">addCameraToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addCameraToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.addLampToScene">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addLampToScene">[docs]</a>
-    <span class="k">def</span> <span class="nf">addLampToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addLampToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.reParent">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.reParent">[docs]</a>
-    <span class="k">def</span> <span class="nf">reParent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reParent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">vi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCurrentScene</span><span class="p">()</span>
@@ -804,25 +804,25 @@
 
 <div class="viewcode-block" id="simulariumHelper.setInstance">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setInstance">[docs]</a>
-    <span class="k">def</span> <span class="nf">setInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getTranslation">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getTranslation">[docs]</a>
-    <span class="k">def</span> <span class="nf">getTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">centroid</span>  <span class="c1"># or getCumulatedTranslation</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.setTranslation">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setTranslation">[docs]</a>
-    <span class="k">def</span> <span class="nf">setTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">SetTranslation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromVec</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.translateObj">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.translateObj">[docs]</a>
-    <span class="k">def</span> <span class="nf">translateObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">use_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translateObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">use_parent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">position</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -837,7 +837,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.scaleObj">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.scaleObj">[docs]</a>
-    <span class="k">def</span> <span class="nf">scaleObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">sc</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scaleObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">sc</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
             <span class="n">sc</span> <span class="o">=</span> <span class="p">[</span><span class="n">sc</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span> <span class="n">sc</span><span class="p">]</span>
         <span class="c1"># obj.scale = sc #SetScale()?</span>
@@ -847,7 +847,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.rotateObj">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.rotateObj">[docs]</a>
-    <span class="k">def</span> <span class="nf">rotateObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotateObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
         <span class="c1"># take radians, give degrees</span>
         <span class="n">mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eulerToMatrix</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>  <span class="c1"># obj.rotation</span></div>
@@ -855,7 +855,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.getTransformation">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getTransformation">[docs]</a>
-    <span class="k">def</span> <span class="nf">getTransformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getTransformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
@@ -864,7 +864,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.toggleDisplay">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.toggleDisplay">[docs]</a>
-    <span class="k">def</span> <span class="nf">toggleDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggleDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
@@ -873,7 +873,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.getVisibility">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getVisibility">[docs]</a>
-    <span class="k">def</span> <span class="nf">getVisibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">editor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getVisibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">editor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># 0 off, 1#on, 2 undef</span>
         <span class="n">display</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
@@ -894,7 +894,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.getCurrentSelection">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getCurrentSelection">[docs]</a>
-    <span class="k">def</span> <span class="nf">getCurrentSelection</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCurrentSelection</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -910,19 +910,19 @@
 
 <div class="viewcode-block" id="simulariumHelper.addMaterial">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addMaterial">[docs]</a>
-    <span class="k">def</span> <span class="nf">addMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">color</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.createTexturedMaterial">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createTexturedMaterial">[docs]</a>
-    <span class="k">def</span> <span class="nf">createTexturedMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createTexturedMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.assignMaterial">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.assignMaterial">[docs]</a>
-    <span class="k">def</span> <span class="nf">assignMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">texture</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assignMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">texture</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">texture</span><span class="p">:</span>
             <span class="nb">object</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">texture</span><span class="o">=</span><span class="n">mat</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -935,38 +935,38 @@
 
 <div class="viewcode-block" id="simulariumHelper.changeObjColorMat">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeObjColorMat">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeObjColorMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeObjColorMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMaterialObject">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMaterialObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMaterialObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMaterialObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
         <span class="k">pass</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMaterial">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMaterial">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">mat</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getAllMaterials">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getAllMaterials">[docs]</a>
-    <span class="k">def</span> <span class="nf">getAllMaterials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getAllMaterials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMaterialName">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMaterialName">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMaterialName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMaterialName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.ObjectsSelection">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.ObjectsSelection">[docs]</a>
-    <span class="k">def</span> <span class="nf">ObjectsSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listeObjects</span><span class="p">,</span> <span class="n">typeSel</span><span class="o">=</span><span class="s2">&quot;new&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ObjectsSelection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listeObjects</span><span class="p">,</span> <span class="n">typeSel</span><span class="o">=</span><span class="s2">&quot;new&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the current object selection.</span>
 
@@ -985,7 +985,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.oneCylinder">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.oneCylinder">[docs]</a>
-    <span class="k">def</span> <span class="nf">oneCylinder</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">oneCylinder</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">head</span><span class="p">,</span>
@@ -1024,7 +1024,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.cylinder">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.cylinder">[docs]</a>
-    <span class="k">def</span> <span class="nf">cylinder</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cylinder</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">radius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
@@ -1067,7 +1067,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.updateTubeMesh">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateTubeMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateTubeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">cradius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateTubeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">cradius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="c1"># change the radius to cradius</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
@@ -1081,7 +1081,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.sphere">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.sphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">sphere</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sphere</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
         <span class="n">baseSphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Spheres</span><span class="p">(</span>
@@ -1113,7 +1113,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.instancesSphere">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancesSphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">instancesSphere</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">instancesSphere</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">meshsphere</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
         <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1125,7 +1125,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.instancesCylinder">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancesCylinder">[docs]</a>
-    <span class="k">def</span> <span class="nf">instancesCylinder</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">instancesCylinder</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
         <span class="n">mesh</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span> <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
@@ -1134,7 +1134,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.FromVec">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.FromVec">[docs]</a>
-    <span class="k">def</span> <span class="nf">FromVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">FromVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="n">points</span>
         <span class="p">)</span>  <span class="c1"># np.array(float(points[0]),float(points[1]),float(points[2]))</span></div>
@@ -1143,13 +1143,13 @@
     <span class="c1">#</span>
 <div class="viewcode-block" id="simulariumHelper.ToVec">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.ToVec">[docs]</a>
-    <span class="k">def</span> <span class="nf">ToVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ToVec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">v</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.spline">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.spline">[docs]</a>
-    <span class="k">def</span> <span class="nf">spline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">spline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">spline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Polylines</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">points</span><span class="p">)</span>  <span class="c1"># ,faces=f)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">spline</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">spline</span><span class="p">,</span> <span class="kc">None</span></div>
@@ -1157,7 +1157,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.update_spline">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update_spline">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_points</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_points</span><span class="p">):</span>
         <span class="n">spline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">spline</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -1168,12 +1168,12 @@
 
 <div class="viewcode-block" id="simulariumHelper.Points">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Points">[docs]</a>
-    <span class="k">def</span> <span class="nf">Points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="c1"># need to add the AtomArray modifier....</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s2">&quot;parent&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;parent&quot;</span><span class="p">)</span>
-        <span class="kn">from</span> <span class="nn">Simularium.Points</span> <span class="kn">import</span> <span class="n">Points</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">Simularium.Points</span><span class="w"> </span><span class="kn">import</span> <span class="n">Points</span>
 
         <span class="n">obj</span> <span class="o">=</span> <span class="n">Points</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_object_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getCurrentScene</span><span class="p">(),</span> <span class="n">obj</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
@@ -1182,7 +1182,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.updatePoly">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updatePoly">[docs]</a>
-    <span class="k">def</span> <span class="nf">updatePoly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updatePoly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">polygon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">polygon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1195,7 +1195,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.updateMesh">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1205,13 +1205,13 @@
 
 <div class="viewcode-block" id="simulariumHelper.instancePolygon">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancePolygon">[docs]</a>
-    <span class="k">def</span> <span class="nf">instancePolygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">matrices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">instancePolygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">matrices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.changeColor">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeColor">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeColor</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeColor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">perVertex</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">proxyObject</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pb</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
@@ -1220,7 +1220,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.box">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.box">[docs]</a>
-    <span class="k">def</span> <span class="nf">box</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">box</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
@@ -1248,7 +1248,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.updateBox">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateBox">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateBox</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateBox</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">box</span><span class="p">,</span>
         <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
@@ -1269,7 +1269,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.getCornerPointCube">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getCornerPointCube">[docs]</a>
-    <span class="k">def</span> <span class="nf">getCornerPointCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cube</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getCornerPointCube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cube</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">):</span>
             <span class="n">size</span> <span class="o">=</span> <span class="n">cube</span><span class="o">.</span><span class="n">side</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1293,7 +1293,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.plane">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.plane">[docs]</a>
-    <span class="k">def</span> <span class="nf">plane</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plane</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
         <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
@@ -1308,40 +1308,40 @@
 
 <div class="viewcode-block" id="simulariumHelper.getFace">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getFace">[docs]</a>
-    <span class="k">def</span> <span class="nf">getFace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">face</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">face</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMeshVertices">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshVertices">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMeshVertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMeshVertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkIsMesh</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMeshNormales">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshNormales">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMeshNormales</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMeshNormales</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkIsMesh</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">getVNormals</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMeshEdges">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshEdges">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMeshEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMeshEdges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.getMeshFaces">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshFaces">[docs]</a>
-    <span class="k">def</span> <span class="nf">getMeshFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getMeshFaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkIsMesh</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">getFaces</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.isIndexedPolyon">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.isIndexedPolyon">[docs]</a>
-    <span class="k">def</span> <span class="nf">isIndexedPolyon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isIndexedPolyon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;getFaces&quot;</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
                 <span class="n">c</span><span class="p">,</span> <span class="n">ipoly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isIndexedPolyon</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
@@ -1354,7 +1354,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.DecomposeMesh">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DecomposeMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">DecomposeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">DecomposeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">poly</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">poly</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">poly</span><span class="o">.</span><span class="n">vertex_normals</span></div>
@@ -1362,25 +1362,25 @@
 
 <div class="viewcode-block" id="simulariumHelper.changeColorO">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeColorO">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeColorO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeColorO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
         <span class="nb">object</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">materials</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.setRigidBody">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setRigidBody">[docs]</a>
-    <span class="k">def</span> <span class="nf">setRigidBody</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setRigidBody</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.pathDeform">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.pathDeform">[docs]</a>
-    <span class="k">def</span> <span class="nf">pathDeform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pathDeform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.updatePathDeform">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updatePathDeform">[docs]</a>
-    <span class="k">def</span> <span class="nf">updatePathDeform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updatePathDeform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
@@ -1389,7 +1389,7 @@
     <span class="c1"># ==============================================================================</span>
 <div class="viewcode-block" id="simulariumHelper.getColladaMaterial">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getColladaMaterial">[docs]</a>
-    <span class="k">def</span> <span class="nf">getColladaMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getColladaMaterial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
         <span class="c1"># get the bound geometries</span>
         <span class="n">mat</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">boundg</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">))</span>
@@ -1404,7 +1404,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.TextureFaceCoordintesToVertexCoordinates">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.TextureFaceCoordintesToVertexCoordinates">[docs]</a>
-    <span class="k">def</span> <span class="nf">TextureFaceCoordintesToVertexCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ti</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">TextureFaceCoordintesToVertexCoordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ti</span><span class="p">):</span>
         <span class="n">textureuv_vertex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">indice_verex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
@@ -1418,7 +1418,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.getNormals">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getNormals">[docs]</a>
-    <span class="k">def</span> <span class="nf">getNormals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ni</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getNormals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">ni</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ni</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">ni</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">n</span><span class="p">[</span><span class="n">ni</span><span class="p">]</span>
@@ -1438,7 +1438,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.nodeToGeom">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.nodeToGeom">[docs]</a>
-    <span class="k">def</span> <span class="nf">nodeToGeom</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nodeToGeom</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">node</span><span class="p">,</span>
         <span class="n">i</span><span class="p">,</span>
@@ -1534,7 +1534,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.transformNode">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.transformNode">[docs]</a>
-    <span class="k">def</span> <span class="nf">transformNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">parentxmlnode</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transformNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">parentxmlnode</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">parentxmlnode</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">parentxmlnode</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
@@ -1567,7 +1567,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.decomposeColladaGeom">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.decomposeColladaGeom">[docs]</a>
-    <span class="k">def</span> <span class="nf">decomposeColladaGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decomposeColladaGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">id</span>
@@ -1588,7 +1588,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.oneColladaGeom">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.oneColladaGeom">[docs]</a>
-    <span class="k">def</span> <span class="nf">oneColladaGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">oneColladaGeom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">id</span>
@@ -1631,13 +1631,13 @@
 
 <div class="viewcode-block" id="simulariumHelper.write">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.write">[docs]</a>
-    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listObj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listObj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.writeToFile">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.writeToFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">writeToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">recipe_name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">writeToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">recipe_name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write to simularium file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1754,7 +1754,7 @@
 
 <div class="viewcode-block" id="simulariumHelper.raycast">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast">[docs]</a>
-    <span class="k">def</span> <span class="nf">raycast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">raycast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">intersect</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="s2">&quot;count&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">intersect</span><span class="p">,</span> <span class="mi">0</span>
@@ -1767,13 +1767,13 @@
 
 <div class="viewcode-block" id="simulariumHelper.raycast_test">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast_test">[docs]</a>
-    <span class="k">def</span> <span class="nf">raycast_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">raycast_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="simulariumHelper.post_and_open_file">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.post_and_open_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">post_and_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">open_results_in_browser</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_and_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">open_results_in_browser</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">simularium_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.simularium&quot;</span><span class="p">)</span>
         <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">file_name</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="n">simulariumHelper</span><span class="o">.</span><span class="n">store_result_file</span><span class="p">(</span>
@@ -1788,7 +1788,7 @@
 <div class="viewcode-block" id="simulariumHelper.store_result_file">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.store_result_file">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">store_result_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_result_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">storage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">storage</span> <span class="o">==</span> <span class="s2">&quot;aws&quot;</span><span class="p">:</span>
             <span class="n">handler</span> <span class="o">=</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
             <span class="n">initialized_handler</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span>
@@ -1808,7 +1808,7 @@
 <div class="viewcode-block" id="simulariumHelper.store_metadata">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.store_metadata">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">store_metadata</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">store_metadata</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">db</span> <span class="o">==</span> <span class="s2">&quot;firebase&quot;</span><span class="p">:</span>
             <span class="n">handler</span> <span class="o">=</span> <span class="n">DATABASE_IDS</span><span class="o">.</span><span class="n">handlers</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
             <span class="n">initialized_db</span> <span class="o">=</span> <span class="n">handler</span><span class="p">(</span>
@@ -1828,7 +1828,7 @@
 <div class="viewcode-block" id="simulariumHelper.open_in_simularium">
 <a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.open_in_simularium">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">open_in_simularium</span><span class="p">(</span><span class="n">aws_url</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_in_simularium</span><span class="p">(</span><span class="n">aws_url</span><span class="p">):</span>
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new_tab</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;https://simularium.allencell.org/viewer?trajUrl=</span><span class="si">{</span><span class="n">aws_url</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
@@ -1865,7 +1865,7 @@
         <li class="right" >
           <a href="../../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../../autopack.html" >cellpack.autopack</a> &#187;</li>

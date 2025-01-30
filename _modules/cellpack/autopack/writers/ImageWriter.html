@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.writers.ImageWriter &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.writers.ImageWriter &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>
@@ -39,10 +39,10 @@
           <div class="body" role="main">
             
   <h1>Source code for cellpack.autopack.writers.ImageWriter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">aicsimageio.writers.ome_tiff_writer</span> <span class="kn">import</span> <span class="n">OmeTiffWriter</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">convolve</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">aicsimageio.writers.ome_tiff_writer</span><span class="w"> </span><span class="kn">import</span> <span class="n">OmeTiffWriter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">convolve</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">ImageWriter provides a class to export cellpack packings as tiff images</span>
@@ -51,8 +51,8 @@
 
 <div class="viewcode-block" id="ImageWriter">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter">[docs]</a>
-<span class="k">class</span> <span class="nc">ImageWriter</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImageWriter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -100,7 +100,7 @@
 <div class="viewcode-block" id="ImageWriter.create_gaussian_psf">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.create_gaussian_psf">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_gaussian_psf</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_gaussian_psf</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a gaussian psf</span>
 
@@ -133,7 +133,7 @@
 <div class="viewcode-block" id="ImageWriter.create_box_psf">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.create_box_psf">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_box_psf</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_box_psf</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a box psf</span>
 
@@ -159,7 +159,7 @@
 <div class="viewcode-block" id="ImageWriter.convolve_channel">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_channel">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">convolve_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">psf</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convolve_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">psf</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convolves a channel with a psf</span>
 
@@ -184,7 +184,7 @@
 <div class="viewcode-block" id="ImageWriter.transpose_image_for_projection">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.transpose_image_for_projection">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">transpose_image_for_projection</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">projection_axis</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transpose_image_for_projection</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">projection_axis</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">projection_axis</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span>
             <span class="n">image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">projection_axis</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
@@ -196,7 +196,7 @@
 
 <div class="viewcode-block" id="ImageWriter.convolve_image">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.convolve_image">[docs]</a>
-    <span class="k">def</span> <span class="nf">convolve_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">psf</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">psf_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convolve_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">psf</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="n">psf_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convolves the image with a psf</span>
 
@@ -236,7 +236,7 @@
 
 <div class="viewcode-block" id="ImageWriter.concatenate_image_data">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.concatenate_image_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">concatenate_image_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">concatenate_image_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a voxelized representation of the current scene</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -267,7 +267,7 @@
 
 <div class="viewcode-block" id="ImageWriter.export_image">
 <a class="viewcode-back" href="../../../../cellpack.autopack.writers.html#cellpack.autopack.writers.ImageWriter.ImageWriter.export_image">[docs]</a>
-    <span class="k">def</span> <span class="nf">export_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the results as a tiff file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -319,7 +319,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>

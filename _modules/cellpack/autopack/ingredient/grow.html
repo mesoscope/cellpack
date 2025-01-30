@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>cellpack.autopack.ingredient.grow &#8212; cellPack 1.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+    <title>cellpack.autopack.ingredient.grow &#8212; cellPack v1.1.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../../_static/documentation_options.js?v=aec50437"></script>
+    <script src="../../../../_static/documentation_options.js?v=a34f1657"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" accesskey="U">cellpack.autopack</a> &#187;</li>
@@ -40,29 +40,29 @@
   <h1>Source code for cellpack.autopack.ingredient.grow</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">matrix</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">random</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient.Ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">spatial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.ingredient.Ingredient</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ingredient</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.transformation</span> <span class="kn">import</span> <span class="n">angle_between_vectors</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.ldSequence</span> <span class="kn">import</span> <span class="n">SphereHalton</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">BaseGrid</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">rotVectToVect</span><span class="p">,</span> <span class="n">get_reflected_point</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.transformation</span><span class="w"> </span><span class="kn">import</span> <span class="n">angle_between_vectors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.ldSequence</span><span class="w"> </span><span class="kn">import</span> <span class="n">SphereHalton</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cellpack.autopack.BaseGrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">BaseGrid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">rotVectToVect</span><span class="p">,</span> <span class="n">get_reflected_point</span>
 
-<span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cellpack.autopack</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">autopack</span>
 
-<span class="kn">from</span> <span class="nn">.multi_cylinder</span> <span class="kn">import</span> <span class="n">MultiCylindersIngr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.multi_cylinder</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiCylindersIngr</span>
 
 <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
 
 
 <div class="viewcode-block" id="GrowIngredient">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient">[docs]</a>
-<span class="k">class</span> <span class="nc">GrowIngredient</span><span class="p">(</span><span class="n">MultiCylindersIngr</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GrowIngredient</span><span class="p">(</span><span class="n">MultiCylindersIngr</span><span class="p">):</span>
     <span class="n">ARGUMENTS</span> <span class="o">=</span> <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span>
     <span class="n">ARGUMENTS</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
         <span class="p">[</span>
@@ -80,7 +80,7 @@
         <span class="p">]</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">available_regions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
@@ -283,7 +283,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.get_signed_distance">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.get_signed_distance">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_signed_distance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">packing_location</span><span class="p">,</span>
         <span class="n">grid_point_location</span><span class="p">,</span>
@@ -321,7 +321,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.get_new_distance_values">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.get_new_distance_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_new_distance_values</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_distance_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">):</span>
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
@@ -387,7 +387,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.resetSphereDistribution">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.resetSphereDistribution">[docs]</a>
-    <span class="k">def</span> <span class="nf">resetSphereDistribution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resetSphereDistribution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># given a radius, create the sphere distribution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sphere_points</span> <span class="o">=</span> <span class="n">SphereHalton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_nb</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_nb</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span></div>
@@ -395,7 +395,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getNextPoint">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">getNextPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getNextPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># pick a random point from the sphere point distribution</span>
         <span class="n">pointsmask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pointsmask</span><span class="p">):</span>
@@ -413,7 +413,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points_boundary">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_boundary">[docs]</a>
-    <span class="k">def</span> <span class="nf">mask_sphere_points_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_sphere_points_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">fillBB</span>
         <span class="n">pts</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span><span class="p">)</span> <span class="o">+</span> <span class="n">pt</span>
@@ -428,7 +428,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points_ingredients">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_ingredients">[docs]</a>
-    <span class="k">def</span> <span class="nf">mask_sphere_points_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">listeclosest</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_sphere_points_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">listeclosest</span><span class="p">):</span>
         <span class="n">listeclosest</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">elem</span>
             <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">listeclosest</span>
@@ -464,7 +464,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points_dihedral">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_dihedral">[docs]</a>
-    <span class="k">def</span> <span class="nf">mask_sphere_points_dihedral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">marge_out</span><span class="p">,</span> <span class="n">marge_diedral</span><span class="p">,</span> <span class="n">v3</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_sphere_points_dihedral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">marge_out</span><span class="p">,</span> <span class="n">marge_diedral</span><span class="p">,</span> <span class="n">v3</span><span class="o">=</span><span class="p">[]):</span>
         <span class="n">points_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v3</span><span class="p">):</span>
             <span class="c1">#            a=angle_between_vectors(self.vi.unit_vector(v2),self.sphere_points[points_mask], axis=1)</span>
@@ -506,7 +506,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points_angle">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_angle">[docs]</a>
-    <span class="k">def</span> <span class="nf">mask_sphere_points_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">marge_in</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_sphere_points_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">marge_in</span><span class="p">):</span>
         <span class="c1"># mask first with angle</span>
         <span class="c1"># adjust the points to current transfomation? or normalize current vector ?</span>
         <span class="n">points_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -527,7 +527,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points_vector">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_vector">[docs]</a>
-    <span class="k">def</span> <span class="nf">mask_sphere_points_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">alternate</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_sphere_points_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">alternate</span><span class="p">):</span>
         <span class="n">points_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># pick the point that are close to pt2-pt3</span>
         <span class="c1"># align v to pt1-pt2, apply to pt2-pt3</span>
@@ -555,7 +555,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points">[docs]</a>
-    <span class="k">def</span> <span class="nf">mask_sphere_points</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask_sphere_points</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">v</span><span class="p">,</span>
         <span class="n">pt</span><span class="p">,</span>
@@ -586,7 +586,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.reset">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.reset">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbCurve</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">listePtLinear</span> <span class="o">=</span> <span class="p">[]</span>
@@ -598,7 +598,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getNextPtIndCyl">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPtIndCyl">[docs]</a>
-    <span class="k">def</span> <span class="nf">getNextPtIndCyl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getNextPtIndCyl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
         <span class="c1">#        print jtrans, rotMatj</span>
         <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">jz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
@@ -623,7 +623,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getJtransRot_r">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getJtransRot_r">[docs]</a>
-    <span class="k">def</span> <span class="nf">getJtransRot_r</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getJtransRot_r</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span>
@@ -636,7 +636,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getJtransRot">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getJtransRot">[docs]</a>
-    <span class="k">def</span> <span class="nf">getJtransRot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getJtransRot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">length</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getTubePropertiesMatrix</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -671,7 +671,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.walkLatticeSurface">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.walkLatticeSurface">[docs]</a>
-    <span class="k">def</span> <span class="nf">walkLatticeSurface</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">walkLatticeSurface</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">pts</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
@@ -753,7 +753,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.walkLattice">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.walkLattice">[docs]</a>
-    <span class="k">def</span> <span class="nf">walkLattice</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">walkLattice</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="mf">999.0</span><span class="p">,</span> <span class="n">checkcollision</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">saw</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
         <span class="c1"># take the next random point in the windows size +1 +2</span>
@@ -844,7 +844,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.walkSphere">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.walkSphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">walkSphere</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">walkSphere</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span> <span class="n">checkcollision</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;use a random point on a sphere of radius uLength, and useCylinder collision on the grid&quot;&quot;&quot;</span>
@@ -942,7 +942,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getInterpolatedSphere">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getInterpolatedSphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">getInterpolatedSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getInterpolatedSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1">#        d=self.uLength</span>
         <span class="n">sps</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
@@ -963,7 +963,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.pickHalton">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.pickHalton">[docs]</a>
-    <span class="k">def</span> <span class="nf">pickHalton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pickHalton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNextPoint</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -974,7 +974,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.pickRandomSphere">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.pickRandomSphere">[docs]</a>
-    <span class="k">def</span> <span class="nf">pickRandomSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">marge</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pickRandomSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">marge</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">advance_randpoint_onsphere</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">marge</span><span class="p">),</span> <span class="n">vector</span><span class="o">=</span><span class="n">v</span>
         <span class="p">)</span>
@@ -989,7 +989,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.pickAlternateHalton">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.pickAlternateHalton">[docs]</a>
-    <span class="k">def</span> <span class="nf">pickAlternateHalton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pickAlternateHalton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNextPoint</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -1002,7 +1002,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.resetLastPoint">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.resetLastPoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">resetLastPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listePtCurve</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resetLastPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listePtCurve</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">nb_ingredient</span> <span class="o">-=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rRot</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rRot</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># rotMatj</span>
@@ -1023,7 +1023,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.grow">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.grow">[docs]</a>
-    <span class="k">def</span> <span class="nf">grow</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grow</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">previousPoint</span><span class="p">,</span>
         <span class="n">startingPoint</span><span class="p">,</span>
@@ -1252,7 +1252,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.updateGrid">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.updateGrid">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateGrid</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateGrid</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rg</span><span class="p">,</span>
         <span class="n">histoVol</span><span class="p">,</span>
@@ -1286,7 +1286,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getFirstPoint">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getFirstPoint">[docs]</a>
-    <span class="k">def</span> <span class="nf">getFirstPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getFirstPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="p">):</span>  <span class="c1"># surfacegrowing: first point is aling to the normal:</span>
@@ -1369,7 +1369,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.grow_place">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.grow_place">[docs]</a>
-    <span class="k">def</span> <span class="nf">grow_place</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grow_place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
@@ -1516,7 +1516,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.prepare_alternates">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.prepare_alternates">[docs]</a>
-    <span class="k">def</span> <span class="nf">prepare_alternates</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_alternates</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">all_partners</span><span class="p">):</span>
@@ -1534,7 +1534,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.prepare_alternates_proba">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.prepare_alternates_proba">[docs]</a>
-    <span class="k">def</span> <span class="nf">prepare_alternates_proba</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_alternates_proba</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">thw</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1548,7 +1548,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.pick_random_alternate">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.pick_random_alternate">[docs]</a>
-    <span class="k">def</span> <span class="nf">pick_random_alternate</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pick_random_alternate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alternates_names</span><span class="p">):</span>
@@ -1565,7 +1565,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.pick_alternate">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.pick_alternate">[docs]</a>
-    <span class="k">def</span> <span class="nf">pick_alternate</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pick_alternate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># whats he current length ie number of point so far</span>
@@ -1597,7 +1597,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.get_alternate_position">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.get_alternate_position">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_alternate_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_alternate_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">length</span>
         <span class="c1"># rotation that align snake orientation to current segment</span>
         <span class="n">rotMatj</span><span class="p">,</span> <span class="n">jtrans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getJtransRot_r</span><span class="p">(</span>
@@ -1656,7 +1656,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.get_alternate_position_p">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.get_alternate_position_p">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_alternate_position_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_alternate_position_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">length</span>
         <span class="n">rotMatj</span><span class="p">,</span> <span class="n">jtrans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getJtransRot_r</span><span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">length</span><span class="o">=</span><span class="n">length</span>
@@ -1678,7 +1678,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.getV3">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getV3">[docs]</a>
-    <span class="k">def</span> <span class="nf">getV3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">alternate</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getV3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">alternate</span><span class="p">):</span>
         <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">length</span>
         <span class="n">rotMatj</span><span class="p">,</span> <span class="n">jtrans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getJtransRot_r</span><span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">length</span><span class="o">=</span><span class="n">length</span>
@@ -1702,7 +1702,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.place_alternate">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.place_alternate">[docs]</a>
-    <span class="k">def</span> <span class="nf">place_alternate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">place_alternate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">pta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">get_point</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">ptb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">get_point</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">ptc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">alternate</span><span class="p">]</span><span class="o">.</span><span class="n">get_point</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -1734,7 +1734,7 @@
 
 <div class="viewcode-block" id="GrowIngredient.place_alternate_p">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.place_alternate_p">[docs]</a>
-    <span class="k">def</span> <span class="nf">place_alternate_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">place_alternate_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternate</span><span class="p">,</span> <span class="n">alti</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="c1"># previou transformation</span>
         <span class="c1">#        distance,mat = autopack.helper.getTubePropertiesMatrix(pt1,pt2)</span>
         <span class="c1">#        prevMat = numpy.array(mat)</span>
@@ -1781,8 +1781,8 @@
 
 <div class="viewcode-block" id="ActinIngredient">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.ActinIngredient">[docs]</a>
-<span class="k">class</span> <span class="nc">ActinIngredient</span><span class="p">(</span><span class="n">GrowIngredient</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ActinIngredient</span><span class="p">(</span><span class="n">GrowIngredient</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">molarity</span><span class="p">,</span>
         <span class="n">radii</span><span class="o">=</span><span class="p">[[</span><span class="mf">50.0</span><span class="p">]],</span>
@@ -1809,7 +1809,7 @@
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">orientation</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kw</span>
+        <span class="o">**</span><span class="n">kw</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">GrowIngredient</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -1837,7 +1837,7 @@
             <span class="n">orientation</span><span class="p">,</span>
             <span class="n">count</span><span class="p">,</span>
             <span class="nb">type</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kw</span>
+            <span class="o">**</span><span class="n">kw</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Actine_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>
@@ -1852,7 +1852,7 @@
 
 <div class="viewcode-block" id="ActinIngredient.updateFromBB">
 <a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.ActinIngredient.updateFromBB">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateFromBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateFromBB</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
         <span class="k">return</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
@@ -1893,7 +1893,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack 1.0.8 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">cellPack v1.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../../../cellpack.html" >cellpack</a> &#187;</li>
           <li class="nav-item nav-item-3"><a href="../../autopack.html" >cellpack.autopack</a> &#187;</li>
