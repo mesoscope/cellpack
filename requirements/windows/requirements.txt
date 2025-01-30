@@ -144,6 +144,7 @@ s3fs==0.4.2
 s3transfer==0.10.4
 scikit-image==0.24.0
 scipy==1.13.1
+setuptools==75.8.0
 simulariumio==1.11.0
 six==1.17.0
 snowballstemmer==2.2.0
