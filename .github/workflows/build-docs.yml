@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - fix/documentation-workflow
   workflow_dispatch:
 
 # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
@@ -15,6 +14,7 @@ permissions:
 
 jobs:
   docs:
+    if: ${{ !contains(github.event.head_commit.message, 'Bump version') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4.2.2
