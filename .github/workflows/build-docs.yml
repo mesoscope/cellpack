@@ -4,26 +4,45 @@ on:
   push:
     branches:
       - main
+      - fix/documentation-workflow
   workflow_dispatch:
 
 jobs:
   docs:
-    if: ${{ !contains(github.event.head_commit.message, 'Bump version') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4.2.2
       with:
         persist-credentials: false
     - uses: ./.github/actions/dependencies
+
     - name: Generate Docs
       run: |
         pdm run make gen-docs
         touch docs/_build/html/.nojekyll
-    - name: Publish Docs
-      uses: JamesIves/github-pages-deploy-action@v4.6.8
+    
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BASE_BRANCH: main # The branch the action should deploy from.
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: docs/_build/html/ # The folder the action should deploy.
+        path: docs/_build/html/
+  
+  deploy:
+    needs: docs
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write
+      id-token: write
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
