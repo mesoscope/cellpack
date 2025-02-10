@@ -63,7 +63,10 @@ dev = [
     "docutils<0.21,>=0.18.1",
     "ipykernel>=6.29.5",
 ]
-setup = ["pytest-runner>=6.0.1"]
+setup = [
+    "pytest-runner>=6.0.1",
+    "setuptools>=75.8.0",
+]
 test = ["pytest-cov>=6.0.0", "pytest-raises>=0.11", "pytest>=8.3.4"]
 lint = [
     "black>=24.10.0",
