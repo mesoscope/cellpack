@@ -26,7 +26,7 @@ dependencies = [
     "matplotlib>=3.9.4",
     "mdutils>=1.6.0",
     "moto>=5.0.26",
-    "numpy>=2.0.2",
+    "numpy<2.0",
     "plotly>=5.24.1",
     "pycollada>=0.8",
     "pymunk>=6.10.0",
