@@ -2,7 +2,7 @@ import copy
 from datetime import datetime, timezone
 from enum import Enum
 
-# from deepdiff import DeepDiff
+
 import hashlib
 import json
 import requests
@@ -14,12 +14,6 @@ class DataDoc(object):
     def __init__(
         self,
     ):
-        pass
-
-    def as_dict():
-        pass
-
-    def should_write():
         pass
 
     @staticmethod
@@ -46,7 +40,6 @@ class DataDoc(object):
     @staticmethod
     def is_obj(comp_or_obj):
         # in resolved DB data, if the top level of a downloaded comp doesn't have the key `name`, it's an obj
-        # TODO: true for all cases? better approaches?
         return not comp_or_obj.get("name") and "object" in comp_or_obj
 
     @staticmethod
@@ -58,7 +51,6 @@ class DataDoc(object):
 class CompositionDoc(DataDoc):
     """
     Declares required attributes for comps in the constructor, set default values.
-    Handles the logic for comparing the local and db data to determine the uploading process.
     """
 
     SHALLOW_MATCH = ["object", "count", "molarity"]
@@ -289,43 +281,6 @@ class CompositionDoc(DataDoc):
         else:
             db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
-    # def should_write(self, db, recipe_data):
-    #     """
-    #     Compares the resolved local composition to the resolved db composition.
-    #     To determine whether the composition data already exists or if it needs to be written to the database.
-    #     """
-    #     db_docs = db.get_doc_by_name("composition", self.name)
-    #     local_data = {
-    #         "name": self.name,
-    #         "object": self.object,
-    #         "count": self.count,
-    #         "molarity": self.molarity,
-    #         "regions": copy.deepcopy(self.regions),
-    #     }
-
-    #     if db_docs and len(db_docs) >= 1:
-    #         for doc in db_docs:
-    #             db_data = db.doc_to_dict(doc)
-    #             for item in CompositionDoc.SHALLOW_MATCH:
-    #                 if db_data[item] != local_data[item]:
-    #                     break
-    #             if local_data["regions"] is None and db_data["regions"] is None:
-    #                 # found a match, so shouldn't write
-    #                 return False, db.doc_id(doc)
-    #             else:
-    #                 # deeply compare resolved regions data
-    #                 self.resolve_db_regions(db_data, db)
-    #                 self.resolve_local_regions(local_data, recipe_data, db)
-    #                 difference = DeepDiff(
-    #                     local_data,
-    #                     db_data,
-    #                     ignore_order=True,
-    #                     ignore_type_in_groups=[tuple, list],
-    #                 )
-    #                 if not difference:
-    #                     return doc, db.doc_id(doc)
-    #     return None, None
-
 
 class ObjectDoc(DataDoc):
     def __init__(self, name, settings):
@@ -381,35 +336,11 @@ class ObjectDoc(DataDoc):
             "gradient" in obj_data and isinstance(obj_data["gradient"], dict)
         ) or "inherit" in obj_data
 
-    # def should_write(self, db):
-    #     docs = db.get_doc_by_name("objects", self.name)
-    #     if docs and len(docs) >= 1:
-    #         for doc in docs:
-    #             # if there is repr in the obj doc from db
-    #             full_doc_data = ObjectDoc.convert_representation(doc, db)
-    #             # unpack objects to dicts in local data for comparison
-    #             local_data = DBUploader.prep_data_for_db(self.as_dict())
-    #             difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
-    #             if not difference:
-    #                 return doc, db.doc_id(doc)
-    #     return None, None
-
 
 class GradientDoc(DataDoc):
     def __init__(self, settings):
         super().__init__()
         self.settings = settings
-
-    # def should_write(self, db, grad_name):
-    #     docs = db.get_doc_by_name("gradients", grad_name)
-    #     if docs and len(docs) >= 1:
-    #         for doc in docs:
-    #             local_data = DBUploader.prep_data_for_db(db.doc_to_dict(doc))
-    #             db_data = db.doc_to_dict(doc)
-    #             difference = DeepDiff(db_data, local_data, ignore_order=True)
-    #             if not difference:
-    #                 return doc, db.doc_id(doc)
-    #     return None, None
 
 
 class ResultDoc:
@@ -481,27 +412,6 @@ class DBUploader(object):
                 modified_data[key] = value
         return modified_data
 
-    # def upload_data(self, collection, data, id=None):
-    #     """
-    #     If should_write is true, upload the data to the database
-    #     """
-    #     # check if we need to convert part of the data(2d arrays and objs to dict)
-    #     modified_data = DBUploader.prep_data_for_db(data)
-    #     modified_data["dedup_hash"] = DataDoc.generate_hash(modified_data)
-    #     # import ipdb; ipdb.set_trace()
-    #     if id is None:
-    #         name = modified_data["name"]
-    #         doc = self.db.write_doc(collection, modified_data)
-    #         # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
-    #         doc_path = self.db.get_path_from_ref(doc[1])
-    #         doc_id = self.db.doc_id(doc[1])
-    #         print(f"successfully uploaded {name} to path: {doc_path}")
-    #         return doc_id, self.db.create_path(collection, doc_id)
-    #     else:
-    #         doc_path = f"{collection}/{id}"
-    #         doc = self.db.set_doc(collection, id, modified_data)
-    #         return id, self.db.create_path(collection, id)
-
     def upload_data(self, collection, data, id=None):
         modified_data = DBUploader.prep_data_for_db(data)
         modified_data["dedup_hash"] = DataDoc.generate_hash(modified_data)
@@ -523,13 +433,6 @@ class DBUploader(object):
         for gradient in gradients:
             gradient_name = gradient["name"]
             gradient_doc = GradientDoc(settings=gradient)
-            # _, doc_id = gradient_doc.should_write(self.db, gradient_name)
-            # if doc_id:
-            #     print(f"gradients/{gradient_name} is already in firestore")
-            #     self.grad_to_path_map[gradient_name] = self.db.create_path(
-            #         "gradients", doc_id
-            #     )
-            # else:
             _, grad_path = self.upload_data("gradients", gradient_doc.settings)
             self.grad_to_path_map[gradient_name] = grad_path
 
@@ -547,12 +450,6 @@ class DBUploader(object):
                     "gradient", obj_data[obj_name], self.grad_to_path_map
                 )
         object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
-        # _, doc_id = object_doc.should_write(self.db)
-        # if doc_id:
-        #     print(f"objects/{object_doc.name} is already in firestore")
-        #     obj_path = self.db.create_path("objects", doc_id)
-        #     self.objects_to_path_map[obj_name] = obj_path
-        # else:
         _, obj_path = self.upload_data("objects", object_doc.as_dict())
         self.objects_to_path_map[obj_name] = obj_path
 
@@ -590,8 +487,6 @@ class DBUploader(object):
                 regions=comp_data["regions"],
                 molarity=comp_data["molarity"],
             )
-            # if comp exists, don't upload
-            # _, doc_id = comp_doc.should_write(self.db, recipe_data)
             temp_composition = comp_data.copy()
             temp_composition["dedup_hash"] = DataDoc.generate_hash(temp_composition)
 
@@ -624,43 +519,6 @@ class DBUploader(object):
                 for inner_data in references_to_update[comp_name]:
                     inner_data["comp_id"] = doc_id
         return references_to_update
-
-    # def upload_compositions(self, compositions, recipe_to_save):
-    #     references_to_update = {}
-    #     for comp_name, comp_obj in compositions.items():
-    #         self.comp_to_path_map[comp_name] = {}
-    #         comp_obj["name"] = comp_name
-    #         comp_data = deep_merge(copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp_obj)
-    #         comp_doc = CompositionDoc(
-    #             comp_name,
-    #             object_key=comp_data["object"],
-    #             count=comp_data["count"],
-    #             regions=comp_data["regions"],
-    #             molarity=comp_data["molarity"],
-    #         )
-    #         temp_composition = comp_data.copy()
-    #         temp_composition["dedup_hash"] = DataDoc.generate_hash(temp_composition)
-
-    #         existing_doc = self.db.check_doc_existence("composition", temp_composition)
-
-    #         if existing_doc:
-    #             doc_id = self.db.doc_id(existing_doc)
-    #             comp_path = self.db.create_path("composition", doc_id)
-    #         else:
-    #             doc_id, comp_path = self.upload_data("composition", comp_data)
-
-    #         self.comp_to_path_map[comp_name]["path"] = comp_path
-    #         self.comp_to_path_map[comp_name]["id"] = doc_id
-
-    #         recipe_to_save["composition"][comp_name] = {"inherit": comp_path}
-
-    #     for comp_name, comp_obj in compositions.items():
-    #         if comp_name in references_to_update:
-    #             doc_id = self.comp_to_path_map[comp_name]["id"]
-    #             for inner_data in references_to_update[comp_name]:
-    #                 inner_data["comp_id"] = doc_id
-
-    #     return references_to_update
 
     def _get_recipe_id(self, recipe_data):
         """
