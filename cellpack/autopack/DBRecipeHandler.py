@@ -1,4 +1,5 @@
 import copy
+import logging
 from datetime import datetime, timezone
 from enum import Enum
 
@@ -273,7 +274,6 @@ class CompositionDoc(DataDoc):
             return
         _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
         update_ref_path = f"{db.db_name()}:{db.get_path_from_ref(new_item_ref)}"
-        print("update_ref_path>>>>>", update_ref_path)
         if update_in_array:
             db.update_elements_in_array(
                 doc_ref, index, update_ref_path, remove_comp_name
@@ -361,9 +361,9 @@ class ResultDoc:
                     result_data["url"]
                 ):
                     self.db.delete_doc("results", self.db.doc_id(result))
-            print("Results cleanup complete.")
+            logging.info("Results cleanup complete.")
         else:
-            print("No results found in the database.")
+            logging.info("No results found in the database.")
 
     def validate_existence(self, url):
         """
@@ -416,18 +416,23 @@ class DBUploader(object):
         modified_data = DBUploader.prep_data_for_db(data)
         modified_data["dedup_hash"] = DataDoc.generate_hash(modified_data)
 
+        # customized id for recipe
         if id:
             self.db.set_doc(collection, id, modified_data)
-            return id, self.db.create_path(collection, id)
+            doc_path = self.db.create_path(collection, id)
+            return id, doc_path
         doc_ref = self.db.check_doc_existence(collection, modified_data)
+        # if the doc already exists, return the path
         if doc_ref:
             doc_id = self.db.doc_id(doc_ref)
-            return doc_id, self.db.create_path(collection, doc_id)
-
+            doc_path = self.db.create_path(collection, doc_id)
+            return doc_id, doc_path
+        # if the doc doesn't exist, upload it
         doc_ref = self.db.upload_doc(collection, modified_data)
         doc_id = self.db.doc_id(doc_ref[1])
-
-        return doc_id, self.db.create_path(collection, doc_id)
+        doc_path = self.db.create_path(collection, doc_id)
+        logging.info(f"successfully uploaded {doc_id} to path: {doc_path}")
+        return doc_id, doc_path
 
     def upload_gradients(self, gradients):
         for gradient in gradients:
@@ -445,7 +450,6 @@ class DBUploader(object):
                 obj_data[obj_name]["gradient"] = self.grad_to_path_map[grad_name]
             # combined gradients
             elif isinstance(obj_data[obj_name]["gradient"], list):
-                print("combined gradients.>>>>", self.grad_to_path_map)
                 CompositionDoc.resolve_combined_gradient(
                     "gradient", obj_data[obj_name], self.grad_to_path_map
                 )
@@ -497,7 +501,6 @@ class DBUploader(object):
                 path = self.db.create_path("composition", doc_id)
                 self.comp_to_path_map[comp_name]["path"] = path
                 self.comp_to_path_map[comp_name]["id"] = doc_id
-                print(f"composition/{comp_name} is already in firestore")
             else:
                 # replace with paths for outer objs in comp, then upload
                 comp_doc.check_and_replace_references(
@@ -562,11 +565,6 @@ class DBUploader(object):
         After all other collections are checked or uploaded, upload the recipe with references into db
         """
         recipe_id = self._get_recipe_id(recipe_data)
-        # if the recipe is already exists in db, just return
-        recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
-        if recipe:
-            print(f"{recipe_id} is already in firestore")
-            # return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
@@ -634,7 +632,6 @@ class DBRecipeLoader(object):
         """
         collection, id = self.db.get_collection_id_from_path(path)
         recipe_path = self.db.get_value(collection, id, "recipe_path")
-        print("recipe_path>>>>", collection, id, recipe_path)
         if not recipe_path:
             raise ValueError(
                 f"No recipe found at the input path: '{path}'. Please ensure the recipe exists in the database and is spelled correctly. Expected path format: 'firebase:recipes/[RECIPE-ID]'"
