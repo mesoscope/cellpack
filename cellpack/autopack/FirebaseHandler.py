@@ -244,3 +244,12 @@ class FirebaseHandler(object):
         return isinstance(
             obj, (firestore.DocumentReference, firestore.DocumentSnapshot)
         )
+
+    def check_doc_existence(self, collection, doc_data):
+        doc_hash = doc_data.get("dedup_hash")
+        query = self.db.collection(collection).where("dedup_hash", "==", doc_hash).limit(1)
+        docs = list(query.stream())
+        if any(docs):
+            logging.info("Document already exists in database.")
+            return docs[0].reference
+        return None
