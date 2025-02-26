@@ -48,11 +48,12 @@ class DataDoc(object):
         # in resolved DB data, if the top level of a downloaded comp doesn't have the key `name`, it's an obj
         # TODO: true for all cases? better approaches?
         return not comp_or_obj.get("name") and "object" in comp_or_obj
-    
+
     @staticmethod
     def generate_hash(doc_data):
         doc_str = json.dumps(doc_data, sort_keys=True)
         return hashlib.sha256(doc_str.encode()).hexdigest()
+
 
 class CompositionDoc(DataDoc):
     """
@@ -684,9 +685,7 @@ class DBUploader(object):
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
-        references_to_update = self.upload_compositions(
-            compositions, recipe_to_save
-        )
+        references_to_update = self.upload_compositions(compositions, recipe_to_save)
         # update nested comp in composition
         if references_to_update:
             for comp_name in references_to_update:
@@ -858,7 +857,9 @@ class DBRecipeLoader(object):
         """Recursively removes 'dedup_hash' from dictionaries and lists."""
         if isinstance(data, dict):
             return {
-                k: DBRecipeLoader.remove_dedup_hash(v) for k, v in data.items() if k != "dedup_hash"
+                k: DBRecipeLoader.remove_dedup_hash(v)
+                for k, v in data.items()
+                if k != "dedup_hash"
             }
         elif isinstance(data, list):
             return [DBRecipeLoader.remove_dedup_hash(item) for item in data]
