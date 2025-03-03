@@ -36,7 +36,7 @@ jobs:
       run: |
         pdm run pytest --cov cellpack/tests/
     - name: Upload codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
 
   lint:
     runs-on: ubuntu-latest
