@@ -83,22 +83,10 @@ def test_upload_compositions():
         "space": {"regions": {"interior": ["A"]}},
     }
     recipe_to_save = {"format_version": "2.1", "name": "one_sphere", "composition": {}}
-    recipe_data = {
-        "name": "one_sphere",
-        "objects": {
-            "sphere_25": {
-                "type": "single_sphere",
-                "max_jitter": [1, 1, 0],
-            },
-        },
-        "composition": {
-            "space": {"regions": {"interior": ["A"]}},
-        },
-    }
 
     composition_doc = DBUploader(mock_db)
     references_to_update = composition_doc.upload_compositions(
-        composition, recipe_to_save, recipe_data
+        composition, recipe_to_save
     )
     assert composition_doc.comp_to_path_map == {
         "space": {"id": "test_id", "path": "firebase:composition/test_id"},

@@ -101,7 +101,7 @@ class FirebaseHandler(object):
             return doc_ref
         else:
             logging.error(
-                f"ERROR: {doc_ref.path} already exists. If uploading new data, provide a unique recipe name."
+                f"WARNING: {doc_ref.path} already exists. If uploading new data, provide a unique recipe name."
             )
             return
 
@@ -244,3 +244,15 @@ class FirebaseHandler(object):
         return isinstance(
             obj, (firestore.DocumentReference, firestore.DocumentSnapshot)
         )
+
+    def check_doc_existence(self, collection, doc_data):
+        doc_hash = doc_data.get("dedup_hash")
+        doc_name = doc_data.get("name")
+        query = (
+            self.db.collection(collection).where("dedup_hash", "==", doc_hash).limit(1)
+        )
+        docs = list(query.stream())
+        if any(docs):
+            logging.info(f"{doc_name} already exists in database with id {docs[0].id}.")
+            return docs[0].reference
+        return None

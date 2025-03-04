@@ -44,18 +44,24 @@ def test_convert_representation():
     assert result == expected_result
 
 
-def test_object_doc_should_write_with_no_existing_doc():
-    object_doc = ObjectDoc("test", {"test_key": "test_value"})
-    doc, doc_id = object_doc.should_write(mock_db)
-    assert doc_id is None
-    assert doc is None
+def test_check_doc_existence_for_object():
+    object_doc = {
+        "peroxisome": {
+            "gradient": {
+                "mode": "surface",
+                "name": "nucleus_surface_gradient",
+            },
+            "name": "peroxisome",
+        }
+    }
 
+    test_data = {
+        "doc": object_doc,
+        "dedup_hash": ObjectDoc.generate_hash({"doc": object_doc}),
+    }
 
-def test_object_doc_should_write_with_existing_doc():
-    existing_doc = {"name": "test", "test_key": "test_value"}
-    mock_db.data = existing_doc
-    object_doc = ObjectDoc("test", {"test_key": "test_value"})
+    result = mock_db.check_doc_existence("objects", test_data)
+    assert result is None
 
-    doc, doc_id = object_doc.should_write(mock_db)
-    assert doc_id is not None
-    assert doc == existing_doc
+    existing_doc = mock_db._existing_doc[0]
+    assert existing_doc["dedup_hash"] == test_data["dedup_hash"]

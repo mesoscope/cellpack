@@ -8,6 +8,7 @@ class MockDB(object):
             self.obj["id"] = index
         self.data = data
         self.name = "test_db"
+        self._existing_doc = []
 
     @staticmethod
     def is_firebase_obj(obj):
@@ -69,3 +70,15 @@ class MockDB(object):
 
     def update_elements_in_array(self, doc_ref, index, new_item_ref, remove_item):
         return True
+
+    def check_doc_existence(self, collection, doc_data):
+        doc_hash = doc_data.get("dedup_hash")
+        if len(self._existing_doc) == 0:
+            self._existing_doc.append({"dedup_hash": doc_hash})
+
+        if self.data.get("dedup_hash") == doc_hash:
+            mock_ref = Mock()
+            mock_ref.id = "existing_doc_id"
+            return mock_ref
+
+        return None
