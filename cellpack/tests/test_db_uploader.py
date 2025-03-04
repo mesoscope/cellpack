@@ -98,7 +98,7 @@ def test_upload_compositions():
 
     composition_doc = DBUploader(mock_db)
     references_to_update = composition_doc.upload_compositions(
-        composition, recipe_to_save, recipe_data
+        composition, recipe_to_save
     )
     assert composition_doc.comp_to_path_map == {
         "space": {"id": "test_id", "path": "firebase:composition/test_id"},
