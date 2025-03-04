@@ -1,4 +1,4 @@
-from cellpack.autopack.DBRecipeHandler import GradientDoc, DataDoc
+from cellpack.autopack.DBRecipeHandler import DataDoc
 from cellpack.tests.mocks.mock_db import MockDB
 
 mock_db = MockDB({})
