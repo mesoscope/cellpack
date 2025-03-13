@@ -139,19 +139,6 @@ class CompositionDoc(DataDoc):
                     self.resolve_db_regions(downloaded_data, db)
 
     @staticmethod
-    def gradient_list_to_dict(prep_recipe_data):
-        """
-        Convert gradient list to dict for resolve_local_regions
-        """
-        if "gradients" in prep_recipe_data and isinstance(
-            prep_recipe_data["gradients"], list
-        ):
-            gradient_dict = {}
-            for gradient in prep_recipe_data["gradients"]:
-                gradient_dict[gradient["name"]] = gradient
-            prep_recipe_data["gradients"] = gradient_dict
-
-    @staticmethod
     def resolve_combined_gradient(key, obj_data, prep_data):
         """
         When the gradients are combined, fetch and replace gradient data in a list.
@@ -180,106 +167,89 @@ class CompositionDoc(DataDoc):
                         key, object_data, prep_recipe_data["gradients"]
                     )
 
-    def resolve_local_regions(self, local_data, recipe_data, db):
+    def build_dependency_graph(compositions):
         """
-        Recursively resolves the regions of a composition from local data.
-        Restructure the local data to match the db data.
+        Creates a dependency map showing the relationships between compositions.
         """
-        unpack_recipe_data = DBUploader.prep_data_for_db(recipe_data)
-        prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
-        # `gradients` is a list, convert it to dict for easy access and replace
-        CompositionDoc.gradient_list_to_dict(prep_recipe_data)
-        if "object" in local_data and local_data["object"] is not None:
-            if DataDoc.is_key(local_data["object"]):
-                key_name = local_data["object"]
-            else:
-                key_name = local_data["object"]["name"]
-            local_data["object"] = prep_recipe_data["objects"][key_name]
-            self.resolve_object_data(local_data["object"], prep_recipe_data)
-        for region_name in local_data["regions"]:
-            for index, key_or_dict in enumerate(local_data["regions"][region_name]):
-                if not DataDoc.is_key(key_or_dict):
-                    obj_item = local_data["regions"][region_name][index]["object"]
-                    if DataDoc.is_key(obj_item):
-                        local_data["regions"][region_name][index]["object"] = (
-                            prep_recipe_data["objects"][obj_item]
-                        )
-                    else:
-                        local_data["regions"][region_name][index]["object"] = (
-                            prep_recipe_data["objects"][obj_item["name"]]
-                        )
-                    # replace reference in obj with actual data
-                    obj_data = local_data["regions"][region_name][index]["object"]
-                    self.resolve_object_data(obj_data, prep_recipe_data)
-                else:
-                    comp_name = local_data["regions"][region_name][index]
-                    prep_comp_data = prep_recipe_data["composition"][comp_name]
-                    prep_comp_data["name"] = comp_name
-                    local_data["regions"][region_name][index] = CompositionDoc(
-                        **prep_comp_data
-                    ).as_dict()
-                if (
-                    "regions" in local_data["regions"][region_name][index]
-                    and local_data["regions"][region_name][index]["regions"] is not None
-                ):
-                    self.resolve_local_regions(
-                        local_data["regions"][region_name][index], recipe_data, db
-                    )
+        dependency_map = {}
+        for key in compositions:
+            if key not in dependency_map:
+                dependency_map[key] = []
 
-    def check_and_replace_references(
-        self, objects_to_path_map, references_to_update, db
-    ):
-        """
-        Within one recipe upload, we store the references for uploaded comps and objs.
-        Checks if the object or comp is a reference in the nesting regions, and replaces it with the referenced db path.
-        """
-        obj_name = self.object
-        if obj_name is not None and not db.is_reference(obj_name):
-            obj_database_path = objects_to_path_map.get(obj_name)
-            self.object = obj_database_path
+            comp = compositions[key]
+            if isinstance(comp, dict) and "regions" in comp:
+                for _, region_items in comp["regions"].items():
+                    if isinstance(region_items, list):
+                        for item in region_items:
+                            if isinstance(item, str) and item in compositions:
+                                dependency_map[key].append(item)
+        print("dependency_map>>>>>", dependency_map)
+        return dependency_map
 
-        if self.regions is not None:
-            for region_name, region_array in self.regions.items():
-                if len(region_array) > 0:
-                    for region_item in region_array:
-                        # replace nested objs in comp["regions"]
-                        if DataDoc.is_key(region_item):
-                            update_field_path = f"regions.{region_name}"
-                            update_data = {
-                                "index": update_field_path,
-                                "name": region_item,
-                            }
-                            if self.name in references_to_update:
-                                references_to_update[self.name].append(update_data)
-                            else:
-                                references_to_update[self.name] = [update_data]
-                        elif not db.is_reference(region_item["object"]):
-                            obj_name = region_item["object"]
-                            region_item["object"] = objects_to_path_map.get(obj_name)
+    def comp_upload_order(self, compositions):
+        """
+        Use topological sort to determine the order in which compositions should be uploaded.
+        Returns a list of composition keys in the order they should be uploaded.
+        """
+        dependency_map = CompositionDoc.build_dependency_graph(compositions)
 
-    @staticmethod
-    def update_reference(
-        db,
-        composition_id,
-        referring_comp_id,
-        index,
-        remove_comp_name,
-        update_in_array=False,
-    ):
+        in_degree = {node: 0 for node in compositions}
+
+        # calculate in-degree for each node (how many compositions contain this one)
+        for container, dependencies in dependency_map.items():
+            for dependency in dependencies:
+                in_degree[dependency] = in_degree.get(dependency, 0) + 1
+
+        # start with nodes that are not contained by any other comp
+        roots = [node for node in in_degree if in_degree[node] == 0]
+
+        queue = roots.copy()
+        upload_order = []
+
+        while queue:
+            current = queue.pop(0)  # process the first node in the queue
+            upload_order.append(current)
+
+            for dependency in dependency_map.get(current, []):
+                in_degree[dependency] -= 1
+                if in_degree[dependency] == 0:
+                    queue.append(dependency)
+
+        # check for cycles in the graph
+        if len(upload_order) != len(in_degree):
+            raise ValueError("Cyclic dependency detected in compositions.")
+
+        # reverse the order since we need inner nodes first
+        # TODO: refactor to return the correct order
+        upload_order.reverse()
+        print("Topological sort result:", upload_order)
+        return upload_order
+
+    def replace_region_references(self, composition_data):
         """
-        Update comp references in the recipe
+        Replaces composition references with paths in the database.
         """
-        doc, doc_ref = db.get_doc_by_id("composition", composition_id)
-        if doc is None:
-            return
-        _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
-        update_ref_path = f"{db.db_name()}:{db.get_path_from_ref(new_item_ref)}"
-        if update_in_array:
-            db.update_elements_in_array(
-                doc_ref, index, update_ref_path, remove_comp_name
+        print("local_data>>>>>", composition_data)
+
+        if "object" in composition_data and DataDoc.is_key(composition_data["object"]):
+            composition_data["object"] = self.objects_to_path_map.get(
+                composition_data["object"]
             )
-        else:
-            db.update_reference_on_doc(doc_ref, index, update_ref_path)
+
+        if "regions" in composition_data and composition_data["regions"]:
+            for region_name in composition_data["regions"]:
+                if not composition_data["regions"][region_name]:
+                    continue
+                for index, item in enumerate(composition_data["regions"][region_name]):
+                    if isinstance(item, str):
+                        composition_data["regions"][region_name][index] = (
+                            self.comp_to_path_map.get(item)
+                        )
+                    elif isinstance(item, dict):
+                        # process nested regions recursively
+                        if "regions" in item and item["regions"]:
+                            self.replace_region_references(item)
+        return composition_data
 
 
 class ObjectDoc(DataDoc):
@@ -476,14 +446,16 @@ class DBUploader(object):
             self.upload_single_object(obj_name, modify_objects)
 
     def upload_compositions(self, compositions, recipe_to_save):
-        references_to_update = {}
-        for comp_name in compositions:
-            comp_obj = compositions[comp_name]
-            self.comp_to_path_map[comp_name] = {}
-            comp_obj["name"] = comp_name
-            comp_data = deep_merge(
-                copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp_obj
-            )
+        comp_order = CompositionDoc.comp_upload_order(self, compositions)
+
+        for comp_name in comp_order:
+            comp = copy.deepcopy(compositions[comp_name])
+            comp["name"] = comp_name
+
+            # apply default values
+            comp_data = deep_merge(copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp)
+            # replace composition references with ids
+            comp_data = CompositionDoc.replace_region_references(self, comp_data)
             comp_doc = CompositionDoc(
                 comp_name,
                 object_key=comp_data["object"],
@@ -491,37 +463,15 @@ class DBUploader(object):
                 regions=comp_data["regions"],
                 molarity=comp_data["molarity"],
             )
-            temp_composition = comp_data.copy()
-            temp_composition["dedup_hash"] = DataDoc.generate_hash(temp_composition)
 
-            existing_doc = self.db.check_doc_existence("composition", temp_composition)
+            comp_ready_for_db = comp_doc.as_dict()
+            print("comp_ready_for_db>>>>>", comp_ready_for_db)
+            _, comp_path = self.upload_data("composition", comp_ready_for_db)
 
-            if existing_doc:
-                doc_id = self.db.doc_id(existing_doc)
-                path = self.db.create_path("composition", doc_id)
-                self.comp_to_path_map[comp_name]["path"] = path
-                self.comp_to_path_map[comp_name]["id"] = doc_id
-            else:
-                # replace with paths for outer objs in comp, then upload
-                comp_doc.check_and_replace_references(
-                    self.objects_to_path_map, references_to_update, self.db
-                )
-                comp_ready_for_db = comp_doc.as_dict()
-                doc_id, comp_path = self.upload_data("composition", comp_ready_for_db)
-                self.comp_to_path_map[comp_name]["path"] = comp_path
-                self.comp_to_path_map[comp_name]["id"] = doc_id
+            self.comp_to_path_map[comp_name] = comp_path
 
-            recipe_to_save["composition"][comp_name] = {
-                "inherit": self.comp_to_path_map[comp_name]["path"]
-            }
-
-            recipe_to_save["composition"][comp_name] = {
-                "inherit": self.comp_to_path_map[comp_name]["path"]
-            }
-            if comp_name in references_to_update:
-                for inner_data in references_to_update[comp_name]:
-                    inner_data["comp_id"] = doc_id
-        return references_to_update
+            # update the recipe reference
+            recipe_to_save["composition"][comp_name] = {"inherit": comp_path}
 
     def _get_recipe_id(self, recipe_data):
         """
@@ -546,18 +496,7 @@ class DBUploader(object):
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
-        references_to_update = self.upload_compositions(compositions, recipe_to_save)
-        # update nested comp in composition
-        if references_to_update:
-            for comp_name in references_to_update:
-                for inner_data in references_to_update[comp_name]:
-                    comp_id = inner_data["comp_id"]
-                    index = inner_data["index"]
-                    name = inner_data["name"]
-                    item_id = self.comp_to_path_map[name]["id"]
-                    CompositionDoc.update_reference(
-                        self.db, comp_id, item_id, index, name, update_in_array=True
-                    )
+        self.upload_compositions(compositions, recipe_to_save)
         return recipe_to_save
 
     def upload_recipe(self, recipe_meta_data, recipe_data):
