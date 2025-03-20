@@ -217,10 +217,9 @@ class CompositionDoc(DataDoc):
 
         # check for cycles in the graph
         if len(upload_order) != len(in_degree):
-            raise ValueError("Cyclic dependency detected in compositions.")
+            raise ValueError("Circular dependency detected in compositions.")
 
         # reverse the order since we need inner nodes first
-        # TODO: refactor to return the correct order
         upload_order.reverse()
         return upload_order
 
