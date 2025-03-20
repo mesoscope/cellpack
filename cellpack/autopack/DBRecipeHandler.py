@@ -167,6 +167,7 @@ class CompositionDoc(DataDoc):
                         key, object_data, prep_recipe_data["gradients"]
                     )
 
+    @staticmethod
     def build_dependency_graph(compositions):
         """
         Creates a dependency map showing the relationships between compositions.
@@ -183,7 +184,6 @@ class CompositionDoc(DataDoc):
                         for item in region_items:
                             if isinstance(item, str) and item in compositions:
                                 dependency_map[key].append(item)
-        print("dependency_map>>>>>", dependency_map)
         return dependency_map
 
     def comp_upload_order(self, compositions):
@@ -222,15 +222,12 @@ class CompositionDoc(DataDoc):
         # reverse the order since we need inner nodes first
         # TODO: refactor to return the correct order
         upload_order.reverse()
-        print("Topological sort result:", upload_order)
         return upload_order
 
     def replace_region_references(self, composition_data):
         """
         Replaces composition references with paths in the database.
         """
-        print("local_data>>>>>", composition_data)
-
         if "object" in composition_data and DataDoc.is_key(composition_data["object"]):
             composition_data["object"] = self.objects_to_path_map.get(
                 composition_data["object"]
@@ -465,7 +462,6 @@ class DBUploader(object):
             )
 
             comp_ready_for_db = comp_doc.as_dict()
-            print("comp_ready_for_db>>>>>", comp_ready_for_db)
             _, comp_path = self.upload_data("composition", comp_ready_for_db)
 
             self.comp_to_path_map[comp_name] = comp_path
