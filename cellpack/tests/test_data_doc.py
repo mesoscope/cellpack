@@ -36,3 +36,12 @@ def test_is_nested_list():
 def test_is_obj():
     assert DataDoc.is_obj(object_example) is True
     assert DataDoc.is_obj(composition_example) is False
+
+
+def test_generate_hash():
+    test_cases = [object_example, composition_example, None]
+
+    for input_data in test_cases:
+        generated_hash = DataDoc.generate_hash(input_data)
+        assert isinstance(generated_hash, str)
+        assert generated_hash == DataDoc.generate_hash(input_data)
