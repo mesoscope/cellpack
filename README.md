@@ -1,28 +1,42 @@
-# cellPack
+# cellPACK
 
 [![Continuous Integration](https://github.com/mesoscope/cellpack/actions/workflows/ci.yml/badge.svg)](https://github.com/mesoscope/cellpack/actions/workflows/ci.yml)
 [![Documentation](https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg)](https://mesoscope.github.io/cellpack/)
 [![Code Coverage](https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg)](https://codecov.io/gh/mesoscope/cellpack)
 
-algorithm to pack molecular recipes
+An algorithm to pack molecular recipes
 
-### Prerequisite 
-1. Install Conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
+## Installation
 
-### Setup 
-1. create a virtual env: `conda create -n autopack python=3.9`
-2. `conda activate autopack`
-3. `pip install -e .[dev]`
+> [!NOTE]
+> These are the basic installation steps. However, our recommendation for developers is to install with `pyenv` and `pdm`. See advanced installation instructions [here](docs/INSTALL.md).
 
-### Run pack code
+1. Install Python 3.9 and `git`.  Update pip at least to `24.0.0`.
+2. Clone this git repository.
+```bash
+git clone git@github.com:mesoscope/cellpack.git
+cd cellpack
+```
+3. Create a new virtual environment and activate it.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+4. Install the required packages for your operating system. Replace `linux` with `macos` or `windows` as appropriate.
+```bash
+pip install --upgrade pip
+pip install -r requirements/linux/requirements.txt
+pip install -e .
+```
+
+## Run pack code
 1. example pack v1 recipe : `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json -c examples/packing-configs/run.json`
 2. example pack v2 recipe :  `pack -r examples/recipes/v2/one_sphere.json -c examples/packing-configs/run.json`
 3. example pack from remote : `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c examples/packing-configs/run.json`
 
-### Run conversion code 
+## Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer
 `convert -r [FULL_PATH_TO_INPUT_RECIPE_FILE] -p [FULL_PATH_TO_PACKING_RESULT] -o [OUTPUT_PATH]`
-## Installation
 
 **Stable Release:** `pip install cellpack`<br>
 **Development Head:** `pip install git+https://github.com/mesoscope/cellpack.git`
@@ -44,8 +58,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
 2. `make build`
 
-    This will run `tox` which will run all your tests in both Python 3.7
-    and Python 3.8 as well as linting your code.
+    This will run `tox` which will run all your tests and lint your code.
 
 3. `make clean`
 
@@ -57,7 +70,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
     This will generate and launch a web browser to view the most up-to-date
     documentation for your Python package.
 
-#### Suggested Git Branch Strategy
+### Suggested Git Branch Strategy
 
 1. `main` is for the most up-to-date development, very rarely should you directly
    commit to this branch. GitHub Actions will run on every push and on a CRON to this

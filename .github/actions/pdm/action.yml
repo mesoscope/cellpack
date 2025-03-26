@@ -1,0 +1,11 @@
+name: PDM
+description: Install PDM
+runs:
+  using: composite
+  steps:
+    - name: Set up PDM
+      uses: pdm-project/setup-pdm@v4.2
+      with:
+        python-version: "3.9"
+        # Cache all dependencies installed from pdm.lock
+        cache: true

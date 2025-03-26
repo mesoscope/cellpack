@@ -2104,7 +2104,7 @@ class AutopackViewer:
         data=None,
         objects=None,
         colors=[upyColors.red, upyColors.black],
-        **options
+        **options,
     ):
         mini = None
         maxi = None
@@ -2133,7 +2133,7 @@ class AutopackViewer:
                     objects=objects,
                     ramp=ramp,
                     colors=colors,
-                    **options
+                    **options,
                 )
             elif mode == "order":
                 # the order is in the name
@@ -2143,7 +2143,7 @@ class AutopackViewer:
                     objects=objects,
                     ramp=ramp,
                     colors=colors,
-                    **options
+                    **options,
                 )
         print("datas", len(datas))
         print("objs", len(listeObjs))
@@ -2166,7 +2166,7 @@ class AutopackViewer:
         objects=None,
         ramp=None,
         colors=[upyColors.red, upyColors.black],
-        **options
+        **options,
     ):
         """
         target : name or host object target
@@ -2240,7 +2240,7 @@ class AutopackViewer:
         objects=None,
         ramp=None,
         colors=[upyColors.red, upyColors.black],
-        **options
+        **options,
     ):
         """
         target : name or host object target

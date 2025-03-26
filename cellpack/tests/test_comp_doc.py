@@ -115,115 +115,73 @@ def test_resolve_db_regions_with_none():
     assert composition_db_doc.as_dict() == resolved_data
 
 
-def test_resolve_local_regions():
-    full_recipe_data = {
-        "name": "one_sphere",
-        "objects": {
-            "sphere_25": {
-                "type": "single_sphere",
-                "max_jitter": [1, 1, 0],
+def test_build_dependency_graph():
+    composition_db_doc = CompositionDoc(
+        name="test",
+        count=1,
+        object=None,
+        regions=None,
+        molarity=None,
+    )
+    compositions = {
+        "space": {"regions": {"interior": ["A"]}},
+        "A": {"object": "sphere_25", "count": 5},
+    }
+    dependency_map = composition_db_doc.build_dependency_graph(compositions)
+    assert dependency_map == {"space": ["A"], "A": []}
+
+
+def test_build_dependency_graph_with_complex_compositions():
+    composition_db_doc = CompositionDoc(
+        name="test",
+        count=1,
+        object=None,
+        regions=None,
+        molarity=None,
+    )
+    complex_compositions = {
+        "space": {"regions": {"interior": ["tree", "A", "B", "C"]}},
+        "tree": {"object": "sphere_tree_A", "molarity": 1},
+        "A": {
+            "object": "sphere_100",
+            "regions": {
+                "surface": [
+                    {"object": "sphere_50", "count": 5},
+                    {"object": "sphere_75", "count": 1},
+                ],
+                "interior": [{"object": "sphere_25", "count": 30, "priority": -1}],
             },
         },
-        "composition": {
-            "space": {"regions": {"interior": ["A"]}},
-            "A": {"object": "sphere_25", "count": 500},
+        "B": {
+            "object": "sphere_100",
+            "regions": {"surface": ["B_sphere_75"], "interior": ["B_sphere_50"]},
         },
+        "B_sphere_50": {"object": "sphere_50", "count": 8, "priority": -1},
+        "B_sphere_75": {"object": "sphere_75", "count": 3},
     }
 
-    local_data = CompositionDoc(
-        name="space",
-        count=None,
-        object=None,
-        regions={
-            "interior": [
-                "A",
-            ]
-        },
-        molarity=None,
-    )
-
-    resolved_data = {
-        "name": "space",
-        "object": None,
-        "count": None,
-        "molarity": None,
-        "regions": {
-            "interior": [
-                {
-                    "name": "A",
-                    "object": {"type": "single_sphere", "max_jitter": [1, 1, 0]},
-                    "count": 500,
-                    "molarity": None,
-                    "regions": {},
-                }
-            ]
-        },
-    }
-    local_data.resolve_local_regions(local_data.as_dict(), full_recipe_data, mock_db)
-    assert local_data.as_dict() == resolved_data
-
-
-def test_check_and_replace_references():
-    objects_to_path_map = {"test_obj": "firebase:objects/test_id"}
-    references_to_update = {}
-    composition_doc = CompositionDoc(
-        name="test",
-        count=1,
-        object="firebase:objects/test_id",
-        regions={"interior": [{"object": "test_obj", "count": 1}]},
-        molarity=None,
-    )
-    composition_doc.check_and_replace_references(
-        objects_to_path_map, references_to_update, mock_db
-    )
-    assert composition_doc.as_dict()["object"] == "firebase:objects/test_id"
-    assert composition_doc.as_dict()["regions"] == {
-        "interior": [{"object": "firebase:objects/test_id", "count": 1}]
+    dependency_map = composition_db_doc.build_dependency_graph(complex_compositions)
+    assert dependency_map == {
+        "space": ["tree", "A", "B"],
+        "tree": [],
+        "A": [],
+        "B": ["B_sphere_75", "B_sphere_50"],
+        "B_sphere_75": [],
+        "B_sphere_50": [],
     }
 
 
-def test_composition_doc_should_write_with_no_existing_doc():
-    recipe_data = {
-        "bounding_box": [[0, 0, 0], [10, 10, 10]],
-        "name": "test",
-        "count": 1,
-        "objects": None,
-        "regions": {},
-    }
-    composition_doc = CompositionDoc(
+def test_comp_upload_order():
+    composition_db_doc = CompositionDoc(
         name="test",
         count=1,
         object=None,
-        regions={},
+        regions=None,
         molarity=None,
     )
-    doc, doc_id = composition_doc.should_write(mock_db, recipe_data)
-    assert doc_id is None
-    assert doc is None
-
-
-def test_composition_doc_should_write_with_existing_doc():
-    existing_doc = {
-        "name": "test",
-        "count": 1,
-        "object": None,
-        "regions": {},
-        "molarity": None,
+    compositions = {
+        "space": {"regions": {"interior": ["A"]}},
+        "A": {"object": "sphere_25", "count": 5},
     }
-    mock_db.data = existing_doc
-    recipe_data = {
-        "name": "test",
-        "count": 1,
-        "objects": None,
-    }
-    composition_doc = CompositionDoc(
-        name="test",
-        count=1,
-        object=None,
-        regions={},
-        molarity=None,
-    )
-
-    doc, doc_id = composition_doc.should_write(mock_db, recipe_data)
-    assert doc_id is not None
-    assert doc == existing_doc
+    upload_order = composition_db_doc.comp_upload_order(compositions)
+    assert upload_order == ["A", "space"]
