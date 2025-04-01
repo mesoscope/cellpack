@@ -92,7 +92,7 @@ jobs:
         run: echo "::set-output name=timestamp::$(date +'%Y-%m-%d_%H-%M')"
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           base: main
           title: admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}
