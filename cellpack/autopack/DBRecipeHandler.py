@@ -54,7 +54,6 @@ class CompositionDoc(DataDoc):
     Declares required attributes for comps in the constructor, set default values.
     """
 
-    SHALLOW_MATCH = ["object", "count", "molarity"]
     DEFAULT_VALUES = {
         "object": None,
         "count": None,
