@@ -11,6 +11,7 @@ def test_composition_doc_as_dict():
         object={"test_key": "test_value"},
         regions={},
         molarity=None,
+        priority=None,
     )
     expected_dict = {
         "name": "test",
@@ -18,6 +19,7 @@ def test_composition_doc_as_dict():
         "object": {"test_key": "test_value"},
         "regions": {},
         "molarity": None,
+        "priority": None,
     }
     assert composition_doc.as_dict() == expected_dict
 
@@ -29,6 +31,7 @@ def test_get_reference_data_with_dict():
         object={"object": "firebase:objects/test_id"},
         regions={},
         molarity=None,
+        priority=None,
     )
     downloaded_data, key = composition_db_doc.get_reference_data(
         composition_db_doc.as_dict()["object"], mock_db
@@ -44,6 +47,7 @@ def test_get_reference_data_with_key():
         object="firebase:objects/test_id",
         regions={},
         molarity=None,
+        priority=None,
     )
     downloaded_data, key = composition_db_doc.get_reference_data(
         composition_db_doc.as_dict()["object"], mock_db
@@ -59,6 +63,7 @@ def test_get_reference_data_with_none():
         object=None,
         regions={},
         molarity=None,
+        priority=None,
     )
     downloaded_data, key = composition_db_doc.get_reference_data(
         composition_db_doc.as_dict()["object"], mock_db
@@ -79,12 +84,14 @@ def test_resolve_db_regions():
             ]
         },
         molarity=None,
+        priority=None,
     )
     resolved_data = {
         "name": "test",
         "object": None,
         "count": 1,
         "molarity": None,
+        "priority": None,
         "regions": {
             "test_region_name": [
                 {"test": "downloaded_data"},
@@ -103,12 +110,14 @@ def test_resolve_db_regions_with_none():
         object=None,
         regions=None,
         molarity=None,
+        priority=None,
     )
     resolved_data = {
         "name": "test",
         "object": None,
         "count": 1,
         "molarity": None,
+        "priority": None,
         "regions": {},
     }
     composition_db_doc.resolve_db_regions(composition_db_doc.as_dict(), mock_db)
@@ -122,6 +131,7 @@ def test_build_dependency_graph():
         object=None,
         regions=None,
         molarity=None,
+        priority=None,
     )
     compositions = {
         "space": {"regions": {"interior": ["A"]}},
@@ -138,6 +148,7 @@ def test_build_dependency_graph_with_complex_compositions():
         object=None,
         regions=None,
         molarity=None,
+        priority=None,
     )
     complex_compositions = {
         "space": {"regions": {"interior": ["tree", "A", "B", "C"]}},
@@ -178,6 +189,7 @@ def test_comp_upload_order():
         object=None,
         regions=None,
         molarity=None,
+        priority=None,
     )
     compositions = {
         "space": {"regions": {"interior": ["A"]}},
