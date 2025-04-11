@@ -25,16 +25,16 @@ class Agent:
         self.partners = partners
         self.packing_mode = packing_mode
 
-        assert self.packing_mode in [
-            "random",
-            "close",
-            "closePartner",
-            "randomPartner",
-            "gradient",
-            "hexatile",
-            "squaretile",
-            "triangletile",
-        ]
+        # assert self.packing_mode in [
+        #     "random",
+        #     "close",
+        #     "closePartner",
+        #     "randomPartner",
+        #     "gradient",
+        #     "hexatile",
+        #     "squaretile",
+        #     "triangletile",
+        # ]
         self.place_method = place_method
         self.mesh_3d = None
         self.is_attractor = is_attractor
