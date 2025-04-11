@@ -2,7 +2,12 @@ from math import pi
 from cellpack.autopack import load_file
 
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.loaders.utils import create_file_info_object_from_full_path
+from cellpack.autopack.loaders.utils import (
+    create_file_info_object_from_full_path,
+    handle_mesh_file,
+    handle_positions,
+    handle_radii,
+)
 from cellpack.autopack.interface_objects.default_values import default_recipe_values
 from .v1_v2_attribute_changes import (
     convert_to_partners_map,
@@ -21,14 +26,26 @@ we are converting each part of older version data to the new structure in this f
 
 def get_representations(old_ingredient):
     representations = default_recipe_values["representations"].copy()
+    # direct sphere tree data
+    if "positions" in old_ingredient:
+        representations["packing"] = {
+            "positions": [],
+            "radii": [],
+        }
+        representations["packing"]["positions"] = handle_positions(
+            old_ingredient["positions"]
+        )
+    if "radii" in old_ingredient:
+        representations["packing"]["radii"] = handle_radii(old_ingredient["radii"])
+    # sphere file data
     if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
         representations["packing"] = create_file_info_object_from_full_path(
             old_ingredient["sphereFile"]
         )
+
+    # mesh file data
     if "meshFile" in old_ingredient and old_ingredient["meshFile"] is not None:
-        representations["mesh"] = create_file_info_object_from_full_path(
-            old_ingredient["meshFile"]
-        )
+        representations["mesh"] = handle_mesh_file(old_ingredient["meshFile"])
         if (
             "coordsystem" in old_ingredient
             and old_ingredient["coordsystem"] is not None
@@ -36,12 +53,26 @@ def get_representations(old_ingredient):
             representations["mesh"]["coordinate_system"] = old_ingredient["coordsystem"]
     # compartment value
     if "geom" in old_ingredient or "rep_file" in old_ingredient:
-        full_path = (
-            old_ingredient["geom"]
-            if "geom" in old_ingredient
-            else old_ingredient["rep_file"]
-        )
-        representations["mesh"] = create_file_info_object_from_full_path(full_path)
+        key = old_ingredient["geom"]
+        if key is not None and key in old_ingredient:
+            if key == "mb":
+                data = old_ingredient[key]
+                representations["packing"] = {
+                    "positions": [],
+                    "radii": [],
+                }
+                representations["packing"]["positions"] = handle_positions(
+                    data["positions"]
+                )
+                representations["packing"]["radii"] = handle_radii(data["radii"])
+
+        else:
+            full_path = (
+                old_ingredient["geom"]
+                if "geom" in old_ingredient
+                else old_ingredient["rep_file"]
+            )
+            representations["mesh"] = create_file_info_object_from_full_path(full_path)
     if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
         if ".pdb" in old_ingredient["pdb"]:
             representations["atomic"] = {
@@ -58,6 +89,18 @@ def get_representations(old_ingredient):
             representations["atomic"]["transform"] = old_ingredient["source"][
                 "transform"
             ]
+    if "source" in old_ingredient and old_ingredient["source"] is not None:
+        if ".pdb" in old_ingredient["source"]["pdb"]:
+            representations["atomic"] = {
+                "path": "default",
+                "name": old_ingredient["source"]["pdb"],
+                "format": ".pdb",
+            }
+        else:
+            representations["atomic"] = {
+                "id": old_ingredient["source"]["pdb"],
+                "format": ".pdb",
+            }
 
     return representations
 
@@ -164,7 +207,13 @@ def convert(old_recipe):
         for compartment_name in old_recipe["compartments"]:
             # add the compartment to composition
             compartment_data = old_recipe["compartments"][compartment_name]
-            compartment_data["Type"] = "mesh"
+            if (
+                "geom_type" in compartment_data
+                and compartment_data["geom_type"] == "mb"
+            ):
+                compartment_data["Type"] = "MultiSphere"
+            else:
+                compartment_data["Type"] = "mesh"
 
             composition[compartment_name] = {"object": compartment_name, "regions": {}}
             get_and_store_v2_object(
