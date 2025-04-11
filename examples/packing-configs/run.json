@@ -6,7 +6,7 @@
     "ordered_packing": false,
     "out": "out/",
     "overwrite_place_method": false,
-    "place_method": "jitter",
+    "place_method": "spheresSST",
     "save_analyze_result": false,
     "show_grid_plot": false,
     "spacing": null,
