@@ -1,0 +1,49 @@
+name: Docker Build and Publish
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+env:
+    # TODO: double check these values
+  AWS_REGION: us-west-2
+  AWS_ACCOUNT_ID: 771753870375
+  ECR_REPOSITORY: cellpack-private
+
+
+jobs:
+    # Build docker image and publish to ECR
+    docker-publish:
+      if: ${{ github.ref == 'refs/heads/main' }}
+      runs-on: ubuntu-latest
+
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+            with:
+              fetch-depth: 0 # needed to pull history and tags
+
+          - name: Configure AWS credentials with Batch
+            # TODO: The role must have the necessary permissions to perform the actions in the target account.
+            uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722
+            with: 
+              role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/batch
+              role-session-name: cellpack-ecr
+              aws-region: ${{ env.AWS_REGION }}
+
+          - name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb
+  
+          - name: Login to Amazon ECR
+            uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446
+            with:
+              registry: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}
+      
+          - name: Build and push Docker image
+            uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4
+            with:
+              # Only push the image from the main branch and when there have been changes made to the repo (not on "schedule" runs):
+              push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+              tags: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:latest
