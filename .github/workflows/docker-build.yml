@@ -17,7 +17,7 @@ env:
 jobs:
     # Build docker image and publish to ECR
     docker-publish:
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/feature/') }}
       runs-on: ubuntu-latest
 
       steps:
@@ -46,5 +46,5 @@ jobs:
             uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4
             with:
               # Only push the image from the main branch and when there have been changes made to the repo (not on "schedule" runs):
-              push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+              push: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/feature/')) && github.event_name == 'push' }}
               tags: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:latest
