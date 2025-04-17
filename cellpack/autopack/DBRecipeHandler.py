@@ -8,6 +8,7 @@ import hashlib
 import json
 import requests
 
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.utils import deep_merge
 
 
@@ -536,6 +537,17 @@ class DBRecipeLoader(object):
 
     def __init__(self, db_handler):
         self.db = db_handler
+
+    def read_config(self, config_path):
+        """
+        Read the config data from the database.
+        """
+        collection, id = self.db.get_collection_id_from_path(config_path)
+        config_data, _ = self.db.get_doc_by_id(collection, id)
+        if config_data:
+            return config_data
+        else:
+            raise ValueError(f"Config not found at path: {config_path}")
 
     def prep_db_doc_for_download(self, db_doc):
         """

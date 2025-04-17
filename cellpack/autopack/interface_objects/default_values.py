@@ -20,4 +20,5 @@ default_firebase_collection_names = [
     "gradients",
     "recipes",
     "results",
+    "configs",
 ]
