@@ -503,6 +503,14 @@ class DBUploader(object):
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
 
+    def upload_config(self, config_data, source_path):
+        """
+        Upload the config data to the database.
+        """
+        config_data["source_path"] = source_path
+        self.upload_data("configs", config_data)
+        return
+
     def upload_result_metadata(self, file_name, url):
         """
         Upload the metadata of the result file to the database.
