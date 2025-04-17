@@ -508,7 +508,11 @@ class DBUploader(object):
         Upload the config data to the database.
         """
         config_data["source_path"] = source_path
-        self.upload_data("configs", config_data)
+        id, doc_path = self.upload_data("configs", config_data)
+        print(f"Config uploaded to {doc_path}")
+        # update the config data with the firebase doc path
+        config_data["config_path"] = doc_path
+        self.db.update_doc("configs", id, config_data)
         return
 
     def upload_result_metadata(self, file_name, url):
