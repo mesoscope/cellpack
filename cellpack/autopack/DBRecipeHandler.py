@@ -55,8 +55,13 @@ class CompositionDoc(DataDoc):
     Declares required attributes for comps in the constructor, set default values.
     """
 
-    SHALLOW_MATCH = ["object", "count", "molarity"]
-    DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
+    DEFAULT_VALUES = {
+        "object": None,
+        "count": None,
+        "regions": {},
+        "molarity": None,
+        "priority": None,
+    }
     KEY_TO_DICT_MAPPING = {"gradient": "gradients", "inherit": "objects"}
 
     def __init__(
@@ -66,6 +71,7 @@ class CompositionDoc(DataDoc):
         count=None,
         regions=None,
         molarity=None,
+        priority=None,
         object=None,
     ):
         super().__init__()
@@ -73,6 +79,7 @@ class CompositionDoc(DataDoc):
         self.object = object_key or object
         self.count = count
         self.molarity = molarity
+        self.priority = priority
         self.regions = regions or {}
 
     def as_dict(self):
@@ -81,6 +88,7 @@ class CompositionDoc(DataDoc):
         data["object"] = self.object
         data["count"] = self.count
         data["molarity"] = self.molarity
+        data["priority"] = self.priority
         data["regions"] = self.regions
         return data
 
@@ -224,12 +232,13 @@ class CompositionDoc(DataDoc):
         upload_order.reverse()
         return upload_order
 
-    def replace_region_references(self, composition_data):
+    @staticmethod
+    def replace_region_references(uploader, composition_data):
         """
         Replaces composition references with paths in the database.
         """
         if "object" in composition_data and DataDoc.is_key(composition_data["object"]):
-            composition_data["object"] = self.objects_to_path_map.get(
+            composition_data["object"] = uploader.objects_to_path_map.get(
                 composition_data["object"]
             )
 
@@ -240,12 +249,11 @@ class CompositionDoc(DataDoc):
                 for index, item in enumerate(composition_data["regions"][region_name]):
                     if isinstance(item, str):
                         composition_data["regions"][region_name][index] = (
-                            self.comp_to_path_map.get(item)
+                            uploader.comp_to_path_map.get(item)
                         )
                     elif isinstance(item, dict):
                         # process nested regions recursively
-                        if "regions" in item and item["regions"]:
-                            self.replace_region_references(item)
+                        CompositionDoc.replace_region_references(uploader, item)
         return composition_data
 
 
@@ -459,6 +467,7 @@ class DBUploader(object):
                 count=comp_data["count"],
                 regions=comp_data["regions"],
                 molarity=comp_data["molarity"],
+                priority=comp_data["priority"],
             )
 
             comp_ready_for_db = comp_doc.as_dict()
@@ -569,6 +578,7 @@ class DBRecipeLoader(object):
                             count=None,
                             regions={},
                             molarity=None,
+                            priority=None,
                         )
                         composition_data, _ = comp_doc.get_reference_data(
                             ref_link, self.db
