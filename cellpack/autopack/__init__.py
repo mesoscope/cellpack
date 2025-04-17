@@ -395,32 +395,25 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
 def load_file(filename, destination="", cache="geometries", force=None):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        # command example: `pack -r firebase:recipes/[FIREBASE-RECIPE-ID] -c [CONFIG-FILE-PATH]`
-        if database_name == "firebase":
-            db = DATABASE_IDS.handlers().get(database_name)
-            initialize_db = db()
-            if not initialize_db._initialized:
-                readme_url = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
-                sys.exit(
-                    f"The selected database is not initialized. Please set up Firebase credentials to pack remote recipes. Refer to the instructions at {readme_url}"
-                )
-            db_handler = DBRecipeLoader(initialize_db)
-            db_handler.validate_input_recipe_path(filename)
-            recipe_id = file_path.split("/")[-1]
-            db_doc, _ = db_handler.collect_docs_by_id(
-                collection="recipes", id=recipe_id
+        db = DATABASE_IDS.handlers().get(database_name)
+        initialize_db = db()
+
+        if not initialize_db._initialized:
+            readme_url = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
+            sys.exit(
+                f"The selected database: {database_name} is not initialized. Please set up credentials to pack remote recipes. Refer to the instructions at {readme_url}"
             )
-            downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
-            return downloaded_recipe_data, database_name
-        else:
-            local_file_path = get_local_file_location(
-                file_path, destination=destination, cache=cache, force=force
-            )
+        db_handler = DBRecipeLoader(initialize_db)
+        db_handler.validate_input_recipe_path(filename)
+        recipe_id = file_path.split("/")[-1]
+        db_doc, _ = db_handler.collect_docs_by_id(collection="recipes", id=recipe_id)
+        downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
+        return downloaded_recipe_data, database_name
     else:
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
         )
-    return json.load(open(local_file_path, "r")), None
+        return json.load(open(local_file_path, "r")), None
 
 
 def fixPath(adict):  # , k, v):
