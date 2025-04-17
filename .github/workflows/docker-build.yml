@@ -8,7 +8,6 @@ on:
     pull_request:
 
 env:
-    # TODO: double check these values
   AWS_REGION: us-west-2
   AWS_ACCOUNT_ID: 771753870375
   ECR_REPOSITORY: cellpack-private
@@ -26,12 +25,11 @@ jobs:
             with:
               fetch-depth: 0 # needed to pull history and tags
 
-          - name: Configure AWS credentials with Batch
-            # TODO: The role must have the necessary permissions to perform the actions in the target account.
-            uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722
-            with: 
-              role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/batch
-              role-session-name: cellpack-ecr
+          - name: Configure AWS credentials
+            uses: aws-actions/configure-aws-credentials@v2
+            with:
+              aws-access-key-id: ${{ secrets.AWS_BATCH_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_BATCH_SECRET_ACCESS_KEY }}
               aws-region: ${{ env.AWS_REGION }}
 
           - name: Set up Docker Buildx
