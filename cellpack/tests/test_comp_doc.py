@@ -110,14 +110,14 @@ def test_resolve_db_regions_with_none():
         object=None,
         regions=None,
         molarity=None,
-        priority=None,
+        priority=-1,
     )
     resolved_data = {
         "name": "test",
         "object": None,
         "count": 1,
         "molarity": None,
-        "priority": None,
+        "priority": -1,
         "regions": {},
     }
     composition_db_doc.resolve_db_regions(composition_db_doc.as_dict(), mock_db)
@@ -131,7 +131,7 @@ def test_build_dependency_graph():
         object=None,
         regions=None,
         molarity=None,
-        priority=None,
+        priority=-1,
     )
     compositions = {
         "space": {"regions": {"interior": ["A"]}},
