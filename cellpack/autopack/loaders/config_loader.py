@@ -4,6 +4,9 @@ import os
 import json
 from json import encoder
 
+import cellpack.autopack as autopack
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
@@ -101,9 +104,16 @@ class ConfigLoader(object):
         if self.file_path is None:
             config = ConfigLoader.default_values.copy()
         else:
-            new_values = json.load(open(self.file_path, "r"))
-            config = ConfigLoader.default_values.copy()
-            config.update(new_values)
+            if autopack.is_remote_path(self.file_path):
+                database_name, _ = self.file_path.split(":")
+                db = DATABASE_IDS.handlers().get(database_name)
+                initialize_db = db()
+                db_handler = DBRecipeLoader(initialize_db)
+                config = db_handler.read_config(self.file_path)
+            else:
+                new_values = json.load(open(self.file_path, "r"))
+                config = ConfigLoader.default_values.copy()
+                config.update(new_values)
         if config["version"] != self.latest_version:
             config = ConfigLoader._migrate_version(config)
         ConfigLoader._test_types(config)
