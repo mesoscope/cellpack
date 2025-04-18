@@ -8,7 +8,6 @@ import hashlib
 import json
 import requests
 
-from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.utils import deep_merge
 
 
