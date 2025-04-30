@@ -185,7 +185,7 @@ class FirebaseHandler(object):
     def update_doc(self, collection, id, data):
         doc_ref = self.db.collection(collection).document(id)
         doc_ref.update(data)
-        logging.info(f"successfully updated to path: {doc_ref.path}")
+        logging.info(f"successfully updated doc: {id}")
         return doc_ref
 
     @staticmethod

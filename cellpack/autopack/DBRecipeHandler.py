@@ -54,8 +54,13 @@ class CompositionDoc(DataDoc):
     Declares required attributes for comps in the constructor, set default values.
     """
 
-    SHALLOW_MATCH = ["object", "count", "molarity"]
-    DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
+    DEFAULT_VALUES = {
+        "object": None,
+        "count": None,
+        "regions": {},
+        "molarity": None,
+        "priority": None,
+    }
     KEY_TO_DICT_MAPPING = {"gradient": "gradients", "inherit": "objects"}
 
     def __init__(
@@ -65,6 +70,7 @@ class CompositionDoc(DataDoc):
         count=None,
         regions=None,
         molarity=None,
+        priority=None,
         object=None,
     ):
         super().__init__()
@@ -72,6 +78,7 @@ class CompositionDoc(DataDoc):
         self.object = object_key or object
         self.count = count
         self.molarity = molarity
+        self.priority = priority
         self.regions = regions or {}
 
     def as_dict(self):
@@ -80,6 +87,7 @@ class CompositionDoc(DataDoc):
         data["object"] = self.object
         data["count"] = self.count
         data["molarity"] = self.molarity
+        data["priority"] = self.priority
         data["regions"] = self.regions
         return data
 
@@ -223,12 +231,13 @@ class CompositionDoc(DataDoc):
         upload_order.reverse()
         return upload_order
 
-    def replace_region_references(self, composition_data):
+    @staticmethod
+    def replace_region_references(uploader, composition_data):
         """
         Replaces composition references with paths in the database.
         """
         if "object" in composition_data and DataDoc.is_key(composition_data["object"]):
-            composition_data["object"] = self.objects_to_path_map.get(
+            composition_data["object"] = uploader.objects_to_path_map.get(
                 composition_data["object"]
             )
 
@@ -239,12 +248,11 @@ class CompositionDoc(DataDoc):
                 for index, item in enumerate(composition_data["regions"][region_name]):
                     if isinstance(item, str):
                         composition_data["regions"][region_name][index] = (
-                            self.comp_to_path_map.get(item)
+                            uploader.comp_to_path_map.get(item)
                         )
                     elif isinstance(item, dict):
                         # process nested regions recursively
-                        if "regions" in item and item["regions"]:
-                            self.replace_region_references(item)
+                        CompositionDoc.replace_region_references(uploader, item)
         return composition_data
 
 
@@ -458,6 +466,7 @@ class DBUploader(object):
                 count=comp_data["count"],
                 regions=comp_data["regions"],
                 molarity=comp_data["molarity"],
+                priority=comp_data["priority"],
             )
 
             comp_ready_for_db = comp_doc.as_dict()
@@ -503,7 +512,19 @@ class DBUploader(object):
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
 
-    def upload_result_metadata(self, file_name, url, job_id=None):
+    def upload_config(self, config_data, source_path):
+        """
+        Upload the config data to the database.
+        """
+        config_data["source_path"] = source_path
+        id, doc_path = self.upload_data("configs", config_data)
+        print(f"Config uploaded to {doc_path}")
+        # update the config data with the firebase doc path
+        config_data["config_path"] = doc_path
+        self.db.update_doc("configs", id, config_data)
+        return
+
+    def upload_result_metadata(self, file_name, url):
         """
         Upload the metadata of the result file to the database.
         """
@@ -530,6 +551,17 @@ class DBRecipeLoader(object):
     def __init__(self, db_handler):
         self.db = db_handler
 
+    def read_config(self, config_path):
+        """
+        Read the config data from the database.
+        """
+        collection, id = self.db.get_collection_id_from_path(config_path)
+        config_data, _ = self.db.get_doc_by_id(collection, id)
+        if config_data:
+            return config_data
+        else:
+            raise ValueError(f"Config not found at path: {config_path}")
+
     def prep_db_doc_for_download(self, db_doc):
         """
         convert data from db and resolve references.
@@ -550,6 +582,7 @@ class DBRecipeLoader(object):
                             count=None,
                             regions={},
                             molarity=None,
+                            priority=None,
                         )
                         composition_data, _ = comp_doc.get_reference_data(
                             ref_link, self.db
