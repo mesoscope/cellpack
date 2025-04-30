@@ -524,7 +524,7 @@ class DBUploader(object):
         self.db.update_doc("configs", id, config_data)
         return
 
-    def upload_result_metadata(self, file_name, url):
+    def upload_result_metadata(self, file_name, url, job_id=None):
         """
         Upload the metadata of the result file to the database.
         """
