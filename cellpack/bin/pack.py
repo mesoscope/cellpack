@@ -30,7 +30,7 @@ def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
 
     :return: void
     """
-    packing_config_data = ConfigLoader(config_path).config
+    packing_config_data = ConfigLoader(config_path, docker).config
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"], docker
     ).recipe_data
