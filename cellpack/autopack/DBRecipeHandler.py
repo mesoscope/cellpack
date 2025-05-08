@@ -695,7 +695,7 @@ class DBRecipeLoader(object):
         recipe_data = {
             **{
                 k: db_recipe_data[k]
-                for k in ["format_version", "version", "name", "bounding_box"]
+                for k in ["format_version", "version", "name", "bounding_box", "grid_file_path"]
             },
             "objects": DBRecipeLoader.remove_dedup_hash(obj_dict),
             "composition": DBRecipeLoader.remove_dedup_hash(comp_dict),
