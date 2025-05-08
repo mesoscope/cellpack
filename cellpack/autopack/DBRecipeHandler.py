@@ -695,11 +695,13 @@ class DBRecipeLoader(object):
         recipe_data = {
             **{
                 k: db_recipe_data[k]
-                for k in ["format_version", "version", "name", "bounding_box", "grid_file_path"]
+                for k in ["format_version", "version", "name", "bounding_box"]
             },
             "objects": DBRecipeLoader.remove_dedup_hash(obj_dict),
             "composition": DBRecipeLoader.remove_dedup_hash(comp_dict),
         }
+        if db_recipe_data.get("grid_file_path"):
+            recipe_data["grid_file_path"] = db_recipe_data.get("grid_file_path")
         if grad_dict:
             recipe_data["gradients"] = [
                 {**v} for v in DBRecipeLoader.remove_dedup_hash(grad_dict).values()
