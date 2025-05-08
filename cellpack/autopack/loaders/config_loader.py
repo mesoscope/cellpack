@@ -52,7 +52,7 @@ class ConfigLoader(object):
         "version": 1.0,
     }
 
-    def __init__(self, input_file_path=None):
+    def __init__(self, input_file_path=None, use_docker=False):
         if input_file_path is not None:
             _, file_extension = os.path.splitext(input_file_path)
             self.file_path = input_file_path
@@ -60,7 +60,7 @@ class ConfigLoader(object):
         else:
             self.file_path = None
         self.latest_version = 1.0
-        self.config = self._read()
+        self.config = self._read(use_docker=use_docker)
 
     @staticmethod
     def _test_types(config):
@@ -97,7 +97,7 @@ class ConfigLoader(object):
     def _migrate_version(config):
         return config
 
-    def _read(self):
+    def _read(self, use_docker=False):
         """
         Read in a Json Config file.
         """
@@ -107,7 +107,7 @@ class ConfigLoader(object):
             if autopack.is_remote_path(self.file_path):
                 database_name, _ = self.file_path.split(":")
                 db = DATABASE_IDS.handlers().get(database_name)
-                initialize_db = db()
+                initialize_db = db(default_db="staging") if use_docker else db()
                 db_handler = DBRecipeLoader(initialize_db)
                 config = db_handler.read_config(self.file_path)
             else:
