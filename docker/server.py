@@ -6,7 +6,7 @@ from cellpack.bin.pack import pack
 SERVER_PORT = 8443
 
 async def hello_world(request: web.Request) -> web.Response:
-    return web.Response(text="Hello world")
+    return web.Response(text="Hello from the cellPACK server")
 
 async def pack_handler(request: web.Request) -> web.Response:
     recipe = request.rel_url.query.get("recipe")
