@@ -11,12 +11,16 @@ async def hello_world(request: web.Request) -> web.Response:
 async def pack_handler(request: web.Request) -> web.Response:
     recipe = request.rel_url.query.get("recipe")
     if recipe is None:
-        # pack request must include "recipe" query parameter
-        raise web.HTTPBadRequest()
+        raise web.HTTPBadRequest(
+            "Pack requests must include recipe as a query param"
+        )
     config = request.rel_url.query.get("config")
     job_id = str(uuid.uuid4())
     os.environ["AWS_BATCH_JOB_ID"] = job_id
-    pack(recipe=recipe, config_path=config, docker=True)
+    try:
+        pack(recipe=recipe, config_path=config, docker=True)
+    except Exception as e:
+        raise web.HTTPInternalServerError(e)
     return web.json_response({"job_id": job_id})
 
 async def init_app() -> web.Application:
