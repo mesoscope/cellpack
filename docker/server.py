@@ -21,7 +21,7 @@ async def pack_handler(request: web.Request) -> web.Response:
         pack(recipe=recipe, config_path=config, docker=True)
     except Exception as e:
         raise web.HTTPInternalServerError(e)
-    return web.json_response({"job_id": job_id})
+    return web.json_response({"jobId": job_id})
 
 async def init_app() -> web.Application:
     app = web.Application()
