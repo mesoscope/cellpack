@@ -9,7 +9,11 @@ def handle_positions(input_positions):
     if isinstance(input_positions, list) and isinstance(input_positions[0], int):
         for i in range(0, len(input_positions), 3):
             positions.append(input_positions[i : i + 3])
-    elif input_positions[0] is not None and input_positions[0]["coords"] is not None:
+    elif (
+        input_positions[0] is not None
+        and isinstance(input_positions[0], dict)
+        and input_positions[0]["coords"] is not None
+    ):
         for i in range(0, len(input_positions[0]["coords"]), 3):
             positions.append(input_positions[0]["coords"][i : i + 3])
     return [positions]
@@ -21,8 +25,9 @@ def handle_radii(input_radii):
     if isinstance(input_radii, list) and isinstance(input_radii[0], int):
         radii = input_radii
     # is a list of dicts with radii
-    elif input_radii[0] is not None and input_radii[0]["radii"] is not None:
-        radii = input_radii[0]["radii"]
+    elif input_radii[0] is not None and isinstance(input_radii[0], dict):
+        obj = input_radii[0]
+        radii = obj["radii"]
     return [radii]
 
 

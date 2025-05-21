@@ -36,6 +36,10 @@ def get_representations(old_ingredient):
             old_ingredient["positions"]
         )
     if "radii" in old_ingredient:
+        representations["packing"] = {
+            "positions": [],
+            "radii": [],
+        }
         representations["packing"]["radii"] = handle_radii(old_ingredient["radii"])
     # sphere file data
     if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:

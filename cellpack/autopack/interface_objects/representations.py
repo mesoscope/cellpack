@@ -82,7 +82,15 @@ class Representations:
         # can be passed in directly, or they were just read from a file
         positions = self.packing["positions"]
         radii = self.packing["radii"]
-        if positions is None or positions[0] is None or positions[0][0] is None:
+        if (
+            positions is None
+            or (len(positions) == 1 and positions[0] is None)
+            or (
+                len(positions) == 1
+                and len(positions[0]) == 1
+                and positions[0][0] is None
+            )
+        ):
             positions = [[[0, 0, 0]]]
         if radii is None:
             radii = [[0]]
