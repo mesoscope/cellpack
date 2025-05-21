@@ -308,9 +308,6 @@ class Compartment(CompartmentList):
         """
         geometry = None
         gname = self.gname
-        import ipdb
-
-        ipdb.set_trace()
         geometry = mesh_store.get_mesh(gname, self.filename)
         if geometry is not None and not self.ghost:
             faces, vertices, vnormals = mesh_store.decompose_mesh(
