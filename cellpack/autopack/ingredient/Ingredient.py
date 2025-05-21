@@ -488,19 +488,16 @@ class Ingredient(Agent):
         # get the collision mesh
         mesh_path = self.representations.get_mesh_path()
         meshName = self.representations.get_mesh_name()
-        meshType = "file"
+        meshFormat = self.representations.get_mesh_format()
         self.mesh = None
+        if meshFormat == ".raw":
+            self.buildMesh(mesh_store)
         if mesh_path is not None:
-            if meshType == "file":
-                self.mesh = self.getMesh(mesh_path, meshName, mesh_store)
-                self.log.info(f"OK got {self.mesh}")
-                if self.mesh is None:
-                    # display a message ?
-                    self.log.warning("no geometries for ingredient " + self.name)
-            # TODO: add back in raw option
-            elif meshType == "raw":
-                # need to build the mesh from v,f,n
-                self.buildMesh(mesh_store)
+            self.mesh = self.getMesh(mesh_path, meshName, mesh_store)
+            self.log.info(f"OK got {self.mesh}")
+            if self.mesh is None:
+                # display a message ?
+                self.log.warning("no geometries for ingredient " + self.name)
 
         if self.mesh is not None:
             self.getEncapsulatingRadius()
@@ -700,7 +697,8 @@ class Ingredient(Agent):
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
         geom, vertices, faces, vnormals = mesh_store.build_mesh(
-            self.mesh_info["file"], self.mesh_info["name"]
+            self.representations.get_mesh_contents(),
+            self.representations.get_mesh_name(),
         )
         self.vertices = vertices
         self.faces = faces
@@ -1664,6 +1662,7 @@ class Ingredient(Agent):
                 pt_ind, env.grid.masterGridPositions[pt_ind], env.mesh_store
             )
             try:
+
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
             except Exception as e:
                 print(f"PROBLEM: {self.name}, {e}")

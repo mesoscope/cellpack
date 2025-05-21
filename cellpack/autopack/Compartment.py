@@ -218,6 +218,10 @@ class Compartment(CompartmentList):
 
     def buildSphere(self, mesh_store):
         geom = None
+
+        if self.type == "multi_sphere":
+            _, r_max = self.representations.get_min_max_radius()
+            self.radius = r_max
         geom = mesh_store.create_sphere(self.gname, 4, self.radius)
         self.faces, self.vertices, self.vnormals = mesh_store.decompose_mesh(
             geom, edit=False, copy=False, tri=True
@@ -243,13 +247,17 @@ class Compartment(CompartmentList):
         if self.is_sphere:
             # one sphere, geom is a dictionary
             self.buildSphere(mesh_store)
-        if self.vertices is None and self.type == "mesh":
+        if (
+            self.vertices is None
+            and self.type == "mesh"
+            and mesh_store.get_mesh(self.gname) is not None
+        ):
             self.faces, self.vertices, self.vnormals = self.getMesh(mesh_store)
             self.ref_obj = self.name
         if self.meshType == "raw":
             # need to build the mesh from v,f,n
             self.buildMesh(self.meshFile, mesh_store)
-        if self.type == "mb":
+        if self.type == "multi_sphere":
             # one sphere, geom is a dictionary
             self.buildSphere(mesh_store)
         if self.vertices is not None and len(self.vertices):

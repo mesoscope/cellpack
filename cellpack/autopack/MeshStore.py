@@ -307,24 +307,17 @@ class MeshStore:
         vertices = numpy.array(data["verts"]).reshape((nv, 3))
         faces = numpy.array(data["faces"]).reshape((nf, 3))
         vnormals = numpy.array(data["normals"]).reshape((nv, 3))
-        geom = self.create_mesh(geomname, vertices, None, faces)[0]
 
-        autopack.helper.saveDejaVuMesh(
-            autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
-        )
-        autopack.helper.saveObjMesh(
-            autopack.cache_geoms + os.sep + geomname + ".obj",
-            self.vertices,
-            self.faces,
-        )
-        # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
+        geom = self.create_mesh(geomname, vertices, None, faces)
         return geom, vertices, faces, vnormals
 
     def get_mesh(self, mesh_name, file_path=None):
         geometry = self.get_object(mesh_name)
-        if geometry is None and file_path is not None:
-            geometry = self.read_mesh_file(file_path)
-            self.add_mesh_to_scene(geometry, mesh_name)
+
+        if geometry is None:
+            if file_path is not None:
+                geometry = self.read_mesh_file(file_path)
+                self.add_mesh_to_scene(geometry, mesh_name)
         return geometry
 
     @staticmethod

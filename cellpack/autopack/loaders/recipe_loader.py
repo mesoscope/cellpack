@@ -17,10 +17,12 @@ from cellpack.autopack.interface_objects import (
 )
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert as convert_v1_to_v2
 from cellpack.autopack.loaders.migrate_v2_to_v2_1 import convert as convert_v2_to_v2_1
+from cellpack.autopack.loaders.migrate_v2_to_v2_2 import convert as convert_v2_to_v2_2
+
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-CURRENT_VERSION = "2.1"
+CURRENT_VERSION = "2.2"
 
 
 class RecipeLoader(object):
@@ -142,9 +144,13 @@ class RecipeLoader(object):
         if old_recipe["format_version"] == "2.0":
             new_recipe = copy.deepcopy(old_recipe)
             converted = True
-
             new_recipe = convert_v2_to_v2_1(old_recipe)
+            old_recipe = copy.deepcopy(new_recipe)
 
+        if old_recipe["format_version"] == "2.1":
+            new_recipe = copy.deepcopy(old_recipe)
+            converted = True
+            new_recipe = convert_v2_to_v2_2(old_recipe)
         if converted:
             if self.save_converted_recipe:
                 self._save_converted_recipe(new_recipe)
