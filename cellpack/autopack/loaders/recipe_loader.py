@@ -258,9 +258,9 @@ class RecipeLoader(object):
                         ):
                             node = {"include": compartment["from"]}
                             sub_recipe = self._request_sub_recipe(inode=node)
-                            recipe_data["compartments"][compartment["from"]] = (
-                                sub_recipe["compartments"]
-                            )
+                            recipe_data["compartments"][
+                                compartment["from"]
+                            ] = sub_recipe["compartments"]
                         continue
                     compartment_dict = recipe_data["compartments"][cname]
                     rep = None

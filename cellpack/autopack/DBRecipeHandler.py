@@ -238,9 +238,9 @@ class CompositionDoc(DataDoc):
                     continue
                 for index, item in enumerate(composition_data["regions"][region_name]):
                     if isinstance(item, str):
-                        composition_data["regions"][region_name][index] = (
-                            self.comp_to_path_map.get(item)
-                        )
+                        composition_data["regions"][region_name][
+                            index
+                        ] = self.comp_to_path_map.get(item)
                     elif isinstance(item, dict):
                         # process nested regions recursively
                         if "regions" in item and item["regions"]:
@@ -291,9 +291,9 @@ class ObjectDoc(DataDoc):
                 and doc_value["packing"] is not None
             ):
                 position_value = doc_value["packing"]["positions"]
-                convert_doc["representations"]["packing"]["positions"] = (
-                    ObjectDoc.convert_positions_in_representation(position_value)
-                )
+                convert_doc["representations"]["packing"][
+                    "positions"
+                ] = ObjectDoc.convert_positions_in_representation(position_value)
         return convert_doc
 
     @staticmethod
