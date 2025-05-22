@@ -35,12 +35,8 @@ def get_representations(old_ingredient):
         representations["packing"]["positions"] = handle_positions(
             old_ingredient["positions"]
         )
-    if "radii" in old_ingredient:
-        representations["packing"] = {
-            "positions": [],
-            "radii": [],
-        }
-        representations["packing"]["radii"] = handle_radii(old_ingredient["radii"])
+        if "radii" in old_ingredient:
+            representations["packing"]["radii"] = handle_radii(old_ingredient["radii"])
     # sphere file data
     if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
         representations["packing"] = create_file_info_object_from_full_path(
@@ -94,17 +90,19 @@ def get_representations(old_ingredient):
                 "transform"
             ]
     if "source" in old_ingredient and old_ingredient["source"] is not None:
-        if ".pdb" in old_ingredient["source"]["pdb"]:
-            representations["atomic"] = {
-                "path": "default",
-                "name": old_ingredient["source"]["pdb"],
-                "format": ".pdb",
-            }
-        else:
-            representations["atomic"] = {
-                "id": old_ingredient["source"]["pdb"],
-                "format": ".pdb",
-            }
+        source = old_ingredient["source"]
+        if isinstance(source, dict) and "pdb" in source and source["pdb"] is not None:
+            if ".pdb" in source["pdb"]:
+                representations["atomic"] = {
+                    "path": "default",
+                    "name": old_ingredient["source"]["pdb"],
+                    "format": ".pdb",
+                }
+            else:
+                representations["atomic"] = {
+                    "id": old_ingredient["source"]["pdb"],
+                    "format": ".pdb",
+                }
 
     return representations
 

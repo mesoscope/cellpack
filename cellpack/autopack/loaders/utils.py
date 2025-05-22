@@ -49,15 +49,17 @@ def unpack_mesh_data(data):
 
 
 def handle_mesh_file(data):
-
-    if (
-        data["verts"] is not None
-        and data["faces"] is not None
-        and data["normals"] is not None
-    ):
-        return unpack_mesh_data(data)
-    else:
-        return create_file_info_object_from_full_path(data["path"])
+    if isinstance(data, str):
+        return create_file_info_object_from_full_path(data)
+    elif isinstance(data, dict):
+        if (
+            data["verts"] is not None
+            and data["faces"] is not None
+            and data["normals"] is not None
+        ):
+            return unpack_mesh_data(data)
+        else:
+            return create_file_info_object_from_full_path(data["path"])
 
 
 def create_file_info_object_from_full_path(full_path):
