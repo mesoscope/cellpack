@@ -3,10 +3,14 @@ import os
 import uuid
 from cellpack.bin.pack import pack
 
-SERVER_PORT = 8443
+SERVER_PORT = 80
 
 async def hello_world(request: web.Request) -> web.Response:
     return web.Response(text="Hello from the cellPACK server")
+
+async def health_check(request: web.Request) -> web.Response:
+    # healthcheck endpoint needed for AWS load balancer
+    return web.Response()
 
 async def pack_handler(request: web.Request) -> web.Response:
     recipe = request.rel_url.query.get("recipe")
@@ -29,6 +33,7 @@ async def init_app() -> web.Application:
         [
             web.get("/hello", hello_world),
             web.get("/pack", pack_handler),
+            web.get("/", health_check)
         ]
     )
     return app
