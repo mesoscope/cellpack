@@ -7,7 +7,7 @@ RUN pip install cellpack@git+https://github.com/mesoscope/cellpack.git@staging/c
 
 COPY docker/server.py /cellpack/
 COPY .env /cellpack/
-EXPOSE 8443
+EXPOSE 80
 
 RUN apt-get update && apt-get install -y awscli
 
