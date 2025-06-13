@@ -541,6 +541,25 @@ class DBUploader(object):
                     "batch_job_id": job_id,
                 },
             )
+        if job_id:
+            self.upload_job_status(job_id, "DONE", result_path=url)
+
+    def upload_job_status(self, job_id, status, result_path=None, error_message=None):
+        """
+        Update status for a given job ID
+        """
+        if self.db:
+            timestamp = self.db.create_timestamp()
+            self.db.update_or_create(
+                "job_status",
+                job_id,
+                {
+                    "timestamp": timestamp,
+                    "status": str(status),
+                    "result_path": result_path,
+                    "error_message": error_message
+                },
+            )
 
 
 class DBRecipeLoader(object):
