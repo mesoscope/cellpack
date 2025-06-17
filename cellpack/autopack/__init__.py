@@ -392,11 +392,13 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
     return sphere_data
 
 
-def load_file(filename, destination="", cache="geometries", force=None):
+def load_file(
+    filename, destination="", cache="geometries", force=None, use_docker=False
+):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
         db = DATABASE_IDS.handlers().get(database_name)
-        initialize_db = db()
+        initialize_db = db(default_db="staging") if use_docker else db()
 
         if not initialize_db._initialized:
             readme_url = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
