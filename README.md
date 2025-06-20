@@ -127,7 +127,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
 #### ECS Docker Image
 1. Build image, running `docker build -f docker/Dockerfile.ecs -t [CONTAINER-NAME] .`
-2. Run packings in the container, running: `docker run -v ~/.aws:/root/.aws -p 80:80 -e local=true [CONTAINER-NAME]`
+2. Run packings in the container, running: `docker run -v ~/.aws:/root/.aws -p 80:80 [CONTAINER-NAME]`
 3. Try hitting the test endpoint on the server, by navigating to `http://0.0.0.0:8443/hello` in your browser.
 4. Try running a packing on the server, by hitting the `http://0.0.0.0:80/pack?recipe=firebase:recipes/one_sphere_v_1.0.0` in your browser.
 5. Verify that the packing result path was uploaded to the firebase results table, with the job id specified in the response from the request in step 4.The result simularium file can be found at the s3 path specified there.

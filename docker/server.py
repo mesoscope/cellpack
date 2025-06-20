@@ -9,8 +9,7 @@ from cellpack.bin.pack import pack
 SERVER_PORT = 80
 
 class CellpackServer:
-    def __init__(self, is_remote):
-        self.is_remote = is_remote
+    def __init__(self):
         self.packing_tasks = set()
 
     async def run_packing(self, recipe, config, job_id):
@@ -61,12 +60,11 @@ class CellpackServer:
 
 async def init_app() -> web.Application:
     app = web.Application()
-    is_remote = os.getenv("REMOTE_RUN", "False") == "True"
-    server = CellpackServer(is_remote)
+    server = CellpackServer()
     app.add_routes(
         [
             web.get("/hello", server.hello_world),
-            web.get("/pack", server.pack_handler), # TODO: should this be a POST?
+            web.post("/pack", server.pack_handler),
             web.get("/", server.health_check)
         ]
     )
