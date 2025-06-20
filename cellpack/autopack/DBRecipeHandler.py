@@ -557,7 +557,7 @@ class DBUploader(object):
                     "timestamp": timestamp,
                     "status": str(status),
                     "result_path": result_path,
-                    "error_message": error_message
+                    "error_message": error_message,
                 },
             )
 
