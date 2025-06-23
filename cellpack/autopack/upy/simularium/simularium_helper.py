@@ -1417,7 +1417,7 @@ class simulariumHelper(hostHelper.Helper):
             # TODO: use cellpack-results bucket for batch jobs once we have the correct permissions
             if batch_job_id:
                 initialized_handler = handler(
-                    bucket_name="cellpack-demo",
+                    bucket_name="cellpack-results",
                     sub_folder_name="simularium",
                     region_name="us-west-2",
                 )
