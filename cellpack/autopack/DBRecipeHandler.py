@@ -594,20 +594,20 @@ class DBRecipeLoader(object):
                 elif key == "composition":
                     compositions = db_doc["composition"]
                     for comp_name, reference in compositions.items():
-                        ref_link = reference["inherit"]
-                        comp_doc = CompositionDoc(
-                            comp_name,
-                            object_key=None,
-                            count=None,
-                            regions={},
-                            molarity=None,
-                            priority=None,
-                        )
-                        composition_data, _ = comp_doc.get_reference_data(
-                            ref_link, self.db
-                        )
-                        comp_doc.resolve_db_regions(composition_data, self.db)
-                        compositions[comp_name] = composition_data
+                        if ref_link := reference.get("inherit"):
+                            comp_doc = CompositionDoc(
+                                comp_name,
+                                object_key=None,
+                                count=None,
+                                regions={},
+                                molarity=None,
+                                priority=None,
+                            )
+                            composition_data, _ = comp_doc.get_reference_data(
+                                ref_link, self.db
+                            )
+                            comp_doc.resolve_db_regions(composition_data, self.db)
+                            compositions[comp_name] = composition_data
                     prep_data[key] = compositions
                 else:
                     prep_data[key] = value
@@ -709,6 +709,16 @@ class DBRecipeLoader(object):
             }
         elif isinstance(data, list):
             return [DBRecipeLoader.remove_dedup_hash(item) for item in data]
+        return data
+
+    def remove_empty(data):
+        """Recursively removes empty values from dictionaries and lists."""
+        if isinstance(data, dict):
+            return {
+                k: DBRecipeLoader.remove_empty(v)
+                for k, v in data.items()
+                if v != None and v != {}
+            }
         return data
 
     @staticmethod

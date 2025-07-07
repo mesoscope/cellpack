@@ -408,8 +408,11 @@ def load_file(
         db_handler = DBRecipeLoader(initialize_db)
         db_handler.validate_input_recipe_path(filename)
         recipe_id = file_path.split("/")[-1]
-        db_doc, _ = db_handler.collect_docs_by_id(collection="recipes", id=recipe_id)
+        collection = file_path.split("/")[0]
+        db_doc, _ = db_handler.collect_docs_by_id(collection=collection, id=recipe_id)
         downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
+        if collection == "recipes_edited":
+            database_name = "firebase_edited"
         return downloaded_recipe_data, database_name
     else:
         local_file_path = get_local_file_location(

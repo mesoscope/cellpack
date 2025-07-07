@@ -167,6 +167,13 @@ class RecipeLoader(object):
             new_values = DBRecipeLoader.compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )
+        elif database_name == "firebase_edited":
+            objects = new_values.get("objects", {})
+            gradients = new_values.get("gradients", {})
+            composition = DBRecipeLoader.remove_empty(new_values.get("composition", {}))
+            new_values = DBRecipeLoader.compile_db_recipe_data(
+                new_values, objects, gradients, composition
+            )
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
