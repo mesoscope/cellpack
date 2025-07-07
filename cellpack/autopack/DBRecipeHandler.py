@@ -717,7 +717,7 @@ class DBRecipeLoader(object):
             return {
                 k: DBRecipeLoader.remove_empty(v)
                 for k, v in data.items()
-                if v != None and v != {}
+                if v is not None and v != {}
             }
         return data
 
