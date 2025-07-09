@@ -411,14 +411,12 @@ def load_file(
         collection = file_path.split("/")[0]
         db_doc, _ = db_handler.collect_docs_by_id(collection=collection, id=recipe_id)
         downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
-        if collection == "recipes_edited":
-            database_name = "firebase_edited"
-        return downloaded_recipe_data, database_name
+        return downloaded_recipe_data, database_name, collection == "recipes_edited"
     else:
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
         )
-        return json.load(open(local_file_path, "r")), None
+        return json.load(open(local_file_path, "r")), None, False
 
 
 def fixPath(adict):  # , k, v):
