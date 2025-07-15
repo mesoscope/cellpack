@@ -1,4 +1,6 @@
-# cellPACK Recipe and Config Schema 2.0
+# cellPACK Recipe and Config Schema
+
+Version: 2.0
 
 
 ## Recipe
