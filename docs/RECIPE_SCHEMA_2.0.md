@@ -119,4 +119,4 @@ The config file controls the packing behavior. It specifies parameters such as p
 | `version` | number | Config version number | | Yes | 1.0 | For internal tracking |
 | `image_export_options.hollow` | boolean | Export hollow images | | Yes | | |
 | `image_export_options.projection_axis` | string | Image projection axis | | Yes | | e.g., `x`, `y`, `z` |
-| `image_export_options.voxel_size` | array `[x, y, z]` | Voxel size for image export | | Yes | | |RetryClaude can make mistakes. Please double-check responses.
+| `image_export_options.voxel_size` | array `[x, y, z]` | Voxel size for image export | | Yes | | 
