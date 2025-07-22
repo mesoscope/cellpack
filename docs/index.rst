@@ -1,9 +1,11 @@
-Welcome to cellPack's documentation!
-======================================
+.. cellPACK documentation master file, created by
+   sphinx-quickstart on Tue Jul 22 15:09:27 2025.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
 .. toctree::
    :hidden:
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    Overview <self>
@@ -11,12 +13,9 @@ Welcome to cellPack's documentation!
    Package modules <modules>
    recipe-schema
    contributing
-   math
 
 .. mdinclude:: ../README.md
 
-Indices and tables
-==================
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
