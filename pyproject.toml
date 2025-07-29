@@ -54,13 +54,13 @@ dev = [
     "Sphinx>=7.4.7",
     "coverage>=7.6.10",
     "ipython>=8.18.1",
-    "m2r2>=0.3.3.post2",
     "sphinx-rtd-theme>=3.0.2",
     "tox>=4.23.2",
     "wheel>=0.45.1",
     "tox-pdm>=0.7.2",
     "bumpver>=2024.1130",
     "docutils<0.21,>=0.18.1",
+    "ipykernel>=6.30.0",
 ]
 setup = [
     "pytest-runner>=6.0.1",
@@ -72,6 +72,10 @@ lint = [
     "flake8-debugger>=4.1.2",
     "flake8>=7.1.1",
     "docutils<0.21,>=0.18.1",
+]
+docs = [
+    "linkify-it-py>=2.0.3",
+    "myst-parser>=3.0.1",
 ]
 
 [tool.pdm.scripts]

@@ -19,12 +19,21 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
-    "m2r2",
+    "myst_parser",
+]
+
+
+myst_enable_extensions = [
+    "deflist",
+    "colon_fence",
+    "linkify",
+    "substitution",
+    "tasklist",
 ]
 
 # Control napoleon
-napoleon_google_docstring = False
-napolean_include_init_with_doc = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = True
 napoleon_use_ivar = True
 napoleon_use_param = False
 

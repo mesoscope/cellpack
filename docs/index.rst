@@ -9,7 +9,6 @@
    :caption: Contents:
 
    Overview <self>
-   installation
    Package modules <modules>
    recipe-schema
    contributing
