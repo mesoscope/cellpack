@@ -1,5 +1,4 @@
-# cellPACK Recipe and Config Schema
-### Version 2.0
+### cellPACK schema version 2.0
 
 This document provides a schema for cellPACK recipes and configurations.
 
@@ -38,7 +37,6 @@ The top-level fields  include metadata about the recipe, such as its name, versi
         ]
     ],
     "grid_file_path": "/path/to/local/file" // optional
-    ...
 }
 ```
 

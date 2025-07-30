@@ -9,7 +9,7 @@ An algorithm to pack molecular recipes
 ## Installation
 
 > [!NOTE]
-> These are the basic installation steps. However, our recommendation for developers is to install with `pyenv` and `pdm`. See advanced installation instructions [here](docs/INSTALL.md).
+> These are the basic installation steps. However, our recommendation for developers is to install with `pyenv` and `pdm`. See advanced installation instructions [here](./docs/INSTALL.md).
 
 1. Install Python 3.9 and `git`.  Update pip at least to `24.0.0`.
 2. Clone this git repository.
@@ -43,12 +43,12 @@ For full package documentation please visit [mesoscope.github.io/cellpack](https
 
 ## Development
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the code.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for information related to developing the code.
 
 ## Remote databases
-cellPACK uses AWS and Firebase Firestore as remote databases to store packing results and recipes. Follow instructions [here](docs/REMOTE_DATABASES.md) to set up access.
+cellPACK uses AWS and Firebase Firestore as remote databases to store packing results and recipes. Follow instructions [here](./docs/REMOTE_DATABASES.md) to set up access.
 
 ## Docker
-cellPACK can be run in Docker containers for both AWS ECS and AWS Batch. Follow the instructions [here](docs/DOCKER.md) to set up the Docker environment.
+cellPACK can be run in Docker containers for both AWS ECS and AWS Batch. Follow the instructions [here](./docs/DOCKER.md) to set up the Docker environment.
 
 **MIT license**

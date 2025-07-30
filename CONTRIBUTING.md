@@ -15,7 +15,7 @@ Ready to contribute? Here's how to set up `cellpack` for local development.
     git clone git@github.com:{your_name_here}/cellpack.git
     ```
 
-3. Install the project in editable mode by following installation instructions [here](docs/INSTALL.md). (It is also recommended to work in a virtual environment):
+3. Install the project in editable mode by following installation instructions [here](./docs/INSTALL.md). (It is also recommended to work in a virtual environment):
 
     ```bash
     cd cellpack/
