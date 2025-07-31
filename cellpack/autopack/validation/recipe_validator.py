@@ -2,9 +2,6 @@ from pydantic import ValidationError
 from .recipe_models import Recipe, RecipeObject
 
 
-class RecipeValidationError(ValueError):
-    pass
-
 
 class RecipeValidator:
     @staticmethod
@@ -23,4 +20,4 @@ class RecipeValidator:
             return validated_data
             
         except ValidationError as e:
-            raise RecipeValidationError(f"Validation failed:", e)
+            print("Validation error:", e)

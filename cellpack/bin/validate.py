@@ -1,8 +1,9 @@
 import sys
 import fire
 import json
+from pydantic import ValidationError
 
-from cellpack.autopack.validation.recipe_validator import RecipeValidator, RecipeValidationError
+from cellpack.autopack.validation.recipe_validator import RecipeValidator
 
 
 def validate(recipe_path):
@@ -13,7 +14,7 @@ def validate(recipe_path):
         RecipeValidator.validate_recipe(raw_recipe_data)
         
         print(f"Recipe {raw_recipe_data['name']} is valid")
-    except RecipeValidationError as e:
+    except ValidationError as e:
         print("Recipe validation failed:", e)
         sys.exit(1)
 
