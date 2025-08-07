@@ -411,7 +411,8 @@ def load_file(
         collection = file_path.split("/")[0]
         db_doc, _ = db_handler.collect_docs_by_id(collection=collection, id=recipe_id)
         downloaded_recipe_data = db_handler.prep_db_doc_for_download(db_doc)
-        return downloaded_recipe_data, database_name, collection == "recipes_edited"
+        is_unnested_collection = (collection == "recipes_edited")
+        return downloaded_recipe_data, database_name, is_unnested_collection
     else:
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
