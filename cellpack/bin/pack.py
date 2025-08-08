@@ -1,17 +1,17 @@
-import fire
-from pathlib import Path
 import logging
 import logging.config
 import time
+from pathlib import Path
+
+import fire
 
 from cellpack import autopack
 from cellpack.autopack import upy
 from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.Environment import Environment
-
+from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
-from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 
 ###############################################################################
 log_file_path = Path(__file__).parent.parent / "logging.conf"
