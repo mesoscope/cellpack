@@ -27,7 +27,7 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path, save_converted_recipe=False):
+    def __init__(self, input_file_path, save_converted_recipe=False, use_docker=False):
         _, file_extension = os.path.splitext(input_file_path)
         self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
@@ -36,7 +36,7 @@ class RecipeLoader(object):
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
         autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
-        self.recipe_data = self._read()
+        self.recipe_data = self._read(use_docker=use_docker)
 
     @staticmethod
     def _resolve_object(key, objects):
@@ -156,12 +156,21 @@ class RecipeLoader(object):
                 f"{old_recipe['format_version']} is not a format version we support"
             )
 
-    def _read(self, resolve_inheritance=True):
-        new_values, database_name = autopack.load_file(self.file_path, cache="recipes")
+    def _read(self, resolve_inheritance=True, use_docker=False):
+        new_values, database_name, is_unnested_firebase = autopack.load_file(
+            self.file_path, cache="recipes", use_docker=use_docker
+        )
         if database_name == "firebase":
-            objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
-                new_values["composition"]
-            )
+            if is_unnested_firebase:
+                objects = new_values.get("objects", {})
+                gradients = new_values.get("gradients", {})
+                composition = DBRecipeLoader.remove_empty(
+                    new_values.get("composition", {})
+                )
+            else:
+                objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
+                    new_values["composition"]
+                )
             new_values = DBRecipeLoader.compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )

@@ -1,0 +1,16 @@
+FROM python:3.9
+
+WORKDIR /cellpack
+
+RUN python -m pip install --upgrade pip --root-user-action=ignore
+RUN pip install cellpack@git+https://github.com/mesoscope/cellpack.git
+
+COPY docker/server.py /cellpack/
+COPY .env /cellpack/
+EXPOSE 80
+
+RUN apt-get update && apt-get install -y awscli
+
+COPY docker/entrypoint-ecs.sh /usr/local/bin/
+RUN ["chmod", "+x", "/usr/local/bin/entrypoint-ecs.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint-ecs.sh"]

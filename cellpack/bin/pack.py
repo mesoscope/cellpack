@@ -20,18 +20,19 @@ log = logging.getLogger()
 ###############################################################################
 
 
-def pack(recipe, config_path=None, analysis_config_path=None):
+def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
     """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
+    :param docker: boolean argument, are we using docker
 
     :return: void
     """
-    packing_config_data = ConfigLoader(config_path).config
+    packing_config_data = ConfigLoader(config_path, docker).config
     recipe_data = RecipeLoader(
-        recipe, packing_config_data["save_converted_recipe"]
+        recipe, packing_config_data["save_converted_recipe"], docker
     ).recipe_data
     analysis_config_data = {}
     if analysis_config_path is not None:

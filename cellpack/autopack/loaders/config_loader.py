@@ -4,6 +4,9 @@ import os
 import json
 from json import encoder
 
+import cellpack.autopack as autopack
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
@@ -49,7 +52,7 @@ class ConfigLoader(object):
         "version": 1.0,
     }
 
-    def __init__(self, input_file_path=None):
+    def __init__(self, input_file_path=None, use_docker=False):
         if input_file_path is not None:
             _, file_extension = os.path.splitext(input_file_path)
             self.file_path = input_file_path
@@ -57,7 +60,7 @@ class ConfigLoader(object):
         else:
             self.file_path = None
         self.latest_version = 1.0
-        self.config = self._read()
+        self.config = self._read(use_docker=use_docker)
 
     @staticmethod
     def _test_types(config):
@@ -94,16 +97,23 @@ class ConfigLoader(object):
     def _migrate_version(config):
         return config
 
-    def _read(self):
+    def _read(self, use_docker=False):
         """
         Read in a Json Config file.
         """
         if self.file_path is None:
             config = ConfigLoader.default_values.copy()
         else:
-            new_values = json.load(open(self.file_path, "r"))
-            config = ConfigLoader.default_values.copy()
-            config.update(new_values)
+            if autopack.is_remote_path(self.file_path):
+                database_name, _ = self.file_path.split(":")
+                db = DATABASE_IDS.handlers().get(database_name)
+                initialize_db = db(default_db="staging") if use_docker else db()
+                db_handler = DBRecipeLoader(initialize_db)
+                config = db_handler.read_config(self.file_path)
+            else:
+                new_values = json.load(open(self.file_path, "r"))
+                config = ConfigLoader.default_values.copy()
+                config.update(new_values)
         if config["version"] != self.latest_version:
             config = ConfigLoader._migrate_version(config)
         ConfigLoader._test_types(config)

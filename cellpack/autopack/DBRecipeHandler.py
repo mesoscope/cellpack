@@ -1,8 +1,11 @@
 import copy
+import logging
 from datetime import datetime, timezone
 from enum import Enum
 
-from deepdiff import DeepDiff
+
+import hashlib
+import json
 import requests
 
 from cellpack.autopack.utils import deep_merge
@@ -12,12 +15,6 @@ class DataDoc(object):
     def __init__(
         self,
     ):
-        pass
-
-    def as_dict():
-        pass
-
-    def should_write():
         pass
 
     @staticmethod
@@ -44,18 +41,26 @@ class DataDoc(object):
     @staticmethod
     def is_obj(comp_or_obj):
         # in resolved DB data, if the top level of a downloaded comp doesn't have the key `name`, it's an obj
-        # TODO: true for all cases? better approaches?
         return not comp_or_obj.get("name") and "object" in comp_or_obj
+
+    @staticmethod
+    def generate_hash(doc_data):
+        doc_str = json.dumps(doc_data, sort_keys=True)
+        return hashlib.sha256(doc_str.encode()).hexdigest()
 
 
 class CompositionDoc(DataDoc):
     """
     Declares required attributes for comps in the constructor, set default values.
-    Handles the logic for comparing the local and db data to determine the uploading process.
     """
 
-    SHALLOW_MATCH = ["object", "count", "molarity"]
-    DEFAULT_VALUES = {"object": None, "count": None, "regions": {}, "molarity": None}
+    DEFAULT_VALUES = {
+        "object": None,
+        "count": None,
+        "regions": {},
+        "molarity": None,
+        "priority": None,
+    }
     KEY_TO_DICT_MAPPING = {"gradient": "gradients", "inherit": "objects"}
 
     def __init__(
@@ -65,6 +70,7 @@ class CompositionDoc(DataDoc):
         count=None,
         regions=None,
         molarity=None,
+        priority=None,
         object=None,
     ):
         super().__init__()
@@ -72,6 +78,7 @@ class CompositionDoc(DataDoc):
         self.object = object_key or object
         self.count = count
         self.molarity = molarity
+        self.priority = priority
         self.regions = regions or {}
 
     def as_dict(self):
@@ -80,6 +87,7 @@ class CompositionDoc(DataDoc):
         data["object"] = self.object
         data["count"] = self.count
         data["molarity"] = self.molarity
+        data["priority"] = self.priority
         data["regions"] = self.regions
         return data
 
@@ -139,19 +147,6 @@ class CompositionDoc(DataDoc):
                     self.resolve_db_regions(downloaded_data, db)
 
     @staticmethod
-    def gradient_list_to_dict(prep_recipe_data):
-        """
-        Convert gradient list to dict for resolve_local_regions
-        """
-        if "gradients" in prep_recipe_data and isinstance(
-            prep_recipe_data["gradients"], list
-        ):
-            gradient_dict = {}
-            for gradient in prep_recipe_data["gradients"]:
-                gradient_dict[gradient["name"]] = gradient
-            prep_recipe_data["gradients"] = gradient_dict
-
-    @staticmethod
     def resolve_combined_gradient(key, obj_data, prep_data):
         """
         When the gradients are combined, fetch and replace gradient data in a list.
@@ -180,143 +175,85 @@ class CompositionDoc(DataDoc):
                         key, object_data, prep_recipe_data["gradients"]
                     )
 
-    def resolve_local_regions(self, local_data, recipe_data, db):
+    @staticmethod
+    def build_dependency_graph(compositions):
         """
-        Recursively resolves the regions of a composition from local data.
-        Restructure the local data to match the db data.
+        Creates a dependency map showing the relationships between compositions.
         """
-        unpack_recipe_data = DBUploader.prep_data_for_db(recipe_data)
-        prep_recipe_data = ObjectDoc.convert_representation(unpack_recipe_data, db)
-        # `gradients` is a list, convert it to dict for easy access and replace
-        CompositionDoc.gradient_list_to_dict(prep_recipe_data)
-        if "object" in local_data and local_data["object"] is not None:
-            if DataDoc.is_key(local_data["object"]):
-                key_name = local_data["object"]
-            else:
-                key_name = local_data["object"]["name"]
-            local_data["object"] = prep_recipe_data["objects"][key_name]
-            self.resolve_object_data(local_data["object"], prep_recipe_data)
-        for region_name in local_data["regions"]:
-            for index, key_or_dict in enumerate(local_data["regions"][region_name]):
-                if not DataDoc.is_key(key_or_dict):
-                    obj_item = local_data["regions"][region_name][index]["object"]
-                    if DataDoc.is_key(obj_item):
-                        local_data["regions"][region_name][index]["object"] = (
-                            prep_recipe_data["objects"][obj_item]
-                        )
-                    else:
-                        local_data["regions"][region_name][index]["object"] = (
-                            prep_recipe_data["objects"][obj_item["name"]]
-                        )
-                    # replace reference in obj with actual data
-                    obj_data = local_data["regions"][region_name][index]["object"]
-                    self.resolve_object_data(obj_data, prep_recipe_data)
-                else:
-                    comp_name = local_data["regions"][region_name][index]
-                    prep_comp_data = prep_recipe_data["composition"][comp_name]
-                    prep_comp_data["name"] = comp_name
-                    local_data["regions"][region_name][index] = CompositionDoc(
-                        **prep_comp_data
-                    ).as_dict()
-                if (
-                    "regions" in local_data["regions"][region_name][index]
-                    and local_data["regions"][region_name][index]["regions"] is not None
-                ):
-                    self.resolve_local_regions(
-                        local_data["regions"][region_name][index], recipe_data, db
-                    )
+        dependency_map = {}
+        for key in compositions:
+            if key not in dependency_map:
+                dependency_map[key] = []
 
-    def check_and_replace_references(
-        self, objects_to_path_map, references_to_update, db
-    ):
-        """
-        Within one recipe upload, we store the references for uploaded comps and objs.
-        Checks if the object or comp is a reference in the nesting regions, and replaces it with the referenced db path.
-        """
-        obj_name = self.object
-        if obj_name is not None and not db.is_reference(obj_name):
-            obj_database_path = objects_to_path_map.get(obj_name)
-            self.object = obj_database_path
+            comp = compositions[key]
+            if isinstance(comp, dict) and "regions" in comp:
+                for _, region_items in comp["regions"].items():
+                    if isinstance(region_items, list):
+                        for item in region_items:
+                            if isinstance(item, str) and item in compositions:
+                                dependency_map[key].append(item)
+        return dependency_map
 
-        if self.regions is not None:
-            for region_name, region_array in self.regions.items():
-                if len(region_array) > 0:
-                    for region_item in region_array:
-                        # replace nested objs in comp["regions"]
-                        if DataDoc.is_key(region_item):
-                            update_field_path = f"regions.{region_name}"
-                            update_data = {
-                                "index": update_field_path,
-                                "name": region_item,
-                            }
-                            if self.name in references_to_update:
-                                references_to_update[self.name].append(update_data)
-                            else:
-                                references_to_update[self.name] = [update_data]
-                        elif not db.is_reference(region_item["object"]):
-                            obj_name = region_item["object"]
-                            region_item["object"] = objects_to_path_map.get(obj_name)
+    def comp_upload_order(self, compositions):
+        """
+        Use topological sort to determine the order in which compositions should be uploaded.
+        Returns a list of composition keys in the order they should be uploaded.
+        """
+        dependency_map = CompositionDoc.build_dependency_graph(compositions)
+
+        in_degree = {node: 0 for node in compositions}
+
+        # calculate in-degree for each node (how many compositions contain this one)
+        for container, dependencies in dependency_map.items():
+            for dependency in dependencies:
+                in_degree[dependency] = in_degree.get(dependency, 0) + 1
+
+        # start with nodes that are not contained by any other comp
+        roots = [node for node in in_degree if in_degree[node] == 0]
+
+        queue = roots.copy()
+        upload_order = []
+
+        while queue:
+            current = queue.pop(0)  # process the first node in the queue
+            upload_order.append(current)
+
+            for dependency in dependency_map.get(current, []):
+                in_degree[dependency] -= 1
+                if in_degree[dependency] == 0:
+                    queue.append(dependency)
+
+        # check for cycles in the graph
+        if len(upload_order) != len(in_degree):
+            raise ValueError("Circular dependency detected in compositions.")
+
+        # reverse the order since we need inner nodes first
+        upload_order.reverse()
+        return upload_order
 
     @staticmethod
-    def update_reference(
-        db,
-        composition_id,
-        referring_comp_id,
-        index,
-        remove_comp_name,
-        update_in_array=False,
-    ):
+    def replace_region_references(uploader, composition_data):
         """
-        Update comp references in the recipe
+        Replaces composition references with paths in the database.
         """
-        doc, doc_ref = db.get_doc_by_id("composition", composition_id)
-        if doc is None:
-            return
-        _, new_item_ref = db.get_doc_by_id("composition", referring_comp_id)
-        update_ref_path = f"{db.db_name()}:{db.get_path_from_ref(new_item_ref)}"
-        if update_in_array:
-            db.update_elements_in_array(
-                doc_ref, index, update_ref_path, remove_comp_name
+        if "object" in composition_data and DataDoc.is_key(composition_data["object"]):
+            composition_data["object"] = uploader.objects_to_path_map.get(
+                composition_data["object"]
             )
-        else:
-            db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
-    def should_write(self, db, recipe_data):
-        """
-        Compares the resolved local composition to the resolved db composition.
-        To determine whether the composition data already exists or if it needs to be written to the database.
-        """
-        db_docs = db.get_doc_by_name("composition", self.name)
-        local_data = {
-            "name": self.name,
-            "object": self.object,
-            "count": self.count,
-            "molarity": self.molarity,
-            "regions": copy.deepcopy(self.regions),
-        }
-
-        if db_docs and len(db_docs) >= 1:
-            for doc in db_docs:
-                db_data = db.doc_to_dict(doc)
-                for item in CompositionDoc.SHALLOW_MATCH:
-                    if db_data[item] != local_data[item]:
-                        break
-                if local_data["regions"] is None and db_data["regions"] is None:
-                    # found a match, so shouldn't write
-                    return False, db.doc_id(doc)
-                else:
-                    # deeply compare resolved regions data
-                    self.resolve_db_regions(db_data, db)
-                    self.resolve_local_regions(local_data, recipe_data, db)
-                    difference = DeepDiff(
-                        local_data,
-                        db_data,
-                        ignore_order=True,
-                        ignore_type_in_groups=[tuple, list],
-                    )
-                    if not difference:
-                        return doc, db.doc_id(doc)
-        return None, None
+        if "regions" in composition_data and composition_data["regions"]:
+            for region_name in composition_data["regions"]:
+                if not composition_data["regions"][region_name]:
+                    continue
+                for index, item in enumerate(composition_data["regions"][region_name]):
+                    if isinstance(item, str):
+                        composition_data["regions"][region_name][index] = (
+                            uploader.comp_to_path_map.get(item)
+                        )
+                    elif isinstance(item, dict):
+                        # process nested regions recursively
+                        CompositionDoc.replace_region_references(uploader, item)
+        return composition_data
 
 
 class ObjectDoc(DataDoc):
@@ -373,35 +310,11 @@ class ObjectDoc(DataDoc):
             "gradient" in obj_data and isinstance(obj_data["gradient"], dict)
         ) or "inherit" in obj_data
 
-    def should_write(self, db):
-        docs = db.get_doc_by_name("objects", self.name)
-        if docs and len(docs) >= 1:
-            for doc in docs:
-                # if there is repr in the obj doc from db
-                full_doc_data = ObjectDoc.convert_representation(doc, db)
-                # unpack objects to dicts in local data for comparison
-                local_data = DBUploader.prep_data_for_db(self.as_dict())
-                difference = DeepDiff(full_doc_data, local_data, ignore_order=True)
-                if not difference:
-                    return doc, db.doc_id(doc)
-        return None, None
-
 
 class GradientDoc(DataDoc):
     def __init__(self, settings):
         super().__init__()
         self.settings = settings
-
-    def should_write(self, db, grad_name):
-        docs = db.get_doc_by_name("gradients", grad_name)
-        if docs and len(docs) >= 1:
-            for doc in docs:
-                local_data = DBUploader.prep_data_for_db(db.doc_to_dict(doc))
-                db_data = db.doc_to_dict(doc)
-                difference = DeepDiff(db_data, local_data, ignore_order=True)
-                if not difference:
-                    return doc, db.doc_id(doc)
-        return None, None
 
 
 class ResultDoc:
@@ -422,9 +335,9 @@ class ResultDoc:
                     result_data["url"]
                 ):
                     self.db.delete_doc("results", self.db.doc_id(result))
-            print("Results cleanup complete.")
+            logging.info("Results cleanup complete.")
         else:
-            print("No results found in the database.")
+            logging.info("No results found in the database.")
 
     def validate_existence(self, url):
         """
@@ -474,37 +387,33 @@ class DBUploader(object):
         return modified_data
 
     def upload_data(self, collection, data, id=None):
-        """
-        If should_write is true, upload the data to the database
-        """
-        # check if we need to convert part of the data(2d arrays and objs to dict)
         modified_data = DBUploader.prep_data_for_db(data)
-        if id is None:
-            name = modified_data["name"]
-            doc = self.db.upload_doc(collection, modified_data)
-            # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
-            doc_path = self.db.get_path_from_ref(doc[1])
-            doc_id = self.db.doc_id(doc[1])
-            print(f"successfully uploaded {name} to path: {doc_path}")
-            return doc_id, self.db.create_path(collection, doc_id)
-        else:
-            doc_path = f"{collection}/{id}"
-            doc = self.db.set_doc(collection, id, modified_data)
-            return id, self.db.create_path(collection, id)
+        modified_data["dedup_hash"] = DataDoc.generate_hash(modified_data)
+
+        # customized id for recipe
+        if id:
+            self.db.set_doc(collection, id, modified_data)
+            doc_path = self.db.create_path(collection, id)
+            return id, doc_path
+        doc_ref = self.db.check_doc_existence(collection, modified_data)
+        # if the doc already exists, return the path
+        if doc_ref:
+            doc_id = self.db.doc_id(doc_ref)
+            doc_path = self.db.create_path(collection, doc_id)
+            return doc_id, doc_path
+        # if the doc doesn't exist, upload it
+        doc_ref = self.db.upload_doc(collection, modified_data)
+        doc_id = self.db.doc_id(doc_ref[1])
+        doc_path = self.db.create_path(collection, doc_id)
+        logging.info(f"successfully uploaded {doc_id} to path: {doc_path}")
+        return doc_id, doc_path
 
     def upload_gradients(self, gradients):
         for gradient in gradients:
             gradient_name = gradient["name"]
             gradient_doc = GradientDoc(settings=gradient)
-            _, doc_id = gradient_doc.should_write(self.db, gradient_name)
-            if doc_id:
-                print(f"gradients/{gradient_name} is already in firestore")
-                self.grad_to_path_map[gradient_name] = self.db.create_path(
-                    "gradients", doc_id
-                )
-            else:
-                _, grad_path = self.upload_data("gradients", gradient_doc.settings)
-                self.grad_to_path_map[gradient_name] = grad_path
+            _, grad_path = self.upload_data("gradients", gradient_doc.settings)
+            self.grad_to_path_map[gradient_name] = grad_path
 
     def upload_single_object(self, obj_name, obj_data):
         # replace gradient name with path to check if gradient exists in db
@@ -519,14 +428,8 @@ class DBUploader(object):
                     "gradient", obj_data[obj_name], self.grad_to_path_map
                 )
         object_doc = ObjectDoc(name=obj_name, settings=obj_data[obj_name])
-        _, doc_id = object_doc.should_write(self.db)
-        if doc_id:
-            print(f"objects/{object_doc.name} is already in firestore")
-            obj_path = self.db.create_path("objects", doc_id)
-            self.objects_to_path_map[obj_name] = obj_path
-        else:
-            _, obj_path = self.upload_data("objects", object_doc.as_dict())
-            self.objects_to_path_map[obj_name] = obj_path
+        _, obj_path = self.upload_data("objects", object_doc.as_dict())
+        self.objects_to_path_map[obj_name] = obj_path
 
     def upload_objects(self, objects):
         # modify a copy of objects to avoid key error when resolving local regions
@@ -546,50 +449,33 @@ class DBUploader(object):
             ]
             self.upload_single_object(obj_name, modify_objects)
 
-    def upload_compositions(self, compositions, recipe_to_save, recipe_data):
-        references_to_update = {}
-        for comp_name in compositions:
-            comp_obj = compositions[comp_name]
-            self.comp_to_path_map[comp_name] = {}
-            comp_obj["name"] = comp_name
-            comp_data = deep_merge(
-                copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp_obj
-            )
+    def upload_compositions(self, compositions, recipe_to_save):
+        comp_order = CompositionDoc.comp_upload_order(self, compositions)
+
+        for comp_name in comp_order:
+            comp = copy.deepcopy(compositions[comp_name])
+            comp["name"] = comp_name
+
+            # apply default values
+            comp_data = deep_merge(copy.deepcopy(CompositionDoc.DEFAULT_VALUES), comp)
+            # replace composition references with ids
+            comp_data = CompositionDoc.replace_region_references(self, comp_data)
             comp_doc = CompositionDoc(
                 comp_name,
                 object_key=comp_data["object"],
                 count=comp_data["count"],
                 regions=comp_data["regions"],
                 molarity=comp_data["molarity"],
+                priority=comp_data["priority"],
             )
-            # if comp exists, don't upload
-            _, doc_id = comp_doc.should_write(self.db, recipe_data)
-            if doc_id:
-                path = self.db.create_path("composition", doc_id)
-                self.comp_to_path_map[comp_name]["path"] = path
-                self.comp_to_path_map[comp_name]["id"] = doc_id
-                print(f"composition/{comp_name} is already in firestore")
-            else:
-                # replace with paths for outer objs in comp, then upload
-                comp_doc.check_and_replace_references(
-                    self.objects_to_path_map, references_to_update, self.db
-                )
-                comp_ready_for_db = comp_doc.as_dict()
-                doc_id, comp_path = self.upload_data("composition", comp_ready_for_db)
-                self.comp_to_path_map[comp_name]["path"] = comp_path
-                self.comp_to_path_map[comp_name]["id"] = doc_id
 
-            recipe_to_save["composition"][comp_name] = {
-                "inherit": self.comp_to_path_map[comp_name]["path"]
-            }
+            comp_ready_for_db = comp_doc.as_dict()
+            _, comp_path = self.upload_data("composition", comp_ready_for_db)
 
-            recipe_to_save["composition"][comp_name] = {
-                "inherit": self.comp_to_path_map[comp_name]["path"]
-            }
-            if comp_name in references_to_update:
-                for inner_data in references_to_update[comp_name]:
-                    inner_data["comp_id"] = doc_id
-        return references_to_update
+            self.comp_to_path_map[comp_name] = comp_path
+
+            # update the recipe reference
+            recipe_to_save["composition"][comp_name] = {"inherit": comp_path}
 
     def _get_recipe_id(self, recipe_data):
         """
@@ -614,20 +500,7 @@ class DBUploader(object):
         # save objects to db
         self.upload_objects(objects)
         # save comps to db
-        references_to_update = self.upload_compositions(
-            compositions, recipe_to_save, recipe_data
-        )
-        # update nested comp in composition
-        if references_to_update:
-            for comp_name in references_to_update:
-                for inner_data in references_to_update[comp_name]:
-                    comp_id = inner_data["comp_id"]
-                    index = inner_data["index"]
-                    name = inner_data["name"]
-                    item_id = self.comp_to_path_map[name]["id"]
-                    CompositionDoc.update_reference(
-                        self.db, comp_id, item_id, index, name, update_in_array=True
-                    )
+        self.upload_compositions(compositions, recipe_to_save)
         return recipe_to_save
 
     def upload_recipe(self, recipe_meta_data, recipe_data):
@@ -635,16 +508,23 @@ class DBUploader(object):
         After all other collections are checked or uploaded, upload the recipe with references into db
         """
         recipe_id = self._get_recipe_id(recipe_data)
-        # if the recipe is already exists in db, just return
-        recipe, _ = self.db.get_doc_by_id("recipes", recipe_id)
-        if recipe:
-            print(f"{recipe_id} is already in firestore")
-            return
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
 
-    def upload_result_metadata(self, file_name, url):
+    def upload_config(self, config_data, source_path):
+        """
+        Upload the config data to the database.
+        """
+        config_data["source_path"] = source_path
+        id, doc_path = self.upload_data("configs", config_data)
+        print(f"Config uploaded to {doc_path}")
+        # update the config data with the firebase doc path
+        config_data["config_path"] = doc_path
+        self.db.update_doc("configs", id, config_data)
+        return
+
+    def upload_result_metadata(self, file_name, url, job_id=None):
         """
         Upload the metadata of the result file to the database.
         """
@@ -654,7 +534,31 @@ class DBUploader(object):
             self.db.update_or_create(
                 "results",
                 file_name,
-                {"user": username, "timestamp": timestamp, "url": url},
+                {
+                    "user": username,
+                    "timestamp": timestamp,
+                    "url": url,
+                    "batch_job_id": job_id,
+                },
+            )
+        if job_id:
+            self.upload_job_status(job_id, "DONE", result_path=url)
+
+    def upload_job_status(self, job_id, status, result_path=None, error_message=None):
+        """
+        Update status for a given job ID
+        """
+        if self.db:
+            timestamp = self.db.create_timestamp()
+            self.db.update_or_create(
+                "job_status",
+                job_id,
+                {
+                    "timestamp": timestamp,
+                    "status": str(status),
+                    "result_path": result_path,
+                    "error_message": error_message,
+                },
             )
 
 
@@ -665,6 +569,17 @@ class DBRecipeLoader(object):
 
     def __init__(self, db_handler):
         self.db = db_handler
+
+    def read_config(self, config_path):
+        """
+        Read the config data from the database.
+        """
+        collection, id = self.db.get_collection_id_from_path(config_path)
+        config_data, _ = self.db.get_doc_by_id(collection, id)
+        if config_data:
+            return config_data
+        else:
+            raise ValueError(f"Config not found at path: {config_path}")
 
     def prep_db_doc_for_download(self, db_doc):
         """
@@ -679,19 +594,20 @@ class DBRecipeLoader(object):
                 elif key == "composition":
                     compositions = db_doc["composition"]
                     for comp_name, reference in compositions.items():
-                        ref_link = reference["inherit"]
-                        comp_doc = CompositionDoc(
-                            comp_name,
-                            object_key=None,
-                            count=None,
-                            regions={},
-                            molarity=None,
-                        )
-                        composition_data, _ = comp_doc.get_reference_data(
-                            ref_link, self.db
-                        )
-                        comp_doc.resolve_db_regions(composition_data, self.db)
-                        compositions[comp_name] = composition_data
+                        if ref_link := reference.get("inherit"):
+                            comp_doc = CompositionDoc(
+                                comp_name,
+                                object_key=None,
+                                count=None,
+                                regions={},
+                                molarity=None,
+                                priority=None,
+                            )
+                            composition_data, _ = comp_doc.get_reference_data(
+                                ref_link, self.db
+                            )
+                            comp_doc.resolve_db_regions(composition_data, self.db)
+                            compositions[comp_name] = composition_data
                     prep_data[key] = compositions
                 else:
                     prep_data[key] = value
@@ -783,6 +699,29 @@ class DBRecipeLoader(object):
         return objects, gradients, composition
 
     @staticmethod
+    def remove_dedup_hash(data):
+        """Recursively removes 'dedup_hash' from dictionaries and lists."""
+        if isinstance(data, dict):
+            return {
+                k: DBRecipeLoader.remove_dedup_hash(v)
+                for k, v in data.items()
+                if k != "dedup_hash"
+            }
+        elif isinstance(data, list):
+            return [DBRecipeLoader.remove_dedup_hash(item) for item in data]
+        return data
+
+    def remove_empty(data):
+        """Recursively removes empty values from dictionaries and lists."""
+        if isinstance(data, dict):
+            return {
+                k: DBRecipeLoader.remove_empty(v)
+                for k, v in data.items()
+                if v is not None and v != {}
+            }
+        return data
+
+    @staticmethod
     def compile_db_recipe_data(db_recipe_data, obj_dict, grad_dict, comp_dict):
         """
         Compile recipe data from db recipe data into a ready-to-pack structure
@@ -792,11 +731,15 @@ class DBRecipeLoader(object):
                 k: db_recipe_data[k]
                 for k in ["format_version", "version", "name", "bounding_box"]
             },
-            "objects": obj_dict,
-            "composition": comp_dict,
+            "objects": DBRecipeLoader.remove_dedup_hash(obj_dict),
+            "composition": DBRecipeLoader.remove_dedup_hash(comp_dict),
         }
+        if db_recipe_data.get("grid_file_path"):
+            recipe_data["grid_file_path"] = db_recipe_data.get("grid_file_path")
         if grad_dict:
-            recipe_data["gradients"] = [{**v} for v in grad_dict.values()]
+            recipe_data["gradients"] = [
+                {**v} for v in DBRecipeLoader.remove_dedup_hash(grad_dict).values()
+            ]
         return recipe_data
 
 

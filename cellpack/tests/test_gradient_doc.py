@@ -1,21 +1,25 @@
-from cellpack.autopack.DBRecipeHandler import GradientDoc
+from cellpack.autopack.DBRecipeHandler import DataDoc
 from cellpack.tests.mocks.mock_db import MockDB
 
 mock_db = MockDB({})
 
 
-def test_should_write_with_no_existing_doc():
-    gradient_doc = GradientDoc({"name": "test_grad_name", "test_key": "test_value"})
-    doc, doc_id = gradient_doc.should_write(mock_db, "test_grad_name")
-    assert doc_id is None
-    assert doc is None
+def test_check_doc_existence_for_gradient():
+    data_doc = DataDoc()
+    gradient_doc = {
+        "nucleus_surface_gradient": {
+            "mode": "surface",
+            "name": "nucleus_surface_gradient",
+        }
+    }
 
+    test_data = {
+        "doc": gradient_doc,
+        "dedup_hash": data_doc.generate_hash({"doc": gradient_doc}),
+    }
 
-def test_should_write_with_existing_doc():
-    existing_doc = {"name": "test_grad_name", "test_key": "test_value"}
-    mock_db.data = existing_doc
-    gradient_doc = GradientDoc({"name": "test_grad_name", "test_key": "test_value"})
+    result = mock_db.check_doc_existence("gradients", test_data)
+    assert result is None
 
-    doc, doc_id = gradient_doc.should_write(mock_db, "test_grad_name")
-    assert doc_id is not None
-    assert doc is not None
+    existing_doc = mock_db._existing_doc[0]
+    assert existing_doc["dedup_hash"] == test_data["dedup_hash"]
