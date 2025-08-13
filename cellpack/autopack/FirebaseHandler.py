@@ -1,14 +1,18 @@
 import ast
 import logging
 import os
+
 import firebase_admin
-from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
+from firebase_admin import credentials, firestore
 from google.cloud.exceptions import NotFound
-from cellpack.autopack.loaders.utils import read_json_file, write_json_file
+
 from cellpack.autopack.interface_objects.default_values import (
     default_firebase_collection_names,
 )
+from cellpack.autopack.loaders.utils import read_json_file, write_json_file
+
+log = logging.getLogger(__name__)
 
 
 class FirebaseHandler(object):
@@ -39,12 +43,12 @@ class FirebaseHandler(object):
     def which_db(default_db=None):
         options = {"1": "dev", "2": "staging"}
         if default_db in options.values():
-            print(f"Using {default_db} database -------------")
+            log.debug(f"Using {default_db} database -------------")
             return default_db
         for key, value in options.items():
-            print(f"[{key}] {value}")
+            log.debug(f"[{key}] {value}")
         choice = input("Enter number: ").strip()
-        print(f"Using {options.get(choice, 'dev')} database -------------")
+        log.debug(f"Using {options.get(choice, 'dev')} database -------------")
         return options.get(choice, "dev")  # default to dev db for recipe uploads
 
     @staticmethod
@@ -185,7 +189,7 @@ class FirebaseHandler(object):
     def update_doc(self, collection, id, data):
         doc_ref = self.db.collection(collection).document(id)
         doc_ref.update(data)
-        logging.info(f"successfully updated doc: {id}")
+        logging.debug(f"successfully updated doc: {id}")
         return doc_ref
 
     @staticmethod
