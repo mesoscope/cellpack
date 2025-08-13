@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Interface classes for cellpack. These are to establish data structures. """
+"""Interface classes for cellpack. These are to establish data structures."""
 from .default_values import (  # noqa: F401
     default_recipe_values,
     DEFAULT_GRADIENT_MODE_SETTINGS,
