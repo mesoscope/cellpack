@@ -10,13 +10,13 @@ The recipe JSON file defines the specification for a cellPACK packing, including
 ### Metadata section
 The top-level fields  include metadata about the recipe, such as its name, version, and bounding box. It also specifies the file path for grid data.
 
-| Field Path | Type | Description | Required | Default Value | Notes |
-|------------|------|-------------|----------|-----|-------|
-| `name` | string | Name of the recipe | Yes | | |
-| `version` | string | Recipe version string | No | "default" | Version of the recipe is appended to the output file name. |
-| `format_version` | string | Schema format version | No | "1.0" | Older recipe formats do not have this field. Recipes are automatically migrated to the latest format version before packing.|
-| `bounding_box` | array `[[minX, minY, minZ], [maxX, maxY, maxZ]]` | Bounding box of the packing result | No | `[[ 0, 0, 0 ], [ 100, 100, 100 ]]` | |
-| `grid_file_path` | string | File path to read/write grid data | No | | If not specified, a grid file is created and stored at the output path. |
+| Field Path | Type | Description | Default Value | Notes |
+|------------|------|-------------|-----|-------|
+| `name` | string | Name of the recipe | | |
+| `version` | string | Recipe version string | "default" | Version of the recipe is appended to the output file name. |
+| `format_version` | string | Schema format version | "1.0" | Older recipe formats do not have this field. Recipes are automatically migrated to the latest format version before packing.|
+| `bounding_box` | array `[[minX, minY, minZ], [maxX, maxY, maxZ]]` | Bounding box of the packing result | `[[ 0, 0, 0 ], [ 100, 100, 100 ]]` | |
+| `grid_file_path` | string | File path to read/write grid data | | If not specified, a grid file is created and stored at the output path. |
 
 **Example:**
 ```JSON
@@ -44,28 +44,28 @@ The top-level fields  include metadata about the recipe, such as its name, versi
 ### Objects Section
 This section contains information about the objects to be packed, including their types, colors, sizes, and packing methods. Each object can inherit properties from another object.
 
-| Field Path | Type | Description | Required | Default Value | Notes |
-|------------|------|-------------|----------|-----|-------|
-| `color` | array (RGB 0–1) `[float, float, float]` | RGB color of object | No | | |
-| `type` | string (enum) | Object type | Yes | `single_sphere` | Accepts a type from `"single_sphere"`, `"multi_sphere"`, `"single_cube"`, `"single_cylinder"`, `"multi_cylinder"`, `"grow"`, `mesh` |
-| `inherit` | string | Linked name of the inherited object | No | | Defined by the object. Must exist in `objects` |
-| `radius` | number | Object radius | Yes | |  |
-| `jitter_attempts` | number | Max retries for packing | No | 5 | | 
-| `max_jitter` | array (0–1 per axis) | Vector with maximum jitter distance in units of grid spacing | No | [1, 1, 1] | |
-| `place_method` | string(enum) | Method used for packing the object | No | `jitter` | Accepts a method from `jitter`, `spheresSST`. Can be overwritten by a global config. |
-| `available_regions` | array | Regions where the object can be placed | | |e.g. `interior`, `surface`, `outer_leaflet`, `inner_leaflet` |
-| `packing_mode` | string(enum) | Packing behavior mode | No | `random` | Tied to the recipe. Accepts a packing mode from `random`, `close`, `closePartner`, `randomPartner`, `gradient`, `hexatile`, `squaretile`, `triangletile` |
-| `gradient` | string or list of strings | Gradient(s) applied to object | No | | Must exist in `gradients` |
-| `representations.mesh.path` | string | Mesh file path | No | | |
-| `representations.mesh.name` | string | Mesh file name | No | | Tied to the object |
-| `representations.mesh.format` | string | Mesh file format | No | | Tied to the object |
-| `representations.mesh.coordinate_system` | string (`left` or `right`) | Depends on generating software | No | `left` | |
-| `partners.names` | array(string[]) | List of partner object names | No | | Objects that attract to this one, must exist in `objects`|
-| `partners.probability_binding` | number (0–1) | Probability of binding with partners | No | 0.5 | |
-| `partners.positions` | array | Partner relative positions | No | | Relative positions for partner placement |
-| `partners.excluded_names` | array(string[]) | List of excluded partner objects | No | | Objects that repel from this one |
-| `partners.probability_repelled` | number (0–1) | Probability of repulsion from excluded partners | No | | |
-| `partners.weight` | number | Weight factor for partner interactions | No | 0.2 | Influence strength of partner effects |
+| Field Path | Type | Description | Default Value | Notes |
+|------------|------|-------------|-----|-------|
+| `color` | array (RGB 0–1) `[float, float, float]` | RGB color of object | | |
+| `type` | string (enum) | Object type | `single_sphere` | Accepts a type from `"single_sphere"`, `"multi_sphere"`, `"single_cube"`, `"single_cylinder"`, `"multi_cylinder"`, `"grow"`, `mesh` |
+| `inherit` | string | Linked name of the inherited object | | Defined by the object. Must exist in `objects` |
+| `radius` | number | Object radius | |  |
+| `jitter_attempts` | number | Max retries for packing | 5 | | 
+| `max_jitter` | array (0–1 per axis) | Vector with maximum jitter distance in units of grid spacing | [1, 1, 1] | |
+| `place_method` | string(enum) | Method used for packing the object | `jitter` | Accepts a method from `jitter`, `spheresSST`. Can be overwritten by a global config. |
+| `available_regions` | array | Regions where the object can be placed | |e.g. `interior`, `surface`, `outer_leaflet`, `inner_leaflet` |
+| `packing_mode` | string(enum) | Packing behavior mode | `random` | Tied to the recipe. Accepts a packing mode from `random`, `close`, `closePartner`, `randomPartner`, `gradient`, `hexatile`, `squaretile`, `triangletile` |
+| `gradient` | string or list of strings | Gradient(s) applied to object | | Must exist in `gradients` |
+| `representations.mesh.path` | string | Mesh file path | | |
+| `representations.mesh.name` | string | Mesh file name | | Tied to the object |
+| `representations.mesh.format` | string | Mesh file format | | Tied to the object |
+| `representations.mesh.coordinate_system` | string (`left` or `right`) | Depends on generating software | `left` | |
+| `partners.names` | array(string[]) | List of partner object names | | Objects that attract to this one, must exist in `objects`|
+| `partners.probability_binding` | number (0–1) | Probability of binding with partners | 0.5 | |
+| `partners.positions` | array | Partner relative positions | | Relative positions for partner placement |
+| `partners.excluded_names` | array(string[]) | List of excluded partner objects | | Objects that repel from this one |
+| `partners.probability_repelled` | number (0–1) | Probability of repulsion from excluded partners | | |
+| `partners.weight` | number | Weight factor for partner interactions | 0.2 | Influence strength of partner effects |
 
 **Example:**
 ```
@@ -131,19 +131,19 @@ This section contains information about the objects to be packed, including thei
 ### Gradients Section
 
 
-| Field Path | Type | Description | Required | Default Value | Notes |
-|------------|------|-------------|----------|-----|-------|
-| `description` | string | Description of gradient | No | | |
-| `mode` | string(enum) | Type of gradient | No | "X" | Defined by gradient. Accepts a mode from `"x"`, `"y"`, `"z"`, `"vector"`, `"radial"`, `"surface"` |
-| `pick_mode` | string(enum) | Gradient sampling method | No | `"linear"`| Accepts a pick mode from `"max"`, `"min"`, `"rnd"`, `"linear"`, `"binary"`, `"sub"`, `"reg"` |
-| `weight_mode` | string(enum) | Modulates the form of the grid point weight dropoff | Yes | | Accepts a weight mode from `"linear"`, `"square"`, `"cube"`, `"power"`, `"exponential"` |
-| `reversed` | boolean | Reverse gradient direction | No | | |
-| `invert` | boolean | Invert gradient weights | No | |  |
-| `weight_mode_settings.decay_length` | number | Decay rate parameter | No | | Controls gradient falloff |
-| `mode_settings.object` | string | Reference object for gradient | No | | Links to a mesh object |
-| `mode_settings.scale_to_next_surface` | boolean | Scaling toggle | No | | |
-| `mode_settings.direction` | array `[x, y, z]` | Direction vector for mode | No | | Defined by the mode |
-| `mode_settings.center` | array `[x, y, z]` | Center point for the gradient | No | | Used as the origin for radial or directional gradients, defined by the mode |
+| Field Path | Type | Description | Default Value | Notes |
+|------------|------|-------------|-----|-------|
+| `description` | string | Description of gradient | | |
+| `mode` | string(enum) | Type of gradient | "X" | Defined by gradient. Accepts a mode from `"x"`, `"y"`, `"z"`, `"vector"`, `"radial"`, `"surface"` |
+| `pick_mode` | string(enum) | Gradient sampling method | `"linear"`| Accepts a pick mode from `"max"`, `"min"`, `"rnd"`, `"linear"`, `"binary"`, `"sub"`, `"reg"` |
+| `weight_mode` | string(enum) | Modulates the form of the grid point weight dropoff | | Accepts a weight mode from `"linear"`, `"square"`, `"cube"`, `"power"`, `"exponential"` |
+| `reversed` | boolean | Reverse gradient direction | | |
+| `invert` | boolean | Invert gradient weights | |  |
+| `weight_mode_settings.decay_length` | number | Decay rate parameter | | Controls gradient falloff |
+| `mode_settings.object` | string | Reference object for gradient | | Links to a mesh object |
+| `mode_settings.scale_to_next_surface` | boolean | Scaling toggle | | |
+| `mode_settings.direction` | array `[x, y, z]` | Direction vector for mode | | Defined by the mode |
+| `mode_settings.center` | array `[x, y, z]` | Center point for the gradient | | Used as the origin for radial or directional gradients, defined by the mode |
 
 
 **Example:**
@@ -168,16 +168,16 @@ This section contains information about the objects to be packed, including thei
 
 The composition section defines the hierarchical structure of containers and their contents. It establishes parent-child relationships between objects and specifies which objects are placed within different regions.
 
-| Field Path | Type | Description | Required | Default Value |  Notes |
-|------------|------|-------------|----------|-----|-------|
-| `id` | string (unique) | Unique identifier for the composition item | Yes | | Must be unique within composition |
-| `object` | string | Linked object name | No | | Must exist in `objects` |
-| `count` | number (integers >= 0) | Number of objects | Yes | 5 | Falls back to definition in the object section|
-| `priority` | number | Packing priority | No | | e.g. -1 |
-| `regions.interior` | array | Interior contents of object | No | | |
-| `regions.surface` | array | Surface contents of object | No | | Objects placed on the surface |
-| `regions.inner-leaflet` | array | Inner leaflet contents | No | | Objects placed on inner leaflet |
-| `regions.outer-leaflet` | array | Outer leaflet contents | No | | Objects placed on outer leaflet |
+| Field Path | Type | Description | Default Value |  Notes |
+|------------|------|-------------|-----|-------|
+| `id` | string (unique) | Unique identifier for the composition item | | Must be unique within composition |
+| `object` | string | Linked object name | | Must exist in `objects` |
+| `count` | number (integers >= 0) | Number of objects | 5 | Falls back to definition in the object section|
+| `priority` | number | Packing priority | | e.g. -1 |
+| `regions.interior` | array | Interior contents of object | | |
+| `regions.surface` | array | Surface contents of object | | Objects placed on the surface |
+| `regions.inner-leaflet` | array | Inner leaflet contents | | Objects placed on inner leaflet |
+| `regions.outer-leaflet` | array | Outer leaflet contents | | Objects placed on outer leaflet |
 
 **Example:**
 ```
