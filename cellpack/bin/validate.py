@@ -10,9 +10,9 @@ def validate(recipe_path):
     try:
         with open(recipe_path, "r") as f:
             raw_recipe_data = json.load(f)
-        
+
         RecipeValidator.validate_recipe(raw_recipe_data)
-        
+
         print(f"Recipe {raw_recipe_data['name']} is valid")
     except ValidationError as e:
         print("Recipe validation failed:", e)
