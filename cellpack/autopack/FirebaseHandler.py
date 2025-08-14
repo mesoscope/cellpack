@@ -45,9 +45,9 @@ class FirebaseHandler(object):
         if default_db in options.values():
             log.debug(f"Using {default_db} database -------------")
             return default_db
-        for key, value in options.items():
-            log.debug(f"[{key}] {value}")
-        choice = input("Enter number: ").strip()
+        choice = input(
+            f"Enter number for database ({', '.join([f'{k}: {v}' for k, v in options.items()])}): "
+        ).strip()
         log.debug(f"Using {options.get(choice, 'dev')} database -------------")
         return options.get(choice, "dev")  # default to dev db for recipe uploads
 
