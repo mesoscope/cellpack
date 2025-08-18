@@ -5,7 +5,7 @@
 groups = ["default", "dev", "lint", "setup", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:720a3d77516daa64eebba2d5325618347f70a5f6f8d0344d161f0770e7f2217c"
+content_hash = "sha256:d1381f4cd7eb490570a9a1f0b49caa4e206f8df990185c69e40dbd773cf32370"
 
 [[metadata.targets]]
 requires_python = "==3.9.*"
@@ -2413,7 +2413,7 @@ files = [
 
 [[package]]
 name = "simulariumio"
-version = "1.11.0"
+version = "1.13.0"
 requires_python = ">=3.8"
 summary = "Python package that converts simulation outputs to the format consumed by the Simularium viewer website"
 groups = ["default"]
@@ -2423,8 +2423,8 @@ dependencies = [
     "pint>=0.17",
 ]
 files = [
-    {file = "simulariumio-1.11.0-py3-none-any.whl", hash = "sha256:a23026e8ad650d88478094cfa293562320844ba87246562a5e2a8325e1718ee4"},
-    {file = "simulariumio-1.11.0.tar.gz", hash = "sha256:4f58c25ec633a4f260e78e4ed5c1d89fa12468cf3f3ee2061fe039c83f23c894"},
+    {file = "simulariumio-1.13.0-py3-none-any.whl", hash = "sha256:71b47fce3ccc20af8c255ea388334d54d937bc27de677a7eca853f6044de0aaa"},
+    {file = "simulariumio-1.13.0.tar.gz", hash = "sha256:03dc1c9dda8e2fd6d7c58718e2114f145955a364f2884affb42bff1932d847e9"},
 ]
 
 [[package]]
