@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
 import copy
-import os
-
 import json
+import os
 from json import encoder
 
-
 import cellpack.autopack as autopack
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.interface_objects.partners import Partners
-from cellpack.autopack.utils import deep_merge, expand_object_using_key
+from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects import (
+    GradientData,
     Representations,
     default_recipe_values,
-    GradientData,
 )
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
+from cellpack.autopack.interface_objects.partners import Partners
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert as convert_v1_to_v2
 from cellpack.autopack.loaders.migrate_v2_to_v2_1 import convert as convert_v2_to_v2_1
-from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
+from cellpack.autopack.utils import deep_merge, expand_object_using_key
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 CURRENT_VERSION = "2.1"

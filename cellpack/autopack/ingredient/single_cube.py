@@ -382,7 +382,7 @@ class SingleCubeIngr(Ingredient):
         inv_rotation_matrix = numpy.linalg.inv(rotation_matrix)
 
         transformed_point = [
-            (grid_point_location - packing_location)
+            grid_point_location - packing_location
         ]  # translate points to cube center
         transformed_point = self.transformPoints(
             self.center, inv_rotation_matrix, transformed_point
