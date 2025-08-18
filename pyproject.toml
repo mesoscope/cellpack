@@ -33,7 +33,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "rtree>=1.3.0",
     "scipy>=1.13.1",
-    "simulariumio>=1.11.0",
+    "simulariumio>=1.13.0",
     "tqdm>=4.67.1",
     "trimesh>=4.5.3",
     "grpcio==1.67.1",
