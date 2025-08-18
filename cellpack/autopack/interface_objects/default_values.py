@@ -21,4 +21,5 @@ default_firebase_collection_names = [
     "recipes",
     "results",
     "configs",
+    "recipes_edited",
 ]

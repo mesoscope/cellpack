@@ -46,46 +46,48 @@
 # TODO: fix the save/restore grid
 """
 
-import os
-from time import time
-from random import random, uniform, seed
-from cellpack.autopack.interface_objects.packed_objects import PackedObjects
-from scipy import spatial
-import numpy
-import pickle
 import json
-from json import encoder
 import logging
+import os
+import pickle
 from collections import OrderedDict
+from json import encoder
+from random import random, seed, uniform
+from time import time
+
+import numpy
+from scipy import spatial
+from tqdm import tqdm
+
 import cellpack.autopack as autopack
-from cellpack.autopack.MeshStore import MeshStore
 import cellpack.autopack.ingredient as ingredient
+from cellpack.autopack import IOutils, get_cache_location, get_local_file_location
+
+# backward compatibility with kevin method
+from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
+from cellpack.autopack.interface_objects.packed_objects import PackedObjects
 from cellpack.autopack.loaders.utils import create_output_dir
+from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.utils import (
     cmp_to_key,
     expand_object_using_key,
-    get_value_from_distribution,
     get_max_value_from_distribution,
     get_min_value_from_distribution,
+    get_value_from_distribution,
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
     load_object_from_pickle,
 )
 from cellpack.autopack.writers import Writer
-from .Compartment import CompartmentList, Compartment
-from .Recipe import Recipe
-from .ingredient import GrowIngredient, ActinIngredient
-from cellpack.autopack import IOutils, get_cache_location, get_local_file_location
-from .octree import Octree
+
+from .Compartment import Compartment, CompartmentList
 from .Gradient import Gradient
-from .transformation import signed_angle_between_vectors
-
-# backward compatibility with kevin method
-from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
+from .ingredient import ActinIngredient, GrowIngredient
+from .octree import Octree
 from .randomRot import RandomRot
-
-from tqdm import tqdm
+from .Recipe import Recipe
+from .transformation import signed_angle_between_vectors
 
 try:
     helper = autopack.helper
@@ -99,8 +101,9 @@ encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 pickle.DEFAULT_PROTOCOL = pickle.HIGHEST_PROTOCOL
 
 SEED = 15
-LOG = False
 verbose = 0
+
+log = logging.getLogger("env")
 
 
 class Environment(CompartmentList):
@@ -293,7 +296,7 @@ class Environment(CompartmentList):
             name=grid_file_name, cache="grids", destination=""
         )
         if os.path.exists(local_file_path):
-            print(f"Removing grid cache file: {local_file_path}")  # TODO: change to log
+            log.info(f"Removing grid cache file: {local_file_path}")
             os.remove(local_file_path)
 
     def get_compartment_object_by_name(self, compartment_name):
@@ -783,14 +786,14 @@ class Environment(CompartmentList):
         """
         d = os.path.dirname(gridFileOut)
         if not os.path.exists(d):
-            print("gridfilename path problem", gridFileOut)
+            log.error(f"gridfilename path problem {gridFileOut}")
             return
         f = open(gridFileOut, "wb")  # 'w'
         self.writeArraysToFile(f)
 
         for compartment in self.compartments:
             compartment.saveGridToFile(f)
-        print("SAVED GRID TO ", gridFileOut)
+        log.debug(f"Saved grid to {gridFileOut}")
         f.close()
 
     def saveGridLogsAsJson(self, gridFileOut):
@@ -845,7 +848,7 @@ class Environment(CompartmentList):
         """
         Read and setup the grid from the given filename. (pickle)
         """
-        print(f"Loading grid from {grid_file_path}")
+        log.debug(f"Loading grid from {grid_file_path}")
 
         with open(grid_file_path, "rb") as file_obj:
             # load env grid
@@ -877,7 +880,7 @@ class Environment(CompartmentList):
         """
         Save the current grid and compartment grids to file. (pickle)
         """
-        print(f"Saving grid to {grid_file_path}")
+        log.info("Saving grid to %s", grid_file_path)
         if not os.path.exists(os.path.dirname(grid_file_path)):
             raise ValueError(f"Check grid file path: {grid_file_path}")
         with open(grid_file_path, "wb") as file_obj:
@@ -895,7 +898,7 @@ class Environment(CompartmentList):
         """
         Read and setup the grid from the given filename. (pickle)
         """
-        print(f"Loading grid from {gridFileName}")
+        log.debug(f"Loading grid from {gridFileName}")
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
@@ -1560,7 +1563,7 @@ class Environment(CompartmentList):
                 if ingrInd < len(self.activeIngr):
                     ingr = self.activeIngr[ingrInd]
                 else:
-                    print("error in Environment pick Ingredient", ingrInd)
+                    log.error(f"Error in Environment pick Ingredient: {ingrInd}")
                     ingr = self.activeIngr[0]
                 if verbose:
                     print("weighted", prob, vThreshStart, ingrInd, ingr.name)
@@ -1779,7 +1782,10 @@ class Environment(CompartmentList):
         min_distance = min(distances)
         expected_min_distance = self.smallestProteinSize * 2
         if min_distance < expected_min_distance:
-            print(expected_min_distance - min_distance)
+            log.error(
+                f"New placement {new_position} is too close to existing objects. "
+                f"Minimum distance {min_distance} is less than expected {expected_min_distance}."
+            )
         return min_distance < expected_min_distance
 
     def distance_check_failed(self):
@@ -2556,8 +2562,8 @@ class Environment(CompartmentList):
             resultfilename = autopack.fixOnePath(resultfilename)  # retireve?
         # if result file_name start with http?
         if resultfilename.find("http") != -1 or resultfilename.find("ftp") != -1:
-            print(
-                "please provide a correct file name for the result file ",
+            log.info(
+                "Please provide a correct file name for the result file %s",
                 resultfilename,
             )
         self.collectResultPerIngredient()

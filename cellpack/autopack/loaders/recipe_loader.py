@@ -155,13 +155,20 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name = autopack.load_file(
+        new_values, database_name, is_unnested_firebase = autopack.load_file(
             self.file_path, cache="recipes", use_docker=use_docker
         )
         if database_name == "firebase":
-            objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
-                new_values["composition"]
-            )
+            if is_unnested_firebase:
+                objects = new_values.get("objects", {})
+                gradients = new_values.get("gradients", {})
+                composition = DBRecipeLoader.remove_empty(
+                    new_values.get("composition", {})
+                )
+            else:
+                objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
+                    new_values["composition"]
+                )
             new_values = DBRecipeLoader.compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )
