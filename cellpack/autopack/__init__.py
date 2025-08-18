@@ -37,7 +37,6 @@ AF
 import getpass
 import json
 import logging
-import logging.config
 import os
 import re
 import shutil
@@ -46,7 +45,6 @@ import sys
 import urllib.request as urllib
 from collections import OrderedDict
 from pathlib import Path
-
 
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
@@ -58,14 +56,7 @@ use_json_hook = True
 afdir = Path(os.path.abspath(__path__[0]))
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
 
-###############################################################################
-log_file_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "../logging.conf"
-)
-logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger("autopack")
-log.propagate = False
-###############################################################################
 
 
 def make_directory_if_needed(directory):
@@ -79,7 +70,7 @@ def make_directory_if_needed(directory):
 # the dir will have all the recipe + cache.
 appdata = Path(__file__).parents[2] / ".cache"
 make_directory_if_needed(appdata)
-log.info(f"cellPACK data dir created {appdata}")
+log.debug(f"cellPACK data dir created {appdata}")
 appdata = Path(appdata)
 
 
