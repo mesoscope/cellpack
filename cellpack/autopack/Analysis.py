@@ -6,6 +6,7 @@ Created on Mon May  6 22:58:44 2013
 """
 import concurrent.futures
 import json
+import logging
 import multiprocessing
 from pathlib import Path
 from time import time
@@ -22,6 +23,8 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
 from cellpack.autopack.writers import Writer
 from cellpack.autopack.writers.MarkdownWriter import MarkdownWriter
+
+log = logging.getLogger(__name__)
 
 
 class Analysis:
@@ -551,7 +554,7 @@ class Analysis:
             [len(packing_dict) for packing_dict in all_pos_list]
         )
 
-        print("Starting analysis workflow...")
+        log.debug("Starting analysis workflow...")
 
         if analysis_config.get("create_report"):
             self.create_report(
@@ -632,7 +635,7 @@ class Analysis:
         self.env.buildGrid()
         t2 = time()
         gridTime = t2 - t1
-        print(f"time to build grid: {gridTime:0.2f}")
+        log.debug(f"Time to build grid: {gridTime:0.2f}")
 
     def pack(
         self,
@@ -648,8 +651,8 @@ class Analysis:
         self.seed_to_results[seed] = results
         t2 = time()
         run_time = t2 - t1
-        print(f"time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
-        print(f"num placed: {len(self.env.packed_objects.get_ingredients())}")
+        log.debug(f"Time to run pack_grid for {self.env.place_method}: {run_time:0.2f}")
+        log.debug(f"Number placed: {len(self.env.packed_objects.get_ingredients())}")
         if show_plotly_plot:
             min_bound, max_bound = self.env.get_bounding_box_limits()
             width = max_bound - min_bound
