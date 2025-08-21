@@ -172,17 +172,6 @@ def get_paired_key(val_dict, key1=None, key2=None):
             return key
 
 
-def load_object_from_pickle(pickle_file_object):
-    """
-    Update an object from a pickle file
-    """
-    try:
-        output_object = pickle.load(pickle_file_object)
-    except Exception as e:
-        raise ValueError(f"Error loading saved object: {e}")
-    return output_object
-
-
 def get_min_value_from_distribution(distribution_options, return_int=False):
     """
     Returns a low bound on the value from a distribution

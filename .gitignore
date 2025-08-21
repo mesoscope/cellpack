@@ -123,3 +123,9 @@ data/
 
 # pdm files
 .pdm-python
+
+# AWS
+.aws/
+
+# MacOS
+**/*.DS_Store
