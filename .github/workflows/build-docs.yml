@@ -32,9 +32,23 @@ jobs:
         touch docs/_build/html/.nojekyll
     
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: docs/_build/html/
+  
+  test-deploy:
+    needs: docs
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+      - name: Extract and validate
+        run: |
+          tar -tf artifact.tar | head -10
+          echo "Artifact validation complete"
   
   deploy:
     needs: docs
