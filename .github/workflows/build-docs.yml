@@ -24,11 +24,6 @@ jobs:
 
     - uses: ./.github/actions/dependencies
 
-    - name: Test token access
-      run: |
-        echo "Token exists: ${{ secrets.GITHUB_TOKEN != '' }}"
-        # Note: The actual token value is masked in logs for security
-
     - name: Setup Pages
       uses: actions/configure-pages@v5
 
@@ -38,8 +33,9 @@ jobs:
         touch docs/_build/html/.nojekyll
     
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
+        name: github-pages
         path: docs/_build/html/
   
   deploy:
