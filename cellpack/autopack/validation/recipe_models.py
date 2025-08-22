@@ -4,7 +4,7 @@ from enum import Enum
 
 # note: ge(>=), le(<=), gt(>), lt(<)
 
-
+# OBJECT-LEVEL CLASSES
 class IngredientType(str, Enum):
     SINGLE_SPHERE = "single_sphere"
     MULTI_SPHERE = "multi_sphere"
@@ -89,26 +89,6 @@ class Gradient(BaseModel):
     mode_settings: Optional[GradientModeSettings] = None
 
 
-class CompositionItem(BaseModel):
-    object: str
-    count: int = Field(5, ge=0)
-    priority: Optional[int] = None
-
-
-class CompositionRegions(BaseModel):
-    interior: Optional[List[Union[str, CompositionItem]]] = None
-    surface: Optional[List[Union[str, CompositionItem]]] = None
-    inner_leaflet: Optional[List[Union[str, CompositionItem]]] = None
-    outer_leaflet: Optional[List[Union[str, CompositionItem]]] = None
-
-
-class CompositionEntry(BaseModel):
-    object: Optional[str] = None
-    count: Optional[int] = Field(None, ge=0)
-    priority: Optional[int] = None
-    regions: Optional[CompositionRegions] = None
-
-
 class Partner(BaseModel):
     names: Optional[List[str]] = None
     probability_binding: float = Field(0.5, ge=0, le=1)
@@ -147,7 +127,7 @@ class Representations(BaseModel):
     packing: Optional[PackingRepresentation] = None
 
 
-class BaseRecipeObject(BaseModel):
+class BaseObject(BaseModel):
     type: Optional[IngredientType] = None
     inherit: Optional[str] = None
     color: Optional[ThreeFloatArray] = Field(None, min_length=3, max_length=3)
@@ -202,14 +182,85 @@ class BaseRecipeObject(BaseModel):
                 raise ValueError("orient_bias_range min must be <= max")
         return v
 
+# COMPOSITION-LEVEL CLASSES
+"""
+"composition": {
+        "bounding_area": {       <= this is a CompositionEntry
+            "regions": {
+                "interior": [
+                    "outer_sphere",    <= this is a string reference to a CompositionEntry
+                    {
+                        "object": "green_sphere",
+                        "count": 5
+                    }
+                ]
+            }
+        },
+        "outer_sphere": {         <= this is a CompositionEntry
+            "object": "large_sphere",
+            "count": 1,
+            "regions": {      <= this is CompositionRegions
+                "interior": [
+                    "inner_sphere",
+                    {                               <= this is a CompositionItem
+                        "object": "red_sphere",      <= CompositionItem.object
+                        "count": 40                  <= CompositionItem.count
+                    }
+                ],
+                "surface": [{
+                    "object": "green_sphere",
+                    "count": 40
+                }]
+            }
+        },
+        "inner_sphere": {       <= this is a CompositionEntry
+            "object": "medium_sphere",
+            "regions": {
+                "interior": [
+                    {
+                        "object": "green_sphere",
+                        "count": 20
+                    }
+                ]
+            }
+        }
+    }
+}
+
+All referenced objects must be defined in the objects section.
+"""
+class CompositionItem(BaseModel):
+    object: str
+    count: int = Field(5, ge=0)
+    priority: Optional[int] = None
 
 
+class CompositionRegions(BaseModel):
+    interior: Optional[List[Union[str, CompositionItem]]] = None
+    surface: Optional[List[Union[str, CompositionItem]]] = None
+    inner_leaflet: Optional[List[Union[str, CompositionItem]]] = None
+    outer_leaflet: Optional[List[Union[str, CompositionItem]]] = None
 
-# TODO: check the requirement for specific object types(SingleSphereObject, MultiSphereObject, MeshObject)
 
-RecipeObject = Union[BaseRecipeObject]
+class CompositionEntry(BaseModel):
+    object: Optional[str] = None
+    count: Optional[int] = Field(None, ge=0)
+    priority: Optional[int] = None
+    regions: Optional[CompositionRegions] = None
+
+    @model_validator(mode="after")
+    def validate_entry_content(self):
+        """validates entry has either object or regions (not both empty)"""
+        if not self.object and not self.regions:
+            raise ValueError("CompositionEntry must have either 'object' or 'regions'")
+        return self
 
 
+# TODO: other than the base object we defined, check the requirement for specific object types(SingleSphereObject, MultiSphereObject, MeshObject)
+# add them in the RecipeObject union
+RecipeObject = Union[BaseObject]
+
+# RECIPE-LEVEL CLASS
 class Recipe(BaseModel):
     name: str
     version: str = Field("default")
@@ -242,11 +293,13 @@ class Recipe(BaseModel):
                 raise ValueError(f"Bounding box min_{axis} must be < max_{axis}")
         return v
 
+    # CROSS-FIELD VALIDATIONS
+    # the "after" model validator runs after all individual fields
     @model_validator(mode="after")
     def validate_object_gradients(self):
-            """Validate that object gradients reference existing gradients in the recipe"""
-            if hasattr(self, "objects") and self.objects:
-                available_gradients = set(self.gradients.keys()) if self.gradients else set()
+        """Validate that object gradients reference existing gradients in the recipe"""
+        if hasattr(self, "objects") and self.objects:
+            available_gradients = set(self.gradients.keys()) if self.gradients else set()   
             for obj_name, obj_data in self.objects.items():
                 if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
                     gradient_value = obj_data.gradient
@@ -260,6 +313,44 @@ class Recipe(BaseModel):
                     for gradient_ref in gradient_refs:
                         if gradient_ref not in available_gradients:
                             raise ValueError(f"objects.{obj_name}.gradient references '{gradient_ref}' which does not exist in gradients section")
-            return self
+        return self
+
+    @model_validator(mode="after") 
+    def validate_composition_references(self):
+        """validates that composition references point to existing composition entries or objects"""
+        if hasattr(self, "composition") and self.composition:
+            available_composition_entries = set(self.composition.keys())
+            available_objects = set(self.objects.keys()) if self.objects else set()
+
+            for comp_name, comp_entry in self.composition.items():
+                
+                if hasattr(comp_entry, "regions") and comp_entry.regions:
+                    self._validate_regions_references(
+                        comp_entry.regions, 
+                        f"composition.{comp_name}.regions",
+                        available_composition_entries,
+                        available_objects
+                    )
+                if hasattr(comp_entry, "object") and comp_entry.object:
+                    if comp_entry.object not in available_objects:
+                        raise ValueError(f"composition.{comp_name}.object references '{comp_entry.object}' which does not exist in objects section")
+
+        return self
+
+    def _validate_regions_references(self, regions, path, available_composition_entries, available_objects):
+        """validates references in composition regions"""
+        for region_name in ["interior", "surface", "inner_leaflet", "outer_leaflet"]:
+            region_items = getattr(regions, region_name, None)
+            if region_items:
+                for i, item in enumerate(region_items):
+                    current_path = f"{path}.{region_name}[{i}]"
+                    if isinstance(item, str):
+                        # str ref - must exist in composition entries
+                        if item not in available_composition_entries:
+                            raise ValueError(f"{current_path} references '{item}' which does not exist in composition section")
+                    elif isinstance(item, dict) and "object" in item:
+                        # CompositionItem.object ref - must exist in objects
+                        if item["object"] not in available_objects:
+                            raise ValueError(f"{current_path}.object references '{item['object']}' which does not exist in objects section")
 
     # TODO make the validation error messages more readable
