@@ -4,6 +4,7 @@ from enum import Enum
 
 # note: ge(>=), le(<=), gt(>), lt(<)
 
+
 # OBJECT-LEVEL CLASSES
 class IngredientType(str, Enum):
     SINGLE_SPHERE = "single_sphere"
@@ -129,7 +130,7 @@ class Representations(BaseModel):
 
 class BaseObject(BaseModel):
     type: Optional[IngredientType] = None
-    inherit: Optional[str] = None
+    inherit: Optional[str] = None  # TODO: add validation for `inherit` and `base`
     color: Optional[ThreeFloatArray] = Field(None, min_length=3, max_length=3)
 
     jitter_attempts: int = Field(5, ge=1)
@@ -181,6 +182,9 @@ class BaseObject(BaseModel):
                 raise ValueError("orient_bias_range min must be <= max")
         return v
 
+
+# TODO: need gradient-level validation
+
 # COMPOSITION-LEVEL CLASSES
 """
 "composition": {
@@ -228,6 +232,8 @@ class BaseObject(BaseModel):
 
 All referenced objects must be defined in the objects section.
 """
+
+
 class CompositionItem(BaseModel):
     object: str
     count: int = Field(5, ge=0)
@@ -258,6 +264,7 @@ class CompositionEntry(BaseModel):
 # TODO: other than the base object we defined, check the requirement for specific object types(SingleSphereObject, MultiSphereObject, MeshObject)
 # add them in the RecipeObject union
 RecipeObject = Union[BaseObject]
+
 
 # RECIPE-METADATA-LEVEL
 class Recipe(BaseModel):
@@ -298,7 +305,9 @@ class Recipe(BaseModel):
     def validate_object_gradients(self):
         """Validate that object gradients reference existing gradients in the recipe"""
         if hasattr(self, "objects") and self.objects:
-            available_gradients = set(self.gradients.keys()) if self.gradients else set()   
+            available_gradients = (
+                set(self.gradients.keys()) if self.gradients else set()
+            )
             for obj_name, obj_data in self.objects.items():
                 if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
                     gradient_value = obj_data.gradient
@@ -311,10 +320,12 @@ class Recipe(BaseModel):
                     # Check that all referenced gradients exist
                     for gradient_ref in gradient_refs:
                         if gradient_ref not in available_gradients:
-                            raise ValueError(f"objects.{obj_name}.gradient references '{gradient_ref}' which does not exist in gradients section")
+                            raise ValueError(
+                                f"objects.{obj_name}.gradient references '{gradient_ref}' which does not exist in gradients section"
+                            )
         return self
 
-    @model_validator(mode="after") 
+    @model_validator(mode="after")
     def validate_composition_references(self):
         """validates that composition references point to existing composition entries or objects"""
         if hasattr(self, "composition") and self.composition:
@@ -322,21 +333,25 @@ class Recipe(BaseModel):
             available_objects = set(self.objects.keys()) if self.objects else set()
 
             for comp_name, comp_entry in self.composition.items():
-                
+
                 if hasattr(comp_entry, "regions") and comp_entry.regions:
                     self._validate_regions_references(
-                        comp_entry.regions, 
+                        comp_entry.regions,
                         f"composition.{comp_name}.regions",
                         available_composition_entries,
-                        available_objects
+                        available_objects,
                     )
                 if hasattr(comp_entry, "object") and comp_entry.object:
                     if comp_entry.object not in available_objects:
-                        raise ValueError(f"composition.{comp_name}.object references '{comp_entry.object}' which does not exist in objects section")
+                        raise ValueError(
+                            f"composition.{comp_name}.object references '{comp_entry.object}' which does not exist in objects section"
+                        )
 
         return self
 
-    def _validate_regions_references(self, regions, path, available_composition_entries, available_objects):
+    def _validate_regions_references(
+        self, regions, path, available_composition_entries, available_objects
+    ):
         """validates references in composition regions"""
         for region_name in ["interior", "surface", "inner_leaflet", "outer_leaflet"]:
             region_items = getattr(regions, region_name, None)
@@ -346,10 +361,14 @@ class Recipe(BaseModel):
                     if isinstance(item, str):
                         # str ref - must exist in composition entries
                         if item not in available_composition_entries:
-                            raise ValueError(f"{current_path} references '{item}' which does not exist in composition section")
+                            raise ValueError(
+                                f"{current_path} references '{item}' which does not exist in composition section"
+                            )
                     elif isinstance(item, dict) and "object" in item:
                         # CompositionItem.object ref - must exist in objects
                         if item["object"] not in available_objects:
-                            raise ValueError(f"{current_path}.object references '{item['object']}' which does not exist in objects section")
+                            raise ValueError(
+                                f"{current_path}.object references '{item['object']}' which does not exist in objects section"
+                            )
 
     # TODO make the validation error messages more readable
