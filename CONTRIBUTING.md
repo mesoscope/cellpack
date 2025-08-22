@@ -15,7 +15,7 @@ Ready to contribute? Here's how to set up `cellpack` for local development.
     git clone git@github.com:{your_name_here}/cellpack.git
     ```
 
-3. Install the project in editable mode by following installation instructions [here](docs/INSTALL.md). (It is also recommended to work in a virtual environment):
+3. Install the project in editable mode by following installation instructions [here](./docs/INSTALL.md). (It is also recommended to work in a virtual environment):
 
     ```bash
     cd cellpack/
@@ -48,6 +48,42 @@ Ready to contribute? Here's how to set up `cellpack` for local development.
     ```
 
 7. Submit a pull request through the GitHub website.
+
+### Contributing cheat sheet
+
+1. `pip install -e .[dev]`
+
+    This will install your package in editable mode with all the required development
+    dependencies (i.e. `tox`).
+
+2. `make build`
+
+    This will run `tox` which will run all your tests and lint your code.
+
+3. `make clean`
+
+    This will clean up various Python and build generated files so that you can ensure
+    that you are working in a clean environment.
+
+4. `make docs`
+
+    This will generate and launch a web browser to view the most up-to-date
+    documentation for your Python package.
+
+### Suggested Git Branch Strategy
+
+1. `main` is for the most up-to-date development, very rarely should you directly
+   commit to this branch. GitHub Actions will run on every push and on a CRON to this
+   branch but still recommended to commit to your development branches and make pull
+   requests to main. If you push a tagged commit with bumpversion, this will also release to PyPI.
+2. Your day-to-day work should exist on branches separate from `main`. Even if it is
+   just yourself working on the repository, make a PR from your working branch to `main`
+   so that you can ensure your commits don't break the development head. GitHub Actions
+   will run on every push to any branch or any pull request from any branch to any other
+   branch.
+3. It is recommended to use "Squash and Merge" commits when committing PR's. It makes
+   each set of changes to `main` atomic and as a side effect naturally encourages small
+   well defined PR's.
 
 ## Deploying
 

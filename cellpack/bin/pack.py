@@ -1,15 +1,16 @@
-import fire
-from pathlib import Path
 import logging
 import logging.config
 import time
-import sys
+from pathlib import Path
+
+import fire
 
 from cellpack import autopack
 from cellpack.autopack import upy
 from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.Environment import Environment
-
+from cellpack.autopack.IOutils import format_time
+from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
@@ -64,6 +65,8 @@ def pack(
     env = Environment(config=packing_config_data, recipe=recipe_data)
     env.helper = helper
 
+    log.info("Packing recipe: %s", recipe_data["name"])
+    log.info("Outputs will be saved to %s", env.out_folder)
     if (
         packing_config_data["save_analyze_result"]
         or packing_config_data["number_of_packings"] > 1
@@ -71,7 +74,6 @@ def pack(
         analyze = Analysis(
             env=env,
         )
-        log.info(f"saving to {env.out_folder}")
 
         analyze.doloop(
             recipe_data,
@@ -91,8 +93,7 @@ def pack(
 def main():
     start_time = time.time()
     fire.Fire(pack)
-    execution_time = time.time() - start_time
-    print(f"The workflow took {execution_time:.2f} s to run.")
+    log.info(f"Workflow completed in {format_time(time.time() - start_time)}")
 
 
 if __name__ == "__main__":
