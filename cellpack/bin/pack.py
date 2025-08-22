@@ -50,7 +50,6 @@ def pack(
             log.info("Recipe validation passed!")
         except ValidationError as e:
             log.error(f"Recipe validation failed: {e}")
-            sys.exit(1)
 
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"], docker
