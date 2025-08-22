@@ -27,7 +27,7 @@ log = logging.getLogger()
 
 
 def pack(
-    recipe, config_path=None, analysis_config_path=None, docker=False, validate=True
+    recipe, config_path=None, analysis_config_path=None, docker=False, validate=False
 ):
     """
     Initializes an autopack packing from the command line
@@ -50,6 +50,7 @@ def pack(
             log.info("Recipe validation passed!")
         except ValidationError as e:
             log.error(f"Recipe validation failed: {e}")
+            return
 
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"], docker
