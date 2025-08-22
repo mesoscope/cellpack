@@ -202,19 +202,7 @@ class BaseRecipeObject(BaseModel):
                 raise ValueError("orient_bias_range min must be <= max")
         return v
 
-    @field_validator("gradient")
-    @classmethod
-    def validate_gradient(cls, v):
-        allowed_gradients = ["nucleus_gradient", "membrane_gradient", "struct_gradient"]
-        if v is not None:
-            if isinstance(v, str):
-                if v not in allowed_gradients:
-                    raise ValueError(f"gradient must be one of {allowed_gradients}")
-            elif isinstance(v, list):
-                for gradient in v:
-                    if gradient not in allowed_gradients:
-                        raise ValueError(f"gradient must be one of {allowed_gradients}")
-        return v
+
 
 
 # TODO: check the requirement for specific object types(SingleSphereObject, MultiSphereObject, MeshObject)
@@ -253,5 +241,25 @@ class Recipe(BaseModel):
                 axis = ["x", "y", "z"][i]
                 raise ValueError(f"Bounding box min_{axis} must be < max_{axis}")
         return v
+
+    @model_validator(mode="after")
+    def validate_object_gradients(self):
+            """Validate that object gradients reference existing gradients in the recipe"""
+            if hasattr(self, "objects") and self.objects:
+                available_gradients = set(self.gradients.keys()) if self.gradients else set()
+            for obj_name, obj_data in self.objects.items():
+                if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
+                    gradient_value = obj_data.gradient
+                    # Handle both string and list gradient references
+                    gradient_refs = []
+                    if isinstance(gradient_value, str):
+                        gradient_refs = [gradient_value]
+                    elif isinstance(gradient_value, list):
+                        gradient_refs = gradient_value
+                    # Check that all referenced gradients exist
+                    for gradient_ref in gradient_refs:
+                        if gradient_ref not in available_gradients:
+                            raise ValueError(f"objects.{obj_name}.gradient references '{gradient_ref}' which does not exist in gradients section")
+            return self
 
     # TODO make the validation error messages more readable
