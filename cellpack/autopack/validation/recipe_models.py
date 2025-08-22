@@ -90,12 +90,12 @@ class Gradient(BaseModel):
 
 
 class Partner(BaseModel):
-    names: Optional[List[str]] = None
-    probability_binding: float = Field(0.5, ge=0, le=1)
+    name: str
+    binding_probability: float = Field(0.5, ge=0, le=1)
     positions: Optional[List[ThreeFloatArray]] = None
     excluded_names: Optional[List[str]] = None
     probability_repelled: Optional[float] = Field(None, ge=0, le=1)
-    weight: float = Field(0.2, ge=0)
+    weight: Optional[float] = Field(None, ge=0)
 
 
 class MeshRepresentation(BaseModel):
@@ -151,8 +151,7 @@ class BaseObject(BaseModel):
     encapsulating_radius: Optional[float] = Field(None, gt=0)
     radius: Optional[float] = Field(None, gt=0)
     available_regions: Optional[Dict[str, Any]] = None
-
-    partners: Optional[Partner] = None
+    partners: Optional[List[Partner]] = None
     gradient: Optional[Union[str, List[str]]] = None
     weight: Optional[float] = Field(None, ge=0)
     is_attractor: Optional[bool] = None
@@ -260,7 +259,7 @@ class CompositionEntry(BaseModel):
 # add them in the RecipeObject union
 RecipeObject = Union[BaseObject]
 
-# RECIPE-LEVEL CLASS
+# RECIPE-METADATA-LEVEL
 class Recipe(BaseModel):
     name: str
     version: str = Field("default")
