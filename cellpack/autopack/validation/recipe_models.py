@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional, List, Dict, Any, Union
 from enum import Enum
 
-# Temp note: ge(>=), le(<=), gt(>), lt(<)
+# note: ge(>=), le(<=), gt(>), lt(<)
 
 
 class IngredientType(str, Enum):
@@ -68,7 +68,7 @@ ThreeFloatArray = List[float]
 
 
 class WeightModeSettings(BaseModel):
-    decay_length: Optional[float] = None
+    decay_length: Optional[float] = Field(None, ge=0, le=1)
 
 
 class GradientModeSettings(BaseModel):
@@ -169,7 +169,7 @@ class BaseRecipeObject(BaseModel):
     cutoff_surface: Optional[float] = Field(None, gt=0)
     perturb_axis_amplitude: Optional[float] = Field(None, ge=0)
     encapsulating_radius: Optional[float] = Field(None, gt=0)
-
+    radius: Optional[float] = Field(None, gt=0)
     available_regions: Optional[Dict[str, Any]] = None
 
     partners: Optional[Partner] = None
@@ -200,6 +200,20 @@ class BaseRecipeObject(BaseModel):
         if v is not None and len(v) == 2:
             if v[0] > v[1]:
                 raise ValueError("orient_bias_range min must be <= max")
+        return v
+
+    @field_validator("gradient")
+    @classmethod
+    def validate_gradient(cls, v):
+        allowed_gradients = ["nucleus_gradient", "membrane_gradient", "struct_gradient"]
+        if v is not None:
+            if isinstance(v, str):
+                if v not in allowed_gradients:
+                    raise ValueError(f"gradient must be one of {allowed_gradients}")
+            elif isinstance(v, list):
+                for gradient in v:
+                    if gradient not in allowed_gradients:
+                        raise ValueError(f"gradient must be one of {allowed_gradients}")
         return v
 
 
