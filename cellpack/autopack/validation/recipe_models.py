@@ -98,16 +98,26 @@ class RecipeGradient(BaseModel):
         if self.mode == GradientMode.SURFACE:
             if not self.mode_settings:
                 raise ValueError("Surface gradient mode requires 'mode_settings' field")
-            if not hasattr(self.mode_settings, "object") or not self.mode_settings.object:
-                raise ValueError("Surface gradient mode requires 'object' in mode_settings")
+            if (
+                not hasattr(self.mode_settings, "object")
+                or not self.mode_settings.object
+            ):
+                raise ValueError(
+                    "Surface gradient mode requires 'object' in mode_settings"
+                )
 
         # vector mode requires mode_settings with direction
         elif self.mode == GradientMode.VECTOR:
             if not self.mode_settings:
                 raise ValueError("Vector gradient mode requires 'mode_settings' field")
-            if not hasattr(self.mode_settings, "direction") or not self.mode_settings.direction:
-                raise ValueError("Vector gradient mode requires 'direction' in mode_settings")
-                
+            if (
+                not hasattr(self.mode_settings, "direction")
+                or not self.mode_settings.direction
+            ):
+                raise ValueError(
+                    "Vector gradient mode requires 'direction' in mode_settings"
+                )
+
         return self
 
     @field_validator("mode_settings")
@@ -115,10 +125,12 @@ class RecipeGradient(BaseModel):
     def validate_direction_vector(cls, v, info):
         if v and hasattr(v, "direction") and v.direction:
             import math
+
             magnitude = math.sqrt(sum(x**2 for x in v.direction))
             if magnitude == 0:
                 raise ValueError("Direction vector cannot be a zero vector")
         return v
+
 
 class Partner(BaseModel):
     name: str
@@ -160,7 +172,7 @@ class Representations(BaseModel):
 
 class BaseObject(BaseModel):
     type: Optional[IngredientType] = None
-    inherit: Optional[str] = None  # TODO: add validation for `inherit` and `base`
+    inherit: Optional[str] = None
     color: Optional[ThreeFloatArray] = Field(None, min_length=3, max_length=3)
 
     jitter_attempts: int = Field(5, ge=1)
@@ -212,8 +224,6 @@ class BaseObject(BaseModel):
                 raise ValueError("orient_bias_range min must be <= max")
         return v
 
-
-# TODO: need gradient-level validation
 
 # COMPOSITION-LEVEL CLASSES
 """
@@ -360,12 +370,21 @@ class Recipe(BaseModel):
         """Validate that surface gradients reference existing objects"""
         if hasattr(self, "gradients") and self.gradients:
             available_objects = set(self.objects.keys()) if self.objects else set()
-            
+
             for gradient_name, gradient_data in self.gradients.items():
                 if hasattr(gradient_data, "mode") and gradient_data.mode == "surface":
-                    if hasattr(gradient_data, "mode_settings") and gradient_data.mode_settings:
-                        if hasattr(gradient_data.mode_settings, "object") and gradient_data.mode_settings.object:
-                            if gradient_data.mode_settings.object not in available_objects:
+                    if (
+                        hasattr(gradient_data, "mode_settings")
+                        and gradient_data.mode_settings
+                    ):
+                        if (
+                            hasattr(gradient_data.mode_settings, "object")
+                            and gradient_data.mode_settings.object
+                        ):
+                            if (
+                                gradient_data.mode_settings.object
+                                not in available_objects
+                            ):
                                 raise ValueError(
                                     f"gradients.{gradient_name}.mode_settings.object references '{gradient_data.mode_settings.object}' which does not exist in objects section"
                                 )
@@ -383,6 +402,25 @@ class Recipe(BaseModel):
                             raise ValueError(
                                 f"objects.{obj_name}.gradient: gradient lists must contain at least 2 gradients"
                             )
+        return self
+
+    @model_validator(mode="after")
+    def validate_object_inheritance(self):
+        """Validate that object inherit references point to existing objects in the objects section"""
+        if hasattr(self, "objects") and self.objects:
+            available_objects = set(self.objects.keys())
+            for obj_name, obj_data in self.objects.items():
+                if hasattr(obj_data, "inherit") and obj_data.inherit is not None:
+                    inherit_ref = obj_data.inherit
+                    if inherit_ref not in available_objects:
+                        raise ValueError(
+                            f"objects.{obj_name}.inherit references '{inherit_ref}' which does not exist in objects section"
+                        )
+                    # check for self-inheritance
+                    if inherit_ref == obj_name:
+                        raise ValueError(
+                            f"objects.{obj_name}.inherit cannot reference itself"
+                        )
         return self
 
     @model_validator(mode="after")
@@ -430,5 +468,3 @@ class Recipe(BaseModel):
                             raise ValueError(
                                 f"{current_path}.object references '{item['object']}' which does not exist in objects section"
                             )
-
-    # TODO make the validation error messages more readable
