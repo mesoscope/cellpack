@@ -170,7 +170,7 @@ class Representations(BaseModel):
     packing: Optional[PackingRepresentation] = None
 
 
-class BaseObject(BaseModel):
+class RecipeObject(BaseModel):
     type: Optional[IngredientType] = None
     inherit: Optional[str] = None
     color: Optional[ThreeFloatArray] = Field(None, min_length=3, max_length=3)
@@ -299,11 +299,6 @@ class CompositionEntry(BaseModel):
         if not self.object and not self.regions:
             raise ValueError("CompositionEntry must have either 'object' or 'regions'")
         return self
-
-
-# TODO: other than the base object we defined, check the requirement for specific object types(SingleSphereObject, MultiSphereObject, MeshObject)
-# add them in the RecipeObject union
-RecipeObject = Union[BaseObject]
 
 
 # RECIPE-METADATA-LEVEL
