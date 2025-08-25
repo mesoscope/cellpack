@@ -49,7 +49,8 @@ def pack(
             RecipeValidator.validate_recipe(raw_recipe_data)
             log.info("Recipe validation passed!")
         except ValidationError as e:
-            log.error(f"Recipe validation failed: {e}")
+            formatted_error = RecipeValidator.format_validation_error(e)
+            log.error(formatted_error)
             return
 
     recipe_data = RecipeLoader(

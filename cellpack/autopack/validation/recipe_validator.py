@@ -3,6 +3,20 @@ from .recipe_models import Recipe, RecipeObject, RecipeGradient
 
 class RecipeValidator:
     @staticmethod
+    def format_validation_error(validation_error):
+        """
+        Format a Pydantic ValidationError into a user-friendly message
+        Removes technical details like URLs and provides clear error messages
+        """
+        error_lines = []
+        for error in validation_error.errors():
+            location = " -> ".join(str(x) for x in error["loc"]) if error["loc"] else "root"
+            message = error["msg"]
+            error_lines.append(f"  {location}: {message}")
+        
+        return "Validation errors found:\n" + "\n".join(error_lines)
+
+    @staticmethod
     def validate_recipe(recipe_data):
         # main recipe metadata
         recipe_model = Recipe(**recipe_data)
