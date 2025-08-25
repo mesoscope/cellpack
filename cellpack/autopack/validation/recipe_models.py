@@ -70,6 +70,7 @@ ThreeFloatArray = List[float]
 
 class WeightModeSettings(BaseModel):
     decay_length: Optional[float] = Field(None, ge=0, le=1)
+    power: Optional[float] = Field(None, gt=0)
 
 
 class GradientModeSettings(BaseModel):
@@ -77,9 +78,10 @@ class GradientModeSettings(BaseModel):
     scale_to_next_surface: Optional[bool] = None
     direction: Optional[ThreeFloatArray] = Field(None, min_length=3, max_length=3)
     center: Optional[ThreeFloatArray] = Field(None, min_length=3, max_length=3)
+    radius: Optional[float] = Field(None, gt=0)
 
 
-class Gradient(BaseModel):
+class RecipeGradient(BaseModel):
     description: Optional[str] = None
     mode: GradientMode = Field(GradientMode.X)
     pick_mode: PickMode = Field(PickMode.LINEAR)
@@ -89,6 +91,34 @@ class Gradient(BaseModel):
     weight_mode_settings: Optional[WeightModeSettings] = None
     mode_settings: Optional[GradientModeSettings] = None
 
+    @model_validator(mode="after")
+    def validate_mode_requirements(self):
+        """Validate that required `mode_settings` exist for modes that need them"""
+        # surface mode requires mode_settings with object
+        if self.mode == GradientMode.SURFACE:
+            if not self.mode_settings:
+                raise ValueError("Surface gradient mode requires 'mode_settings' field")
+            if not hasattr(self.mode_settings, "object") or not self.mode_settings.object:
+                raise ValueError("Surface gradient mode requires 'object' in mode_settings")
+
+        # vector mode requires mode_settings with direction
+        elif self.mode == GradientMode.VECTOR:
+            if not self.mode_settings:
+                raise ValueError("Vector gradient mode requires 'mode_settings' field")
+            if not hasattr(self.mode_settings, "direction") or not self.mode_settings.direction:
+                raise ValueError("Vector gradient mode requires 'direction' in mode_settings")
+                
+        return self
+
+    @field_validator("mode_settings")
+    @classmethod
+    def validate_direction_vector(cls, v, info):
+        if v and hasattr(v, "direction") and v.direction:
+            import math
+            magnitude = math.sqrt(sum(x**2 for x in v.direction))
+            if magnitude == 0:
+                raise ValueError("Direction vector cannot be a zero vector")
+        return v
 
 class Partner(BaseModel):
     name: str
@@ -274,7 +304,7 @@ class Recipe(BaseModel):
     bounding_box: List[List[float]] = Field([[0, 0, 0], [100, 100, 100]])
     grid_file_path: Optional[str] = None
     objects: Dict[str, RecipeObject] = Field(default_factory=dict)
-    gradients: Dict[str, Gradient] = Field(default_factory=dict)
+    gradients: Dict[str, RecipeGradient] = Field(default_factory=dict)
     composition: Dict[str, CompositionEntry] = Field(default_factory=dict)
 
     @field_validator("name")
@@ -322,6 +352,36 @@ class Recipe(BaseModel):
                         if gradient_ref not in available_gradients:
                             raise ValueError(
                                 f"objects.{obj_name}.gradient references '{gradient_ref}' which does not exist in gradients section"
+                            )
+        return self
+
+    @model_validator(mode="after")
+    def validate_gradient_surface_objects(self):
+        """Validate that surface gradients reference existing objects"""
+        if hasattr(self, "gradients") and self.gradients:
+            available_objects = set(self.objects.keys()) if self.objects else set()
+            
+            for gradient_name, gradient_data in self.gradients.items():
+                if hasattr(gradient_data, "mode") and gradient_data.mode == "surface":
+                    if hasattr(gradient_data, "mode_settings") and gradient_data.mode_settings:
+                        if hasattr(gradient_data.mode_settings, "object") and gradient_data.mode_settings.object:
+                            if gradient_data.mode_settings.object not in available_objects:
+                                raise ValueError(
+                                    f"gradients.{gradient_name}.mode_settings.object references '{gradient_data.mode_settings.object}' which does not exist in objects section"
+                                )
+        return self
+
+    @model_validator(mode="after")
+    def validate_gradient_combinations(self):
+        """Validate gradient combinations in object gradient lists"""
+        if hasattr(self, "objects") and self.objects:
+            for obj_name, obj_data in self.objects.items():
+                if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
+                    if isinstance(obj_data.gradient, list):
+                        # multiple gradients - validate combination
+                        if len(obj_data.gradient) < 2:
+                            raise ValueError(
+                                f"objects.{obj_name}.gradient: gradient lists must contain at least 2 gradients"
                             )
         return self
 
