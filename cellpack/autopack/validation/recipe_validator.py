@@ -10,11 +10,7 @@ class RecipeValidator:
         """
         error_lines = []
         for error in validation_error.errors():
-            location = (
-                " -> ".join(str(x) for x in error["loc"]) if error["loc"] else "root"
-            )
-            message = error["msg"]
-            error_lines.append(f"  {location}: {message}")
+            error_lines.append(error["msg"])
 
         return "Validation errors found:\n" + "\n".join(error_lines)
 
