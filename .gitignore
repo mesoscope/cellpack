@@ -87,6 +87,7 @@ dask-worker-space
 .env
 
 # virtualenv
+**venv**
 .venv
 venv/
 ENV/
