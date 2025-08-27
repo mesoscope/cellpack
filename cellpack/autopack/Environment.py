@@ -876,7 +876,10 @@ class Environment(CompartmentList):
         # setup compartment grids
         for ct, _ in enumerate(self.compartments):
             for comp_obj in comp_objs:
-                if hasattr(comp_obj, "name") and comp_obj.name == self.compartments[ct].name:
+                if (
+                    hasattr(comp_obj, "name")
+                    and comp_obj.name == self.compartments[ct].name
+                ):
                     for update_attr in self.get_attributes_to_update():
                         setattr(
                             self.compartments[ct],

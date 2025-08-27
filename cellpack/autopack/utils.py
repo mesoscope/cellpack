@@ -1,7 +1,7 @@
 import collections
 import copy
+
 import numpy
-import pickle
 
 
 def get_distance(pt1, pt2):
