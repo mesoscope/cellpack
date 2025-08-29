@@ -1,4 +1,4 @@
-## Installation with `pyenv` and `pdm`
+# Installation with `pyenv` and `pdm`
 `pyenv` allows you to install multiple python versions side by side in your local user environment. This installation method is preferred over using `conda` to install `pdm`
 
 ### Install pyenv
