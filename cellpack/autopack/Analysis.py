@@ -10,7 +10,7 @@ import logging
 import multiprocessing
 from pathlib import Path
 from time import time
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import matplotlib
 import numpy as np
@@ -18,12 +18,14 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle
+from scipy.spatial.distance import cdist, pdist
 
 import cellpack.autopack as autopack
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.ingredient.Ingredient import Ingredient
 from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
+from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
 from cellpack.autopack.writers import Writer
 from cellpack.autopack.writers.MarkdownWriter import MarkdownWriter
@@ -120,6 +122,185 @@ class Analysis:
             List of dimension names.
         """
         return ["x", "y", "z", "r", "theta", "phi"]
+
+    def get_all_distances(self, position: Optional[List[float]] = None) -> np.ndarray:
+        """
+        Get distances between all packed objects or from a specific position.
+
+        Parameters
+        ----------
+        position
+            Position to calculate distances from
+
+        Returns
+        -------
+        :
+            Array of distances
+        """
+        positions = self.env.packed_objects.get_positions()
+        if len(positions) == 0:
+            return np.array([])
+        elif position is not None:
+            return np.linalg.norm(positions - np.array(position), axis=1)
+        else:
+            return pdist(positions)
+
+    def get_distances(
+        self, ingredient_name: str, center: List[float]
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Get distances for a specific ingredient.
+
+        Parameters
+        ----------
+        ingredient_name
+            Name of the ingredient
+        center
+            Center position for distance calculations
+
+        Returns
+        -------
+        :
+            Ingredient positions, distances from center, distances between ingredients
+        """
+        ingredient_positions = self.env.packed_objects.get_positions_for_ingredient(
+            ingredient_name
+        )
+
+        if len(ingredient_positions):
+            distances_between_ingredients = pdist(ingredient_positions)
+            distances_from_center = np.linalg.norm(
+                ingredient_positions - np.array(center), axis=1
+            )
+        else:
+            distances_from_center = np.array([])
+            distances_between_ingredients = np.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        )
+
+    def get_ingredient_angles(
+        self,
+        ingredient_name: str,
+        center: List[float],
+        ingredient_positions: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Calculate angles for ingredient orientations.
+
+        Parameters
+        ----------
+        ingredient_name
+            Name of the ingredient
+        center
+            Center position for angle calculations
+        ingredient_positions
+            Positions of ingredient instances
+
+        Returns
+        -------
+        :
+            Array of angles in degrees for X, Y, Z rotations
+        """
+        ingredient_rotation = self.env.packed_objects.get_rotations_for_ingredient(
+            ingredient_name=ingredient_name,
+        )
+        ingredient_position_vector = np.array(ingredient_positions) - np.array(center)
+
+        anglesX = np.array(
+            signed_angle_between_vectors(
+                [[0, 0, 1]] * len(ingredient_positions),
+                ingredient_rotation[:, 0, :3],
+                -ingredient_position_vector,
+                directed=False,
+                axis=1,
+            )
+        )
+        anglesY = np.array(
+            signed_angle_between_vectors(
+                [[0, 1, 0]] * len(ingredient_positions),
+                ingredient_rotation[:, 1, :3],
+                -ingredient_position_vector,
+                directed=False,
+                axis=1,
+            )
+        )
+        anglesZ = np.array(
+            signed_angle_between_vectors(
+                [[1, 0, 0]] * len(ingredient_positions),
+                ingredient_rotation[:, 2, :3],
+                -ingredient_position_vector,
+                directed=False,
+                axis=1,
+            )
+        )
+        return np.degrees(np.array([anglesX, anglesY, anglesZ]))
+
+    def get_distances_and_angles(
+        self, ingredient_name: str, center: List[float], get_angles: bool = False
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Get distances and optionally angles for an ingredient.
+
+        Parameters
+        ----------
+        ingredient_name
+            Name of the ingredient
+        center
+            Center position for calculations
+        get_angles
+            Whether to calculate angles
+
+        Returns
+        -------
+        :
+            Positions, distances from center, distances between ingredients, angles
+        """
+        (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        ) = self.get_distances(ingredient_name, center)
+        if get_angles:
+            angles = self.get_ingredient_angles(
+                ingredient_name, center, ingredient_positions
+            )
+        else:
+            angles = np.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+            angles,
+        )
+
+    def calc_pairwise_distances(self, ingr1name: str, ingr2name: str) -> np.ndarray:
+        """
+        Returns pairwise distances between ingredients of different types.
+
+        Parameters
+        ----------
+        ingr1name
+            Name of first ingredient type
+        ingr2name
+            Name of second ingredient type
+
+        Returns
+        -------
+        :
+            Flattened array of pairwise distances
+        """
+        ingredient_positions_1 = self.env.packed_objects.get_positions_for_ingredient(
+            ingredient_name=ingr1name
+        )
+        ingredient_positions_2 = self.env.packed_objects.get_positions_for_ingredient(
+            ingredient_name=ingr2name
+        )
+        return np.ravel(cdist(ingredient_positions_1, ingredient_positions_2))
 
     def writeJSON(self, filename: Union[Path, str], data: Union[Dict, list]) -> None:
         """
@@ -1203,7 +1384,7 @@ class Analysis:
             seed_distances_from_center,
             seed_distances_between_ingredients,
             seed_angles,
-        ) = self.env.get_distances_and_angles(ingr.name, center, get_angles=get_angles)
+        ) = self.get_distances_and_angles(ingr.name, center, get_angles=get_angles)
 
         center_distance_dict[string_seed_index][
             ingr.name
@@ -1264,8 +1445,7 @@ class Analysis:
             ):
                 pairwise_distance_dict[string_seed_index][
                     f"{ingr.name}_{ingr2.name}"
-                ] = self.env.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
-
+                ] = self.calc_pairwise_distances(ingr.name, ingr2.name).tolist()
         return pairwise_distance_dict
 
     def process_ingredients_in_recipe(
@@ -1530,6 +1710,7 @@ class Analysis:
                 center = self.center
             else:
                 center = self.env.grid.getCenter()
+
 
             # Process all recipes in order
             recipes_to_process = []
