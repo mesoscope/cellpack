@@ -1,49 +1,41 @@
 # -*- coding: utf-8 -*-
 """
-###############################################################################
-#
-# autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
-#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
-#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
-#   from Arthur Olson's Molecular Graphics Lab
-#
-# Environment.py Authors: Graham Johnson & Michel Sanner with editing/enhancement
-# from Ludovic Autin
-# HistoVol.py became Environment.py in the Spring of 2013 to generalize the terminology
-# away from biology
-#
-# Translation to Python initiated March 1, 2010 by Michel Sanner with Graham Johnson
-#
-# Class restructuring and organization: Michel Sanner
-#
-# Copyright: Graham Johnson ©2010
-#
-# This file "Environment.py" is part of autoPACK, cellPACK.
-#
-#    autoPACK is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    autoPACK is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with autoPACK (See "CopyingGNUGPL" in the installation.
-#    If not, see <http://www.gnu.org/licenses/>.
-#
-#
-###############################################################################
+autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
+  Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+  with assistance from Mostafa Al-Alusi in 2009 and periodic input
+  from Arthur Olson's Molecular Graphics Lab
+
+Environment.py Authors: Graham Johnson & Michel Sanner with editing/enhancement
+from Ludovic Autin
+
+HistoVol.py became Environment.py in the Spring of 2013 to generalize the terminology
+away from biology
+
+Translation to Python initiated March 1, 2010 by Michel Sanner with Graham Johnson
+
+Class restructuring and organization: Michel Sanner
+
+Copyright: Graham Johnson ©2010
+
+This file "Environment.py" is part of autoPACK, cellPACK.
+   autoPACK is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   autoPACK is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   You should have received a copy of the GNU General Public License
+   along with autoPACK (See "CopyingGNUGPL" in the installation.
+   If not, see <http://www.gnu.org/licenses/>.
+
 @author: Graham Johnson, Ludovic Autin, & Michel Sanner
 
-# Hybrid version merged from Graham's Sept 2011 and Ludo's April 2012
-# version on May 16, 2012
-# Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012
-# with correct analysis tools
-
-# TODO: fix the save/restore grid
+Hybrid version merged from Graham's Sept 2011 and Ludo's April 2012
+version on May 16, 2012
+Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012
+with correct analysis tools
 """
 
 import json
@@ -51,19 +43,17 @@ import logging
 import os
 import pickle
 from collections import OrderedDict
-from json import encoder
 from random import random, seed, uniform
 from time import time
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-import numpy
-from scipy import spatial
+import numpy as np
+from scipy.spatial import KDTree
 from tqdm import tqdm
 
 import cellpack.autopack as autopack
 import cellpack.autopack.ingredient as ingredient
 from cellpack.autopack import IOutils, get_cache_location, get_local_file_location
-
-# backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from cellpack.autopack.interface_objects.packed_objects import PackedObjects
 from cellpack.autopack.loaders.utils import create_output_dir
@@ -86,15 +76,12 @@ from .ingredient import ActinIngredient, GrowIngredient
 from .octree import Octree
 from .randomRot import RandomRot
 from .Recipe import Recipe
-from .transformation import signed_angle_between_vectors
 
 try:
     helper = autopack.helper
 except ImportError:
     helper = None
 
-
-encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
 # set default pickle protocol to highest level
 pickle.DEFAULT_PROTOCOL = pickle.HIGHEST_PROTOCOL
@@ -118,7 +105,17 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, config=None, recipe=None):
+    def __init__(self, config: Dict, recipe: Dict) -> None:
+        """
+        Initialize the Environment with configuration and recipe data.
+
+        Parameters
+        ----------
+        config
+            Configuration dictionary containing packing parameters
+        recipe
+            Recipe dictionary containing environment specifications
+        """
         CompartmentList.__init__(self)
         self.mesh_store = MeshStore()
 
@@ -138,7 +135,7 @@ class Environment(CompartmentList):
         self.pickRandPt = not config["ordered_packing"]
         self.show_sphere_trees = config["show_sphere_trees"]
         self.show_grid_spheres = config["show_grid_plot"]
-        self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.boundingBox = np.array(recipe["bounding_box"])
         self.spacing = config["spacing"]
         self.load_from_grid_file = config["load_from_grid_file"]
         self.show_progress_bar = config["show_progress_bar"]
@@ -251,7 +248,7 @@ class Environment(CompartmentList):
         # debug with timer function
         self.nb_ingredient = 0
         self.totalNbIngr = 0
-        self.treemode = "cKDTree"
+        self.treemode = "KDTree"
         self.close_ingr_bhtree = (
             None  # RBHTree(a.tolist(),range(len(a)),10,10,10,10,10,9999)
         )
@@ -274,7 +271,10 @@ class Environment(CompartmentList):
         self.distanceAfterFill = []
         self._setup()
 
-    def _setup(self):
+    def _setup(self) -> None:
+        """
+        Setup the environment by resolving composition and creating objects.
+        """
         if "composition" in self.recipe_data:
             (
                 self.root_compartment,
@@ -287,9 +287,14 @@ class Environment(CompartmentList):
             for gradient_data in self.recipe_data["gradients"]:
                 self.set_gradient(gradient_data)
 
-    def clean_grid_cache(self, grid_file_name):
+    def clean_grid_cache(self, grid_file_name: str) -> None:
         """
-        Clean the grid cache
+        Clean the grid cache by removing the specified grid file.
+
+        Parameters
+        ----------
+        grid_file_name
+            Name of the grid file to remove from cache
         """
         local_file_path = get_cache_location(
             name=grid_file_name, cache="grids", destination=""
@@ -298,32 +303,87 @@ class Environment(CompartmentList):
             log.info(f"Removing grid cache file: {local_file_path}")
             os.remove(local_file_path)
 
-    def get_compartment_object_by_name(self, compartment_name):
+    def get_compartment_object_by_name(
+        self, compartment_name: str
+    ) -> Optional[Compartment]:
         """
-        Returns compartment object by name
+        Returns compartment object by name.
+
+        Parameters
+        ----------
+        compartment_name
+            Name of the compartment to retrieve
+
+        Returns
+        -------
+        :
+            Compartment object if found, None otherwise
         """
         for compartment in self.compartments:
             if compartment.name == compartment_name:
                 return compartment
 
-    def get_bounding_box_limits(self):
+    def get_bounding_box_limits(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Returns the min and max limits for the bounding box
+        Returns the min and max limits for the bounding box.
+
+        Returns
+        -------
+        :
+            Tuple containing minimum and maximum bounds as numpy arrays
         """
-        bb = numpy.array(self.boundingBox)
-        min_bound = numpy.min(bb, axis=0)
-        max_bound = numpy.max(bb, axis=0)
+        bb = np.array(self.boundingBox)
+        min_bound = np.min(bb, axis=0)
+        max_bound = np.max(bb, axis=0)
         return min_bound, max_bound
 
-    def setSeed(self, seedNum):
+    def get_bounding_box_size(self) -> np.ndarray:
+        """
+        Returns the size of the bounding box in each dimension.
+
+        Returns
+        -------
+        :
+            Size of the bounding box as numpy array
+        """
+        bb = np.array(self.boundingBox)
+
+        return np.abs(bb[1] - bb[0])
+
+    def setSeed(self, seedNum: Union[int, float]) -> None:
+        """
+        Set the random seed for reproducible packing.
+
+        Parameters
+        ----------
+        seedNum
+            Seed number for random number generation
+        """
         SEED = int(seedNum)
-        numpy.random.seed(SEED)  # for gradient
+        np.random.seed(SEED)  # for gradient
         seed(SEED)
         self.randomRot.setSeed(seed=SEED)
         self.seed_set = True
         self.seed_used = SEED
 
-    def _prep_ingredient_info(self, composition_info, ingredient_name=None):
+    def _prep_ingredient_info(
+        self, composition_info: Dict, ingredient_name: Optional[str] = None
+    ) -> Dict:
+        """
+        Prepare ingredient information from composition data.
+
+        Parameters
+        ----------
+        composition_info
+            Dictionary containing composition information
+        ingredient_name
+            Optional name for the ingredient
+
+        Returns
+        -------
+        :
+            Validated ingredient information dictionary
+        """
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
         ingredient_info = expand_object_using_key(
@@ -338,7 +398,19 @@ class Environment(CompartmentList):
         )
         return ingredient_info
 
-    def _step_down(self, compartment_key, prev_compartment=None):
+    def _step_down(
+        self, compartment_key: str, prev_compartment: Optional[Any] = None
+    ) -> None:
+        """
+        Recursively create compartments and their ingredients.
+
+        Parameters
+        ----------
+        compartment_key
+            Key identifying the compartment in composition data
+        prev_compartment
+            Parent compartment object
+        """
         parent = prev_compartment if prev_compartment is not None else self
         composition_dict = self.recipe_data["composition"]
         compartment = self.create_compartment(compartment_key, parent)
@@ -361,7 +433,7 @@ class Environment(CompartmentList):
             elif region_name == "interior":
                 compartment.setInnerRecipe(recipe)
 
-    def create_objects(self):
+    def create_objects(self) -> None:
         """
         Instantiate compartments and ingredients contained within the recipe data.
         """
@@ -391,11 +463,31 @@ class Environment(CompartmentList):
                         self.create_ingredient(external_recipe, ingredient_info)
             self.setExteriorRecipe(external_recipe)
 
-    def reportprogress(self, label=None, progress=None):
+    def reportprogress(
+        self, label: Optional[str] = None, progress: Optional[float] = None
+    ) -> None:
+        """
+        Report progress to the viewer if available.
+
+        Parameters
+        ----------
+        label
+            Progress label text
+        progress
+            Progress value between 0 and 1
+        """
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(progress=progress, label=label)
 
-    def set_partners_ingredient(self, ingr):
+    def set_partners_ingredient(self, ingr: Any) -> None:
+        """
+        Set partner ingredients for the given ingredient.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object to set partners for
+        """
         if ingr.partners is not None:
             for partner in ingr.partners.all_partners:
                 partner_ingr = self.get_ingredient_by_name(partner.name)
@@ -405,113 +497,30 @@ class Environment(CompartmentList):
             # but I haven't dug into it enough to delete it all yet
             ingr.prepare_alternates()
 
-    def get_all_distances(self, position=None):
-        positions = self.packed_objects.get_positions()
-        if len(positions) == 0:
-            return numpy.array([])
-        elif position is not None:
-            return numpy.linalg.norm(positions - numpy.array(position), axis=1)
-        else:
-            return spatial.distance.pdist(positions)
-
-    def get_distances(self, ingredient_name, center):
-
-        ingredient_positions = self.packed_objects.get_positions_for_ingredient(
-            ingredient_name
-        )
-
-        if len(ingredient_positions):
-            distances_between_ingredients = spatial.distance.pdist(ingredient_positions)
-            distances_from_center = numpy.linalg.norm(
-                ingredient_positions - numpy.array(center), axis=1
-            )
-        else:
-            distances_from_center = numpy.array([])
-            distances_between_ingredients = numpy.array([])
-
-        return (
-            ingredient_positions,
-            distances_from_center,
-            distances_between_ingredients,
-        )
-
-    def get_ingredient_angles(self, ingredient_name, center, ingredient_positions):
-        ingredient_rotation = self.packed_objects.get_rotations_for_ingredient(
-            ingredient_name=ingredient_name,
-        )
-        ingredient_position_vector = numpy.array(ingredient_positions) - numpy.array(
-            center
-        )
-
-        anglesX = numpy.array(
-            signed_angle_between_vectors(
-                [[0, 0, 1]] * len(ingredient_positions),
-                ingredient_rotation[:, 0, :3],
-                -ingredient_position_vector,
-                directed=False,
-                axis=1,
-            )
-        )
-        anglesY = numpy.array(
-            signed_angle_between_vectors(
-                [[0, 1, 0]] * len(ingredient_positions),
-                ingredient_rotation[:, 1, :3],
-                -ingredient_position_vector,
-                directed=False,
-                axis=1,
-            )
-        )
-        anglesZ = numpy.array(
-            signed_angle_between_vectors(
-                [[1, 0, 0]] * len(ingredient_positions),
-                ingredient_rotation[:, 2, :3],
-                -ingredient_position_vector,
-                directed=False,
-                axis=1,
-            )
-        )
-        return numpy.degrees(numpy.array([anglesX, anglesY, anglesZ]))
-
-    def get_distances_and_angles(self, ingredient_name, center, get_angles=False):
-        (
-            ingredient_positions,
-            distances_from_center,
-            distances_between_ingredients,
-        ) = self.get_distances(ingredient_name, center)
-        if get_angles:
-            angles = self.get_ingredient_angles(
-                ingredient_name, center, ingredient_positions
-            )
-        else:
-            angles = numpy.array([])
-
-        return (
-            ingredient_positions,
-            distances_from_center,
-            distances_between_ingredients,
-            angles,
-        )
-
-    def calc_pairwise_distances(self, ingr1name, ingr2name):
-        """
-        Returns pairwise distances between ingredients of different types
-        """
-        ingr_pos_1 = self.packed_objects.get_positions_for_ingredient(
-            ingredient_name=ingr1name
-        )
-        ingr_pos_2 = self.packed_objects.get_positions_for_ingredient(
-            ingredient_name=ingr2name
-        )
-        return numpy.ravel(spatial.distance.cdist(ingr_pos_1, ingr_pos_2))
-
     def save_result(
         self,
-        free_points,
-        distances,
-        all_objects,
-        save_grid_logs=False,
-        save_result_as_file=False,
-    ):
+        free_points: List,
+        distances: List,
+        all_objects: List,
+        save_grid_logs: bool = False,
+        save_result_as_file: bool = False,
+    ) -> None:
+        """
+        Save packing results to files.
+
+        Parameters
+        ----------
+        free_points
+            List of free grid points
+        distances
+            List of distances to closest surfaces
+        all_objects
+            List of all packed objects
+        save_grid_logs
+            Whether to save grid logs as JSON
+        save_result_as_file
+            Whether to save results as a file
+        """
         self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
@@ -533,8 +542,31 @@ class Environment(CompartmentList):
         )
 
     def loadResult(
-        self, resultfilename=None, restore_grid=True, backward=False, transpose=True
-    ):
+        self,
+        resultfilename: Optional[str] = None,
+        restore_grid: bool = True,
+        backward: bool = False,
+        transpose: bool = True,
+    ) -> Tuple[List, List, List]:
+        """
+        Load packing results from file.
+
+        Parameters
+        ----------
+        resultfilename
+            Path to result file to load
+        restore_grid
+            Whether to restore grid data
+        backward
+            Whether to use backward compatibility mode
+        transpose
+            Whether to transpose data
+
+        Returns
+        -------
+        :
+            Tuple containing loaded result data
+        """
         result = [], [], []
         if resultfilename is None:
             resultfilename = self.result_file
@@ -565,10 +597,16 @@ class Environment(CompartmentList):
             return [], [], []
         return result
 
-    def includeIngrRecipes(self, ingrname, include):
+    def includeIngrRecipes(self, ingrname: str, include: bool) -> None:
         """
-        Include or Exclude the given ingredient from the recipe.
-        (similar to an active state toggle)
+        Include or exclude ingredient from all recipes.
+
+        Parameters
+        ----------
+        ingrname
+            Name of ingredient to include/exclude
+        include
+            True to include, False to exclude
         """
         r = self.exteriorRecipe
         if self.includeIngrRecipe(ingrname, include, r):
@@ -581,10 +619,23 @@ class Environment(CompartmentList):
             if self.includeIngrRecipe(ingrname, include, ri):
                 return
 
-    def includeIngrRecipe(self, ingrname, include, rs):
+    def includeIngrRecipe(self, ingrname: str, include: bool, rs: Any) -> bool:
         """
-        Include or Exclude the given ingredient from the given recipe.
-        (similar to an active state toggle)
+        Include or exclude ingredient from specific recipe.
+
+        Parameters
+        ----------
+        ingrname
+            Name of ingredient to include/exclude
+        include
+            Whether to include (True) or exclude (False) the ingredient
+        rs
+            Recipe object to modify
+
+        Returns
+        -------
+        :
+            True if ingredient was found and modified, False otherwise
         """
         for ingr in rs.exclude:
             if ingr.name == ingrname:
@@ -601,10 +652,16 @@ class Environment(CompartmentList):
                 else:
                     return True
 
-    def includeIngredientRecipe(self, ingr, include):
-        """lue
-        Include or Exclude the given ingredient from the recipe.
-        (similar to an active state toggle)
+    def includeIngredientRecipe(self, ingr: Any, include: bool) -> None:
+        """
+        Include or exclude ingredient from its recipe.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object to include/exclude
+        include
+            Whether to include (True) or exclude (False) the ingredient
         """
         r = ingr.recipe  # ()
         if include:
@@ -612,8 +669,15 @@ class Environment(CompartmentList):
         else:
             r.delIngredient(ingr)
 
-    def sortIngredient(self, reset=False):
-        # make sure all recipes are sorted from large to small radius
+    def sortIngredient(self, reset: bool = False) -> None:
+        """
+        Sort ingredients in all recipes by radius from large to small.
+
+        Parameters
+        ----------
+        reset
+            Whether to reset compartments before sorting
+        """
         if self.exteriorRecipe:
             self.exteriorRecipe.sort()
         for o in self.compartments:
@@ -624,9 +688,19 @@ class Environment(CompartmentList):
             if o.surfaceRecipe:
                 o.surfaceRecipe.sort()
 
-    def resolve_gradient_data_objects(self, gradient_data):
+    def resolve_gradient_data_objects(self, gradient_data: Dict) -> Dict:
         """
-        Resolves gradient data objects for some modes
+        Resolve gradient data objects for some modes.
+
+        Parameters
+        ----------
+        gradient_data
+            Dictionary containing gradient configuration
+
+        Returns
+        -------
+        :
+            Resolved gradient data dictionary
         """
         # TODO: check if other modes need to be resolved
         if gradient_data["mode"] == "surface":
@@ -637,52 +711,77 @@ class Environment(CompartmentList):
             )
         return gradient_data
 
-    def set_gradient(self, gradient_data):
+    def set_gradient(self, gradient_data: Dict) -> None:
         """
-        create a grdaient
-        assign weight to point
-        listorganelle influenced
-        listingredient influenced
+        Create a gradient and assign weight to points.
+
+        Parameters
+        ----------
+        gradient_data
+            Dictionary containing gradient configuration
         """
         gradient_data = self.resolve_gradient_data_objects(gradient_data)
         gradient = Gradient(gradient_data)
         # default gradient 1-linear Decoy X
         self.gradients[gradient_data["name"]] = gradient
 
-    def callFunction(self, function, args=[], kw={}):
+    def callFunction(self, function: callable, args: List = [], kw: Dict = {}) -> Any:
         """
-        helper function to callback another function with the
-        given arguments and keywords.
-        Optionally time stamp it.
-        """
+        Helper function to callback another function with given arguments.
 
+        Parameters
+        ----------
+        function
+            Function to call
+        args
+            List of positional arguments
+        kw
+            Dictionary of keyword arguments
+
+        Returns
+        -------
+        :
+            Result of function call
+        """
         if len(kw):
             res = function(*args, **kw)
         else:
             res = function(*args)
         return res
 
-    def is_two_d(self):
+    def is_two_d(self) -> bool:
+        """
+        Check if the environment is effectively 2D based on grid spacing.
+
+        Returns
+        -------
+        :
+            True if environment is 2D, False otherwise
+        """
         grid_spacing = self.grid.gridSpacing
         bounding_box = self.boundingBox
-        box_size = numpy.array(bounding_box[1]) - numpy.array(bounding_box[0])
-        smallest_size = numpy.amin(box_size)
+        box_size = np.array(bounding_box[1]) - np.array(bounding_box[0])
+        smallest_size = np.amin(box_size)
         return smallest_size <= grid_spacing
 
-    def timeFunction(self, function, args, kw):
+    def timeFunction(self, function: callable, args: List, kw: Dict) -> Any:
         """
-        Mesure the time for performing the provided function.
+        Measure the time for performing the provided function.
 
-        @type  function: function
-        @param function: the function to execute
-        @type  args: liste
-        @param args: the liste of arguments for the function
+        Parameters
+        ----------
+        function
+            Function to execute and time
+        args
+            List of arguments for the function
+        kw
+            Dictionary of keyword arguments
 
-
-        @rtype:   list/array
-        @return:  the center of mass of the coordinates
+        Returns
+        -------
+        :
+            Result of function execution
         """
-
         t1 = time()
         if len(kw):
             res = function(*args, **kw)
@@ -691,9 +790,16 @@ class Environment(CompartmentList):
         print(("time " + function.__name__, time() - t1))
         return res
 
-    def SetRBOptions(self, obj="moving", **kw):
+    def SetRBOptions(self, obj: str = "moving", **kw) -> None:
         """
-        Change the rigid body options
+        Change the rigid body options.
+
+        Parameters
+        ----------
+        obj
+            Type of rigid body object
+        **kw
+            Keyword arguments for rigid body options
         """
         key = [
             "shape",
@@ -709,9 +815,14 @@ class Environment(CompartmentList):
             if val is not None:
                 self.dynamicOptions[obj][k] = val
 
-    def SetSpringOptions(self, **kw):
+    def SetSpringOptions(self, **kw) -> None:
         """
         Change the spring options, mainly used by C4D.
+
+        Parameters
+        ----------
+        **kw
+            Keyword arguments for spring options
         """
         key = ["stifness", "rlength", "damping"]
         for k in key:
@@ -719,9 +830,9 @@ class Environment(CompartmentList):
             if val is not None:
                 self.springOptions[k] = val
 
-    def setupRBOptions(self):
+    def setupRBOptions(self) -> None:
         """
-        Set default value for rigid body options
+        Set default values for rigid body options.
         """
         self.springOptions["stifness"] = 1.0
         self.springOptions["rlength"] = 0.0
@@ -759,14 +870,28 @@ class Environment(CompartmentList):
         self.dynamicOptions["surface"]["massClamp"] = 100.0
         self.dynamicOptions["surface"]["rotMassClamp"] = 1
 
-    def writeArraysToFile(self, f):
-        """write self.compartment_ids and self.distToClosestSurf to file. (pickle)"""
+    def writeArraysToFile(self, f: Any) -> None:
+        """
+        Write grid arrays to file using pickle.
+
+        Parameters
+        ----------
+        f
+            File object to write to
+        """
         pickle.dump(self.grid.masterGridPositions, f)
         pickle.dump(self.grid.compartment_ids, f)
         pickle.dump(self.grid.distToClosestSurf, f)
 
-    def readArraysFromFile(self, f):
-        """write self.compartment_ids and self.distToClosestSurf to file. (pickle)"""
+    def readArraysFromFile(self, f: Any) -> None:
+        """
+        Read grid arrays from file using pickle.
+
+        Parameters
+        ----------
+        f
+            File object to read from
+        """
         pos = pickle.load(f)
         self.grid.masterGridPositions = pos
 
@@ -779,9 +904,14 @@ class Environment(CompartmentList):
             self.grid.distToClosestSurf = dist  # grid+organelle+surf
         self.grid.free_points = list(range(len(id)))
 
-    def saveGridToFile(self, gridFileOut):
+    def saveGridToFile(self, gridFileOut: str) -> None:
         """
-        Save the current grid and the compartment grid information in a file. (pickle)
+        Save the current grid and compartment information to file.
+
+        Parameters
+        ----------
+        gridFileOut
+            Path to output grid file
         """
         d = os.path.dirname(gridFileOut)
         if not os.path.exists(d):
@@ -795,9 +925,14 @@ class Environment(CompartmentList):
         log.debug(f"Saved grid to {gridFileOut}")
         f.close()
 
-    def saveGridLogsAsJson(self, gridFileOut):
+    def saveGridLogsAsJson(self, gridFileOut: str) -> None:
         """
-        Save the current grid and the compartment grid information in a file. (pickle)
+        Save grid logs as JSON file.
+
+        Parameters
+        ----------
+        gridFileOut
+            Path to output JSON file
         """
         d = os.path.dirname(gridFileOut)
         if not os.path.exists(d):
@@ -822,7 +957,15 @@ class Environment(CompartmentList):
         f.close()
 
     @staticmethod
-    def get_attributes_to_update():
+    def get_attributes_to_update() -> List[str]:
+        """
+        Get list of attributes that need to be updated when loading grids.
+
+        Returns
+        -------
+        :
+            List of attribute names to update
+        """
         return [
             "faces",
             "vertices",
@@ -843,9 +986,14 @@ class Environment(CompartmentList):
             "closestId",
         ]
 
-    def restore_grids_from_pickle(self, grid_file_path):
+    def restore_grids_from_pickle(self, grid_file_path: str) -> None:
         """
-        Read and setup the grid from the given filename. (pickle)
+        Read and setup the grid from pickle file.
+
+        Parameters
+        ----------
+        grid_file_path
+            Path to grid pickle file
         """
         log.debug(f"Loading grid from {grid_file_path}")
 
@@ -898,9 +1046,14 @@ class Environment(CompartmentList):
         # reset grid
         self.grid.reset()
 
-    def save_grids_to_pickle(self, grid_file_path):
+    def save_grids_to_pickle(self, grid_file_path: str) -> None:
         """
-        Save the current grid and compartment grids to file. (pickle)
+        Save the current grid and compartment grids to pickle file.
+
+        Parameters
+        ----------
+        grid_file_path
+            Path to output pickle file
         """
         log.info("Saving grid to %s", grid_file_path)
         if not os.path.exists(os.path.dirname(grid_file_path)):
@@ -916,9 +1069,14 @@ class Environment(CompartmentList):
             # dump mesh store
             pickle.dump(self.mesh_store, file_obj)
 
-    def restoreGridFromFile(self, gridFileName):
+    def restoreGridFromFile(self, gridFileName: str) -> None:
         """
-        Read and setup the grid from the given filename. (pickle)
+        Read and setup the grid from the given filename (legacy method).
+
+        Parameters
+        ----------
+        gridFileName
+            Path to grid file
         """
         log.debug(f"Loading grid from {gridFileName}")
         aInteriorGrids = []
@@ -929,9 +1087,7 @@ class Environment(CompartmentList):
             compartment.readGridFromFile(f)
             aInteriorGrids.append(compartment.insidePoints)
             aSurfaceGrids.append(compartment.surfacePoints)
-            compartment.OGsrfPtsBht = spatial.cKDTree(
-                tuple(compartment.vertices), leafsize=10
-            )
+            compartment.OGsrfPtsBht = KDTree(tuple(compartment.vertices), leafsize=10)
             compartment.compute_volume_and_set_count(
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
@@ -941,9 +1097,21 @@ class Environment(CompartmentList):
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
 
-    def extractMeshComponent(self, obj):
+    def extractMeshComponent(
+        self, obj: Any
+    ) -> Tuple[Optional[List], Optional[List], Optional[List]]:
         """
-        Require host helper. Return the v,f,n of the given object
+        Extract mesh components (vertices, faces, normals) from object.
+
+        Parameters
+        ----------
+        obj
+            Object to extract mesh from
+
+        Returns
+        -------
+        :
+            Tuple containing vertices, faces, and normals lists
         """
         print("extractMeshComponent", helper.getType(obj))
         if helper is None:
@@ -987,13 +1155,31 @@ class Environment(CompartmentList):
             )
             return None, None, None
 
-    def update_largest_smallest_size(self, ingr):
+    def update_largest_smallest_size(self, ingr: Any) -> None:
+        """
+        Update the largest and smallest protein sizes based on ingredient.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object to check sizes for
+        """
         if ingr.encapsulating_radius > self.largestProteinSize:
             self.largestProteinSize = ingr.encapsulating_radius
         if ingr.min_radius < self.smallestProteinSize:
             self.smallestProteinSize = ingr.min_radius
 
-    def create_ingredient(self, recipe, arguments):
+    def create_ingredient(self, recipe: Any, arguments: Dict) -> None:
+        """
+        Create an ingredient and add it to the recipe.
+
+        Parameters
+        ----------
+        recipe
+            Recipe object to add ingredient to
+        arguments
+            Dictionary of ingredient parameters
+        """
         if "place_method" not in arguments:
             arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
@@ -1007,7 +1193,22 @@ class Environment(CompartmentList):
         recipe.addIngredient(ingr)
         self.update_largest_smallest_size(ingr)
 
-    def create_compartment(self, compartment_key, parent):
+    def create_compartment(self, compartment_key: str, parent: Any) -> Any:
+        """
+        Create a compartment object from recipe data.
+
+        Parameters
+        ----------
+        compartment_key
+            Key identifying the compartment
+        parent
+            Parent compartment or environment
+
+        Returns
+        -------
+        :
+            Created compartment object
+        """
         comp_dic = self.recipe_data["composition"]
         obj_dic = self.recipe_data["objects"]
 
@@ -1025,27 +1226,56 @@ class Environment(CompartmentList):
         self._add_compartment(compartment, parent)
         return compartment
 
-    def _add_compartment(self, compartment, parent):
+    def _add_compartment(self, compartment: Any, parent: Any) -> None:
         """
         Add the given compartment to the environment.
-        Extend the main bounding box if needed
+
+        Parameters
+        ----------
+        compartment
+            Compartment object to add
+        parent
+            Parent object for the compartment
         """
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
         self.compartments.append(compartment)
         CompartmentList.add_compartment(parent, compartment)
 
-    def compartment_id_for_nearest_grid_point(self, point):
+    def compartment_id_for_nearest_grid_point(
+        self, point: Union[List, np.ndarray]
+    ) -> int:
+        """
+        Get compartment ID for the nearest grid point to given point.
+
+        Parameters
+        ----------
+        point
+            3D point coordinates
+
+        Returns
+        -------
+        :
+            Compartment ID of nearest grid point
+        """
         # check if point inside  of the compartments
         # closest grid point is
         d, pid = self.grid.getClosestGridPoint(point)
         compartment_id = self.grid.compartment_ids[pid]
         return compartment_id
 
-    def loopThroughIngr(self, cb_function, kwargs=None):
+    def loopThroughIngr(
+        self, cb_function: callable, kwargs: Optional[Dict] = None
+    ) -> None:
         """
-        Helper function that loops through all ingredients of all recipes and applies the given
-        callback function on each ingredients.
+        Loop through all ingredients and apply callback function.
+
+        Parameters
+        ----------
+        cb_function
+            Callback function to apply to each ingredient
+        kwargs
+            Optional keyword arguments for callback function
         """
         if kwargs is None:
             kwargs = {}
@@ -1063,9 +1293,21 @@ class Environment(CompartmentList):
                 for ingr in inner_recipe.ingredients:
                     cb_function(ingr, **kwargs)
 
-    def getIngrFromNameInRecipe(self, name, r):
+    def getIngrFromNameInRecipe(self, name: str, r: Any) -> Optional[Any]:
         """
-        Given an ingredient name and a recipe, retrieve the ingredient object instance
+        Get ingredient object by name from specific recipe.
+
+        Parameters
+        ----------
+        name
+            Name of ingredient to find
+        r
+            Recipe object to search in
+
+        Returns
+        -------
+        :
+            Ingredient object if found, None otherwise
         """
         if r:
             # check if name start with comp name
@@ -1090,9 +1332,24 @@ class Environment(CompartmentList):
                 #                    return ingr
         return None
 
-    def get_ingredient_by_name(self, name, compartment_id=None):
+    def get_ingredient_by_name(
+        self, name: str, compartment_id: Optional[int] = None
+    ) -> Optional[Any]:
         """
-        Given an ingredient name and optionally the compartment number, retrieve the ingredient object instance
+        Given an ingredient name and optionally the compartment number, retrieve the ingredient
+        object instance.
+
+        Parameters
+        ----------
+        name
+            Name of ingredient to find
+        compartment_id
+            Optional compartment ID to search in
+
+        Returns
+        -------
+        :
+            Ingredient object if found, None otherwise
         """
         if compartment_id is None:
             r = self.exteriorRecipe
@@ -1132,7 +1389,20 @@ class Environment(CompartmentList):
             else:
                 return None
 
-    def get_ingredients_in_tree(self, closest_ingredients):
+    def get_ingredients_in_tree(self, closest_ingredients: Dict) -> List:
+        """
+        Get ingredients from packed objects tree.
+
+        Parameters
+        ----------
+        closest_ingredients
+            Dictionary containing indices and distances
+
+        Returns
+        -------
+        :
+            List of ingredient objects and distances
+        """
         ingredients = []
         packed_objects = self.packed_objects.get_ingredients()
         if len(packed_objects):
@@ -1143,9 +1413,26 @@ class Environment(CompartmentList):
                 ingredients.append([obj, closest_ingredients["distances"]])
         return ingredients
 
-    def get_closest_ingredients(self, point, cutoff=10.0):
+    def get_closest_ingredients(
+        self, point: Union[List, np.ndarray], cutoff: float = 10.0
+    ) -> Dict:
+        """
+        Get closest ingredients to a given point within cutoff distance.
+
+        Parameters
+        ----------
+        point
+            3D point coordinates
+        cutoff
+            Maximum distance to search for ingredients
+
+        Returns
+        -------
+        :
+            Dictionary containing indices and distances of closest ingredients
+        """
         to_return = {"indices": [], "distances": []}
-        numpy.zeros(self.totalNbIngr).astype("i")
+        np.zeros(self.totalNbIngr).astype("i")
         nb = 0
         number_packed = len(self.packed_objects.get_ingredients())
         if not number_packed:
@@ -1168,9 +1455,14 @@ class Environment(CompartmentList):
         else:
             return to_return
 
-    def setExteriorRecipe(self, recipe):
+    def setExteriorRecipe(self, recipe: Any) -> None:
         """
-        Set the exterior recipe with the given one. Create the weakref.
+        Set the exterior recipe and create weak reference.
+
+        Parameters
+        ----------
+        recipe
+            Recipe object to set as exterior recipe
         """
         assert isinstance(recipe, Recipe)
         self.exteriorRecipe = recipe
@@ -1178,9 +1470,9 @@ class Environment(CompartmentList):
         for ingr in recipe.ingredients:
             ingr.compartment_id = 0
 
-    def BuildCompartmentsGrids(self):
+    def BuildCompartmentsGrids(self) -> None:
         """
-        Build the compartments grid (interior and surface points) to be merged with the main grid
+        Build the compartments grid (interior and surface points) to be merged with main grid.
         """
         aInteriorGrids = []
         aSurfaceGrids = []
@@ -1188,7 +1480,8 @@ class Environment(CompartmentList):
         for compartment in self.compartments:
             compartment.initialize_shape(self.mesh_store)
             self.log.info(
-                f"in Environment, compartment.is_orthogonal_bounding_box={compartment.is_orthogonal_bounding_box}"
+                "in Environment,"
+                f" compartment.is_orthogonal_bounding_box={compartment.is_orthogonal_bounding_box}"
             )
             (
                 points_inside_compartments,
@@ -1205,33 +1498,55 @@ class Environment(CompartmentList):
             f"build Grids {self.innerGridMethod}, {len(self.grid.aSurfaceGrids)}"
         )
 
-    def build_compartment_grids(self):
+    def build_compartment_grids(self) -> None:
+        """
+        Build compartment grids and setup surface points spatial tree.
+        """
         self.log.info("file is None thus re/building grid distance")
         self.BuildCompartmentsGrids()
 
         if len(self.compartments):
-            verts = numpy.array(self.compartments[0].surfacePointsCoords)
+            verts = np.array(self.compartments[0].surfacePointsCoords)
             for i in range(1, len(self.compartments)):
-                verts = numpy.vstack([verts, self.compartments[i].surfacePointsCoords])
+                verts = np.vstack([verts, self.compartments[i].surfacePointsCoords])
             self.grid.set_surfPtsBht(
                 verts.tolist()
             )  # should do it only on inside grid point
 
-    def extend_bounding_box_for_compartments(self, spacing):
+    def extend_bounding_box_for_compartments(self, spacing: float) -> None:
+        """
+        Extend bounding box to fit all compartments.
+
+        Parameters
+        ----------
+        spacing
+            Grid spacing value
+        """
         for _, compartment in enumerate(self.compartments):
             fits, bb = compartment.inBox(self.boundingBox, spacing)
             if not fits:
                 self.boundingBox = bb
 
-    def get_size_of_bounding_box(self):
-        box_boundary = numpy.array(self.boundingBox)
-        return numpy.linalg.norm(box_boundary[1] - box_boundary[0])
-
-    def buildGrid(self, rebuild=True):
+    def get_size_of_bounding_box(self) -> float:
         """
-        The main build grid function. Setup the main grid and merge the
-        compartment grid. The setup is de novo or using previously built grid
-        or restored using given file.
+        Calculate the size of the bounding box.
+
+        Returns
+        -------
+        :
+            Size of bounding box as scalar value
+        """
+        box_boundary = np.array(self.boundingBox)
+        return np.linalg.norm(box_boundary[1] - box_boundary[0])
+
+    def buildGrid(self, rebuild: bool = True) -> None:
+        """
+        Build the main grid and merge compartment grids.
+
+        Parameters
+        ----------
+        rebuild
+            Whether to rebuild the grid from scratch
         """
         spacing = self.spacing or self.smallestProteinSize
         self.extend_bounding_box_for_compartments(spacing)
@@ -1322,9 +1637,29 @@ class Environment(CompartmentList):
                     boundingBox, self.grid.masterGridPositions
                 )
 
-    def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
+    def onePrevIngredient(
+        self, i: int, mingrs: Tuple, distance: List, nbFreePoints: int, marray: List
+    ) -> int:
         """
-        Unused
+        Process one previously placed ingredient (unused method).
+
+        Parameters
+        ----------
+        i
+            Index of ingredient
+        mingrs
+            Tuple containing ingredient placement data
+        distance
+            List of distances
+        nbFreePoints
+            Number of free points
+        marray
+            Array of molecules
+
+        Returns
+        -------
+        :
+            Updated number of free points
         """
         jtrans, rotMatj, ingr, ptInd, _ = mingrs
         centT = ingr.transformPoints(jtrans, rotMatj, ingr.positions[-1])
@@ -1365,35 +1700,19 @@ class Environment(CompartmentList):
                 del ingr.allIngrPts  # Graham here on 5/16/12 are these two lines safe?
         return nbFreePoints
 
-    def getSortedActiveIngredients(self, allIngredients):
+    def getSortedActiveIngredients(self, allIngredients: List) -> Tuple[List, List]:
         """
-        Sort the active ingredient according their pirority and radius.
-        # first get the ones with a packing priority
-        # Graham- This now works in concert with ingredient picking
+        Sort active ingredients by priority and radius.
 
-        # Graham here- In the new setup, priority is infinite with abs[priority] increasing (+)
-        # An ingredients with (-) priority will pack from greatest abs[-priority] one at a time
-        #     to lease abs[-priority]... each ingredient will attempt to reach its molarity
-        #     before moving on to the next ingredient, and all (-) ingredients will try to
-        #     deposit before other ingredients are tested.
-        # An ingredient with (+) priority will recieve a weighted value based on its abs[priority]
-        #     e.g. an ingredient with a priority=10 will be 10x more likely to be picked than
-        #     an ingredient with a priority=1.
-        # An ingredient with the default priority=0 will recieve a weighted value based on its
-        #     complexity. (currently complexity = min_radius), thus a more 'complex' ingredient
-        #     will more likely try to pack before a less 'complex' ingredient.
-        #     IMPORTANT: the +priority list does not fully mix with the priority=0 list, but this
-        #     should be an option... currently, the priority=0 list is normalized against a range
-        #     up to the smallest +priority ingredient and appended to the (+) list
-        # TODO: Add an option to allow + ingredients to be weighted by assigned priority AND complexity
-        #     Add an option to allow priority=0 ingredients to fit into the (+) ingredient list
-        #       rather than appending to the end.
-        #     Even better, add an option to set the max priority for the 0list and then plug the results
-        #       into the (+) ingredient list.
-        #     Get rid of the (-), 0, (+) system and recreate this as a new flag and a class function
-        #        so we can add multiple styles of sorting and weighting systems.
-        #     Make normalizedPriorities and thresholdPriorities members of Ingredient class to avoid
-        #        building these arrays.
+        Parameters
+        ----------
+        allIngredients
+            List of all ingredient objects
+
+        Returns
+        -------
+        :
+            Tuple containing sorted ingredient lists (priority 0, priority 1+2)
         """
         ingr1 = []  # given priorities
         priorities1 = []
@@ -1449,9 +1768,9 @@ class Environment(CompartmentList):
                 r = max(priors2.length / 2.0, priors2.min_radius)
             elif priors2.model_type == "Spheres":
                 r = priors2.min_radius
-            np = float(r) / float(self.totalRadii) * self.lowestPriority
-            self.normalizedPriorities0.append(np)
-            priors2.priority = np
+            norm_priority = float(r) / float(self.totalRadii) * self.lowestPriority
+            self.normalizedPriorities0.append(norm_priority)
+            priors2.priority = norm_priority
             self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
@@ -1463,18 +1782,31 @@ class Environment(CompartmentList):
 
         return activeIngr0, activeIngr12
 
-    def clearRBingredient(self, ingr):
+    def clearRBingredient(self, ingr: Any) -> None:
+        """
+        Clear rigid body nodes for an ingredient.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object to clear rigid body nodes for
+        """
         if ingr.bullet_nodes[0] is not None:
             self.delRB(ingr.bullet_nodes[0])
         if ingr.bullet_nodes[1] is not None:
             self.delRB(ingr.bullet_nodes[1])
 
-    def clear(self):
+    def clear(self) -> None:
+        """
+        Clear all rigid body ingredients before closing.
+        """
         # before closing remoeall rigidbody
         self.loopThroughIngr(self.clearRBingredient)
 
-    def reset(self):
-        """Reset everything to empty and not done"""
+    def reset(self) -> None:
+        """
+        Reset everything to empty and not done
+        """
         self.fbox_bb = None
         self.totnbJitter = 0
         self.jitterLength = 0.0
@@ -1493,8 +1825,15 @@ class Environment(CompartmentList):
             # the reset doesnt touch the grid...
         # rapid node ?
 
-    def resetIngrRecip(self, recip):
-        """Reset all ingredient of the given recipe"""
+    def resetIngrRecip(self, recip: Any) -> None:
+        """
+        Reset all ingredient of the given recipe
+
+        Parameters
+        ----------
+        recip
+            Recipe containing ingredients to reset
+        """
         if recip:
             for ingr in recip.ingredients:
                 # ingr.results = []
@@ -1527,8 +1866,15 @@ class Environment(CompartmentList):
                 if len(ingr.allIngrPts) > 0:
                     ingr.allIngrPts = []
 
-    def getActiveIng(self):
-        """Return all remaining active ingredients"""
+    def getActiveIng(self) -> List[Any]:
+        """
+        Return all remaining active ingredients
+
+        Returns
+        -------
+        :
+            List of active ingredients with left_to_place > 0
+        """
         allIngredients = []
         recipe = self.exteriorRecipe
         if recipe:
@@ -1562,10 +1908,22 @@ class Environment(CompartmentList):
                         ingr.completion = 1.0
         return allIngredients
 
-    def pickIngredient(self, vThreshStart, verbose=0):
+    def pickIngredient(self, vThreshStart: float, verbose: int = 0) -> Any:
         """
         Main function that decide the next ingredient the packing will try to
         drop. The picking is weighted or random
+
+        Parameters
+        ----------
+        vThreshStart
+            Threshold start value for ingredient picking
+        verbose
+            Verbosity level for logging
+
+        Returns
+        -------
+        :
+            Selected ingredient for packing
         """
         if self.pickWeightedIngr:
             if self.thresholdPriorities[0] == 2:
@@ -1597,8 +1955,20 @@ class Environment(CompartmentList):
         #            print (r,n,ingr.name,len(self.activeIngr)) #Graham turned back on 5/16/12, but may be costly
         return ingr
 
-    def get_dpad(self, compartment_id):
-        """Return the largest encapsulating_radius and use it for padding"""
+    def get_dpad(self, compartment_id: int) -> float:
+        """
+        Return the largest encapsulating_radius and use it for padding
+
+        Parameters
+        ----------
+        compartment_id
+            ID of the compartment to get padding for
+
+        Returns
+        -------
+        :
+            Maximum radius for padding
+        """
         mr = 0.0
         if compartment_id == 0:  # cytoplasm -> use cyto and all surfaces
             for ingr1 in self.activeIngr:
@@ -1625,19 +1995,43 @@ class Environment(CompartmentList):
 
     def getPointToDrop(
         self,
-        ingr,
-        free_points,
-        nbFreePoints,
-        distance,
-        spacing,
-        compId,
-        vRangeStart,
-        vThreshStart,
-    ):
+        ingr: Any,
+        free_points: List[int],
+        nbFreePoints: int,
+        distance: List[float],
+        spacing: float,
+        compId: int,
+        vRangeStart: float,
+        vThreshStart: float,
+    ) -> Tuple[bool, Union[int, float]]:
         """
         Decide next point to use for dropping a given ingredent. The picking can be
         random, based on closest distance, based on gradients, ordered.
         This function also update the available free point except when hack is on.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient to place
+        free_points
+            List of available free points
+        nbFreePoints
+            Number of free points
+        distance
+            Distance array
+        spacing
+            Grid spacing
+        compId
+            Compartment ID
+        vRangeStart
+            Range start value
+        vThreshStart
+            Threshold start value
+
+        Returns
+        -------
+        :
+            Tuple of (success flag, point index or updated vRangeStart)
         """
         allIngrPts, allIngrDist = ingr.get_list_of_free_indices(
             distance,
@@ -1691,14 +2085,21 @@ class Environment(CompartmentList):
                 # pp1 = 0
                 pp = priors.priority
                 if self.totalPriorities != 0:
-                    np = float(pp) / float(self.totalPriorities)
+                    norm_priority = float(pp) / float(self.totalPriorities)
                 else:
-                    np = 0.0
-                self.normalizedPriorities.append(np)
+                    norm_priority = 0.0
+                self.normalizedPriorities.append(norm_priority)
                 if verbose > 1:
-                    print("np is ", np, " pp is ", pp, " tp is ", np + previousThresh)
-                self.thresholdPriorities.append(np + previousThresh)
-                previousThresh = np + float(previousThresh)
+                    print(
+                        "norm_priority is ",
+                        norm_priority,
+                        " pp is ",
+                        pp,
+                        " tp is ",
+                        norm_priority + previousThresh,
+                    )
+                self.thresholdPriorities.append(norm_priority + previousThresh)
+                previousThresh = norm_priority + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
             self.log.info("time to reject the picking %d", time() - t)
 
@@ -1707,7 +2108,7 @@ class Environment(CompartmentList):
         if self.pickRandPt:
             self.log.info("picking random point")
             if ingr.packing_mode == "close":
-                order = numpy.argsort(allIngrDist)
+                order = np.argsort(allIngrDist)
                 # pick point with closest distance
                 ptInd = allIngrPts[order[0]]
                 if ingr.rejectionCounter < len(order):
@@ -1744,8 +2145,10 @@ class Environment(CompartmentList):
                 self.activeIngr.pop(ind)
                 if verbose > 1:
                     print(
-                        "popping this gradient ingredient array must be redone using Sept 25,",
-                        " 2011 thesis version as above for nongradient ingredients, TODO: July 5, 2012",
+                        "popping this gradient ingredient array must be redone using"
+                        " Sept 25,",
+                        " 2011 thesis version as above for nongradient ingredients,"
+                        " TODO: July 5, 2012",
                     )
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
@@ -1760,7 +2163,24 @@ class Environment(CompartmentList):
             ptInd = allIngrPts[0]
         return True, ptInd
 
-    def removeOnePoint(self, pt, free_points, nbFreePoints):
+    def removeOnePoint(self, pt: int, free_points: List[int], nbFreePoints: int) -> int:
+        """
+        Remove one point from the free points list
+
+        Parameters
+        ----------
+        pt
+            Point index to remove
+        free_points
+            List of free points
+        nbFreePoints
+            Current number of free points
+
+        Returns
+        -------
+        :
+            Updated number of free points
+        """
         try:
             # New system replaced by Graham on Aug 18, 2012
             nbFreePoints -= 1
@@ -1773,7 +2193,24 @@ class Environment(CompartmentList):
             pass
         return nbFreePoints
 
-    def getTotalNbObject(self, allIngredients, update_partner=False):
+    def getTotalNbObject(
+        self, allIngredients: List[Any], update_partner: bool = False
+    ) -> int:
+        """
+        Calculate total number of objects to be placed
+
+        Parameters
+        ----------
+        allIngredients
+            List of all ingredients
+        update_partner
+            Whether to update partner ingredients
+
+        Returns
+        -------
+        :
+            Total number of objects to place
+        """
         totalNbIngr = 0
         for ingr in allIngredients:
             if ingr.type == "Grow":
@@ -1786,7 +2223,26 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
-    def prep_molecules_for_save(self, distances, free_points, nbFreePoints):
+    def prep_molecules_for_save(
+        self, distances: List[float], free_points: List[int], nbFreePoints: int
+    ) -> List[Any]:
+        """
+        Prepare molecules data for saving
+
+        Parameters
+        ----------
+        distances
+            Distance array
+        free_points
+            List of free points
+        nbFreePoints
+            Number of free points
+
+        Returns
+        -------
+        :
+            List of all packed objects
+        """
         self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = free_points[:]
         self.nbFreePointsAfterFill = nbFreePoints
@@ -1796,7 +2252,20 @@ class Environment(CompartmentList):
             autopack.helper.writeToFile("./realtime", self.boundingBox)
         return self.packed_objects.get_all()
 
-    def check_new_placement(self, new_position):
+    def check_new_placement(self, new_position: List[float]) -> bool:
+        """
+        Check if a new placement position is valid
+
+        Parameters
+        ----------
+        new_position
+            Position coordinates to check
+
+        Returns
+        -------
+        :
+            True if placement is too close to existing objects
+        """
         distances = self.get_all_distances(new_position)
         if len(distances) == 0:
             # nothing has been packed yet
@@ -1805,12 +2274,21 @@ class Environment(CompartmentList):
         expected_min_distance = self.smallestProteinSize * 2
         if min_distance < expected_min_distance:
             log.error(
-                f"New placement {new_position} is too close to existing objects. "
-                f"Minimum distance {min_distance} is less than expected {expected_min_distance}."
+                f"New placement {new_position} is too close to existing objects."
+                f" Minimum distance {min_distance} is less than expected"
+                f" {expected_min_distance}."
             )
         return min_distance < expected_min_distance
 
-    def distance_check_failed(self):
+    def distance_check_failed(self) -> bool:
+        """
+        Check if distance constraints are violated
+
+        Returns
+        -------
+        :
+            True if minimum distance is less than expected
+        """
         distances = self.get_all_distances()
         if len(distances) == 0:
             # nothing has been packed yet
@@ -1819,9 +2297,14 @@ class Environment(CompartmentList):
         expected_min_distance = self.smallestProteinSize * 2
         return min_distance < expected_min_distance + 0.001
 
-    def update_variable_ingredient_attributes(self, allIngredients):
+    def update_variable_ingredient_attributes(self, allIngredients: List[Any]) -> None:
         """
-        updates variable attributes for all ingredients based on input options
+        Updates variable attributes for all ingredients based on input options
+
+        Parameters
+        ----------
+        allIngredients
+            List of all ingredients to update
         """
         for ingr in allIngredients:
             if hasattr(ingr, "count_options") and ingr.count_options is not None:
@@ -1847,30 +2330,72 @@ class Environment(CompartmentList):
                 if min_radius is not None:
                     ingr.min_radius = min_radius
 
-    def add_seed_number_to_base_name(self, seed_number):
+    def add_seed_number_to_base_name(self, seed_number: int) -> str:
+        """
+        Add seed number to base name
+
+        Parameters
+        ----------
+        seed_number
+            Seed number to add
+
+        Returns
+        -------
+        :
+            Base name with seed number appended
+        """
         return f"{self.base_name}_seed_{seed_number}"
 
-    def set_result_file_name(self, seed_basename):
+    def set_result_file_name(self, seed_basename: str) -> None:
         """
         Sets the result file name using the output folder path and a given seed basename
+
+        Parameters
+        ----------
+        seed_basename
+            Base name with seed for the result file
         """
         self.result_file = str(self.out_folder / f"results_{seed_basename}")
 
-    def update_after_place(self, grid_point_index):
+    def update_after_place(self, grid_point_index: int) -> None:
+        """
+        Update tracking variables after successful placement
+
+        Parameters
+        ----------
+        grid_point_index
+            Index of the grid point where placement occurred
+        """
         self.order[grid_point_index] = self.lastrank
         self.lastrank += 1
         self.nb_ingredient += 1
 
     def pack_grid(
         self,
-        seedNum=0,
-        name=None,
-        vTestid=3,
+        seedNum: int = 0,
+        name: Optional[str] = None,
+        vTestid: int = 3,
         **kw,
-    ):
+    ) -> List[Any]:
         """
-        ## Fill the grid by picking an ingredient first and then
-        ## find a suitable point using the ingredient's placer object
+        Fill the grid by picking an ingredient first and then
+        find a suitable point using the ingredient's placer object
+
+        Parameters
+        ----------
+        seedNum
+            Random seed number
+        name
+            Name for this packing run
+        vTestid
+            Test ID value
+        **kw
+            Additional keyword arguments
+
+        Returns
+        -------
+        :
+            List of all packed objects
         """
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
@@ -1909,10 +2434,10 @@ class Environment(CompartmentList):
         if "fbox" in kw:
             self.fbox = kw["fbox"]
         if self.fbox is not None and not self.EnviroOnly:
-            self.freePointMask = numpy.ones(nbFreePoints, dtype="int32")
+            self.freePointMask = np.ones(nbFreePoints, dtype="int32")
             bb_insidepoint = self.grid.getPointsInCube(self.fbox, [0, 0, 0], 1.0)[:]
             self.freePointMask[bb_insidepoint] = 0
-            bb_outside = numpy.nonzero(self.freePointMask)
+            bb_outside = np.nonzero(self.freePointMask)
             self.grid.compartment_ids[bb_outside] = 99999
         compartment_ids = self.grid.compartment_ids
 
@@ -1960,12 +2485,12 @@ class Environment(CompartmentList):
             # pp1 = 0
             pp = priors.priority
             if self.totalPriorities != 0:
-                np = float(pp) / float(self.totalPriorities)
+                norm_priority = float(pp) / float(self.totalPriorities)
             else:
-                np = 0.0
-            self.normalizedPriorities.append(np)
-            self.thresholdPriorities.append(np + previousThresh)
-            previousThresh = np + float(previousThresh)
+                norm_priority = 0.0
+            self.normalizedPriorities.append(norm_priority)
+            self.thresholdPriorities.append(norm_priority + previousThresh)
+            previousThresh = norm_priority + float(previousThresh)
         self.activeIngr = self.activeIngr0 + self.activeIngr12
 
         nls = 0
@@ -2027,7 +2552,8 @@ class Environment(CompartmentList):
                     cancel = self.displayCancelDialog()
                     if cancel:
                         self.log.info(
-                            "canceled by user: we'll fill with current objects up to time %d",  # noqa: E510
+                            "canceled by user: we'll fill with current objects up to"
+                            " time %d",  # noqa: E510
                             tCancel,
                         )
                         break
@@ -2054,7 +2580,8 @@ class Environment(CompartmentList):
             max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
-                f"picked Ingr radius {ingr.min_radius}, compartment_id {current_ingr_compartment}"
+                f"picked Ingr radius {ingr.min_radius}, compartment_id"
+                f" {current_ingr_compartment}"
             )
 
             # find the points that can be used for this ingredient
@@ -2114,7 +2641,8 @@ class Environment(CompartmentList):
                 self, ptInd, distances, max_radius, spacing, usePP, collision_possible
             )
             self.log.info(
-                "after place attempt, placed: %r, number of free points:%d, length of free points=%d",
+                "after place attempt, placed: %r, number of free points:%d, length of"
+                " free points=%d",
                 success,
                 nbFreePoints,
                 len(free_points),
@@ -2123,8 +2651,8 @@ class Environment(CompartmentList):
                 nbFreePoints = BaseGrid.updateDistances(
                     insidePoints, newDistPoints, free_points, nbFreePoints, distances
                 )
-                self.grid.distToClosestSurf = numpy.array(distances[:])
-                self.grid.free_points = numpy.array(free_points[:])
+                self.grid.distToClosestSurf = np.array(distances[:])
+                self.grid.free_points = np.array(free_points[:])
                 self.grid.nbFreePoints = len(free_points)  # -1
                 # update largest protein size
                 # problem when the encapsulating_radius is actually wrong
@@ -2149,7 +2677,8 @@ class Environment(CompartmentList):
                 self.log.info(f"PlacedMols = {PlacedMols}")
                 self.log.info(f"activeIngr index of {ingr.name}, {ind}")
                 self.log.info(
-                    f"threshold p len {len(self.thresholdPriorities)}, {len(self.normalizedPriorities)}"
+                    f"threshold p len {len(self.thresholdPriorities)},"
+                    f" {len(self.normalizedPriorities)}"
                 )
                 if ind > 0:
                     # j = 0
@@ -2188,13 +2717,13 @@ class Environment(CompartmentList):
                     # pp1 = 0
                     pp = priors.priority
                     if self.totalPriorities != 0:
-                        np = float(pp) / float(self.totalPriorities)
+                        norm_priority = float(pp) / float(self.totalPriorities)
                     else:
-                        np = 0.0
-                    self.normalizedPriorities.append(np)
-                    #                    print ('np is ', np, ' pp is ', pp, ' tp is ', np + previousThresh)
-                    self.thresholdPriorities.append(np + previousThresh)
-                    previousThresh = np + float(previousThresh)
+                        norm_priority = 0.0
+                    self.normalizedPriorities.append(norm_priority)
+                    #                    print ('norm_priority is ', np, ' pp is ', pp, ' tp is ', np + previousThresh)
+                    self.thresholdPriorities.append(norm_priority + previousThresh)
+                    previousThresh = norm_priority + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
 
             if dump and ((time() - stime) > dump_freq):
@@ -2230,21 +2759,54 @@ class Environment(CompartmentList):
 
         return all_objects
 
-    def restore_molecules_array(self, ingr):
+    def restore_molecules_array(self, ingr: Any) -> None:
+        """
+        Restore molecules array for an ingredient
+
+        Parameters
+        ----------
+        ingr
+            Ingredient to restore molecules for
+        """
         pass
         # if len(ingr.results):
         #     for elem in ingr.results:
         # TODO: fix this to reset ingredients from results
         # if ingr.compartment_id == 0:
         #     self.molecules.append(
-        #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
+        #         [elem[0], np.array(elem[1]), ingr, 0, ingr.radius]
         #     )
         # else:
         #     ingr.recipe.compartment.molecules.append(
-        #         [elem[0], numpy.array(elem[1]), ingr, 0, ingr.radius]
+        #         [elem[0], np.array(elem[1]), ingr, 0, ingr.radius]
         #     )
 
-    def restore(self, result, orgaresult, freePoint, tree=False):
+    def restore(
+        self,
+        result: List[Any],
+        orgaresult: List[List[Any]],
+        freePoint: List[int],
+        tree: bool = False,
+    ) -> Dict[str, Any]:
+        """
+        Restore environment state from saved results
+
+        Parameters
+        ----------
+        result
+            Main result data
+        orgaresult
+            Organelle result data
+        freePoint
+            Free point data
+        tree
+            Whether to build spatial tree
+
+        Returns
+        -------
+        :
+            Dictionary of restored ingredients
+        """
         # should we used the grid ? the freePoint can be computed
         # result is [pos,rot,ingr.name,ingr.compartment_id,ptInd]
         # orgaresult is [[pos,rot,ingr.name,ingr.compartment_id,ptInd],[pos,rot,ingr.name,ingr.compartment_id,ptInd]...]
@@ -2259,14 +2821,14 @@ class Environment(CompartmentList):
             # needto check the name if it got the comp rule
             ingr = self.get_ingredient_by_name(name, compartment_id)
             if ingr is not None:
-                molecules.append([pos, numpy.array(rot), ingr, ptInd])
+                molecules.append([pos, np.array(rot), ingr, ptInd])
                 if name not in ingredients:
                     ingredients[name] = [ingr, [], [], []]
-                mat = numpy.array(rot)
+                mat = np.array(rot)
                 mat[:3, 3] = pos
                 ingredients[name][1].append(pos)
-                ingredients[name][2].append(numpy.array(rot))
-                ingredients[name][3].append(numpy.array(mat))
+                ingredients[name][2].append(np.array(rot))
+                ingredients[name][3].append(np.array(mat))
                 ingr.results.append([pos, rot])
         if self.exteriorRecipe:
             self.exteriorRecipe.molecules = molecules
@@ -2277,19 +2839,19 @@ class Environment(CompartmentList):
                     pos, rot, name, compartment_id, ptInd = elem
                     ingr = self.get_ingredient_by_name(name, compartment_id)
                     if ingr is not None:
-                        molecules.append([pos, numpy.array(rot), ingr, ptInd])
+                        molecules.append([pos, np.array(rot), ingr, ptInd])
                         if name not in ingredients:
                             ingredients[name] = [ingr, [], [], []]
-                        mat = numpy.array(rot)
+                        mat = np.array(rot)
                         mat[:3, 3] = pos
                         ingredients[name][1].append(pos)
-                        ingredients[name][2].append(numpy.array(rot))
-                        ingredients[name][3].append(numpy.array(mat))
+                        ingredients[name][2].append(np.array(rot))
+                        ingredients[name][3].append(np.array(mat))
                         ingr.results.append([pos, rot])
                 o.molecules = molecules
         # consider that one filling have occured
         if len(self.packed_objects.get_ingredients()) and tree:
-            self.close_ingr_bhtree = spatial.cKDTree(
+            self.close_ingr_bhtree = KDTree(
                 self.packed_objects.get_positions(), leafsize=10
             )
         self.cFill = self.nFill
@@ -2298,19 +2860,48 @@ class Environment(CompartmentList):
             self.restoreFreePoints(freePoint)
         return ingredients
 
-    def restoreFreePoints(self, freePoint):
+    def restoreFreePoints(self, freePoint: List[int]) -> None:
+        """
+        Restore free points from saved data
+
+        Parameters
+        ----------
+        freePoint
+            List of free points to restore
+        """
         self.free_points = self.freePointsAfterFill = freePoint
         self.nbFreePointsAfterFill = len(freePoint)
         self.distanceAfterFill = self.grid.distToClosestSurf
         self.distancesAfterFill = self.grid.distToClosestSurf
 
-    def loadFreePoint(self, resultfilename):
+    def loadFreePoint(self, resultfilename: str) -> List[int]:
+        """
+        Load free points from file
+
+        Parameters
+        ----------
+        resultfilename
+            Path to result file
+
+        Returns
+        -------
+        :
+            List of free points loaded from file
+        """
         rfile = open(resultfilename + "_free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
         return freePoint
 
-    def store(self, resultfilename=None):
+    def store(self, resultfilename: Optional[str] = None) -> None:
+        """
+        Store results to file
+
+        Parameters
+        ----------
+        resultfilename
+            Path to store results, uses default if None
+        """
         if resultfilename is None:
             resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
@@ -2320,19 +2911,65 @@ class Environment(CompartmentList):
             pickle.dump(self.grid.free_points, rfile)
 
     @classmethod
-    def dropOneIngr(self, pos, rot, ingrname, ingrcompNum, ptInd, rad=1.0):
+    def dropOneIngr(
+        self,
+        pos: List[float],
+        rot: np.ndarray,
+        ingrname: str,
+        ingrcompNum: int,
+        ptInd: int,
+        rad: float = 1.0,
+    ) -> str:
+        """
+        Format one ingredient data as string
+
+        Parameters
+        ----------
+        pos
+            Position coordinates
+        rot
+            Rotation matrix
+        ingrname
+            Ingredient name
+        ingrcompNum
+            Ingredient compartment number
+        ptInd
+            Point index
+        rad
+            Radius value
+
+        Returns
+        -------
+        :
+            Formatted string representation
+        """
         line = ""
-        line += ("<%f,%f,%f>,") % (pos[0], pos[1], pos[2])
+        line += "<%f,%f,%f>," % (pos[0], pos[1], pos[2])
         r = rot.reshape(16)
         line += "<"
         for i in range(15):
-            line += ("%f,") % (r[i])
-        line += ("%f>,") % (r[15])
+            line += "%f," % (r[i])
+        line += "%f>," % (r[15])
         line += "<%f>,<%s>,<%d>,<%d>\n" % (rad, ingrname, ingrcompNum, ptInd)
         return line
 
     @classmethod
-    def getOneIngr(self, line):
+    def getOneIngr(
+        self, line: str
+    ) -> Tuple[Tuple[float, float, float], Tuple[float, ...], str, int, int, float]:
+        """
+        Parse one ingredient from string line
+
+        Parameters
+        ----------
+        line
+            String line to parse
+
+        Returns
+        -------
+        :
+            Tuple of (position, rotation, ingredient name, compartment number, point index, radius)
+        """
         elem = line.split("<")
         pos = eval(elem[1][:-2])
         rot = eval(elem[2][:-2])
@@ -2343,7 +2980,24 @@ class Environment(CompartmentList):
         return pos, rot, ingrname, ingrcompNum, ptInd, rad
 
     #    @classmethod
-    def getOneIngrJson(self, ingr, ingrdic):
+    def getOneIngrJson(
+        self, ingr: Any, ingrdic: Dict[str, Any]
+    ) -> Tuple[List[Any], str, int, int, float]:
+        """
+        Get one ingredient data from JSON dictionary
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object
+        ingrdic
+            Ingredient dictionary from JSON
+
+        Returns
+        -------
+        :
+            Tuple of (results, composition name, compartment ID, count, radius)
+        """
         #        name_ingr = ingr.name
         #        if name_ingr not in ingrdic:
         #            name_ingr = ingr.composition_name
@@ -2364,7 +3018,22 @@ class Environment(CompartmentList):
             ingr.encapsulating_radius,
         )  # ingrdic["compartment_id"],1,ingrdic["encapsulating_radius"]
 
-    def load_asTxt(self, resultfilename=None):
+    def load_asTxt(
+        self, resultfilename: Optional[str] = None
+    ) -> Tuple[List[Any], List[List[Any]], List[int]]:
+        """
+        Load results from text file
+
+        Parameters
+        ----------
+        resultfilename
+            Path to result file, uses default if None
+
+        Returns
+        -------
+        :
+            Tuple of (result, organelle result, free points)
+        """
         if resultfilename is None:
             resultfilename = self.result_file
         rfile = open(resultfilename, "r")
@@ -2374,7 +3043,7 @@ class Environment(CompartmentList):
         for i in range(len(self.compartments)):
             orgaresult.append([])
         #        mry90 = helper.rotation_matrix(-math.pi/2.0, [0.0,1.0,0.0])
-        #        numpy.array([[0.0, 1.0, 0.0, 0.0],
+        #        np.array([[0.0, 1.0, 0.0, 0.0],
         #                 [-1., 0.0, 0.0, 0.0],
         #                 [0.0, 0.0, 1.0, 0.0],
         #                 [0.0, 0.0, 0.0, 1.0]])
@@ -2384,16 +3053,16 @@ class Environment(CompartmentList):
                 continue
             pos, rot, ingrname, ingrcompNum, ptInd, rad = self.getOneIngr(line)
             # should I multiply here
-            r = numpy.array(rot).reshape(
+            r = np.array(rot).reshape(
                 4, 4
-            )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
+            )  # np.matrix(mry90)*np.matrix(np.array(rot).reshape(4,4))
             if ingrcompNum == 0:
                 result.append(
-                    [numpy.array(pos), numpy.array(r), ingrname, ingrcompNum, ptInd]
+                    [np.array(pos), np.array(r), ingrname, ingrcompNum, ptInd]
                 )
             else:
                 orgaresult[abs(ingrcompNum) - 1].append(
-                    [numpy.array(pos), numpy.array(r), ingrname, ingrcompNum, ptInd]
+                    [np.array(pos), np.array(r), ingrname, ingrcompNum, ptInd]
                 )
             #        for i, orga in enumerate(self.compartments):
             #            orfile = open(resultfilename+"ogra"+str(i),'rb')
@@ -2410,7 +3079,11 @@ class Environment(CompartmentList):
             pass
         return result, orgaresult, freePoint
 
-    def collectResultPerIngredient(self):
+    def collectResultPerIngredient(self) -> None:
+        """
+        Collect results per ingredient from packed objects
+        """
+
         def cb(ingr):
             ingr.results = []
 
@@ -2422,7 +3095,22 @@ class Environment(CompartmentList):
             else:
                 ingr.results.append([obj.position, obj.rotation])
 
-    def load_asJson(self, resultfilename=None):
+    def load_asJson(
+        self, resultfilename: Optional[str] = None
+    ) -> Tuple[List[Any], List[List[Any]], List[int]]:
+        """
+        Load results from JSON file
+
+        Parameters
+        ----------
+        resultfilename
+            Path to result file, uses default if None
+
+        Returns
+        -------
+        :
+            Tuple of (result, organelle result, free points)
+        """
         if resultfilename is None:
             resultfilename = self.result_file
         with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
@@ -2454,13 +3142,11 @@ class Environment(CompartmentList):
                     )
                     ingr.results = []
                     for r in iresults:
-                        rot = numpy.array(r[1]).reshape(
+                        rot = np.array(r[1]).reshape(
                             4, 4
-                        )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-                        ingr.results.append([numpy.array(r[0]), rot])
-                        result.append(
-                            [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                        )
+                        )  # np.matrix(mry90)*np.matrix(np.array(rot).reshape(4,4))
+                        ingr.results.append([np.array(r[0]), rot])
+                        result.append([np.array(r[0]), rot, ingrname, ingrcompNum, 1])
                     # organelle ingr
         for i, orga in enumerate(self.compartments):
             orgaresult.append([])
@@ -2500,12 +3186,12 @@ class Environment(CompartmentList):
                         )
                         ingr.results = []
                         for r in iresults:
-                            rot = numpy.array(r[1]).reshape(
+                            rot = np.array(r[1]).reshape(
                                 4, 4
-                            )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-                            ingr.results.append([numpy.array(r[0]), rot])
+                            )  # np.matrix(mry90)*np.matrix(np.array(rot).reshape(4,4))
+                            ingr.results.append([np.array(r[0]), rot])
                             orgaresult[abs(ingrcompNum) - 1].append(
-                                [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
+                                [np.array(r[0]), rot, ingrname, ingrcompNum, 1]
                             )
             # organelle matrix ingr
             ri = orga.innerRecipe
@@ -2542,12 +3228,12 @@ class Environment(CompartmentList):
                         )
                         ingr.results = []
                         for r in iresults:
-                            rot = numpy.array(r[1]).reshape(
+                            rot = np.array(r[1]).reshape(
                                 4, 4
-                            )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-                            ingr.results.append([numpy.array(r[0]), rot])
+                            )  # np.matrix(mry90)*np.matrix(np.array(rot).reshape(4,4))
+                            ingr.results.append([np.array(r[0]), rot])
                             orgaresult[abs(ingrcompNum) - 1].append(
-                                [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
+                                [np.array(r[0]), rot, ingrname, ingrcompNum, 1]
                             )
         freePoint = []  # pickle.load(rfile)
         try:
@@ -2558,7 +3244,22 @@ class Environment(CompartmentList):
             pass
         return result, orgaresult, freePoint
 
-    def dropOneIngrJson(self, ingr, rdic):
+    def dropOneIngrJson(self, ingr: Any, rdic: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Create JSON dictionary for one ingredient
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object
+        rdic
+            Result dictionary
+
+        Returns
+        -------
+        :
+            Dictionary containing ingredient data for JSON
+        """
         adic = OrderedDict()  # [ingr.name]
         adic["compartment_id"] = ingr.compartment_id
         adic["encapsulating_radius"] = float(ingr.encapsulating_radius)
@@ -2572,13 +3273,25 @@ class Environment(CompartmentList):
         if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
             adic["nbCurve"] = ingr.nbCurve
             for i in range(ingr.nbCurve):
-                lp = numpy.array(ingr.listePtLinear[i])
+                lp = np.array(ingr.listePtLinear[i])
                 ingr.listePtLinear[i] = lp.tolist()
                 adic["curve" + str(i)] = ingr.listePtLinear[i]
             #        print adic
         return adic
 
-    def store_asJson(self, resultfilename=None, indent=True):
+    def store_asJson(
+        self, resultfilename: Optional[str] = None, indent: bool = True
+    ) -> None:
+        """
+        Store results as JSON file
+
+        Parameters
+        ----------
+        resultfilename
+            Path to store results, uses default if None
+        indent
+            Whether to indent JSON output
+        """
         if resultfilename is None:
             resultfilename = self.result_file
             resultfilename = autopack.fixOnePath(resultfilename)  # retireve?
@@ -2633,7 +3346,19 @@ class Environment(CompartmentList):
         print("ok dump", resultfilename)
 
     @classmethod
-    def convertPickleToText(self, resultfilename=None, norga=0):
+    def convertPickleToText(
+        self, resultfilename: Optional[str] = None, norga: int = 0
+    ) -> None:
+        """
+        Convert pickle results to text format
+
+        Parameters
+        ----------
+        resultfilename
+            Path to result file, uses default if None
+        norga
+            Number of organelles
+        """
         if resultfilename is None:
             resultfilename = self.result_file
         rfile = open(resultfilename)
@@ -2663,7 +3388,10 @@ class Environment(CompartmentList):
             orfile.close()
             # freepoint
 
-    def printFillInfo(self):
+    def printFillInfo(self) -> None:
+        """
+        Print filling information for environment and compartments
+        """
         r = self.exteriorRecipe
         if r is not None:
             print("    Environment exterior recipe:")
@@ -2672,7 +3400,21 @@ class Environment(CompartmentList):
         for o in self.compartments:
             o.printFillInfo()
 
-    def finishWithWater(self, free_points=None, nbFreePoints=None):
+    def finishWithWater(
+        self,
+        free_points: Optional[List[int]] = None,
+        nbFreePoints: Optional[int] = None,
+    ) -> None:
+        """
+        Fill remaining space with water molecules
+
+        Parameters
+        ----------
+        free_points
+            List of free points, uses default if None
+        nbFreePoints
+            Number of free points, uses default if None
+        """
         # self.freePointsAfterFill[:self.nbFreePointsAfterFill]
         # sphere sphere of 2.9A
         if free_points is None:
@@ -2689,34 +3431,137 @@ class Environment(CompartmentList):
 
     def setupOctree(
         self,
-    ):
+    ) -> None:
+        """
+        Set up octree data structure for spatial partitioning
+        """
         if self.octree is None:
             self.octree = Octree(
                 self.grid.getRadius(), helper=helper
             )  # Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?
 
-    def delRB(self, node):
+    def delRB(self, node: Any) -> None:
+        """
+        Delete rigid body node
+
+        Parameters
+        ----------
+        node
+            Node to delete
+        """
         return None
 
-    def setGeomFaces(self, tris, face):
+    def setGeomFaces(self, tris: Any, face: Any) -> None:
+        """
+        Set geometry faces
+
+        Parameters
+        ----------
+        tris
+            Triangle data
+        face
+            Face data
+        """
         return None
 
-    def addMeshRBOrganelle(self, o):
+    def addMeshRBOrganelle(self, o: Any) -> None:
+        """
+        Add mesh rigid body for organelle
+
+        Parameters
+        ----------
+        o
+            Organelle object
+        """
         return None
 
-    def addRB(self, ingr, trans, rotMat, rtype="single_sphere", static=False):
+    def addRB(
+        self,
+        ingr: Any,
+        translation: List[float],
+        rotMat: List[List[float]],
+        rtype: str = "single_sphere",
+        static: bool = False,
+    ) -> None:
+        """
+        Add a rigid body to the simulation environment.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient object to add as rigid body
+        translation
+            Translation vector for the rigid body position
+        rotMat
+            Rotation matrix for the rigid body orientation
+        rtype
+            Type of rigid body representation
+        static
+            Whether the rigid body should be static or dynamic
+        """
         return None
 
-    def moveRBnode(self, node, trans, rotMat):
+    def moveRBnode(
+        self, node: Any, translation: List[float], rotMat: List[List[float]]
+    ) -> None:
+        """
+        Move a rigid body node to a new position and orientation.
+
+        Parameters
+        ----------
+        node
+            The rigid body node to move
+        translation
+            New translation vector for the node
+        rotMat
+            New rotation matrix for the node
+        """
         return None
 
-    def getRotTransRB(self, node):
+    def getRotTransRB(self, node: Any) -> None:
+        """
+        Get the rotation and translation of a rigid body node.
+
+        Parameters
+        ----------
+        node
+            The rigid body node to query
+        """
         return None
 
-    def runBullet(self, ingr, simulationTimes, runTimeDisplay):
+    def runBullet(self, ingr: Any, simulationTimes: int, runTimeDisplay: bool) -> None:
+        """
+        Run bullet physics simulation for an ingredient.
+
+        Parameters
+        ----------
+        ingr
+            Ingredient to simulate
+        simulationTimes
+            Number of simulation steps to run
+        runTimeDisplay
+            Whether to display runtime information
+        """
         return None
 
-    def exportToBD_BOX(self, res_filename=None, output=None, bd_type="flex"):
+    def exportToBD_BOX(
+        self,
+        res_filename: Optional[str] = None,
+        output: Optional[str] = None,
+        bd_type: str = "flex",
+    ) -> None:
+        """
+        Export simulation results to BD_BOX format.
+
+        Parameters
+        ----------
+        res_filename
+            Name of the result file to export from
+        output
+            Output file path
+        bd_type
+            Type of BD_BOX export format
+        """
         # , call the BD_BOX exporter, plugin ? better if result store somewhere.
         # only sphere + boudary ?
         # sub ATM 216 225.0000 150.0000 525.0000 25.0000 -5.0000 50.0000 0.5922 1
@@ -2749,7 +3594,19 @@ class Environment(CompartmentList):
 
         self.bd.write()
 
-    def exportToTEM_SIM(self, res_filename=None, output=None):
+    def exportToTEM_SIM(
+        self, res_filename: Optional[str] = None, output: Optional[str] = None
+    ) -> None:
+        """
+        Export simulation results to TEM_SIM format.
+
+        Parameters
+        ----------
+        res_filename
+            Name of the result file to export from
+        output
+            Output file path
+        """
         from tem_sim import tem_sim
 
         if res_filename is None:
@@ -2776,9 +3633,12 @@ class Environment(CompartmentList):
                     self.tem.addAutoPackIngredient(ingr)
         self.tem.write()
 
-    def exportToTEM(
-        self,
-    ):
+    def exportToTEM(self) -> None:
+        """
+        Export simulation results to TEM format with coordinate files.
+
+        Limited to 20 ingredients. Creates coordinate.txt file for TEM-simulator.
+        """
         # limited to 20 ingredients, call the TEM exporter plugin ?
         # ingredient -> PDB file or mrc volume file
         # ingredient -> coordinate.txt file
@@ -2787,7 +3647,10 @@ class Environment(CompartmentList):
         output = "iSutm_coordinate.txt"  # ingrname_.txt
         aStr = "# File created for TEM-simulator, version 1.3.\n"
         aStr += str(len(p)) + " 6\n"
-        aStr += "#            x             y             z           phi         theta           psi\n"
+        aStr += (
+            "#            x             y             z           phi         theta    "
+            "       psi\n"
+        )
         for i in range(len(p)):
             aStr += "{0:14.4f}{1:14.4f}{2:14.4f}{3:14.4f}{4:14.4f}{5:14.4f}\n".format(
                 p[i][0], p[i][1], p[i][2], rr[i][0], rr[i][1], rr[i][2]
@@ -2795,7 +3658,10 @@ class Environment(CompartmentList):
         f = open(output, "w")
         f.write(aStr)
 
-    def exportToReaDDy(self):
+    def exportToReaDDy(self) -> None:
+        """
+        Export simulation results to ReaDDy format.
+        """
         # wehn I will get it running ... plugin ?
         return
 
@@ -2804,19 +3670,39 @@ class Environment(CompartmentList):
     #         Animate
     # ==============================================================================
 
-    def linkTraj(self):
+    def linkTraj(self) -> None:
+        """
+        Link trajectory for synchronized callback using autopack helper.
+
+        Creates a synchronized callback for applying trajectory steps.
+        """
         # link the traj usin upy for creating a new synchronized calleback?
         if not self.traj_linked:
             autopack.helper.synchronize(self.applyStep)
             self.traj_linked = True
 
-    def unlinkTraj(self):
+    def unlinkTraj(self) -> None:
+        """
+        Unlink trajectory from synchronized callback.
+
+        Removes the synchronized callback for trajectory steps.
+        """
         # link the traj usin upy for creating a new synchronized calleback?
         if self.traj_linked:
             autopack.helper.unsynchronize(self.applyStep)
             self.traj_linked = False
 
-    def applyStep(self, step):
+    def applyStep(self, step: int) -> None:
+        """
+        Apply coordinates from a trajectory at a specific step.
+
+        Handles correspondence between ingredient instances and coordinate files.
+
+        Parameters
+        ----------
+        step
+            The trajectory step to apply
+        """
         # apply the coordinate from a trajectory at step step.
         # correspondance ingredients instance <-> coordinates file
         # trajectory class to handle
@@ -2825,28 +3711,28 @@ class Environment(CompartmentList):
         self.traj.applyState_primitive_name(self, step)
         # ho can we apply to parent instance the rotatiotn?
 
-    def create_voxelization(self, image_writer):
+    def create_voxelization(self, image_writer: Any) -> Any:
         """
         Update the image data for all molecules in the recipe by creating voxelized
         representations.
 
         Parameters
         ----------
-        image_writer: ImageWriter
-            The image writer to use for writing the voxelized representations.
+        image_writer
+            The image writer to use for writing the voxelized representations
 
         Returns
-        ----------
-        image_data: numpy.ndarray
-            The updated image data.
+        -------
+        :
+            The updated image data
         """
         channel_colors = {}
 
         for obj in self.packed_objects.get_all():
             mesh_store = None
             if obj.name not in image_writer.image_data:
-                image_writer.image_data[obj.name] = numpy.zeros(
-                    image_writer.image_size, dtype=numpy.uint8
+                image_writer.image_data[obj.name] = np.zeros(
+                    image_writer.image_size, dtype=np.uint8
                 )
                 if obj.color is not None:
                     color = obj.color
