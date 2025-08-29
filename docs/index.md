@@ -13,12 +13,13 @@ Welcome to cellPACK! This documentation provides an overview of the cellPACK pac
 :maxdepth: 2
 
 Overview <self>
-installation
+INSTALLATION
 Package modules <modules>
-recipe-schema
-docker
-remote_databases
-contributing
+CONFIG_SCHEMA
+RECIPE_SCHEMA
+DOCKER
+REMOTE_DATABASES
+CONTRIBUTING
 ```
 
 ```{include} ../README.md
