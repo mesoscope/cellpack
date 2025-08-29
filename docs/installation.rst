@@ -3,7 +3,7 @@
 Installation
 ================
 
-.. include:: ./INSTALL.md
+.. include:: ./INSTALLATION.md
     :parser: myst_parser.sphinx_
 
 .. _Github repo: https://github.com/mesoscope/cellpack
