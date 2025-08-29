@@ -43,7 +43,7 @@ For full package documentation please visit [mesoscope.github.io/cellpack](https
 
 ## Development
 
-See [CONTRIBUTING.md](/contributing) for information related to developing the code.
+See [CONTRIBUTING.md](/contributing.md) for information related to developing the code.
 
 ## Remote databases
 cellPACK uses AWS and Firebase Firestore as remote databases to store packing results and recipes. Follow [ setup instructions](./docs/remote_databases) for access.
