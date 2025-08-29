@@ -13,7 +13,7 @@ resolution-markers = [
 [[package]]
 name = "aicsimageio"
 version = "4.14.0"
-source = { registry = "https://artifactory.corp.alleninstitute.org/artifactory/api/pypi/pypi-virtual/simple" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dask", extra = ["array"] },
     { name = "fsspec" },
@@ -30,9 +30,9 @@ dependencies = [
     { name = "xmlschema" },
     { name = "zarr" },
 ]
-sdist = { url = "https://artifactory.corp.alleninstitute.org/artifactory/api/pypi/pypi-virtual/packages/packages/17/84/02534b7183e042e37445cfac89307c30505db02d34fceae1639ce5fa8476/aicsimageio-4.14.0.tar.gz", hash = "sha256:0f6684587b1d833ce5b10f3e81314e2a89269cd94bd09747fcd6460f3119855c" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/84/02534b7183e042e37445cfac89307c30505db02d34fceae1639ce5fa8476/aicsimageio-4.14.0.tar.gz", hash = "sha256:0f6684587b1d833ce5b10f3e81314e2a89269cd94bd09747fcd6460f3119855c", size = 125582, upload-time = "2023-11-01T21:55:24.482Z" }
 wheels = [
-    { url = "https://artifactory.corp.alleninstitute.org/artifactory/api/pypi/pypi-virtual/packages/packages/d6/d9/2ee5b3136cab29904a2816d40ace37236fcf47081976705087d12230ec2e/aicsimageio-4.14.0-py2.py3-none-any.whl", hash = "sha256:b3df2beba7d000c35660816116d562bfe96ed2beb79713b023a7579e5e72c646" },
+    { url = "https://files.pythonhosted.org/packages/d6/d9/2ee5b3136cab29904a2816d40ace37236fcf47081976705087d12230ec2e/aicsimageio-4.14.0-py2.py3-none-any.whl", hash = "sha256:b3df2beba7d000c35660816116d562bfe96ed2beb79713b023a7579e5e72c646", size = 138652, upload-time = "2023-11-01T21:55:22.017Z" },
 ]
 
 [[package]]
@@ -349,7 +349,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aicsimageio", index = "https://artifactory.corp.alleninstitute.org/artifactory/api/pypi/pypi-virtual/simple" },
+    { name = "aicsimageio" },
     { name = "boto3" },
     { name = "deepdiff" },
     { name = "fire" },
