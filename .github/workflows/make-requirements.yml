@@ -66,19 +66,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download linux requirements files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: linux-requirements
           path: requirements/linux
 
       - name: Download windows requirements files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: windows-requirements
           path: requirements/windows
 
       - name: Download macOS requirements files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: macos-requirements
           path: requirements/macos
