@@ -43,22 +43,22 @@
 # Updated with Correct Sept 25, 2011 thesis version on July 5, 2012
 
 import logging
-import math
 from math import pi
 from random import gauss, random, uniform
 from time import time
 
-import collada
-import numpy
+import numpy as np
 from scipy import spatial
 from scipy.spatial.transform import Rotation as R
 
 import cellpack.autopack as autopack
+from cellpack.autopack import Environment
+from cellpack.autopack.Compartment import Compartment
+from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.ingredient.agent import Agent
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 from cellpack.autopack.interface_objects.packed_objects import PackedObject
-from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 from cellpack.autopack.utils import get_distance, get_value_from_distribution
 
 from .utils import ApplyMatrix, getNormedVectorOnes, rotax, rotVectToVect
@@ -92,26 +92,6 @@ REQUIRED_DISTRIBUTION_OPTIONS = {
 }
 
 
-class IngredientInstanceDrop:
-    def __init__(self, ptId, position, rotation, ingredient, rb=None):
-        self.ptId = ptId
-        self.position = position
-        self.rotation = rotation
-        self.ingredient = ingredient
-        self.rigid_body = rb
-        self.name = ingredient.name + str(ptId)
-        x, y, z = position
-        rad = ingredient.encapsulating_radius
-        self.bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-        # maybe get bb from mesh if any ?
-        if self.ingredient.mesh is not None:
-            self.bb = autopack.helper.getBoundingBox(self.ingredient.mesh)
-            for i in range(3):
-                self.bb[0][i] = self.bb[0][i] + self.position[i]
-                self.bb[1][i] = self.bb[1][i] + self.position[i]
-
-
-# the ingredient should derive from a class of Agent
 class Ingredient(Agent):
     static_id = 0
     """
@@ -140,7 +120,7 @@ class Ingredient(Agent):
         - count counts the number of placed ingredients during a fill
         - counter is the target number of ingredients to place
         - completion is the ratio of placed/target
-        - rejectionCounter is used to eliminate ingredients after too many failed
+        - rejectionCounter is used to eliminate ingredients after too many failed attempts
         attempts
 
     """
@@ -250,7 +230,11 @@ class Ingredient(Agent):
         )
         if name is None:
             name = "%f" % molarity
-        self.log.info("CREATE INGREDIENT %s %r", str(name), rejection_threshold)
+        self.log.info(
+            "CREATE INGREDIENT %s %r",
+            str(name),
+            rejection_threshold,
+        )
         self.name = str(name)
         self.composition_name = str(name)
         self.object_name = str(object_name)
@@ -269,7 +253,7 @@ class Ingredient(Agent):
         self.moving = None
         self.moving_geom = None
         self.rb_nodes = []  # store rbnode. no more than X ?
-        self.bullet_nodes = [None, None]  # try only store 2, and move them when needd
+        self.bullet_nodes = [None, None]  # try only store 2, and move them when needed
         self.limit_nb_nodes = 50
         self.vi = autopack.helper
         self.min_radius = 1
@@ -306,7 +290,7 @@ class Ingredient(Agent):
         self.jitter_attempts = (
             jitter_attempts  # number of jitter attempts for translation
         )
-        self.nbPts = 0
+        self.num_encapsulated_grid_pts = 0
         self.allIngrPts = (
             []
         )  # the list of available grid points for this ingredient to pack
@@ -366,7 +350,16 @@ class Ingredient(Agent):
     @staticmethod
     def validate_distribution_options(distribution_options):
         """
-        Validates distribution options and returns validated distribution options
+        Validates distribution options
+        Returns
+        -------
+        dict
+            The validated distribution options.
+
+        Raises
+        ------
+        Exception
+            If the distribution options are invalid.
         """
         if "distribution" not in distribution_options:
             raise Exception("Ingredient count options must contain a distribution")
@@ -384,9 +377,24 @@ class Ingredient(Agent):
         return distribution_options
 
     @staticmethod
-    def validate_ingredient_info(ingredient_info):
+    def validate_ingredient_info(ingredient_info: dict):
         """
         Validates ingredient info and returns validated ingredient info
+
+        Parameters
+        ----------
+        ingredient_info
+            The ingredient info to validate.
+
+        Returns
+        -------
+        :
+            The validated ingredient info.
+
+        Raises
+        ------
+        Exception
+            If the ingredient info is invalid.
         """
         if "count" not in ingredient_info:
             raise Exception("Ingredient info must contain a count")
@@ -445,20 +453,28 @@ class Ingredient(Agent):
         self.completion = 0.0
 
     def has_pdb(self):
+        """Check if the ingredient has a PDB representation."""
         return self.representations.has_pdb()
 
     def has_mesh(self):
+        """Check if the ingredient has a mesh representation."""
         return self.representations.has_mesh()
 
     def use_mesh(self):
+        """Use the mesh representation of the ingredient."""
         self.representations.set_active("mesh")
         return self.representations.get_mesh_path()
 
     def use_pdb(self):
+        """Use the PDB representation of the ingredient."""
         self.representations.set_active("atomic")
         return self.representations.get_pdb_path()
 
     def setTilling(self, comp):
+        """
+        Set the tiling method for the ingredient.
+        Not fully implemented in the new system
+        """
         if self.packing_mode == "hexatile":
             from cellpack.autopack.hexagonTile import tileHexaIngredient
 
@@ -478,7 +494,15 @@ class Ingredient(Agent):
                 self, comp, self.encapsulating_radius, init_seed=self.env.seed_used
             )
 
-    def initialize_mesh(self, mesh_store):
+    def initialize_mesh(self, mesh_store: MeshStore):
+        """
+        Initialize the mesh representation of the ingredient and save it.
+
+        Parameters
+        ----------
+        mesh_store
+            The mesh store to use for storing the mesh representation.
+        """
         # get the collision mesh
         mesh_path = self.representations.get_mesh_path()
         meshName = self.representations.get_mesh_name()
@@ -486,7 +510,7 @@ class Ingredient(Agent):
         self.mesh = None
         if mesh_path is not None:
             if meshType == "file":
-                self.mesh = self.getMesh(mesh_path, meshName, mesh_store)
+                self.mesh = self.get_mesh(mesh_path, meshName, mesh_store)
                 self.log.info(f"OK got {self.mesh}")
                 if self.mesh is None:
                     # display a message ?
@@ -497,7 +521,7 @@ class Ingredient(Agent):
                 self.buildMesh(mesh_store)
 
         if self.mesh is not None:
-            self.getEncapsulatingRadius()
+            self.calculate_encapsulating_radius()
 
     def DecomposeMesh(self, poly, edit=True, copy=False, tri=True, transform=True):
         helper = autopack.helper
@@ -515,7 +539,10 @@ class Ingredient(Agent):
         )
         return faces, vertices, vnormals
 
-    def getEncapsulatingRadius(self, mesh=None):
+    def calculate_encapsulating_radius(self, mesh=None):
+        """
+        Calculate the encapsulating radius of the ingredient.
+        """
         if self.vertices is None or not len(self.vertices):
             if self.mesh:
                 helper = autopack.helper
@@ -523,14 +550,14 @@ class Ingredient(Agent):
                     return
                 if mesh is None:
                     mesh = self.mesh
-                self.log.info("getEncapsulatingRadius %r %r", self.mesh, mesh)
+                self.log.info("calculate_encapsulating_radius %r %r", self.mesh, mesh)
                 self.faces, self.vertices, vnormals = self.DecomposeMesh(
                     mesh, edit=True, copy=False, tri=True
                 )
         # encapsulating radius ?
-        v = numpy.array(self.vertices, "f")
+        v = np.array(self.vertices, "f")
         try:
-            length = numpy.sqrt(
+            length = np.sqrt(
                 (v * v).sum(axis=1)
             )  # FloatingPointError: underflow encountered in multiply
             r = float(max(length)) + 15.0
@@ -542,31 +569,41 @@ class Ingredient(Agent):
             pass
 
     def getData(self):
+        # TODO: delete this once we delete Graphics.py
         if self.vertices is None or not len(self.vertices):
             if self.mesh:
                 return self.mesh.faces, self.mesh.vertices, self.mesh.vertex_normals
 
     def get_rb_model(self, alt=False):
+        """
+        Get the rigid body model for the ingredient using Bullet Physics.
+
+        """
         ret = 0
         if alt:
             ret = 1
         if self.bullet_nodes[ret] is None:
             self.bullet_nodes[ret] = self.env.addRB(
-                self, [0.0, 0.0, 0.0], numpy.identity(4), rtype=self.type
+                self, [0.0, 0.0, 0.0], np.identity(4), rtype=self.type
             )
         return self.bullet_nodes[ret]
 
-    def getMesh(self, filename, geomname, mesh_store):
+    def get_mesh(self, filename: str, geomname: str, mesh_store: MeshStore):
         """
-        Create a mesh representation from a filename for the ingredient
+        Retrieves a mesh from the mesh store or a file.
+        Parameters
+        ----------
+        filename
+            The name of the file to retrieve the mesh from.
+        geomname
+            The name of the geometry to retrieve.
+        mesh_store
+            The mesh store to retrieve the mesh from.
 
-        @type  filename: string
-        @param filename: the name of the input file
-        @type  geomname: string
-        @param geomname: the name of the output geometry
-
-        @rtype:   DejaVu.IndexedPolygons/HostObjec
-        @return:  the created mesh
+        Returns
+        -------
+        :
+            The retrieved mesh object.
         """
         # depending the extension of the filename, can be eitherdejaVu file, fbx or wavefront
         # no extension is DejaVu
@@ -586,94 +623,7 @@ class Ingredient(Agent):
             self.log.info("read dae withHelper", filename, helper, autopack.helper)
             # use the host helper if any to read
             return None
-            if helper is None:
-                # need to get the mesh directly. Only possible if dae or dejavu format
-                # get the dejavu heper but without the View, and in nogui mode
-                h = simulariumHelper(vi="nogui")
-                dgeoms = h.read(filename)
-                # v,vn,f = dgeoms.values()[0]["mesh"]
-                self.vertices, self.vnormals, self.faces = helper.combineDaeMeshData(
-                    dgeoms.values()
-                )
-                self.vnormals = (
-                    []
-                )  # helper.normal_array(self.vertices,numpy.array(self.faces))
-                geom = h.createsNmesh(geomname, self.vertices, None, self.faces)[0]
-                return geom
-            else:  # if helper is not None:#neeed the helper
-                if helper.host == "dejavu" and helper.nogui:
-                    dgeoms = helper.read(filename)
-                    v, vn, f = list(dgeoms.values())[0]["mesh"]
-                    self.log.info("vertices nb is %d", len(v))
-                    self.vertices, self.vnormals, self.faces = (
-                        v,
-                        vn,
-                        f,
-                    )  # helper.combineDaeMeshData(dgeoms.values())
-                    self.vnormals = (
-                        []
-                    )  # helper.normal_array(self.vertices,numpy.array(self.faces))
-                    geom = helper.createsNmesh(
-                        geomname, self.vertices, self.vnormals, self.faces
-                    )[0]
-                    return geom
-                else:
-                    if helper.host != "dejavu":
-                        if collada is not None:
-                            # need to get the mesh directly. Only possible if dae or dejavu format
-                            # get the dejavu heper but without the View, and in nogui mode
-                            h = simulariumHelper(vi="nogui")
-                            dgeoms = h.read_mesh_file(filename)
-                            # should combine both
-                            self.vertices, vnormals, self.faces = h.combineDaeMeshData(
-                                dgeoms.values()
-                            )  # dgeoms.values()[0]["mesh"]
-                            self.vnormals = helper.normal_array(
-                                self.vertices, numpy.array(self.faces)
-                            )
-                helper.read(filename)
-                geom = helper.getObject(geomname)
-                if geom is None:
-                    geom = helper.getObject(self.pdb.split(".")[0])
-                    # rename it
-                    if geom is None:
-                        return None
-                # rotate ?
-                if helper.host == "3dsmax":  # or helper.host.find("blender") != -1:
-                    helper.resetTransformation(
-                        geom
-                    )  # remove rotation and scale from importing??maybe not?
-                if helper.host.find("blender") != -1:
-                    helper.resetTransformation(geom)
-                # if self.coordsystem == "left" :
-                #                        mA = helper.rotation_matrix(-math.pi/2.0,[1.0,0.0,0.0])
-                #                        mB = helper.rotation_matrix(math.pi/2.0,[0.0,0.0,1.0])
-                #                        m=matrix(mA)*matrix(mB)
-                #                        helper.setObjectMatrix(geom,matrice=m)
-                #                if helper.host != "c4d"  and helper.host != "dejavu" and self.coordsystem == "left" and helper.host != "softimage" and helper.host.find("blender") == -1:
-                # what about softimage
-                # need to rotate the transform that carry the shape, maya ? or not ?
-                #                    helper.rotateObj(geom,[0.0,-math.pi/2.0,0.0])#wayfront as well euler angle
-                # swicth the axe?
-                #                    oldv = self.principal_vector[:]
-                #                    self.principal_vector = [oldv[2],oldv[1],oldv[0]]
-                if helper.host == "softimage" and self.coordsystem == "left":
-                    helper.rotateObj(
-                        geom, [0.0, -math.pi / 2.0, 0.0], primitive=True
-                    )  # need to rotate the primitive
-                if helper.host == "c4d" and self.coordsystem == "right":
-                    helper.resetTransformation(geom)
-                    helper.rotateObj(
-                        geom, [0.0, math.pi / 2.0, math.pi / 2.0], primitive=True
-                    )
-                p = helper.getObject("autopackHider")
-                if p is None:
-                    p = helper.newEmpty("autopackHider")
-                    if helper.host.find("blender") == -1:
-                        helper.toggleDisplay(p, False)
-                helper.reParent(geom, p)
-                return geom
-            return None
+
         else:  # host specific file
             if helper is not None:  # neeed the helper
                 helper.read(
@@ -689,7 +639,7 @@ class Ingredient(Agent):
                 return geom
             return None
 
-    def buildMesh(self, mesh_store):
+    def buildMesh(self, mesh_store: MeshStore):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
@@ -701,21 +651,35 @@ class Ingredient(Agent):
         self.mesh = geom
         return geom
 
-    def jitterPosition(self, position, spacing, normal=None):
+    def jitterPosition(
+        self, position: np.ndarray, spacing: float, normal: np.ndarray = None
+    ) -> np.ndarray:
         """
-        position are the 3d coordiantes of the grid point
-        spacing is the grid spacing
-        this will jitter gauss(0., 0.3) * Ingredient.max_jitter
+        Jitters the position of the ingredient in 3D space.
+
+        Parameters
+        ----------
+        position
+            The 3D coordinates of the grid point.
+        spacing
+            The grid spacing.
+        normal
+            The surface normal at the grid point.
+
+        Returns
+        -------
+        :
+            The jittered position.
         """
         if self.compartment_id > 0:
             vx, vy, vz = v1 = self.principal_vector
             # surfacePointsNormals problem here
             v2 = normal
             try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
+                rotMat = np.array(rotVectToVect(v1, v2), "f")
             except Exception as e:
                 self.log.error(e)
-                rotMat = numpy.identity(4)
+                rotMat = np.identity(4)
 
         jx, jy, jz = self.max_jitter
         dx = (
@@ -726,50 +690,79 @@ class Ingredient(Agent):
         #        d2 = dx*dx + dy*dy + dz*dz
         #        if d2 < jitter2:
         if self.compartment_id > 0:  # jitter less among normal
-            dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
+            dx, dy, dz, dum = np.dot(rotMat, (dx, dy, dz, 0))
         position[0] += dx
         position[1] += dy
         position[2] += dz
-        return numpy.array(position)
+        return np.array(position)
 
-    def getMaxJitter(self, spacing):
+    def getMaxJitter(self, spacing: float) -> float:
+        """
+        Returns the maximum jitter value for this ingredient.
+
+        Parameters
+        ----------
+        spacing
+            The grid spacing.
+
+        Returns
+        -------
+        float
+            The maximum jitter value.
+        """
         # self.max_jitter: each value is the max it can move
         # along that axis, but not cocurrently, ie, can't move
         # in the max x AND max y direction at the same time
         return max(self.max_jitter) * spacing
 
-    def swap(self, d, n):
-        d.rotate(-n)
-        d.popleft()
-        d.rotate(n)
+    def get_cutoff_value(self, spacing: float) -> float:
+        """Returns the min value a grid point needs to be away from a surface
+        in order for this ingredient to pack. Saves the value as min_distance.
+        Only needs to be calculated once per ingredient once the jitter is set.
 
-    def deleteblist(self, d, n):
-        del d[n]
+        Parameters
+        ----------
+        spacing
+            The grid spacing.
 
-    def get_cuttoff_value(self, spacing):
-        """Returns the min value a grid point needs to be away from a surfance
-        in order for this ingredient to pack. Only needs to be calculated once
-        per ingredient once the jitter is set."""
+        Returns
+        -------
+        :
+            The cutoff value.
+        """
         if self.min_distance > 0:
             return self.min_distance
         radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
 
         if self.packing_mode == "close":
-            cut = radius - jitter
+            cutoff_value = radius - jitter
         else:
-            cut = radius - jitter
-        self.min_distance = cut
-        return cut
+            cutoff_value = radius - jitter
+        self.min_distance = cutoff_value
+        return cutoff_value
 
-    def checkIfUpdate(self, nbFreePoints, threshold):
-        """Check if we need to update the distance array. Part of the hack free points"""
-        if hasattr(self, "nbPts"):
+    def needs_to_update(self, nbFreePoints: int, threshold: float) -> bool:
+        """Check if we need to update the distance array. Part of the hack free points
+
+        Parameters
+        ----------
+        nbFreePoints
+            The number of free points available.
+        threshold
+            The threshold ratio for updating.
+
+        Returns
+        -------
+        :
+            True if the distance array needs to be updated, False otherwise.
+        """
+        if hasattr(self, "num_encapsulated_grid_pts"):
             if hasattr(self, "firstTimeUpdate") and not self.firstTimeUpdate:
                 # if it has been updated before
                 # check the number of inside points for this ingredient over the total
                 # number of free points left
-                ratio = float(self.nbPts) / float(nbFreePoints)
+                ratio = float(self.num_encapsulated_grid_pts) / float(nbFreePoints)
                 # threshold defaults to zero. It's set by the env, `freePtsUpdateThreshold`
                 if ratio > threshold:
                     return True
@@ -788,34 +781,57 @@ class Ingredient(Agent):
 
     def get_list_of_free_indices(
         self,
-        distances,
-        free_points,
-        nbFreePoints,
-        spacing,
-        comp_ids,
-        threshold,
+        distances: np.ndarray,
+        free_points: np.ndarray,
+        nbFreePoints: int,
+        spacing: float,
+        comp_ids: np.ndarray,
+        threshold: float,
     ):
+        """
+        Gets a list of all the grid points that are free for this ingredient to pack into.
+
+        Parameters
+        ----------
+        distances
+            The distances array: the distance of every grid point to the nearest surface.
+        free_points
+            The current free points array. It's an array of all the grid point indices,
+            to get the free ones, use the nbFreePoints to cut the array at only free points.
+        nbFreePoints
+            The number of free points.
+        spacing
+            The grid spacing.
+        comp_ids
+            The compartment IDs array.
+        threshold
+            The threshold for updating.
+
+        Returns
+        -------
+        :
+            A tuple containing the list of free indices and their distances.
+
+        """
         allIngrPts = []
         allIngrDist = []
         current_comp_id = self.compartment_id
         # gets min distance an object has to be away to allow packing for this object
-        cuttoff = self.get_cuttoff_value(spacing)
+        cuttoff = self.get_cutoff_value(spacing)
         if self.packing_mode == "close":
             # Get an array of free points where the distance is greater than half the cuttoff value
             # and less than the cutoff. Ie an array where the distances are all very small.
             # this also masks the array to only include points in the current commpartment
-            all_distances = numpy.array(distances)[free_points]
-            distance_mask = numpy.logical_and(
-                numpy.less_equal(all_distances, cuttoff),
-                numpy.greater_equal(all_distances, cuttoff / 2.0),
+            all_distances = np.array(distances)[free_points]
+            distance_mask = np.logical_and(
+                np.less_equal(all_distances, cuttoff),
+                np.greater_equal(all_distances, cuttoff / 2.0),
             )
             # mask compartments Id as well
-            compartment_mask = numpy.array(comp_ids)[free_points] == current_comp_id
-            mask_ind = numpy.nonzero(
-                numpy.logical_and(distance_mask, compartment_mask)
-            )[0]
-            allIngrPts = numpy.array(free_points)[mask_ind].tolist()
-            allIngrDist = numpy.array(distances)[mask_ind].tolist()
+            compartment_mask = np.array(comp_ids)[free_points] == current_comp_id
+            mask_ind = np.nonzero(np.logical_and(distance_mask, compartment_mask))[0]
+            allIngrPts = np.array(free_points)[mask_ind].tolist()
+            allIngrDist = np.array(distances)[mask_ind].tolist()
         else:
             starting_array = free_points
             array_length = nbFreePoints
@@ -828,7 +844,7 @@ class Ingredient(Agent):
                 array_length = len(self.allIngrPts)
 
             # use periodic update according size ratio grid
-            update = self.checkIfUpdate(nbFreePoints, threshold)
+            update = self.needs_to_update(nbFreePoints, threshold)
             self.log.info(f"check if update: {update}")
             if update:
                 # Only return points that aren't so close to a surface that we know the
@@ -847,9 +863,22 @@ class Ingredient(Agent):
                     self.allIngrPts = allIngrPts
         return allIngrPts, allIngrDist
 
-    def perturbAxis(self, amplitude):
-        # modify axis using gaussian distribution but clamp
-        # at amplitutde
+    def perturbAxis(self, amplitude: float) -> tuple[float, float, float]:
+        """
+        modifies axis using gaussian distribution but clamp
+        at amplitutde
+
+        Parameters
+        ----------
+        amplitude
+            The maximum perturbation amplitude.
+
+        Returns
+        -------
+        tuple
+            The perturbed axis coordinates.
+        """
+        #
         x, y, z = self.principal_vector
         stddev = amplitude * 0.5
         dx = gauss(0.0, stddev)
@@ -870,47 +899,99 @@ class Ingredient(Agent):
         # if self.name=='2bg9 ION CHANNEL/RECEPTOR':
         return (x + dx, y + dy, z + dz)
 
-    def transformPoints(self, trans, rot, points):
+    def transformPoints(
+        self, trans: np.ndarray, rot: np.ndarray, points: list[np.ndarray]
+    ) -> list[np.ndarray]:
+        """
+        Transforms a list of points by applying a rotation and translation.
+        Parameters
+        ----------
+        trans
+            The translation vector.
+        rot
+            The rotation matrix.
+        points
+            The list of points to transform.
+
+        Returns
+        -------
+        list[np.ndarray]
+            The transformed points.
+        """
         output = []
-        rot = numpy.array(rot)
+        rot = np.array(rot)
         for point in points:
-            output.append(numpy.matmul(rot[0:3, 0:3], point) + trans)
+            output.append(np.matmul(rot[0:3, 0:3], point) + trans)
         return output
 
-    def transformPoints_mult(self, trans, rot, points):
-        tx, ty, tz = trans
-        pos = []
-        for xs, ys, zs in points:
-            x = rot[0][0] * xs + rot[0][1] * ys + rot[0][2] * zs + tx
-            y = rot[1][0] * xs + rot[1][1] * ys + rot[1][2] * zs + ty
-            z = rot[2][0] * xs + rot[2][1] * ys + rot[2][2] * zs + tz
-            pos.append([x, y, z])
-        return numpy.array(pos)
+    def apply_rotation(
+        self, rot: np.ndarray, point: np.ndarray, origin=[0, 0, 0]
+    ) -> np.ndarray[float, float, float]:
+        """
+        Applies a rotation to a point around a given origin.
 
-    def apply_rotation(self, rot, point, origin=[0, 0, 0]):
+        Parameters
+        ----------
+        rot
+            The rotation matrix.
+        point
+            The point to rotate.
+        origin
+            The origin point around which to rotate.
+
+        Returns
+        -------
+        np.ndarray
+            The rotated point.
+        """
         r = R.from_matrix([rot[0][:3], rot[1][:3], rot[2][:3]])
         new_pos = r.apply(point)
-        return new_pos + numpy.array(origin)
+        return new_pos + np.array(origin)
 
-    def alignRotation(self, jtrans, gradients):
+    def align_rotation(self, jtrans: np.ndarray, gradients: dict) -> np.ndarray:
+        """
+        Aligns the rotation of the ingredient based on the surface normal.
+
+        Parameters
+        ----------
+        jtrans
+            The translation vector.
+        gradients
+            The gradients dictionary.
+
+        Returns
+        -------
+        :
+            The rotation matrix.
+        """
         # for surface points we compute the rotation which
         # aligns the principal_vector with the surface normal
-        vx, vy, vz = v1 = self.principal_vector
+        v1 = self.principal_vector
         # surfacePointsNormals problem here
         gradient_center = gradients[self.gradient].direction
-        v2 = numpy.array(gradient_center) - numpy.array(jtrans)
+        v2 = np.array(gradient_center) - np.array(jtrans)
         try:
-            rotMat = numpy.array(rotVectToVect(v1, v2), "f")
+            rotMat = np.array(rotVectToVect(v1, v2), "f")
         except Exception as e:
             self.log.error(f"{self.name}, {e}")
-            rotMat = numpy.identity(4)
+            rotMat = np.identity(4)
         return rotMat
 
-    def getAxisRotation(self, rot):
+    def getAxisRotation(self, rot: np.ndarray) -> np.ndarray:
         """
         combines a rotation about axis to incoming rot.
         rot aligns the principal_vector with the surface normal
         rot aligns the principal_vector with the biased diretion
+
+        Parameters
+        ----------
+        rot
+            The rotation matrix.
+
+        Returns
+        -------
+        :
+            The combined rotation matrix.
         """
         if self.perturb_axis_amplitude != 0.0:
             axis = self.perturbAxis(self.perturb_axis_amplitude)
@@ -918,12 +999,24 @@ class Ingredient(Agent):
             axis = self.principal_vector
         tau = uniform(-pi, pi)
         rrot = rotax((0, 0, 0), axis, tau, transpose=1)
-        rot = numpy.dot(rot, rrot)
+        rot = np.dot(rot, rrot)
         return rot
 
-    def getBiasedRotation(self, rot, weight=None):
+    def getBiasedRotation(self, rot: np.ndarray, weight=None) -> np.ndarray:
         """
         combines a rotation about axis to incoming rot
+
+        Parameters
+        ----------
+        rot
+            The rotation matrix.
+        weight : optional
+            The weight for the rotation.
+
+        Returns
+        -------
+        :
+            The combined rotation matrix.
         """
         # -30,+30 ?
         if weight is not None:
@@ -933,49 +1026,75 @@ class Ingredient(Agent):
                 self.orientBiasRotRangeMin, self.orientBiasRotRangeMax
             )  # (-pi, pi)
         rrot = rotax((0, 0, 0), self.rotation_axis, tau, transpose=1)
-        rot = numpy.dot(rot, rrot)
+        rot = np.dot(rot, rrot)
         return rot
 
-    def correctBB(self, p1, p2, radc):
-        # unprecised
-        x1, y1, z1 = p1
-        x2, y2, z2 = p2
-        #        bb = ( [x1-radc, y1-radc, z1-radc], [x2+radc, y2+radc, z2+radc] )
+    def correctBB(self, p1: np.ndarray, p2: np.ndarray, radc: float) -> np.ndarray:
+        """
+        Creates a bounding box to include an ingredient.
+
+        Parameters
+        ----------
+        p1 : np.ndarray
+            The first point.
+        p2 : np.ndarray
+            The second point.
+        radc : float
+            The radius to expand the bounding box.
+
+        Returns
+        -------
+        np.ndarray
+            The corrected bounding box.
+        """
+
         mini = []
         maxi = []
         for i in range(3):
             mini.append(min(p1[i], p2[i]) - radc)
             maxi.append(max(p1[i], p2[i]) + radc)
-        return numpy.array([numpy.array(mini).flatten(), numpy.array(maxi).flatten()])
-        # precised:
-
-    def getListCompFromMask(self, cId, ptsInSphere):
-        # cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]
-        current = self.compartment_id
-        if current < 0:  # inside
-            ins = [i for i, x in enumerate(cId) if x == current]
-            # surf=[i for i,x in enumerate(cId) if x == -current]
-            liste = ins  # +surf
-        if current > 0:  # surface
-            ins = [i for i, x in enumerate(cId) if x == current]
-            surf = [i for i, x in enumerate(cId) if x == -current]
-            extra = [i for i, x in enumerate(cId) if x < 0]
-            liste = ins + surf + extra
-        elif current == 0:  # extracellular
-            liste = [i for i, x in enumerate(cId) if x == current]
-        return liste
+        return np.array([np.array(mini).flatten(), np.array(maxi).flatten()])
 
     def get_new_distances_and_inside_points(
         self,
-        env,
-        packing_location,
-        rotation_matrix,
-        grid_point_index,
-        grid_distance_values,
-        new_dist_points,
-        inside_points,
+        env: Environment,
+        packing_location: np.ndarray,
+        rotation_matrix: np.ndarray,
+        grid_point_index: int,
+        grid_distance_values: np.ndarray,
+        new_dist_points: dict,
+        inside_points: dict,
         signed_distance_to_surface=None,
     ):
+        """
+        Updates the new distance points and inside points based on the signed distance to the surface.
+
+        Parameters
+        ----------
+        env : Environment
+            The environment object.
+        packing_location : np.ndarray
+            The location where the ingredient is being packed (off the grid).
+        rotation_matrix : np.ndarray
+            The rotation matrix for the ingredient.
+        grid_point_index : int
+            The index of the grid point being packed near.
+        grid_distance_values : np.ndarray
+            The current distance values for each grid point to the closest surface.
+        new_dist_points : dict
+            A dictionary to store newly updated distances.
+        inside_points : dict
+            A dictionary to store the points inside the ingredients (therefore no longer accessible for packing).
+        signed_distance_to_surface : float, optional
+            The signed distance to the surface of the ingredient.
+
+        Returns
+        -------
+        :
+            A tuple containing:
+            - The updated inside points.
+            - The updated new distance points
+        """
         if signed_distance_to_surface is None:
             grid_point_location = env.grid.masterGridPositions[grid_point_index]
             signed_distance_to_surface = self.get_signed_distance(
@@ -1001,8 +1120,22 @@ class Ingredient(Agent):
                 new_dist_points[grid_point_index] = signed_distance_to_surface
         return inside_points, new_dist_points
 
-    def is_point_in_correct_region(self, point):
+    def is_point_in_correct_region(
+        self, point: np.ndarray[float, float, float]
+    ) -> bool:
         # crude location check (using nearest grid point)
+        """
+        Check if the point is in the correct region based on its compartment ID.
+        Parameters
+        ----------
+        point :
+            The point to check.
+
+        Returns
+        -------
+        bool
+            True if the point is in the correct region, False otherwise.
+        """
         nearest_grid_point_compartment_id = (
             self.env.compartment_id_for_nearest_grid_point(point)
         )  # offset ?
@@ -1041,8 +1174,23 @@ class Ingredient(Agent):
                     return False
             return compartment_ingr_belongs_in == nearest_grid_point_compartment_id
 
-    def far_enough_from_surfaces(self, point, cutoff):
-        # check if clear of all other compartment surfaces
+    def far_enough_from_surfaces(
+        self, point: np.ndarray[float, float, float], cutoff: float
+    ) -> bool:
+        """
+        Check if the point is far enough from all compartment surfaces.
+        Parameters
+        ----------
+        point : np.ndarray[float, float, float]
+            The point to check.
+        cutoff : float
+            The minimum distance from surfaces.
+
+        Returns
+        -------
+        bool
+            True if the point is far enough from all surfaces, False otherwise.
+        """
         ingredient_compartment = self.get_compartment(self.env)
         ingredient_compartment_id = self.compartment_id
         for compartment in self.env.compartments:
@@ -1060,8 +1208,19 @@ class Ingredient(Agent):
                     return False
         return True
 
-    def point_is_available(self, newPt):
-        """Takes in a vector returns a boolean"""
+    def point_is_available(self, newPt: np.ndarray[float, float, float]) -> bool:
+        """
+        Runs through a number of checks to make sure the ingredient can be placed near the given point.
+        Parameters
+        ----------
+        newPt :
+            The point to check.
+
+        Returns
+        -------
+        bool
+            True if the point is available, False otherwise.
+        """
         point_in_correct_region = True
         far_from_surfaces = False
         on_grid = self.env.grid.is_point_inside_bb(
@@ -1083,22 +1242,63 @@ class Ingredient(Agent):
         else:
             return False
 
-    def oneJitter(self, env, trans, rotMat):
+    def jitter_once(
+        self, env: Environment, trans: np.ndarray, rotMat: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Applies random jitter to a position and rotation.
+        Parameters
+        ----------
+        env
+            The environment the ingredient is in.
+        trans
+            The translation vector of the ingredient.
+        rotMat
+            The rotation matrix of the ingredient.
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            The jittered translation and rotation.
+        """
         jtrans = self.randomize_translation(env, trans, rotMat)
         rotMatj = self.randomize_rotation(rotMat, env)
         return jtrans, rotMatj
 
     def get_new_jitter_location_and_rotation(
-        self, env, starting_pos, starting_rotation
-    ):
+        self, env: Environment, starting_pos: np.ndarray, starting_rotation: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Randomizes a position and rotation from a grid point position. It will be a random offset that doesn't go to the next grid point.
+        Parameters
+        ----------
+        env
+            The environment the ingredient is in.
+        starting_pos
+            The starting position of grid point
+        starting_rotation
+            The starting rotation of the ingredient.
+
+        Returns
+        -------
+        :
+            The new jittered position and rotation.
+        """
         if self.packing_mode[-4:] == "tile":
             packing_location = starting_pos
             packing_rotation = starting_rotation[:]
             return packing_location, packing_rotation
 
-        return self.oneJitter(env, starting_pos, starting_rotation)
+        return self.jitter_once(env, starting_pos, starting_rotation)
 
-    def getIngredientsInBox(self, env, jtrans, rotMat, compartment):
+    def getIngredientsInBox(
+        self,
+        env: Environment,
+        jtrans: np.ndarray,
+        rotMat: np.ndarray,
+        compartment: Compartment,
+    ) -> list:
+        """ """
         if env.windowsSize_overwrite:
             radius = env.windowsSize
         else:
@@ -1157,7 +1357,25 @@ class Ingredient(Agent):
 
         return ingredients
 
-    def get_partners(self, env, jtrans, rotMat, organelle):
+    def get_partners(
+        self,
+        env: Environment,
+        jtrans: np.ndarray,
+        rotMat: np.ndarray,
+        organelle: Compartment,
+    ) -> tuple:
+        """
+        Finds potential partner ingredients in the vicinity.
+        Parameters:
+            env: The environment object.
+            jtrans: The translation vector of the ingredient.
+            rotMat: The rotation matrix of the ingredient.
+            organelle: The compartment the ingredient is in.
+
+        Returns:
+            A tuple containing the nearby ingredients and which of those are partners of the current ingredient.
+        """
+
         closest_ingredients = env.get_closest_ingredients(jtrans, cutoff=env.grid.diag)
         if not len(closest_ingredients["indices"]):
             near_by_ingredients = self.getIngredientsInBox(
@@ -1205,7 +1423,13 @@ class Ingredient(Agent):
         else:
             return near_by_ingredients, placed_partners
 
-    def get_new_pos(self, ingr, pos, rot, positions_to_adjust):
+    def get_new_pos(
+        self,
+        ingr: Ingredient,  # type: ignore
+        pos: np.ndarray,
+        rot: np.ndarray,
+        positions_to_adjust: np.ndarray,
+    ) -> np.ndarray:
         """
         Takes positions_to_adjust, such as an array of spheres at a level in a
         sphere tree, and adjusts them relative to the given position and rotation
@@ -1214,7 +1438,20 @@ class Ingredient(Agent):
             positions_to_adjust = ingr.positions[0]
         return self.transformPoints(pos, rot, positions_to_adjust)
 
-    def check_against_one_packed_ingr(self, index, level, search_tree):
+    def check_against_one_packed_ingr(
+        self, index: int, level: int, search_tree
+    ) -> bool:
+        """
+        Check against one packed ingredient.
+
+        Parameters:
+            index (int): The index of the packed ingredient.
+            level (int): The level of the sphere tree.
+            search_tree: The search tree for querying positions.
+
+        Returns:
+            bool: True if there is a collision, False otherwise.
+        """
         ingredient_instance = self.env.packed_objects.get_ingredients()[index]
         ingredient_class = ingredient_instance.ingredient
         positions_of_packed_ingr_spheres = self.get_new_pos(
@@ -1230,15 +1467,25 @@ class Ingredient(Agent):
             positions_of_packed_ingr_spheres, len(self.positions[level])
         )
         # return index of sph1 closest to pos of packed ingr
-        cradii = numpy.array(self.radii[level])[ind]
-        oradii = numpy.array(
+        cradii = np.array(self.radii[level])[ind]
+        oradii = np.array(
             self.env.packed_objects.get_ingredients()[index].ingredient.radii[level]
         )
-        sumradii = numpy.add(cradii.transpose(), oradii).transpose()
+        sumradii = np.add(cradii.transpose(), oradii).transpose()
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
-        return len(numpy.nonzero(sD < 0.0)[0]) != 0
+        return len(np.nonzero(sD < 0.0)[0]) != 0
 
-    def np_check_collision(self, packing_location, rotation):
+    def np_check_collision(
+        self, packing_location: np.ndarray, rotation: np.ndarray
+    ) -> bool:
+        """
+        Check for collisions with packed ingredients using numpy.
+        Parameters:
+            packing_location (np.ndarray): The location of the ingredient being packed.
+            rotation (np.ndarray): The rotation of the ingredient being packed.
+        Returns:
+            bool: True if there is a collision, False otherwise.
+        """
         has_collision = False
         # no ingredients packed yet
         packed_objects = self.env.packed_objects.get_ingredients()
@@ -1256,14 +1503,14 @@ class Ingredient(Agent):
             distances_from_packing_location_to_all_ingr,
             ingr_indexes,
         ) = self.env.close_ingr_bhtree.query(packing_location, len(packed_objects))
-        radii_of_placed_ingr = numpy.array(
+        radii_of_placed_ingr = np.array(
             self.env.packed_objects.get_encapsulating_radii()
         )[ingr_indexes]
         overlap_distance = distances_from_packing_location_to_all_ingr - (
             self.encapsulating_radius + radii_of_placed_ingr
         )
         # if overlap_distance is negative, the encapsualting radii are overlapping
-        overlap_indexes = numpy.atleast_1d(overlap_distance < 0.0).nonzero()[0]
+        overlap_indexes = np.atleast_1d(overlap_distance < 0.0).nonzero()[0]
 
         if len(overlap_indexes) != 0:
             level = level + 1
@@ -1312,8 +1559,8 @@ class Ingredient(Agent):
         else:
             organelle = self.env.compartments[abs(self.compartment_id) - 1]
         nodes = []
-        #        a=numpy.asarray(self.env.rTrans)[close_indice["indices"]]
-        #        b=numpy.array([currentpt,])
+        #        a=np.asarray(self.env.rTrans)[close_indice["indices"]]
+        #        b=np.array([currentpt,])
         distances = close_indice[
             "distances"
         ]  # spatial.distance.cdist(a,b)#close_indice["distance"]
@@ -1339,9 +1586,7 @@ class Ingredient(Agent):
             rotMat = self.env.rRot[n]
             if prevpoint is not None:
                 # if prevpoint == jtrans : continue
-                d = self.vi.measure_distance(
-                    numpy.array(jtrans), numpy.array(prevpoint)
-                )
+                d = self.vi.measure_distance(np.array(jtrans), np.array(prevpoint))
                 if d == 0:  # same point
                     continue
             if self.type == "Grow":
@@ -1380,14 +1625,14 @@ class Ingredient(Agent):
             orbnode = o.get_rb_model()
             if orbnode is not None:
                 # test distance to surface ?
-                res = o.OGsrfPtsBht.query(tuple(numpy.array([currentpt])))
+                res = o.OGsrfPtsBht.query(tuple(np.array([currentpt])))
                 if len(res) == 2:
                     d = res[0][0]
                     if d < self.encapsulating_radius:
                         if not getInfo:
                             nodes.append(orbnode)
                         else:
-                            nodes.append([orbnode, [0, 0, 0], numpy.identity(4), o])
+                            nodes.append([orbnode, [0, 0, 0], np.identity(4), o])
                             #        if self.compartment_id < 0 or self.compartment_id == 0 :
                             #            for o in self.env.compartments:
                             #                if o.rbnode is not None :
@@ -1404,15 +1649,43 @@ class Ingredient(Agent):
 
     def pack_at_grid_pt_location(
         self,
-        env,
-        jtrans,
-        rotation_matrix,
-        dpad,
-        grid_point_distances,
-        inside_points,
-        new_dist_points,
-        pt_index,
+        env: Environment,
+        jtrans: np.ndarray,
+        rotation_matrix: np.ndarray,
+        dpad: float,
+        grid_point_distances: np.ndarray,
+        inside_points: dict,
+        new_dist_points: dict,
+        pt_index: int,
     ):
+        """
+        Pack the ingredient at the specified grid point location.
+
+        Parameters
+        ----------
+        env
+            The environment in which the packing is taking place.
+        jtrans
+            The translation vector for the packing.
+        rotation_matrix
+            The rotation matrix to apply to the packing.
+        dpad
+            The padding to apply to the packing.
+        grid_point_distances
+            The distances of each grid point to the nearest packed surface.
+        inside_points
+            The new grid points that are inside an ingredient.
+        new_dist_points
+            The new distances to update in the grid
+        pt_index
+            The index of the point being packed.
+
+        Returns
+        -------
+        A tuple containing:
+        - a dict of the new inside points
+        - a dict of the new distances to the corresponding grid points that need to be updated
+        """
 
         packing_location = jtrans
         radius_of_area_to_check = self.encapsulating_radius + dpad
@@ -1446,6 +1719,10 @@ class Ingredient(Agent):
     def reject(
         self,
     ):
+        """
+        Handle rejecting the current ingredient placement. Updates counters and
+        checks if the counter is over the threshold.
+        """
         # got rejected
         self.haveBeenRejected = True
         self.rejectionCounter += 1
@@ -1456,7 +1733,20 @@ class Ingredient(Agent):
             self.log.info("PREMATURE ENDING of ingredient %s", self.name)
             self.completion = 1.0
 
-    def store_packed_object(self, position, rotation, index):
+    def store_packed_object(
+        self, position: np.ndarray, rotation: np.ndarray, index: int
+    ):
+        """
+        Store the packed object information in the environment and compartment if applicable.
+        Parameters
+        ----------
+        position
+            The position of the packed object.
+        rotation
+            The rotation of the packed object.
+        index
+            The index of the grid point it's packed near.
+        """
         packed_object = PackedObject(
             position=position,
             rotation=rotation,
@@ -1471,13 +1761,30 @@ class Ingredient(Agent):
 
     def place(
         self,
-        env,
-        dropped_position,
-        dropped_rotation,
-        grid_point_index,
-        new_inside_points,
+        env: Environment,
+        dropped_position: np.ndarray,
+        dropped_rotation: np.ndarray,
+        grid_point_index: int,
+        new_inside_points: dict,
     ):
-        self.nbPts = self.nbPts + len(new_inside_points)
+        """
+        Handle placing the ingredient in the environment.
+        Parameters
+        ----------
+        env
+            The environment to place the ingredient in.
+        dropped_position
+            The position the ingredient was dropped at.
+        dropped_rotation
+            The rotation of the dropped ingredient.
+        grid_point_index
+            The index of the grid point the ingredient is placed at.
+        new_inside_points
+            The new inside points of the ingredient.
+        """
+        self.num_encapsulated_grid_pts = self.num_encapsulated_grid_pts + len(
+            new_inside_points
+        )
 
         env.update_after_place(grid_point_index)
 
@@ -1496,7 +1803,9 @@ class Ingredient(Agent):
         self.update_data_tree()
 
     def update_ingredient_size(self):
-        # update the size of the ingredient based on input options
+        """
+        Update the size of the ingredient based on input options.
+        """
         if hasattr(self, "size_options") and self.size_options is not None:
             if self.type == INGREDIENT_TYPE.SINGLE_SPHERE:
                 radius = get_value_from_distribution(
@@ -1508,14 +1817,45 @@ class Ingredient(Agent):
 
     def attempt_to_pack_at_grid_location(
         self,
-        env,
-        ptInd,
-        grid_point_distances,
-        max_radius,
-        spacing,
-        usePP,
-        collision_possible,
+        env: Environment,
+        ptInd: int,
+        grid_point_distances: np.ndarray,
+        max_radius: float,
+        spacing: float,
+        usePP: bool,
+        collision_possible: bool,
     ):
+        """
+        Attempt to pack the ingredient at the specified grid location.
+        Routes to different packing strategies based on the ingredient type and environment.
+        Parameters:
+        ----------
+        env
+            The environment to pack the ingredient in.
+        ptInd
+            The index of the grid point to pack the ingredient at.
+        grid_point_distances
+            The distances to other grid points.
+        max_radius
+            The maximum radius for packing.
+        spacing
+            The spacing between packed ingredients.
+        usePP
+            Whether to use position prediction.
+        collision_possible
+            Not implemented, but intend to use it to bypass collision checks if the encapsulating radius
+            makes it impossible for there to be a collision (mostly at the beginning of packing)
+
+        Returns
+        -------
+        success: bool
+            Whether the packing attempt was successful.
+        insidePoints: dict
+            The points inside the packed ingredient.
+        newDistPoints: dict
+            The new distance points after packing.
+
+        """
         success = False
         jitter = self.getMaxJitter(spacing)
         self.update_ingredient_size()
@@ -1536,9 +1876,9 @@ class Ingredient(Agent):
         target_grid_point_position = gridPointsCoords[
             ptInd
         ]  # drop point, surface points.
-        if numpy.sum(self.offset) != 0.0:
+        if np.sum(self.offset) != 0.0:
             target_grid_point_position = (
-                numpy.array(target_grid_point_position)
+                np.array(target_grid_point_position)
                 + ApplyMatrix([self.offset], rotation_matrix)[0]
             )
         target_grid_point_position = gridPointsCoords[
@@ -1559,7 +1899,6 @@ class Ingredient(Agent):
                 target_grid_point_position,
                 rotation_matrix,
                 compartment,
-                env.afviewer,
                 current_visual_instance,
             )
             if target_grid_point_position is None:
@@ -1617,6 +1956,7 @@ class Ingredient(Agent):
         else:
             # blind packing without further collision checks
             # TODO: make this work for ingredients other than single spheres
+            # not currently implemented
 
             success = True
             (jtrans, rotMatj) = self.get_new_jitter_location_and_rotation(
@@ -1649,7 +1989,7 @@ class Ingredient(Agent):
         # compute rotation matrix rotMat
         comp_num = self.compartment_id
 
-        rot_mat = numpy.identity(4)
+        rot_mat = np.identity(4)
         if comp_num > 0:
             # for surface points we compute the rotation which
             # aligns the principal_vector with the surface normal
@@ -1658,19 +1998,19 @@ class Ingredient(Agent):
                 pt_ind, env.grid.masterGridPositions[pt_ind], env.mesh_store
             )
             try:
-                rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
+                rot_mat = np.array(rotVectToVect(v1, v2), "f")
             except Exception as e:
                 print(f"PROBLEM: {self.name}, {e}")
-                rot_mat = numpy.identity(4)
+                rot_mat = np.identity(4)
         else:
             # this is where we could apply biased rotation ie gradient/attractor
             if self.use_rotation_axis:
                 if sum(self.rotation_axis) == 0.0:
-                    rot_mat = numpy.identity(4)
+                    rot_mat = np.identity(4)
                 elif (
                     self.use_orient_bias and self.packing_mode == "gradient"
                 ):  # you need a gradient here
-                    rot_mat = self.alignRotation(
+                    rot_mat = self.align_rotation(
                         env.grid.masterGridPositions[pt_ind], env.gradients
                     )
                 else:
@@ -1684,13 +2024,13 @@ class Ingredient(Agent):
 
     def randomize_rotation(self, rotation, env):
         # randomize rotation about axis
-        jitter_rotation = numpy.identity(4)
+        jitter_rotation = np.identity(4)
         if self.compartment_id > 0:
             jitter_rotation = self.getAxisRotation(rotation)
         else:
             if self.use_rotation_axis:
                 if sum(self.rotation_axis) == 0.0:
-                    jitter_rotation = numpy.identity(4)
+                    jitter_rotation = np.identity(4)
                     # Graham Oct 16,2012 Turned on always rotate below as default.  If you want no rotation
                     # set use_rotation_axis = 1 and set rotation_axis = 0, 0, 0 for that ingredient
                 elif self.use_orient_bias and self.packing_mode == "gradient":
@@ -1734,7 +2074,7 @@ class Ingredient(Agent):
                 d2 = dx * dx + dy * dy + dz * dz
                 if d2 < jitter_sq:
                     if self.compartment_id > 0:  # jitter less among normal
-                        dx, dy, dz, _ = numpy.dot(rotation, (dx, dy, dz, 0))
+                        dx, dy, dz, _ = np.dot(rotation, (dx, dy, dz, 0))
                     jitter_trans = (tx + dx, ty + dy, tz + dz)
                     found = True
         else:
@@ -1761,7 +2101,42 @@ class Ingredient(Agent):
         moving,
     ):
         """
-        drop the ingredient on grid point ptInd
+        Saves the ingredient at the specified grid point and updates the environment
+
+        Parameters
+        ----------
+        env : Environment
+            The environment object.
+        ptInd : int
+            The index of the grid point.
+        compartment : int
+            The compartment ID.
+        target_grid_point_position : np.ndarray
+            The target position of the grid point.
+        rotation_matrix : np.ndarray
+            The rotation matrix for the ingredient.
+        nbFreePoints : int
+            The number of free points.
+        distance : float
+            The distance to the target point.
+        dpad : float
+            The padding distance.
+        moving : MovingObject
+            If it exists, is used to create an animation of the packing.
+
+        Returns
+        -------
+        success : bool
+            Whether the object was successfully placed
+        jtrans : np.ndarray
+            The translation vector for the ingredient position.
+        rotMatj : np.ndarray
+            The rotation matrix for the ingredient position.
+        insidePoints : list
+            The list of inside points (grid points that are inside an ingredient). Will have been updated if the placement was successful
+        newDistPoints : list
+            The list of new distances for the gridpoints, will have been updated if the placement was successful
+
         """
         afvi = env.afviewer
         simulationTimes = env.simulationTimes
@@ -1769,7 +2144,7 @@ class Ingredient(Agent):
         springOptions = env.springOptions
         is_realtime = moving is not None
 
-        jtrans, rotMatj = self.oneJitter(
+        jtrans, rotMatj = self.jitter_once(
             env, target_grid_point_position, rotation_matrix
         )
 
@@ -1916,6 +2291,21 @@ class Ingredient(Agent):
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def merge_place_results(self, new_results, accum_results):
+        """
+        Merges the new placement results into the accumulated results.
+
+        Parameters
+        ----------
+        new_results : dict
+            The new placement results to merge.
+        accum_results : dict
+            The accumulated placement results to update.
+
+        Returns
+        -------
+        dict
+            The updated accumulated placement results.
+        """
         for pt in new_results:
             if pt not in accum_results:
                 accum_results[pt] = new_results[pt]
@@ -1940,6 +2330,16 @@ class Ingredient(Agent):
             If the point is close to the side of the bounding box, will return an array of 2.
             If the point is close to an edge of the bb (which is a "corner" in 2D), will return an array of 3.
             If the point is close to a corner in 3D will return an array of 8.
+
+        Parameters
+        ----------
+        packing_location : Vector
+            The starting position in the packing space.
+
+        Returns
+        -------
+        list
+            A list of all the points that need to be tested for a collision.
         """
         points_to_check = [packing_location]
         # periodicity check
@@ -1965,6 +2365,28 @@ class Ingredient(Agent):
         """
         Check if the given grid point is available for packing using the jitter collision detection
         method. Returns packing location and new grid point values if packing is successful.
+
+        Parameters
+        ----------
+        env : Environment
+            The environment in which the packing is taking place.
+        targeted_master_grid_point : Vector
+            The targeted master grid point for packing.
+        rot_mat : Matrix
+            The rotation matrix to apply to the packing.
+        moving : Vector
+            The current movement vector of the object being packed.
+        distance : float
+            The distance to check for collisions.
+        dpad : float
+            The padding to apply to the packing.
+        pt_index : int
+            The index of the point being packed.
+
+        Returns
+        -------
+        list
+            A list of all the points that need to be tested for a collision.
         """
 
         packing_location = None
@@ -2054,7 +2476,13 @@ class Ingredient(Agent):
                 )
         return False, packing_location, packing_rotation, {}, {}
 
-    def lookForNeighbours(self, env, trans, rotMat, organelle):
+    def lookForNeighbours(
+        self,
+        env: Environment,
+        trans: np.ndarray,
+        rotMat: np.ndarray,
+        organelle: Compartment,
+    ) -> tuple:
         near_by_ingredients, placed_partners = self.get_partners(
             env, trans, rotMat, organelle
         )
@@ -2083,10 +2511,10 @@ class Ingredient(Agent):
                         # surfacePointsNormals problem here
                         v2 = organelle.ogsurfacePointsNormals[i]
                         try:
-                            rotMat = numpy.array(rotVectToVect(v1, v2), "f")
+                            rotMat = np.array(rotVectToVect(v1, v2), "f")
                         except Exception as e:
                             self.log.warning("PROBLEM %s %r", self.name, e)
-                            rotMat = numpy.identity(4)
+                            rotMat = np.identity(4)
                     # find a newpoint here?
                     return targetPoint, rotMat, found
 
@@ -2103,8 +2531,16 @@ class Ingredient(Agent):
             return env.compartments[abs(self.compartment_id) - 1]
 
     def close_partner_check(
-        self, env, translation, rotation, compartment, afvi, moving
-    ):
+        self,
+        env: Environment,
+        translation: np.ndarray,
+        rotation: np.ndarray,
+        compartment: Compartment,
+        moving: MovingObject,
+    ) -> tuple:
+        """
+        Checks for nearby partners
+        """
         target_point, rot_matrix, found = self.lookForNeighbours(
             env,
             translation,
@@ -2141,11 +2577,45 @@ class Ingredient(Agent):
         target_grid_point_position,
         rotation_matrix,
         moving,
-        distance,
+        grid_point_distances,
         dpad,
-    ):
+    ) -> tuple:
         """
         drop the ingredient on grid point ptInd
+        using the spheres SST method
+
+        Parameters
+        ----------
+        env : Environment
+            The environment object.
+        compartment : Compartment
+            The compartment where the ingredient is being placed.
+        ptInd : int
+            The index of the grid point being packed.
+        target_grid_point_position : np.ndarray
+            The position of the target grid point.
+        rotation_matrix : np.ndarray
+            The rotation matrix for the ingredient.
+        moving : MovingObject
+            The moving object being packed.
+        grid_point_distances : list
+            The distances to the target grid point.
+        dpad : float
+            The padding distance.
+
+        Returns
+        -------
+        A tuple containing:
+            bool
+                True if the packing was successful, False otherwise.
+            np.ndarray
+                The final position of the ingredient.
+            np.ndarray
+                The final rotation matrix.
+            dict
+                A dictionary of points inside the ingredient.
+            dict
+                A dictionary of new distance points.
         """
         is_realtime = moving is not None
 
@@ -2233,7 +2703,7 @@ class Ingredient(Agent):
                         pt,
                         packing_rotation,
                         dpad,
-                        distance,
+                        grid_point_distances,
                         insidePoints,
                         newDistPoints,
                         ptInd,

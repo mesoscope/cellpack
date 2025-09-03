@@ -366,7 +366,9 @@ class SingleCubeIngr(Ingredient):
                     current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
                 else:
                     # vertex is the closest
-                    current_distance = numpy.sqrt(dist_x**2 + dist_y**2 + dist_z**2)
+                    current_distance = numpy.sqrt(
+                        dist_x**2 + dist_y**2 + dist_z**2
+                    )
         return current_distance
 
     def get_signed_distance(

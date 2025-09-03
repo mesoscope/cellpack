@@ -537,7 +537,7 @@ class GrowIngredient(MultiCylindersIngr):
         nexPt = (tx + dx, ty + dy, tz + dz)
         # where is this point in the grid
         # ptInd = histoVol.grid.getPointFrom3D(nexPt)
-        t, r = self.oneJitter(histoVol.smallestProteinSize, cent2T, rotMatj)
+        t, r = self.jitter_once(histoVol.smallestProteinSize, cent2T, rotMatj)
         dist, ptInd = histoVol.grid.getClosestGridPoint(t)
         dv = numpy.array(nexPt) - numpy.array(cent2T)
         d = numpy.sum(dv * dv)

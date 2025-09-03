@@ -1,7 +1,8 @@
 import numpy
 from math import pi
+from numpy import np
 import cellpack.autopack as autopack
-
+from cellpack.autopack import Environment
 from .Ingredient import Ingredient
 
 helper = autopack.helper
@@ -10,8 +11,6 @@ helper = autopack.helper
 class SingleSphereIngr(Ingredient):
     """
     This Ingredient is represented by a single sphere
-    and either a single radius, or a list of radii and offset vectors
-    for each sphere representing the ingredient
     """
 
     def __init__(
@@ -102,6 +101,12 @@ class SingleSphereIngr(Ingredient):
         """
         Creates a circular mask of the given shape with the specified center
         and radius
+
+        Returns
+        -------
+        : numpy.ndarray
+            A boolean mask array with the same shape as the input dimensions,
+            where the sphere region is marked as True.
         """
         if center is None:  # use the middle of the image
             center = (int(x_width / 2), int(y_width / 2), int(z_width / 2))
@@ -131,20 +136,50 @@ class SingleSphereIngr(Ingredient):
         return mask
 
     def get_radius(self):
+        """
+        Returns the radius of the sphere.
+        """
         return self.radius
 
     def collision_jitter(
         self,
-        jtrans,
-        rotMat,
-        level,
-        gridPointsCoords,
-        current_grid_distances,
-        env,
+        jtrans: np.ndarray,
+        rotMat: np.ndarray,
+        _: None,
+        gridPointsCoords: np.ndarray,
+        current_grid_distances: np.ndarray,
+        env: Environment,
         dpad,
     ):
         """
-        Check spheres for collision
+        Check spheres for collision using the jitter algorithm.
+        Can lead to very small overlaps but is more efficient
+        than precise collision detection.
+
+        Parameters
+        ----------
+        jtrans : numpy.ndarray
+            The randomly jittered translation vector, which is close to the selected grid point.
+        rotMat : numpy.ndarray
+            The randomly jittered rotation matrix.
+        _ : unused (keeps interface the same as the other collision detection methods)
+        gridPointsCoords : numpy.ndarray
+            The coordinates of the grid points.
+        current_grid_distances : numpy.ndarray
+            The current distances of the grid points from the packing location.
+        env : Environment
+            The environment object.
+        dpad : float
+            The padding distance.
+
+        Returns
+        -------
+        bool
+            True if a collision is detected, False otherwise.
+        dict
+            A dictionary of points inside the sphere.
+        dict
+            A dictionary of new distance points.
         """
 
         insidePoints = {}
@@ -207,12 +242,29 @@ class SingleSphereIngr(Ingredient):
         self,
         env,
         jtrans,
-        rotation_matrix=None,
+        _,
     ):
         """
-        Check spheres for collision
-        TODO improve the testwhen grid stepSize is larger that size of the ingredient
+        Check spheres for collision with compartment boundaries.
+
+        Parameters
+        ----------
+        env : Environment
+            The environment object.
+        jtrans : numpy.ndarray
+            The transformed position of the ingredient.
+        _ : Not used
+            The transformed rotation matrix of the ingredient is not needed for a sphere.
+
+        Returns
+        -------
+        bool
+            True if the ingredient collides with the compartment boundaries.
+
         """
+
+        # TODO: improve the testwhen grid stepSize is larger that size of the ingredient
+
         ptsInSphere = env.grid.getPointsInSphere(jtrans, self.radius)  # indices
         compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
         if self.compartment_id <= 0:
@@ -225,8 +277,25 @@ class SingleSphereIngr(Ingredient):
         self,
         packing_location,
         grid_point_location,
-        rotation_matrix=None,
+        _,
     ):
+        """
+        Compute the signed distance from the packing location to the grid point.
+
+        Parameters
+        ----------
+        packing_location : numpy.ndarray
+            The packing location of the ingredient.
+        grid_point_location : numpy.ndarray
+            The location of the grid point.
+        _ : Not used
+            The transformed rotation matrix of the ingredient is not needed for a sphere.
+
+        Returns
+        -------
+        float
+            The signed distance from the packing location to the grid point.
+        """
         radius = self.radius
         distance_to_packing_location = numpy.linalg.norm(
             packing_location - grid_point_location
@@ -235,8 +304,33 @@ class SingleSphereIngr(Ingredient):
         return signed_distance_to_surface
 
     def get_new_distance_values(
-        self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
+        self, jtrans, _, gridPointsCoords, distance, dpad, level=0
     ):
+        """
+        Get new distance values for the sphere.
+
+        Parameters
+        ----------
+        jtrans : numpy.ndarray
+            The transformed position of the ingredient.
+        _ : Not used
+            The transformed rotation matrix of the ingredient is not needed for a sphere.
+        gridPointsCoords : numpy.ndarray
+            The coordinates of the grid points.
+        distance : numpy.ndarray
+            The current distance values for the grid points.
+        dpad : float
+            The padding distance for the sphere.
+        level : int, optional
+            The level of the hierarchy (default is 0).
+
+        Returns
+        -------
+        dict
+            A dictionary of points inside the ingredient.
+        dict
+            A dictionary of new distance points.
+        """
         insidePoints = {}
         newDistPoints = {}
         padded_sphere = self.radius + dpad
@@ -263,6 +357,15 @@ class SingleSphereIngr(Ingredient):
         return insidePoints, newDistPoints
 
     def initialize_mesh(self, mesh_store):
+        """
+        Initialize the mesh for the sphere.
+
+        Parameters
+        ----------
+        mesh_store : MeshStore
+            The mesh store to use for creating the sphere mesh.
+
+        """
         if self.mesh is None:
             self.mesh = mesh_store.create_sphere(
                 self.name + "_basic", 5, radius=self.radius
@@ -281,6 +384,26 @@ class SingleSphereIngr(Ingredient):
     ):
         """
         Creates a voxelization for the sphere
+
+        Parameters
+        ----------
+        image_data : numpy.ndarray
+            The image data to voxelize.
+        bounding_box : numpy.ndarray
+            The bounding box of the sphere.
+        voxel_size : float
+            The size of the voxels.
+        image_size : tuple
+            The size of the image.
+        position : numpy.ndarray
+            The position of the sphere.
+        **kwargs : keyword arguments
+            Additional arguments to pass to the voxelization function.
+
+        Returns
+        -------
+        numpy.ndarray
+            The voxelized image data.
         """
         relative_position = position - bounding_box[0]
         voxelized_position = (relative_position / voxel_size).astype(int)

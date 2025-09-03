@@ -7,7 +7,7 @@ class Agent:
     def __init__(
         self,
         name,
-        concentration,
+        concentration: float,
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding
@@ -20,6 +20,38 @@ class Agent:
         place_method="jitter",
         weight=0.2,
     ):
+        """
+        Initialize the agent with the given parameters.
+
+        Parameters
+        ----------
+        name : str
+            The name of the agent.
+        concentration : float
+            The concentration of the agent.
+        distance_expression : str, optional
+            The distance expression for the agent.
+        distance_function : callable, optional
+            The distance function for the agent.
+        force_random : bool, optional
+            Whether to force random placement of the agent.
+        gradient : numpy.ndarray, optional
+            The gradient controlling packing for the agent.
+        gradient_weights : numpy.ndarray, optional
+            The gradient weights for the agent.
+        is_attractor : bool, optional
+            Whether the agent is an attractor.
+        overwrite_distance_function : bool, optional
+            Whether to overwrite the distance function.
+        packing_mode : str, optional
+            The packing mode for the agent.
+        partners : list, optional
+            The partner agents for the agent.
+        place_method : str, optional
+            The placement method for the agent.
+        weight : float, optional
+            The weight of the agent.
+        """
         self.name = name
         self.concentration = concentration
         self.partners = partners
@@ -51,6 +83,19 @@ class Agent:
         self.weight = weight
 
     def get_weights_by_distance(self, placed_partners):
+        """
+        Get the weights of the placed partners based on their distance.
+
+        Parameters
+        ----------
+        placed_partners : list
+            A list of tuples containing the placed partner information.
+
+        Returns
+        -------
+        list
+            A list of weights for the placed partners.
+        """
         weights = []
         for _, partner, dist in placed_partners:
             if self.overwrite_distance_function:
@@ -87,6 +132,23 @@ class Agent:
     def pick_partner_grid_index(
         self, near_by_ingredients, placed_partners, current_packing_position=[0, 0, 0]
     ):
+        """
+        Pick a partner grid index based on the nearby ingredients and placed partners.
+
+        Parameters
+        ----------
+        near_by_ingredients : list
+            A list of nearby ingredients.
+        placed_partners : list
+            A list of placed partners.
+        current_packing_position : list, optional
+            The current packing position.
+
+        Returns
+        -------
+        int
+            The index of the selected partner grid.
+        """
         # near_by_ingredient is [
         #   PackedObject
         #   distance[]

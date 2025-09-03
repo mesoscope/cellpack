@@ -1523,9 +1523,9 @@ class AutopackViewer:
                         elif self.vi.host == "dejavu":
                             self.orgaToMasterGeom[ingr] = ingr.mesh
                         elif self.vi.host == "softimage":
-                            self.orgaToMasterGeom[ingr] = (
-                                ingr.mesh
-                            )  # self.getMasterInstance(polygon)
+                            self.orgaToMasterGeom[
+                                ingr
+                            ] = ingr.mesh  # self.getMasterInstance(polygon)
                             # polygon already an instance from a different object\
 
                     j += 1
