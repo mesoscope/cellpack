@@ -47,6 +47,7 @@ from random import random, seed, uniform
 from time import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from cellpack.autopack.ingredient.Ingredient import Ingredient
 import numpy as np
 from scipy.spatial import KDTree
 from tqdm import tqdm
@@ -479,7 +480,7 @@ class Environment(CompartmentList):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(progress=progress, label=label)
 
-    def set_partners_ingredient(self, ingr: Any) -> None:
+    def set_partners_ingredient(self, ingr: Ingredient) -> None:
         """
         Set partner ingredients for the given ingredient.
 
@@ -652,7 +653,7 @@ class Environment(CompartmentList):
                 else:
                     return True
 
-    def includeIngredientRecipe(self, ingr: Any, include: bool) -> None:
+    def includeIngredientRecipe(self, ingr: Ingredient, include: bool) -> None:
         """
         Include or exclude ingredient from its recipe.
 
@@ -1155,7 +1156,7 @@ class Environment(CompartmentList):
             )
             return None, None, None
 
-    def update_largest_smallest_size(self, ingr: Any) -> None:
+    def update_largest_smallest_size(self, ingr: Ingredient) -> None:
         """
         Update the largest and smallest protein sizes based on ingredient.
 
@@ -1782,7 +1783,7 @@ class Environment(CompartmentList):
 
         return activeIngr0, activeIngr12
 
-    def clearRBingredient(self, ingr: Any) -> None:
+    def clearRBingredient(self, ingr: Ingredient) -> None:
         """
         Clear rigid body nodes for an ingredient.
 
@@ -1995,7 +1996,7 @@ class Environment(CompartmentList):
 
     def getPointToDrop(
         self,
-        ingr: Any,
+        ingr: Ingredient,
         free_points: List[int],
         nbFreePoints: int,
         distance: List[float],
@@ -2759,7 +2760,7 @@ class Environment(CompartmentList):
 
         return all_objects
 
-    def restore_molecules_array(self, ingr: Any) -> None:
+    def restore_molecules_array(self, ingr: Ingredient) -> None:
         """
         Restore molecules array for an ingredient
 
@@ -2981,7 +2982,7 @@ class Environment(CompartmentList):
 
     #    @classmethod
     def getOneIngrJson(
-        self, ingr: Any, ingrdic: Dict[str, Any]
+        self, ingr: Ingredient, ingrdic: Dict[str, Any]
     ) -> Tuple[List[Any], str, int, int, float]:
         """
         Get one ingredient data from JSON dictionary
@@ -3244,7 +3245,7 @@ class Environment(CompartmentList):
             pass
         return result, orgaresult, freePoint
 
-    def dropOneIngrJson(self, ingr: Any, rdic: Dict[str, Any]) -> Dict[str, Any]:
+    def dropOneIngrJson(self, ingr: Ingredient, rdic: Dict[str, Any]) -> Dict[str, Any]:
         """
         Create JSON dictionary for one ingredient
 
@@ -3477,7 +3478,7 @@ class Environment(CompartmentList):
 
     def addRB(
         self,
-        ingr: Any,
+        ingr: Ingredient,
         translation: List[float],
         rotMat: List[List[float]],
         rtype: str = "single_sphere",
@@ -3529,7 +3530,7 @@ class Environment(CompartmentList):
         """
         return None
 
-    def runBullet(self, ingr: Any, simulationTimes: int, runTimeDisplay: bool) -> None:
+    def runBullet(self, ingr: Ingredient, simulationTimes: int, runTimeDisplay: bool) -> None:
         """
         Run bullet physics simulation for an ingredient.
 
