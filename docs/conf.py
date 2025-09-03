@@ -16,12 +16,14 @@ release = "1.1.1"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.mathjax",
     "myst_parser",
 ]
 
+autodoc_typehints = "both"
 
 myst_enable_extensions = [
     "deflist",
@@ -35,7 +37,7 @@ myst_enable_extensions = [
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = True
 napoleon_use_ivar = True
-napoleon_use_param = False
+napoleon_use_param = True
 
 source_suffix = {
     ".rst": "restructuredtext",
