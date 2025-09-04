@@ -118,18 +118,16 @@ class RecipeGradient(BaseModel):
                     "Vector gradient mode requires 'direction' in mode_settings"
                 )
 
-        return self
-
-    @field_validator("mode_settings")
-    @classmethod
-    def validate_direction_vector(cls, v, info):
-        if v and hasattr(v, "direction") and v.direction:
+            # validate that direction vector is not zero (only for vector mode)
             import math
 
-            magnitude = math.sqrt(sum(x**2 for x in v.direction))
+            magnitude = math.sqrt(sum(x**2 for x in self.mode_settings.direction))
             if magnitude == 0:
-                raise ValueError("Direction vector cannot be a zero vector")
-        return v
+                raise ValueError(
+                    "Vector gradient mode requires a non-zero direction vector"
+                )
+
+        return self
 
 
 class Partner(BaseModel):
@@ -365,7 +363,9 @@ class Recipe(BaseModel):
         """Validate that surface gradients reference existing objects or composition keys"""
         if hasattr(self, "gradients") and self.gradients:
             available_objects = set(self.objects.keys()) if self.objects else set()
-            available_composition = set(self.composition.keys()) if self.composition else set()
+            available_composition = (
+                set(self.composition.keys()) if self.composition else set()
+            )
 
             for gradient_name, gradient_data in self.gradients.items():
                 if hasattr(gradient_data, "mode") and gradient_data.mode == "surface":
