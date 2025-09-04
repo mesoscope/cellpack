@@ -362,9 +362,10 @@ class Recipe(BaseModel):
 
     @model_validator(mode="after")
     def validate_gradient_surface_objects(self):
-        """Validate that surface gradients reference existing objects"""
+        """Validate that surface gradients reference existing objects or composition keys"""
         if hasattr(self, "gradients") and self.gradients:
             available_objects = set(self.objects.keys()) if self.objects else set()
+            available_composition = set(self.composition.keys()) if self.composition else set()
 
             for gradient_name, gradient_data in self.gradients.items():
                 if hasattr(gradient_data, "mode") and gradient_data.mode == "surface":
@@ -376,12 +377,13 @@ class Recipe(BaseModel):
                             hasattr(gradient_data.mode_settings, "object")
                             and gradient_data.mode_settings.object
                         ):
+                            obj_ref = gradient_data.mode_settings.object
                             if (
-                                gradient_data.mode_settings.object
-                                not in available_objects
+                                obj_ref not in available_objects
+                                and obj_ref not in available_composition
                             ):
                                 raise ValueError(
-                                    f"gradients.{gradient_name}.mode_settings.object references '{gradient_data.mode_settings.object}' which does not exist in objects section"
+                                    f"gradients.{gradient_name}.mode_settings.object references '{obj_ref}' which does not exist in objects or composition sections"
                                 )
         return self
 
