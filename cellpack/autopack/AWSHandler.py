@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse, urlunparse
 
@@ -141,3 +142,65 @@ class AWSHandler(object):
             print(f"AWS credentials are not configured, details:{e}")
             return None, None
         return None, None
+
+    def upload_directory(self, local_directory_path, s3_prefix=""):
+        """
+        Upload an entire directory to S3, preserving the directory structure
+        :param local_directory_path: local path to the directory to upload
+        :param s3_prefix: s3 prefix to prepend to all uploaded files
+        :return: dictionary with upload results
+        """
+
+        local_path = Path(local_directory_path)
+        if not local_path.exists() or not local_path.is_dir():
+            logging.error(f"Directory does not exist: {local_directory_path}")
+            return {"success": False, "uploaded_files": [], "errors": []}
+
+        uploaded_files = []
+        errors = []
+        total_size = 0
+
+        for root, files in os.walk(local_path):
+            for file in files:
+                local_file_path = os.path.join(root, file)
+                relative_path = os.path.relpath(local_file_path, local_path)
+
+                # create S3 key with prefix and relative path
+                if s3_prefix:
+                    s3_key = f"{s3_prefix}/{relative_path.replace(os.sep, '/')}"
+                else:
+                    s3_key = relative_path.replace(os.sep, "/")
+
+                try:
+                    file_size = os.path.getsize(local_file_path)
+                    self.s3_client.upload_file(
+                        local_file_path, self.bucket_name, s3_key
+                    )
+                    self.s3_client.put_object_acl(
+                        ACL="public-read", Bucket=self.bucket_name, Key=s3_key
+                    )
+
+                    uploaded_files.append(
+                        {
+                            "local_path": local_file_path,
+                            "s3_key": s3_key,
+                            "size": file_size,
+                        }
+                    )
+                    total_size += file_size
+
+                    logging.debug(
+                        f"Uploaded {relative_path} to s3://{self.bucket_name}/{s3_key}"
+                    )
+                except Exception as e:
+                    error_msg = f"upload error - {relative_path}: {e}"
+                    logging.error(error_msg)
+                    errors.append(error_msg)
+
+        return {
+            "success": len(errors) == 0,
+            "uploaded_files": uploaded_files,
+            "errors": errors,
+            "total_files": len(uploaded_files),
+            "total_size": total_size,
+        }

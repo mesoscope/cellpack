@@ -8,6 +8,7 @@ import fire
 from cellpack import autopack
 from cellpack.autopack import upy
 from cellpack.autopack.Analysis import Analysis
+from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.IOutils import format_time
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
@@ -21,13 +22,20 @@ log = logging.getLogger()
 ###############################################################################
 
 
-def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
+def pack(
+    recipe,
+    config_path=None,
+    analysis_config_path=None,
+    docker=False,
+    upload_to_s3=False,
+):
     """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
+    :param upload_to_s3: boolean argument, whether to upload outputs to S3
 
     :return: void
     """
@@ -68,6 +76,44 @@ def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
     else:
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
+
+    # Upload outputs to S3 if requested
+    if upload_to_s3:
+        upload_packing_results_to_s3(
+            env.out_folder, recipe_data["name"], recipe_data.get("version", "1.0.0")
+        )
+
+
+def upload_packing_results_to_s3(output_folder, recipe_name):
+    """
+    Upload packing results to S3 using the DBUploader architecture
+    :param output_folder: Path to the output folder containing results
+    :param recipe_name: Name of the recipe being packed
+    """
+    try:
+        uploader = DBUploader(db_handler=None)
+
+        result = uploader.upload_outputs_to_s3(
+            output_folder=output_folder, recipe_name=recipe_name
+        )
+
+        if result["success"]:
+            log.info(f"Successfully uploaded packing results to S3")
+            log.info(f"Run ID: {result['run_id']}")
+            log.info(f"Public URL: {result['public_url_base']}")
+            log.info(
+                f"Uploaded {result['total_files']} files ({result['total_size']:,} bytes)"
+            )
+        else:
+            log.error(
+                f"Failed to upload packing results: {result.get('error', 'Unknown error')}"
+            )
+            if "errors" in result:
+                for error in result["errors"]:
+                    log.error(f"  - {error}")
+
+    except Exception as e:
+        log.error(f"Unexpected error during S3 upload: {e}")
 
 
 def main():

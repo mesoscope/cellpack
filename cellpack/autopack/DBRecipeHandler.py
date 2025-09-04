@@ -3,6 +3,12 @@ import logging
 from datetime import datetime, timezone
 from enum import Enum
 
+# temp
+import uuid
+from pathlib import Path
+from cellpack.autopack.AWSHandler import AWSHandler
+from botocore.exceptions import NoCredentialsError
+
 
 import hashlib
 import json
@@ -560,6 +566,65 @@ class DBUploader(object):
                     "error_message": error_message,
                 },
             )
+
+    def upload_outputs_to_s3(self, output_folder, recipe_name):
+        """
+        Upload packing outputs to S3 bucket
+        """
+
+        # random unique id, should be job id later
+        run_id = str(uuid.uuid4())[:8]
+
+        bucket_name = "cellpack-results"
+        region_name = "us-west-2"
+        s3_prefix = f"runs/{recipe_name}/{run_id}"
+
+        try:
+            aws_handler = AWSHandler(bucket_name=bucket_name, region_name=region_name)
+
+            upload_result = aws_handler.upload_directory(
+                local_directory_path=output_folder, s3_prefix=s3_prefix
+            )
+
+            if upload_result["success"]:
+                # generate public URLs for the uploaded files
+                base_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com"
+                public_urls = [
+                    f"{base_url}/{file_info['s3_key']}"
+                    for file_info in upload_result["uploaded_files"]
+                ]
+
+                # TODO: upload urls metadata for to firebase?
+
+                logging.info(
+                    f"Successfully uploaded {upload_result['total_files']} files to S3"
+                )
+                logging.info(f"Total size: {upload_result['total_size']:,} bytes")
+                logging.info(f"S3 location: s3://{bucket_name}/{s3_prefix}")
+                logging.info(f"Public URL base: {base_url}/{s3_prefix}/")
+
+                return {
+                    "success": True,
+                    "run_id": run_id,
+                    "s3_bucket": bucket_name,
+                    "s3_prefix": s3_prefix,
+                    "public_url_base": f"{base_url}/{s3_prefix}/",
+                    "uploaded_files": upload_result["uploaded_files"],
+                    "total_files": upload_result["total_files"],
+                    "total_size": upload_result["total_size"],
+                    "urls": public_urls,
+                }
+            else:
+                logging.error(f"Failed to upload some files: {upload_result['errors']}")
+                return {
+                    "success": False,
+                    "errors": upload_result["errors"],
+                    "uploaded_files": upload_result["uploaded_files"],
+                }
+        except Exception as e:
+            error_msg = f"Failed to upload packing results to S3: {e}"
+            logging.error(error_msg)
+            return {"success": False, "error": error_msg}
 
 
 class DBRecipeLoader(object):
