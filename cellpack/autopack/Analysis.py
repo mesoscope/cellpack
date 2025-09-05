@@ -36,7 +36,7 @@ log = logging.getLogger(__name__)
 class Analysis:
     def __init__(
         self,
-        env: Environment,
+        env: Optional[Environment] = None,
         packing_results_path: Optional[Union[Path, str]] = None,
         output_path: Optional[Union[Path, str]] = None,
     ) -> None:
@@ -52,9 +52,7 @@ class Analysis:
         output_path
             Path to the output folder for analysis results. If None, uses env.out_folder.
         """
-        self.env = None
-        if env:
-            self.env = env
+        self.env = env
         self.center = [0, 0, 0]
         self.plotly = PlotlyAnalysis()
 
