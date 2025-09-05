@@ -108,7 +108,7 @@ class Agent:
             weights.append(wd)
         return weights
 
-    def getSubWeighted(self, weights) -> float | None:
+    def getSubWeighted(self, weights) -> float:
         """
         From http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
         This method is about twice as fast as the binary-search technique,
