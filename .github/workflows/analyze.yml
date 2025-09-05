@@ -51,6 +51,8 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-west-2
             - uses: actions/download-artifact@v5
+              with:
+                  name: results
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
             - uses: iterative/setup-cml@v2
