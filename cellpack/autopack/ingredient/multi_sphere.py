@@ -38,7 +38,7 @@ class MultiSphereIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         priority=0,
         rejection_threshold=30,
         rotation_axis=[0.0, 0.0, 0.0],
@@ -145,7 +145,6 @@ class MultiSphereIngr(Ingredient):
         # wouldnt be faster to do sphere-sphere distance test ? than points/points from the grid
         transformed_centers = self.transformPoints(jtrans, rotMat, centers)  # centers)
         # sphNum = 0  # which sphere in the sphere tree we're checking
-        # self.distances_temp = []
         insidePoints = {}
         newDistPoints = {}
         at_max_level = level == self.deepest_level and (level + 1) == len(

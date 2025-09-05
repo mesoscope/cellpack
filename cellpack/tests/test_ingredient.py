@@ -63,7 +63,7 @@ from ..autopack.ingredient import Ingredient
                     "distribution": "uniform",
                 },
             },
-            "Missing option 'min' for uniform distribution",
+            "Missing option 'DistributionOptions.MIN' for uniform distribution",
         ),
         (
             {

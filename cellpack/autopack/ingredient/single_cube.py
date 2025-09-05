@@ -40,7 +40,7 @@ class SingleCubeIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         representations=None,
         rejection_threshold=30,
         resolution_dictionary=None,
@@ -366,9 +366,7 @@ class SingleCubeIngr(Ingredient):
                     current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
                 else:
                     # vertex is the closest
-                    current_distance = numpy.sqrt(
-                        dist_x**2 + dist_y**2 + dist_z**2
-                    )
+                    current_distance = numpy.sqrt(dist_x**2 + dist_y**2 + dist_z**2)
         return current_distance
 
     def get_signed_distance(

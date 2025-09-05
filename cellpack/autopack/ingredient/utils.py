@@ -1,3 +1,4 @@
+from typing import List
 import numpy
 from math import sqrt, pi, sin, cos, asin
 from cellpack.autopack.transformation import angle_between_vectors
@@ -93,9 +94,22 @@ def rotax(a, b, tau, transpose=1):
         return numpy.transpose(rot)
 
 
-def rotVectToVect(vect1, vect2, i=None):
-    """returns a 4x4 transformation that will align vect1 with vect2
-    vect1 and vect2 can be any vector (non-normalized)"""
+def rotVectToVect(vect1: List[float], vect2: List[float], i=None) -> List[List[float]]:
+    """
+    returns a 4x4 transformation that will align vect1 with vect2
+    vect1 and vect2 can be any vector (non-normalized)
+    Parameters
+    ----------
+    vect1
+        The first vector to align.
+    vect2
+        The second vector to align.
+
+    Returns
+    -------
+    :
+        The 4x4 transformation matrix.
+    """
     v1x, v1y, v1z = vect1
     v2x, v2y, v2z = vect2
 

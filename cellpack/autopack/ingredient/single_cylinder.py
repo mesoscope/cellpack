@@ -43,7 +43,7 @@ class SingleCylinderIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
         rejection_threshold=30,

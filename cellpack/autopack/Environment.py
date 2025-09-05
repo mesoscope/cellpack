@@ -705,10 +705,10 @@ class Environment(CompartmentList):
         """
         # TODO: check if other modes need to be resolved
         if gradient_data["mode"] == "surface":
-            gradient_data["mode_settings"][
-                "object"
-            ] = self.get_compartment_object_by_name(
-                gradient_data["mode_settings"]["object"]
+            gradient_data["mode_settings"]["object"] = (
+                self.get_compartment_object_by_name(
+                    gradient_data["mode_settings"]["object"]
+                )
             )
         return gradient_data
 
@@ -2001,7 +2001,7 @@ class Environment(CompartmentList):
         nbFreePoints: int,
         distance: List[float],
         spacing: float,
-        compId: int,
+        comp_ids: np.ndarray[int],
         vRangeStart: float,
         vThreshStart: float,
     ) -> Tuple[bool, Union[int, float]]:
@@ -2022,8 +2022,8 @@ class Environment(CompartmentList):
             Distance array
         spacing
             Grid spacing
-        compId
-            Compartment ID
+        comp_ids
+            Compartment IDs
         vRangeStart
             Range start value
         vThreshStart
@@ -2039,7 +2039,7 @@ class Environment(CompartmentList):
             free_points,
             nbFreePoints,
             spacing,
-            compId,
+            comp_ids,
             self.freePtsUpdateThreshold,
         )
 
@@ -3309,9 +3309,9 @@ class Environment(CompartmentList):
         if r:
             self.result_json["exteriorRecipe"] = OrderedDict()
             for ingr in r.ingredients:
-                self.result_json["exteriorRecipe"][
-                    ingr.composition_name
-                ] = self.dropOneIngrJson(ingr, self.result_json["exteriorRecipe"])
+                self.result_json["exteriorRecipe"][ingr.composition_name] = (
+                    self.dropOneIngrJson(ingr, self.result_json["exteriorRecipe"])
+                )
 
         # compartment ingr
         for orga in self.compartments:
@@ -3530,7 +3530,9 @@ class Environment(CompartmentList):
         """
         return None
 
-    def runBullet(self, ingr: Ingredient, simulationTimes: int, runTimeDisplay: bool) -> None:
+    def runBullet(
+        self, ingr: Ingredient, simulationTimes: int, runTimeDisplay: bool
+    ) -> None:
         """
         Run bullet physics simulation for an ingredient.
 
