@@ -2001,7 +2001,7 @@ class Environment(CompartmentList):
         nbFreePoints: int,
         distance: List[float],
         spacing: float,
-        compId: int,
+        comp_ids: np.ndarray[int],
         vRangeStart: float,
         vThreshStart: float,
     ) -> Tuple[bool, Union[int, float]]:
@@ -2022,8 +2022,8 @@ class Environment(CompartmentList):
             Distance array
         spacing
             Grid spacing
-        compId
-            Compartment ID
+        comp_ids
+            Compartment IDs
         vRangeStart
             Range start value
         vThreshStart
@@ -2039,7 +2039,7 @@ class Environment(CompartmentList):
             free_points,
             nbFreePoints,
             spacing,
-            compId,
+            comp_ids,
             self.freePtsUpdateThreshold,
         )
 
@@ -3530,7 +3530,9 @@ class Environment(CompartmentList):
         """
         return None
 
-    def runBullet(self, ingr: Ingredient, simulationTimes: int, runTimeDisplay: bool) -> None:
+    def runBullet(
+        self, ingr: Ingredient, simulationTimes: int, runTimeDisplay: bool
+    ) -> None:
         """
         Run bullet physics simulation for an ingredient.
 

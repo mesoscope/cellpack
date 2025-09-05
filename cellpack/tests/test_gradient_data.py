@@ -132,7 +132,7 @@ def test_gradient_data(input, expected_options):
                 {"mode": "surface", "mode_settings": {"wrong_setting": True}},
                 "gradient_name",
             ),
-            "Missing required mode setting object for surface",
+            "Missing required mode setting ModeOptions.object for surface",
         ),
         (
             (

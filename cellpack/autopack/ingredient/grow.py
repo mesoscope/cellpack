@@ -72,7 +72,7 @@ class GrowIngredient(MultiCylindersIngr):
         place_method="jitter",
         positions=None,
         positions2=None,
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         radii=None,
         representations=None,
         rejection_threshold=30,
@@ -537,7 +537,7 @@ class GrowIngredient(MultiCylindersIngr):
         nexPt = (tx + dx, ty + dy, tz + dz)
         # where is this point in the grid
         # ptInd = histoVol.grid.getPointFrom3D(nexPt)
-        t, r = self.oneJitter(histoVol.smallestProteinSize, cent2T, rotMatj)
+        t, r = self.jitter_once(histoVol.smallestProteinSize, cent2T, rotMatj)
         dist, ptInd = histoVol.grid.getClosestGridPoint(t)
         dv = numpy.array(nexPt) - numpy.array(cent2T)
         d = numpy.sum(dv * dv)
@@ -1650,7 +1650,7 @@ class ActinIngredient(GrowIngredient):
         modelType="Cylinders",
         biased=1.0,
         type="Actine",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         meshFile=None,
         packing=None,
         place_method="jitter",

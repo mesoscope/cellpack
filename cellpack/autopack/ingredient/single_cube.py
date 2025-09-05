@@ -40,7 +40,7 @@ class SingleCubeIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         representations=None,
         rejection_threshold=30,
         resolution_dictionary=None,

@@ -42,7 +42,7 @@ class MultiCylindersIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         representations=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
@@ -106,6 +106,7 @@ class MultiCylindersIngr(Ingredient):
             self.length = math.sqrt(s)  # diagonal
 
     def initialize_mesh(self, mesh_store):
+        # TODO: use mesh_store
         if self.mesh is None and autopack.helper is not None:
             self.mesh = autopack.helper.Cylinder(
                 self.name + "_basic",
@@ -116,10 +117,12 @@ class MultiCylindersIngr(Ingredient):
                 axis=self.principal_vector,
             )[0]
 
-    def get_cuttoff_value(self, spacing):
-        """Returns the min value a grid point needs to be away from a surfance
+    def get_cutoff_value(self, spacing):
+        """
+        Returns the min value a grid point needs to be away from a surface
         in order for this ingredient to pack. Only needs to be calculated once
-        per ingredient once the jitter is set."""
+        per ingredient once the jitter is set.
+        """
         if self.min_distance > 0:
             return self.min_distance
         radius = self.min_radius

@@ -43,7 +43,7 @@ class SingleCylinderIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
         rejection_threshold=30,
@@ -117,7 +117,7 @@ class SingleCylinderIngr(Ingredient):
                 axis=self.principal_vector,
             )[0]
 
-    def get_cuttoff_value(self, spacing):
+    def get_cutoff_value(self, spacing):
         """Returns the min value a grid point needs to be away from a surfance
         in order for this ingredient to pack. Only needs to be calculated once
         per ingredient once the jitter is set."""
