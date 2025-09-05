@@ -1,6 +1,8 @@
 import logging
 import logging.config
 import time
+import uuid
+import shutil
 from pathlib import Path
 
 import fire
@@ -35,7 +37,7 @@ def pack(
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
-    :param upload_to_s3: boolean argument, whether to upload outputs to S3
+    :param upload_to_s3: boolean argument, whether to upload current run's outputs to S3
 
     :return: void
     """
@@ -55,6 +57,16 @@ def pack(
 
     log.info("Packing recipe: %s", recipe_data["name"])
     log.info("Outputs will be saved to %s", env.out_folder)
+
+    # prepare S3 upload folder
+    s3_upload_folder = None
+    if upload_to_s3:
+        # create unique run folder for S3 upload only, run_id should be job id later on
+        run_id = str(uuid.uuid4())[:8]
+        parent_folder = Path(env.out_folder).parent
+        unique_folder_name = f"{Path(env.out_folder).name}_run_{run_id}"
+        s3_upload_folder = parent_folder / unique_folder_name
+        log.debug(f"S3 upload enabled, results copied to: {s3_upload_folder}")
     if (
         packing_config_data["save_analyze_result"]
         or packing_config_data["number_of_packings"] > 1
@@ -77,43 +89,34 @@ def pack(
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
-    # Upload outputs to S3 if requested
     if upload_to_s3:
-        upload_packing_results_to_s3(
-            env.out_folder, recipe_data["name"], recipe_data.get("version", "1.0.0")
-        )
+        # copy results from original folder to unique S3 upload folder
+        if Path(env.out_folder).exists():
+            s3_upload_folder.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(env.out_folder, s3_upload_folder, dirs_exist_ok=True)
+
+        upload_packing_results_to_s3(s3_upload_folder, recipe_data["name"], run_id)
 
 
-def upload_packing_results_to_s3(output_folder, recipe_name):
+def upload_packing_results_to_s3(output_folder, recipe_name, run_id):
     """
     Upload packing results to S3 using the DBUploader architecture
     :param output_folder: Path to the output folder containing results
     :param recipe_name: Name of the recipe being packed
     """
     try:
-        uploader = DBUploader(db_handler=None)
+        output_path = Path(output_folder)
+        if not output_path.exists():
+            log.error(f"Output folder does not exist: {output_folder}")
+            return
 
-        result = uploader.upload_outputs_to_s3(
-            output_folder=output_folder, recipe_name=recipe_name
+        uploader = DBUploader(db_handler=None)
+        uploader.upload_outputs_to_s3(
+            output_folder=output_folder, recipe_name=recipe_name, run_id=run_id
         )
 
-        if result["success"]:
-            log.info(f"Successfully uploaded packing results to S3")
-            log.info(f"Run ID: {result['run_id']}")
-            log.info(f"Public URL: {result['public_url_base']}")
-            log.info(
-                f"Uploaded {result['total_files']} files ({result['total_size']:,} bytes)"
-            )
-        else:
-            log.error(
-                f"Failed to upload packing results: {result.get('error', 'Unknown error')}"
-            )
-            if "errors" in result:
-                for error in result["errors"]:
-                    log.error(f"  - {error}")
-
     except Exception as e:
-        log.error(f"Unexpected error during S3 upload: {e}")
+        log.error(f"S3 upload error: {e}")
 
 
 def main():

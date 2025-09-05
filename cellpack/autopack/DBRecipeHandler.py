@@ -567,13 +567,10 @@ class DBUploader(object):
                 },
             )
 
-    def upload_outputs_to_s3(self, output_folder, recipe_name):
+    def upload_outputs_to_s3(self, output_folder, recipe_name, run_id):
         """
         Upload packing outputs to S3 bucket
         """
-
-        # random unique id, should be job id later
-        run_id = str(uuid.uuid4())[:8]
 
         bucket_name = "cellpack-results"
         region_name = "us-west-2"
@@ -594,14 +591,14 @@ class DBUploader(object):
                     for file_info in upload_result["uploaded_files"]
                 ]
 
-                # TODO: upload urls metadata for to firebase?
+                # TODO: upload urls metadata to firebase?
 
                 logging.info(
-                    f"Successfully uploaded {upload_result['total_files']} files to S3"
+                    f"Successfully uploaded {upload_result['total_files']} files to s3://{bucket_name}/{s3_prefix}"
                 )
-                logging.info(f"Total size: {upload_result['total_size']:,} bytes")
-                logging.info(f"S3 location: s3://{bucket_name}/{s3_prefix}")
-                logging.info(f"Public URL base: {base_url}/{s3_prefix}/")
+                logging.debug(f"Total size: {upload_result['total_size']:,} bytes")
+                logging.debug(f"S3 location: s3://{bucket_name}/{s3_prefix}")
+                logging.debug(f"Public URL base: {base_url}/{s3_prefix}/")
 
                 return {
                     "success": True,
@@ -613,13 +610,6 @@ class DBUploader(object):
                     "total_files": upload_result["total_files"],
                     "total_size": upload_result["total_size"],
                     "urls": public_urls,
-                }
-            else:
-                logging.error(f"Failed to upload some files: {upload_result['errors']}")
-                return {
-                    "success": False,
-                    "errors": upload_result["errors"],
-                    "uploaded_files": upload_result["uploaded_files"],
                 }
         except Exception as e:
             error_msg = f"Failed to upload packing results to S3: {e}"
