@@ -53,6 +53,7 @@ jobs:
             - uses: actions/download-artifact@v5
               with:
                   name: results
+                  path: ./results
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
             - uses: iterative/setup-cml@v2
