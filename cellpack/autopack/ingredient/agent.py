@@ -1,4 +1,5 @@
 from random import random
+from typing import Any, List
 import numpy
 import math
 
@@ -25,31 +26,31 @@ class Agent:
 
         Parameters
         ----------
-        name : str
+        name
             The name of the agent.
-        concentration : float
+        concentration
             The concentration of the agent.
-        distance_expression : str, optional
+        distance_expression
             The distance expression for the agent.
-        distance_function : callable, optional
+        distance_function
             The distance function for the agent.
-        force_random : bool, optional
+        force_random
             Whether to force random placement of the agent.
-        gradient : numpy.ndarray, optional
+        gradient
             The gradient controlling packing for the agent.
-        gradient_weights : numpy.ndarray, optional
+        gradient_weights
             The gradient weights for the agent.
-        is_attractor : bool, optional
+        is_attractor
             Whether the agent is an attractor.
-        overwrite_distance_function : bool, optional
+        overwrite_distance_function
             Whether to overwrite the distance function.
-        packing_mode : str, optional
+        packing_mode
             The packing mode for the agent.
-        partners : list, optional
+        partners
             The partner agents for the agent.
-        place_method : str, optional
+        place_method
             The placement method for the agent.
-        weight : float, optional
+        weight
             The weight of the agent.
         """
         self.name = name
@@ -82,18 +83,17 @@ class Agent:
         self.tilling = None
         self.weight = weight
 
-    def get_weights_by_distance(self, placed_partners):
+    def get_weights_by_distance(self, placed_partners: list) -> list:
         """
         Get the weights of the placed partners based on their distance.
 
         Parameters
         ----------
-        placed_partners : list
+        placed_partners
             A list of tuples containing the placed partner information.
 
         Returns
         -------
-        list
             A list of weights for the placed partners.
         """
         weights = []
@@ -108,7 +108,7 @@ class Agent:
             weights.append(wd)
         return weights
 
-    def getSubWeighted(self, weights):
+    def getSubWeighted(self, weights) -> float | None:
         """
         From http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
         This method is about twice as fast as the binary-search technique,
@@ -130,23 +130,26 @@ class Agent:
         return None
 
     def pick_partner_grid_index(
-        self, near_by_ingredients, placed_partners, current_packing_position=[0, 0, 0]
+        self,
+        near_by_ingredients: list,
+        placed_partners: List[List[Any]],
+        current_packing_position: list = [0, 0, 0],
     ):
         """
         Pick a partner grid index based on the nearby ingredients and placed partners.
 
         Parameters
         ----------
-        near_by_ingredients : list
+        near_by_ingredients
             A list of nearby ingredients.
-        placed_partners : list
+        placed_partners
             A list of placed partners.
-        current_packing_position : list, optional
+        current_packing_position
             The current packing position.
 
         Returns
         -------
-        int
+        :
             The index of the selected partner grid.
         """
         # near_by_ingredient is [
