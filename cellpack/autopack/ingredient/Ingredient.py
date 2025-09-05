@@ -379,7 +379,7 @@ class Ingredient(Agent):
         ):
             if required_option not in distribution_options:
                 raise Exception(
-                    f"Missing option '{required_option}' for {distribution_options['distribution']} distribution"
+                    f"Missing option '{required_option.value}' for {distribution_options['distribution']} distribution"
                 )
         return distribution_options
 

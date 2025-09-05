@@ -9,9 +9,9 @@ An algorithm to pack molecular recipes
 ## Installation
 
 > [!NOTE]
-> These are the basic installation steps. However, our recommendation for developers is to install with `pyenv` and `pdm`. See [advanced installation instructions](./docs/INSTALLATION.md) for more information.
+> These are the basic installation steps. However, our recommendation for developers is to install using `uv`. See advanced installation instructions [here](./docs/INSTALL.md).
 
-1. Install Python 3.9 and `git`.  Update pip at least to `24.0.0`.
+1. Install Python 3.11 and `git`.  Update pip at least to `24.0.0`.
 2. Clone this git repository.
 ```bash
 git clone git@github.com:mesoscope/cellpack.git

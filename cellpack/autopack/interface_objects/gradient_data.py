@@ -1,7 +1,9 @@
 import copy
+
 from cellpack.autopack.utils import deep_merge
-from .meta_enum import MetaEnum
+
 from .default_values import DEFAULT_GRADIENT_MODE_SETTINGS
+from .meta_enum import MetaEnum
 
 """
 GradientData provides a class to pass sanitized arguments to create gradients
@@ -141,7 +143,7 @@ class GradientData:
         for option in required_options:
             if option not in mode_settings_dict:
                 raise ValueError(
-                    f"Missing required mode setting {option} for {mode_name}"
+                    f"Missing required mode setting {option.value} for {mode_name}"
                 )
 
     def validate_weight_mode_settings(
