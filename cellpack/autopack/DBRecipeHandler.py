@@ -3,11 +3,7 @@ import logging
 from datetime import datetime, timezone
 from enum import Enum
 
-# temp
-import uuid
-from pathlib import Path
-from cellpack.autopack.AWSHandler import AWSHandler
-from botocore.exceptions import NoCredentialsError
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 
 import hashlib
@@ -577,7 +573,12 @@ class DBUploader(object):
         s3_prefix = f"runs/{recipe_name}/{run_id}"
 
         try:
-            aws_handler = AWSHandler(bucket_name=bucket_name, region_name=region_name)
+            handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+            aws_handler = handler(
+                bucket_name=bucket_name,
+                sub_folder_name=None,
+                region_name=region_name
+            )
 
             upload_result = aws_handler.upload_directory(
                 local_directory_path=output_folder, s3_prefix=s3_prefix
