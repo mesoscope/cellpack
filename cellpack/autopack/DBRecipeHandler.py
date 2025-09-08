@@ -570,14 +570,15 @@ class DBUploader(object):
 
         bucket_name = "cellpack-results"
         region_name = "us-west-2"
-        s3_prefix = f"runs/{recipe_name}/{run_id}"
+        sub_folder_name = "runs"
+        s3_prefix = f"{recipe_name}/{run_id}"
 
         try:
             handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
             aws_handler = handler(
                 bucket_name=bucket_name,
-                sub_folder_name=None,
-                region_name=region_name
+                sub_folder_name=sub_folder_name,
+                region_name=region_name,
             )
 
             upload_result = aws_handler.upload_directory(
