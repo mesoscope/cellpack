@@ -563,7 +563,7 @@ class DBUploader(object):
                 },
             )
 
-    def upload_outputs_to_s3(self, output_folder, recipe_name, run_id):
+    def upload_outputs_to_s3(self, output_folder, recipe_name, job_id):
         """
         Upload packing outputs to S3 bucket
         """
@@ -571,7 +571,7 @@ class DBUploader(object):
         bucket_name = "cellpack-results"
         region_name = "us-west-2"
         sub_folder_name = "runs"
-        s3_prefix = f"{recipe_name}/{run_id}"
+        s3_prefix = f"{sub_folder_name}/{recipe_name}/{job_id}"
 
         try:
             handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
@@ -592,19 +592,33 @@ class DBUploader(object):
                     f"{base_url}/{file_info['s3_key']}"
                     for file_info in upload_result["uploaded_files"]
                 ]
-
-                # TODO: upload urls metadata to firebase?
+                outputs_directory = f"s3://{bucket_name}/{s3_prefix}/"
 
                 logging.info(
-                    f"Successfully uploaded {upload_result['total_files']} files to s3://{bucket_name}/{s3_prefix}"
+                    f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
                 )
                 logging.debug(f"Total size: {upload_result['total_size']:,} bytes")
-                logging.debug(f"S3 location: s3://{bucket_name}/{s3_prefix}")
                 logging.debug(f"Public URL base: {base_url}/{s3_prefix}/")
+
+                if not self.db:
+                    from cellpack.autopack.FirebaseHandler import FirebaseHandler
+
+                    self.db = FirebaseHandler()
+
+                self.db.update_or_create(
+                    "job_status",
+                    job_id,
+                    {
+                        "outputs_directory": outputs_directory,
+                    },
+                )
+                logging.info(
+                    f"Updated outputs s3 location {outputs_directory} for job ID: {job_id}"
+                )
 
                 return {
                     "success": True,
-                    "run_id": run_id,
+                    "run_id": job_id,
                     "s3_bucket": bucket_name,
                     "s3_prefix": s3_prefix,
                     "public_url_base": f"{base_url}/{s3_prefix}/",

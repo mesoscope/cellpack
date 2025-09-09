@@ -1,7 +1,7 @@
 import logging
 import logging.config
+import os
 import time
-import uuid
 import shutil
 from pathlib import Path
 
@@ -29,7 +29,6 @@ def pack(
     config_path=None,
     analysis_config_path=None,
     docker=False,
-    upload_to_s3=False,
 ):
     """
     Initializes an autopack packing from the command line
@@ -37,7 +36,6 @@ def pack(
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
-    :param upload_to_s3: boolean argument, whether to upload current run's outputs to S3
 
     :return: void
     """
@@ -60,11 +58,10 @@ def pack(
 
     # prepare S3 upload folder
     s3_upload_folder = None
-    if upload_to_s3:
-        # create unique run folder for S3 upload only, run_id should be job id later on
-        run_id = str(uuid.uuid4())[:8]
+    if docker:
+        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
         parent_folder = Path(env.out_folder).parent
-        unique_folder_name = f"{Path(env.out_folder).name}_run_{run_id}"
+        unique_folder_name = f"{Path(env.out_folder).name}_run_{job_id}"
         s3_upload_folder = parent_folder / unique_folder_name
         log.debug(f"S3 upload enabled, results copied to: {s3_upload_folder}")
     if (
@@ -89,16 +86,16 @@ def pack(
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
-    if upload_to_s3:
+    if docker:
         # copy results from original folder to unique S3 upload folder
         if Path(env.out_folder).exists():
             s3_upload_folder.mkdir(parents=True, exist_ok=True)
             shutil.copytree(env.out_folder, s3_upload_folder, dirs_exist_ok=True)
 
-        upload_packing_results_to_s3(s3_upload_folder, recipe_data["name"], run_id)
+        upload_packing_results_to_s3(s3_upload_folder, recipe_data["name"], job_id)
 
 
-def upload_packing_results_to_s3(output_folder, recipe_name, run_id):
+def upload_packing_results_to_s3(output_folder, recipe_name, job_id):
     """
     Upload packing results to S3 using the DBUploader architecture
     :param output_folder: Path to the output folder containing results
@@ -112,7 +109,7 @@ def upload_packing_results_to_s3(output_folder, recipe_name, run_id):
 
         uploader = DBUploader(db_handler=None)
         uploader.upload_outputs_to_s3(
-            output_folder=output_folder, recipe_name=recipe_name, run_id=run_id
+            output_folder=output_folder, recipe_name=recipe_name, job_id=job_id
         )
 
     except Exception as e:
