@@ -26,7 +26,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: [3.11]
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -34,7 +34,7 @@ jobs:
     - uses: ./.github/actions/dependencies
     - name: Test with pytest
       run: |
-        pdm run pytest --cov cellpack/tests/
+        uv run pytest --cov cellpack/tests/
     - name: Upload codecov
       uses: codecov/codecov-action@v5
 
@@ -46,10 +46,10 @@ jobs:
     - uses: ./.github/actions/dependencies
     - name: Lint with flake8
       run: |
-        pdm run flake8 cellpack --count --verbose --show-source --statistics --ignore=E203,E277,E402,E501,E721,W291,W503
+        uv run flake8 cellpack --count --verbose --show-source --statistics --ignore=E203,E277,E402,E501,E721,W291,W503
     - name: Check with black
       run: |
-        pdm run black --check cellpack
+        uv run black --check cellpack
 
   publish:
     if: success() && startsWith(github.ref, 'refs/tags/')
@@ -65,5 +65,5 @@ jobs:
     - uses: actions/checkout@v4.2.2
     - uses: ./.github/actions/dependencies
     - name: Publish to PyPI
-      run: pdm publish
+      run: uv publish
 

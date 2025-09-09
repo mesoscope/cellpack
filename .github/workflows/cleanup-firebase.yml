@@ -9,7 +9,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                python-version: [3.9]
+                python-version: [3.11]
                 os: [ubuntu-latest, windows-latest, macOS-latest]
         steps:
             -   uses: actions/checkout@v4.2.2
@@ -19,4 +19,4 @@ jobs:
                     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
                     FIREBASE_EMAIL: ${{ secrets.FIREBASE_EMAIL }}
                 run: |
-                    pdm run python cellpack/bin/cleanup_tasks.py
+                    uv run python cellpack/bin/cleanup_tasks.py
