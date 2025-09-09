@@ -37,7 +37,7 @@ jobs:
 
           rm -rf requirements/*
           mkdir -p requirements/$PLATFORM
-          uv export --format requirements-txt --output-file requirements/$PLATFORM/requirements.txt
+          uv export --no-hashes --format requirements-txt --output-file requirements/$PLATFORM/requirements.txt
 
       - name: Get platform variable
         id: platform
