@@ -593,28 +593,13 @@ class DBUploader(object):
                     for file_info in upload_result["uploaded_files"]
                 ]
                 outputs_directory = f"https://us-west-2.console.aws.amazon.com/s3/buckets/{bucket_name}/{s3_prefix}/"
+                DBUploader._update_outputs_directory(job_id, outputs_directory)
 
                 logging.info(
                     f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
                 )
                 logging.debug(f"Total size: {upload_result['total_size']:,} bytes")
                 logging.debug(f"Public URL base: {base_url}/{s3_prefix}/")
-
-                if not self.db:
-                    from cellpack.autopack.FirebaseHandler import FirebaseHandler
-
-                    self.db = FirebaseHandler()
-
-                self.db.update_or_create(
-                    "job_status",
-                    job_id,
-                    {
-                        "outputs_directory": outputs_directory,
-                    },
-                )
-                logging.info(
-                    f"Updated outputs s3 location {outputs_directory} for job ID: {job_id}"
-                )
 
                 return {
                     "success": True,
@@ -631,6 +616,22 @@ class DBUploader(object):
             error_msg = f"Failed to upload packing results to S3: {e}"
             logging.error(error_msg)
             return {"success": False, "error": error_msg}
+
+    def _update_outputs_directory(job_id, outputs_directory):
+        # Update firebase with the new outputs directory
+        handler = DATABASE_IDS.handlers().get("firebase")
+        initialized_db = handler(default_db="staging")
+        if job_id:
+            initialized_db.update_or_create(
+                "job_status",
+                job_id,
+                {
+                    "outputs_directory": outputs_directory,
+                },
+            )
+            logging.debug(
+                f"Updated outputs s3 location {outputs_directory} for job ID: {job_id}"
+            )
 
 
 class DBRecipeLoader(object):

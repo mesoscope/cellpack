@@ -102,15 +102,16 @@ def upload_packing_results_to_s3(output_folder, recipe_name, job_id):
     :param recipe_name: Name of the recipe being packed
     """
     try:
-        output_path = Path(output_folder)
-        if not output_path.exists():
-            log.error(f"Output folder does not exist: {output_folder}")
-            return
+        if job_id:
+            output_path = Path(output_folder)
+            if not output_path.exists():
+                log.error(f"Output folder does not exist: {output_folder}")
+                return
 
-        uploader = DBUploader(db_handler=None)
-        uploader.upload_outputs_to_s3(
-            output_folder=output_folder, recipe_name=recipe_name, job_id=job_id
-        )
+            uploader = DBUploader(db_handler=None)
+            uploader.upload_outputs_to_s3(
+                output_folder=output_folder, recipe_name=recipe_name, job_id=job_id
+            )
 
     except Exception as e:
         log.error(f"S3 upload error: {e}")
