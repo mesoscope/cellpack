@@ -11,10 +11,10 @@ cd /cellpack
 
 if [ -z "$config" ]; then
     echo "Config parameter not included, using default value"
-    pack -r $recipe -d -u
+    pack -r $recipe -d
     exit;
 else
     echo "config passed in: '$config'"
 fi
 
-pack -r $recipe -c $config -d -u
+pack -r $recipe -c $config -d
