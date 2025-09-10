@@ -2,7 +2,6 @@ import logging
 import logging.config
 import os
 import time
-import shutil
 from pathlib import Path
 
 import fire
@@ -56,14 +55,6 @@ def pack(
     log.info("Packing recipe: %s", recipe_data["name"])
     log.info("Outputs will be saved to %s", env.out_folder)
 
-    # prepare S3 upload folder
-    s3_upload_folder = None
-    if docker:
-        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
-        parent_folder = Path(env.out_folder).parent
-        unique_folder_name = f"{Path(env.out_folder).name}_run_{job_id}"
-        s3_upload_folder = parent_folder / unique_folder_name
-        log.debug(f"S3 upload enabled, results copied to: {s3_upload_folder}")
     if (
         packing_config_data["save_analyze_result"]
         or packing_config_data["number_of_packings"] > 1
@@ -87,34 +78,14 @@ def pack(
         env.pack_grid(verbose=0, usePP=False)
 
     if docker:
-        # copy results from original folder to unique S3 upload folder
-        if Path(env.out_folder).exists():
-            s3_upload_folder.mkdir(parents=True, exist_ok=True)
-            shutil.copytree(env.out_folder, s3_upload_folder, dirs_exist_ok=True)
-
-        upload_packing_results_to_s3(s3_upload_folder, recipe_data["name"], job_id)
-
-
-def upload_packing_results_to_s3(output_folder, recipe_name, job_id):
-    """
-    Upload packing results to S3 using the DBUploader architecture
-    :param output_folder: Path to the output folder containing results
-    :param recipe_name: Name of the recipe being packed
-    """
-    try:
+        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
         if job_id:
-            output_path = Path(output_folder)
-            if not output_path.exists():
-                log.error(f"Output folder does not exist: {output_folder}")
-                return
-
             uploader = DBUploader(db_handler=None)
-            uploader.upload_outputs_to_s3(
-                output_folder=output_folder, recipe_name=recipe_name, job_id=job_id
+            uploader.upload_packing_results_workflow(
+                source_folder=env.out_folder,
+                recipe_name=recipe_data["name"],
+                job_id=job_id,
             )
-
-    except Exception as e:
-        log.error(f"S3 upload error: {e}")
 
 
 def main():

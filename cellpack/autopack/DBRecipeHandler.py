@@ -1,7 +1,9 @@
 import copy
 import logging
+import shutil
 from datetime import datetime, timezone
 from enum import Enum
+from pathlib import Path
 
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
@@ -563,6 +565,54 @@ class DBUploader(object):
                 },
             )
 
+    def upload_packing_results_workflow(self, source_folder, recipe_name, job_id):
+        """
+        Complete packing results upload workflow including folder preparation and s3 upload
+        """
+        try:
+            if job_id:
+
+                source_path = Path(source_folder)
+                if not source_path.exists():
+                    error_msg = f"Source folder does not exist: {source_folder}"
+                    logging.error(error_msg)
+                    return {"success": False, "error": error_msg}
+
+                # prepare unique S3 upload folder
+                parent_folder = source_path.parent
+                unique_folder_name = f"{source_path.name}_run_{job_id}"
+                s3_upload_folder = parent_folder / unique_folder_name
+
+                logging.debug(f"outputs will be copied to: {s3_upload_folder}")
+
+                # copy outputs to unique upload folder
+                s3_upload_folder.mkdir(parents=True, exist_ok=True)
+                shutil.copytree(source_folder, s3_upload_folder, dirs_exist_ok=True)
+
+                upload_result = self.upload_outputs_to_s3(
+                    output_folder=s3_upload_folder,
+                    recipe_name=recipe_name,
+                    job_id=job_id,
+                )
+
+                # clean up temporary folder after upload
+                if s3_upload_folder.exists():
+                    shutil.rmtree(s3_upload_folder)
+                    logging.debug(
+                        f"Cleaned up temporary upload folder: {s3_upload_folder}"
+                    )
+
+                # update outputs directory in firebase
+                self.update_outputs_directory(
+                    job_id, upload_result.get("outputs_directory")
+                )
+
+                return upload_result
+
+        except Exception as e:
+            logging.error(e)
+            return {"success": False, "error": e}
+
     def upload_outputs_to_s3(self, output_folder, recipe_name, job_id):
         """
         Upload packing outputs to S3 bucket
@@ -593,7 +643,6 @@ class DBUploader(object):
                     for file_info in upload_result["uploaded_files"]
                 ]
                 outputs_directory = f"https://us-west-2.console.aws.amazon.com/s3/buckets/{bucket_name}/{s3_prefix}/"
-                DBUploader._update_outputs_directory(job_id, outputs_directory)
 
                 logging.info(
                     f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
@@ -611,21 +660,23 @@ class DBUploader(object):
                     "total_files": upload_result["total_files"],
                     "total_size": upload_result["total_size"],
                     "urls": public_urls,
+                    "outputs_directory": outputs_directory,
                 }
         except Exception as e:
-            error_msg = f"Failed to upload packing results to S3: {e}"
-            logging.error(error_msg)
-            return {"success": False, "error": error_msg}
+            logging.error(e)
+            return {"success": False, "error": e}
 
-    def _update_outputs_directory(job_id, outputs_directory):
-        # Update firebase with the new outputs directory
-        handler = DATABASE_IDS.handlers().get("firebase")
-        initialized_db = handler(default_db="staging")
+    def update_outputs_directory(self, job_id, outputs_directory):
+        if not self.db:
+            handler = DATABASE_IDS.handlers().get("firebase")
+            initialized_db = handler(default_db="staging")
         if job_id:
+            timestamp = self.db.create_timestamp()
             initialized_db.update_or_create(
                 "job_status",
                 job_id,
                 {
+                    "timestamp": timestamp,
                     "outputs_directory": outputs_directory,
                 },
             )
