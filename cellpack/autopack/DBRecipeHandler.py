@@ -671,7 +671,7 @@ class DBUploader(object):
             handler = DATABASE_IDS.handlers().get("firebase")
             initialized_db = handler(default_db="staging")
         if job_id:
-            timestamp = self.db.create_timestamp()
+            timestamp = initialized_db.create_timestamp()
             initialized_db.update_or_create(
                 "job_status",
                 job_id,
