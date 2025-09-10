@@ -5,4 +5,4 @@ if [ -z "$local" ]; then
 fi
 
 cd /cellpack
-python server.py
+python docker/server.py
