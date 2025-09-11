@@ -82,8 +82,9 @@ def pack(
         job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
         if job_id:
             handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+            # temporarily using demo bucket before permissions are granted
             initialized_handler = handler(
-                bucket_name="cellpack-results",
+                bucket_name="cellpack-demo",
                 sub_folder_name="runs",
                 region_name="us-west-2",
             )
