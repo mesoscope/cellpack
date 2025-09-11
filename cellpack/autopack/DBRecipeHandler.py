@@ -618,20 +618,13 @@ class DBUploader(object):
         Upload packing outputs to S3 bucket
         """
 
-        bucket_name = "cellpack-results"
-        region_name = "us-west-2"
-        sub_folder_name = "runs"
+        bucket_name = self.db.bucket_name
+        region_name = self.db.region_name
+        sub_folder_name = self.db.sub_folder_name
         s3_prefix = f"{sub_folder_name}/{recipe_name}/{job_id}"
 
         try:
-            handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
-            aws_handler = handler(
-                bucket_name=bucket_name,
-                sub_folder_name=sub_folder_name,
-                region_name=region_name,
-            )
-
-            upload_result = aws_handler.upload_directory(
+            upload_result = self.db.upload_directory(
                 local_directory_path=output_folder, s3_prefix=s3_prefix
             )
 
@@ -667,7 +660,8 @@ class DBUploader(object):
             return {"success": False, "error": e}
 
     def update_outputs_directory(self, job_id, outputs_directory):
-        if not self.db:
+        if not self.db or self.db.s3_client:
+            # switch to firebase handler to update job status
             handler = DATABASE_IDS.handlers().get("firebase")
             initialized_db = handler(default_db="staging")
         if job_id:

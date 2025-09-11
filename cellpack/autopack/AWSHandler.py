@@ -24,6 +24,8 @@ class AWSHandler(object):
     ):
         self.bucket_name = bucket_name
         self.folder_name = sub_folder_name
+        self.sub_folder_name = sub_folder_name
+        self.region_name = region_name
         # Create a session if one does not exist
         if not AWSHandler._session_created:
             self._create_session(region_name)

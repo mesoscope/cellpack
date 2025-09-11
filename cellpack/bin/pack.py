@@ -12,6 +12,7 @@ from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.IOutils import format_time
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
@@ -80,7 +81,13 @@ def pack(
     if docker:
         job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
         if job_id:
-            uploader = DBUploader(db_handler=None)
+            handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+            initialized_handler = handler(
+                bucket_name="cellpack-results",
+                sub_folder_name="runs",
+                region_name="us-west-2",
+            )
+            uploader = DBUploader(db_handler=initialized_handler)
             uploader.upload_packing_results_workflow(
                 source_folder=env.out_folder,
                 recipe_name=recipe_data["name"],
