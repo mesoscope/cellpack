@@ -48,6 +48,7 @@ convert = "cellpack.bin.simularium_converter:main"
 pack = "cellpack.bin.pack:main"
 upload = "cellpack.bin.upload:main"
 clean = "cellpack.bin.clean:main"
+validate = "cellpack.bin.validate:main"
 
 [dependency-groups]
 dev = [
