@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import os
 import time
 from pathlib import Path
 
@@ -8,8 +9,10 @@ import fire
 from cellpack import autopack
 from cellpack.autopack import upy
 from cellpack.autopack.Analysis import Analysis
+from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.IOutils import format_time
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
@@ -21,7 +24,12 @@ log = logging.getLogger()
 ###############################################################################
 
 
-def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
+def pack(
+    recipe,
+    config_path=None,
+    analysis_config_path=None,
+    docker=False,
+):
     """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe
@@ -47,6 +55,7 @@ def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
 
     log.info("Packing recipe: %s", recipe_data["name"])
     log.info("Outputs will be saved to %s", env.out_folder)
+
     if (
         packing_config_data["save_analyze_result"]
         or packing_config_data["number_of_packings"] > 1
@@ -68,6 +77,23 @@ def pack(recipe, config_path=None, analysis_config_path=None, docker=False):
     else:
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
+
+    if docker:
+        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
+        if job_id:
+            handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+            # temporarily using demo bucket before permissions are granted
+            initialized_handler = handler(
+                bucket_name="cellpack-demo",
+                sub_folder_name="runs",
+                region_name="us-west-2",
+            )
+            uploader = DBUploader(db_handler=initialized_handler)
+            uploader.upload_packing_results_workflow(
+                source_folder=env.out_folder,
+                recipe_name=recipe_data["name"],
+                job_id=job_id,
+            )
 
 
 def main():

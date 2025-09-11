@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse, urlunparse
 
@@ -23,6 +24,8 @@ class AWSHandler(object):
     ):
         self.bucket_name = bucket_name
         self.folder_name = sub_folder_name
+        self.sub_folder_name = sub_folder_name
+        self.region_name = region_name
         # Create a session if one does not exist
         if not AWSHandler._session_created:
             self._create_session(region_name)
@@ -46,17 +49,19 @@ class AWSHandler(object):
             object_name = object_name
         return object_name
 
-    def upload_file(self, file_path):
+    def upload_file(self, file_path, s3_key=None):
         """Upload a file to an S3 bucket
         :param file_path: File to upload
-        :param bucket: Bucket to upload to
-        :param object_name: S3 object name. If not specified then file_path is used
-        :return: True if file was uploaded, else False
+        :param s3_key: Custom S3 object key. If not specified, uses file name with folder prefix
+        :return: S3 key if file was uploaded, else False
         """
 
-        file_name = Path(file_path).name
+        if s3_key is None:
+            file_name = Path(file_path).name
+            object_name = self.get_aws_object_key(file_name)
+        else:
+            object_name = s3_key
 
-        object_name = self.get_aws_object_key(file_name)
         # Upload the file
         try:
             self.s3_client.upload_file(file_path, self.bucket_name, object_name)
@@ -67,7 +72,7 @@ class AWSHandler(object):
         except ClientError as e:
             logging.error(e)
             return False
-        return file_name
+        return object_name
 
     def download_file(self, key, local_file_path):
         """
@@ -132,12 +137,74 @@ class AWSHandler(object):
         Uploads a file to S3 and returns the base url
         """
         try:
-            file_name = self.upload_file(file_path)
-            base_url = self.create_presigned_url(file_name)
-            if file_name and base_url:
-                if self.is_url_valid(base_url):
-                    return file_name, base_url
+            s3_key = self.upload_file(file_path)
+            if s3_key:
+                # extract just the filename for use as document ID (remove any folder paths)
+                file_name = Path(s3_key).name
+                base_url = self.create_presigned_url(file_name)
+                if file_name and base_url:
+                    if self.is_url_valid(base_url):
+                        return file_name, base_url
         except NoCredentialsError as e:
             print(f"AWS credentials are not configured, details:{e}")
             return None, None
         return None, None
+
+    def upload_directory(self, local_directory_path, s3_prefix=""):
+        """
+        Upload an entire directory to S3, preserving the directory structure
+        :param local_directory_path: local path to the directory to upload
+        :param s3_prefix: s3 prefix to prepend to all uploaded files
+        :return: dictionary with upload results
+        """
+
+        local_path = Path(local_directory_path)
+        if not local_path.exists() or not local_path.is_dir():
+            logging.error(f"Directory does not exist: {local_directory_path}")
+            return {"success": False, "uploaded_files": [], "errors": []}
+
+        uploaded_files = []
+        errors = []
+        total_size = 0
+
+        for root, dirs, files in os.walk(local_path):
+            for file in files:
+                local_file_path = os.path.join(root, file)
+                relative_path = os.path.relpath(local_file_path, local_path)
+
+                # create S3 key with prefix and relative path
+                if s3_prefix:
+                    s3_key = f"{s3_prefix}/{relative_path.replace(os.sep, '/')}"
+                else:
+                    s3_key = relative_path.replace(os.sep, "/")
+
+                try:
+                    file_size = os.path.getsize(local_file_path)
+                    uploaded_s3_key = self.upload_file(local_file_path, s3_key)
+
+                    if uploaded_s3_key:
+                        uploaded_files.append(
+                            {
+                                "local_path": local_file_path,
+                                "s3_key": uploaded_s3_key,
+                                "size": file_size,
+                            }
+                        )
+                        total_size += file_size
+
+                    else:
+                        error_msg = f"upload error - {relative_path}: upload_file returned False"
+                        logging.error(error_msg)
+                        errors.append(error_msg)
+                except Exception as e:
+                    error_msg = f"upload error - {relative_path}: {e}"
+                    logging.error(error_msg)
+                    errors.append(error_msg)
+
+        return {
+            "success": len(errors) == 0,
+            "uploaded_files": uploaded_files,
+            "errors": errors,
+            "total_files": len(uploaded_files),
+            "total_size": total_size,
+        }
