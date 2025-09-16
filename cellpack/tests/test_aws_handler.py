@@ -46,7 +46,7 @@ def test_upload_file():
         with open("test_file.txt", "w") as file:
             file.write("test file")
         file_name = aws_handler.upload_file("test_file.txt")
-        assert file_name == "test_file.txt"
+        assert file_name == "test_folder/test_file.txt"
 
 
 def test_create_presigned_url():
