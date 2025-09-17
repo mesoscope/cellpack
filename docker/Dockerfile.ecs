@@ -1,12 +1,11 @@
-FROM python:3.9
+FROM python:3.11
 
 WORKDIR /cellpack
+COPY . /cellpack
 
 RUN python -m pip install --upgrade pip --root-user-action=ignore
-RUN pip install cellpack@git+https://github.com/mesoscope/cellpack.git
+RUN python -m pip install . -r requirements/linux/requirements.txt --root-user-action=ignore
 
-COPY docker/server.py /cellpack/
-COPY .env /cellpack/
 EXPOSE 80
 
 RUN apt-get update && apt-get install -y awscli

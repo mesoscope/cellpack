@@ -64,7 +64,7 @@ async def init_app() -> web.Application:
     app.add_routes(
         [
             web.get("/hello", server.hello_world),
-            web.post("/pack", server.pack_handler),
+            web.post("/start-packing", server.pack_handler),
             web.get("/", server.health_check)
         ]
     )
