@@ -42,32 +42,26 @@
 # version on May 16, 2012
 # Updated with Correct Sept 25, 2011 thesis version on July 5, 2012
 
-# TODO: Describe Ingredient class here at high level
-from scipy import spatial
-import numpy
 import logging
-import collada
-from scipy.spatial.transform import Rotation as R
-from math import pi
-from random import uniform, gauss, random
-from time import time
 import math
+from math import pi
+from random import gauss, random, uniform
+from time import time
 
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.interface_objects.packed_objects import PackedObject
-from cellpack.autopack.utils import get_distance, get_value_from_distribution
+import collada
+import numpy
+from scipy import spatial
+from scipy.spatial.transform import Rotation as R
 
-from .utils import (
-    ApplyMatrix,
-    getNormedVectorOnes,
-    rotVectToVect,
-    rotax,
-)
-
-from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 import cellpack.autopack as autopack
 from cellpack.autopack.ingredient.agent import Agent
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+from cellpack.autopack.interface_objects.packed_objects import PackedObject
+from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
+from cellpack.autopack.utils import get_distance, get_value_from_distribution
+
+from .utils import ApplyMatrix, getNormedVectorOnes, rotax, rotVectToVect
 
 helper = autopack.helper
 reporthook = None
@@ -385,7 +379,7 @@ class Ingredient(Agent):
         ):
             if required_option not in distribution_options:
                 raise Exception(
-                    f"Missing option '{required_option}' for {distribution_options['distribution']} distribution"
+                    f"Missing option '{required_option.value}' for {distribution_options['distribution']} distribution"
                 )
         return distribution_options
 
@@ -1269,7 +1263,7 @@ class Ingredient(Agent):
             self.encapsulating_radius + radii_of_placed_ingr
         )
         # if overlap_distance is negative, the encapsualting radii are overlapping
-        overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
+        overlap_indexes = numpy.atleast_1d(overlap_distance < 0.0).nonzero()[0]
 
         if len(overlap_indexes) != 0:
             level = level + 1

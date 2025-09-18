@@ -28,10 +28,11 @@ jobs:
 
     - name: Generate Docs
       run: |
-        pdm run make gen-docs
+        uv run make gen-docs
         touch docs/_build/html/.nojekyll
     
     - name: Upload artifact
+      id: deployment
       uses: actions/upload-pages-artifact@v3
       with:
         path: docs/_build/html/

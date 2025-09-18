@@ -22,7 +22,6 @@ from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.utils import check_paired_key, get_paired_key, get_seed_list
 from cellpack.autopack.writers import Writer
-from cellpack.autopack.writers.ImageWriter import ImageWriter
 from cellpack.autopack.writers.MarkdownWriter import MarkdownWriter
 
 log = logging.getLogger(__name__)
@@ -1183,6 +1182,12 @@ class Analysis:
         plot_figures = packing_config_data.get("save_plot_figures", True)
         show_grid = packing_config_data["show_grid_plot"]
         image_export_options = packing_config_data.get("image_export_options")
+
+        if image_export_options is not None:
+            global ImageWriter
+            if "ImageWriter" not in globals():
+                from cellpack.autopack.writers.ImageWriter import ImageWriter
+
         parallel = packing_config_data.get("parallel", False)
         save_gradient_data_as_image = packing_config_data.get(
             "save_gradient_data_as_image", False

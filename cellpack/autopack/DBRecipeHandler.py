@@ -1,7 +1,11 @@
 import copy
 import logging
+import shutil
 from datetime import datetime, timezone
 from enum import Enum
+from pathlib import Path
+
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 
 import hashlib
@@ -559,6 +563,119 @@ class DBUploader(object):
                     "result_path": result_path,
                     "error_message": error_message,
                 },
+            )
+
+    def upload_packing_results_workflow(self, source_folder, recipe_name, job_id):
+        """
+        Complete packing results upload workflow including folder preparation and s3 upload
+        """
+        try:
+            if job_id:
+
+                source_path = Path(source_folder)
+                if not source_path.exists():
+                    error_msg = f"Source folder does not exist: {source_folder}"
+                    logging.error(error_msg)
+                    return {"success": False, "error": error_msg}
+
+                # prepare unique S3 upload folder
+                parent_folder = source_path.parent
+                unique_folder_name = f"{source_path.name}_run_{job_id}"
+                s3_upload_folder = parent_folder / unique_folder_name
+
+                logging.debug(f"outputs will be copied to: {s3_upload_folder}")
+
+                # copy outputs to unique upload folder
+                s3_upload_folder.mkdir(parents=True, exist_ok=True)
+                shutil.copytree(source_folder, s3_upload_folder, dirs_exist_ok=True)
+
+                upload_result = self.upload_outputs_to_s3(
+                    output_folder=s3_upload_folder,
+                    recipe_name=recipe_name,
+                    job_id=job_id,
+                )
+
+                # clean up temporary folder after upload
+                if s3_upload_folder.exists():
+                    shutil.rmtree(s3_upload_folder)
+                    logging.debug(
+                        f"Cleaned up temporary upload folder: {s3_upload_folder}"
+                    )
+
+                # update outputs directory in firebase
+                self.update_outputs_directory(
+                    job_id, upload_result.get("outputs_directory")
+                )
+
+                return upload_result
+
+        except Exception as e:
+            logging.error(e)
+            return {"success": False, "error": e}
+
+    def upload_outputs_to_s3(self, output_folder, recipe_name, job_id):
+        """
+        Upload packing outputs to S3 bucket
+        """
+
+        bucket_name = self.db.bucket_name
+        region_name = self.db.region_name
+        sub_folder_name = self.db.sub_folder_name
+        s3_prefix = f"{sub_folder_name}/{recipe_name}/{job_id}"
+
+        try:
+            upload_result = self.db.upload_directory(
+                local_directory_path=output_folder, s3_prefix=s3_prefix
+            )
+
+            if upload_result["success"]:
+                # generate public URLs for the uploaded files
+                base_url = f"https://{bucket_name}.s3.{region_name}.amazonaws.com"
+                public_urls = [
+                    f"{base_url}/{file_info['s3_key']}"
+                    for file_info in upload_result["uploaded_files"]
+                ]
+                outputs_directory = f"https://us-west-2.console.aws.amazon.com/s3/buckets/{bucket_name}/{s3_prefix}/"
+
+                logging.info(
+                    f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
+                )
+                logging.debug(f"Total size: {upload_result['total_size']:,} bytes")
+                logging.debug(f"Public URL base: {base_url}/{s3_prefix}/")
+
+                return {
+                    "success": True,
+                    "run_id": job_id,
+                    "s3_bucket": bucket_name,
+                    "s3_prefix": s3_prefix,
+                    "public_url_base": f"{base_url}/{s3_prefix}/",
+                    "uploaded_files": upload_result["uploaded_files"],
+                    "total_files": upload_result["total_files"],
+                    "total_size": upload_result["total_size"],
+                    "urls": public_urls,
+                    "outputs_directory": outputs_directory,
+                }
+        except Exception as e:
+            logging.error(e)
+            return {"success": False, "error": e}
+
+    def update_outputs_directory(self, job_id, outputs_directory):
+        if not self.db or self.db.s3_client:
+            # switch to firebase handler to update job status
+            handler = DATABASE_IDS.handlers().get("firebase")
+            initialized_db = handler(default_db="staging")
+        if job_id:
+            timestamp = initialized_db.create_timestamp()
+            initialized_db.update_or_create(
+                "job_status",
+                job_id,
+                {
+                    "timestamp": timestamp,
+                    "outputs_directory": outputs_directory,
+                },
+            )
+            logging.debug(
+                f"Updated outputs s3 location {outputs_directory} for job ID: {job_id}"
             )
 
 

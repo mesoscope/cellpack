@@ -8,22 +8,22 @@ assignees: ''
 ---
 
 ## Description
-*A clear description of the bug*
+<!-- A clear and concise description of what the bug is. -->
 
 
 
 
 ## Expected Behavior
-*What did you expect to happen instead?*
+<!-- What did you expect to happen instead? -->
 
 
 
 
 ## Reproduction
-*A minimal example that exhibits the behavior.*
+<!-- A minimal example that exhibits the behavior. -->
 
 
 
 
 ## Environment
-*Any additional information about your environment*
+<!--Any additional information about your environment--!>
