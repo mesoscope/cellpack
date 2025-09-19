@@ -388,6 +388,12 @@ def load_file(
 ):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
+        if database_name == DATABASE_IDS.GITHUB:
+            # right now we support github files as json
+            local_file_path = get_local_file_location(
+                file_path, destination=destination, cache=cache, force=force
+            )
+            return json.load(open(local_file_path, "r")), "github", False
         db = DATABASE_IDS.handlers().get(database_name)
         initialize_db = db(default_db="staging") if use_docker else db()
 
