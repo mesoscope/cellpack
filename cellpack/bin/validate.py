@@ -27,7 +27,7 @@ def validate(recipe_path):
 
             RecipeValidator.validate_recipe(raw_recipe_data)
             log.info(f"Local recipe {raw_recipe_data['name']} is valid!")
-            
+
     except ValidationError as e:
         formatted_error = RecipeValidator.format_validation_error(e)
         log.error(formatted_error)
@@ -37,8 +37,12 @@ def validate(recipe_path):
         return
     except Exception as e:
         if "firebase" in str(e).lower() and "not initialized" in str(e).lower():
-            log.error("Firebase database not initialized. Please set up firebase credentials.")
-            log.error("See: https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases")
+            log.error(
+                "Firebase database not initialized. Please set up firebase credentials."
+            )
+            log.error(
+                "See: https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
+            )
         else:
             log.error(f"Error loading recipe: {e}")
         return

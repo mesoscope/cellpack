@@ -174,14 +174,16 @@ class RecipeLoader(object):
             new_values = DBRecipeLoader.compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )
-            
+
             # validate the converted firebase recipe
             try:
                 RecipeValidator.validate_recipe(new_values)
             except ValidationError as e:
                 formatted_error = RecipeValidator.format_validation_error(e)
-                raise ValueError(f"Firebase recipe validation failed:\n{formatted_error}")
-                
+                raise ValueError(
+                    f"Firebase recipe validation failed:\n{formatted_error}"
+                )
+
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(

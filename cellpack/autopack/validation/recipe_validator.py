@@ -9,7 +9,7 @@ class RecipeValidator:
         Shows field location and basic error info for quick debugging
         """
         error_lines = ["Validation errors found:"]
-        
+
         for error in validation_error.errors():
             field_path = " -> ".join(str(loc) for loc in error["loc"])
             error_msg = error["msg"]
