@@ -6,13 +6,17 @@ class RecipeValidator:
     def format_validation_error(validation_error):
         """
         Format a Pydantic ValidationError into a user-friendly message
-        Removes technical details like URLs and provides clear error messages
+        Shows field location and basic error info for quick debugging
         """
-        error_lines = []
+        error_lines = ["Validation errors found:"]
+        
         for error in validation_error.errors():
-            error_lines.append(error["msg"])
+            field_path = " -> ".join(str(loc) for loc in error["loc"])
+            error_msg = error["msg"]
+            error_lines.append(f"  Field: {field_path}")
+            error_lines.append(f"  Error: {error_msg}")
 
-        return "Validation errors found:\n" + "\n".join(error_lines)
+        return "\n".join(error_lines)
 
     @staticmethod
     def validate_recipe(recipe_data):
