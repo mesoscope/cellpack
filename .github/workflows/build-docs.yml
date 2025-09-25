@@ -28,7 +28,7 @@ jobs:
 
     - name: Generate Docs
       run: |
-        pdm run make gen-docs
+        uv run make gen-docs
         touch docs/_build/html/.nojekyll
     
     - name: Upload artifact

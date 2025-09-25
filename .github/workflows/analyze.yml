@@ -12,20 +12,20 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                python-version: [3.9]
+                python-version: [3.11]
                 os: [ubuntu-latest]
         steps:
             - uses: actions/checkout@v4.2.2
             - uses: ./.github/actions/dependencies
             - name: Pack test recipe
               run: |
-                  pdm run pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
+                  uv run pack -r cellpack/tests/recipes/v2/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
             - name: Modify JSON with PR sub_directory path
               run: |
                   jq --arg branch_name "${{  github.ref_name  }}" '.create_report.output_image_location |= "https://cellpack-results.s3.us-west-2.amazonaws.com/\($branch_name)/spheresSST/figures"' cellpack/tests/analysis-configs/PR_analysis_config.json > cellpack/tests/analysis-configs/PR_analysis_config_temp.json
                   mv cellpack/tests/analysis-configs/PR_analysis_config_temp.json cellpack/tests/analysis-configs/PR_analysis_config.json
             - name: Run analysis code
-              run: pdm run analyze -r cellpack/tests/recipes/v2/test_spheres.json -a cellpack/tests/analysis-configs/PR_analysis_config.json -p cellpack/tests/outputs/test_spheres/spheresSST
+              run: uv run analyze -r cellpack/tests/recipes/v2/test_spheres.json -a cellpack/tests/analysis-configs/PR_analysis_config.json -p cellpack/tests/outputs/test_spheres/spheresSST
             - name: Upload results
               uses: actions/upload-artifact@v4
               with:
@@ -50,7 +50,10 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-west-2
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
+              with:
+                  name: results
+                  path: ./results
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
             - uses: iterative/setup-cml@v2

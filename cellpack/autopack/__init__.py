@@ -177,8 +177,8 @@ REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
-    f"{DATABASE_IDS.GITHUB}:": autoPACKserver,
-    f"{DATABASE_IDS.FIREBASE}:": None,
+    f"{DATABASE_IDS.GITHUB.value}:": autoPACKserver,
+    f"{DATABASE_IDS.FIREBASE.value}:": None,
 }
 
 
