@@ -32,12 +32,24 @@ class RecipeValidator:
                 validated_objects[obj_name] = validated_obj.model_dump()
             validated_data["objects"] = validated_objects
 
-        # individual gradients
+        # individual gradients - handle both dict and list formats
         if "gradients" in recipe_data and recipe_data["gradients"]:
-            validated_gradients = {}
-            for gradient_name, gradient_data in recipe_data["gradients"].items():
-                validated_gradient = RecipeGradient(**gradient_data)
-                validated_gradients[gradient_name] = validated_gradient.model_dump()
-            validated_data["gradients"] = validated_gradients
+            if isinstance(recipe_data["gradients"], dict):
+                # dict format: {"gradient_name": {...}, ...}
+                validated_gradients = {}
+                for gradient_name, gradient_data in recipe_data["gradients"].items():
+                    validated_gradient = RecipeGradient(**gradient_data)
+                    validated_gradients[gradient_name] = validated_gradient.model_dump()
+                validated_data["gradients"] = validated_gradients
+            elif isinstance(recipe_data["gradients"], list):
+                # list format: [{"name": "gradient_name", ...}, ...]
+                validated_gradients = []
+                for gradient_data in recipe_data["gradients"]:
+                    if isinstance(gradient_data, dict):
+                        validated_gradient = RecipeGradient(**gradient_data)
+                        validated_gradients.append(validated_gradient.model_dump())
+                    else:
+                        validated_gradients.append(gradient_data)
+                validated_data["gradients"] = validated_gradients
 
         return validated_data

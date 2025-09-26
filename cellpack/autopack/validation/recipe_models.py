@@ -82,6 +82,7 @@ class GradientModeSettings(BaseModel):
 
 
 class RecipeGradient(BaseModel):
+    name: Optional[str] = None  # required when gradients are in list format
     description: Optional[str] = None
     mode: GradientMode = Field(GradientMode.X)
     pick_mode: PickMode = Field(PickMode.LINEAR)
@@ -192,7 +193,7 @@ class RecipeObject(BaseModel):
     encapsulating_radius: Optional[float] = Field(None, gt=0)
     radius: Optional[float] = Field(None, gt=0)
     available_regions: Optional[Dict[str, Any]] = None
-    partners: Optional[List[Partner]] = None
+    partners: Optional[Union[List[Partner], Dict[str, Any]]] = None
     gradient: Optional[Union[str, List[str]]] = None
     weight: Optional[float] = Field(None, ge=0)
     is_attractor: Optional[bool] = None
@@ -220,6 +221,27 @@ class RecipeObject(BaseModel):
         if v is not None and len(v) == 2:
             if v[0] > v[1]:
                 raise ValueError("orient_bias_range min must be <= max")
+        return v
+
+    @field_validator("partners")
+    @classmethod
+    def validate_partners_format(cls, v):
+        if v is not None:
+            # handle Firebase format: {"all_partners": [...]}
+            if isinstance(v, dict):
+                if "all_partners" in v:
+                    # Firebase format is valid - it will be converted later in recipe_loader
+                    return v
+                else:
+                    raise ValueError(
+                        "partners dict format must have 'all_partners' key"
+                    )
+            # handle regular list format: [...], this is the expected converted format, validate individual partners
+            elif isinstance(v, list):
+                for i, partner in enumerate(v):
+                    if isinstance(partner, dict):
+                        if "name" not in partner:
+                            raise ValueError(f"partners[{i}] must have 'name' field")
         return v
 
 
@@ -307,7 +329,9 @@ class Recipe(BaseModel):
     bounding_box: List[List[float]] = Field([[0, 0, 0], [100, 100, 100]])
     grid_file_path: Optional[str] = None
     objects: Dict[str, RecipeObject] = Field(default_factory=dict)
-    gradients: Dict[str, RecipeGradient] = Field(default_factory=dict)
+    gradients: Union[Dict[str, RecipeGradient], List[Dict[str, Any]]] = Field(
+        default_factory=dict
+    )
     composition: Dict[str, CompositionEntry] = Field(default_factory=dict)
 
     @field_validator("name")
@@ -332,15 +356,41 @@ class Recipe(BaseModel):
                 raise ValueError(f"Bounding box min_{axis} must be < max_{axis}")
         return v
 
+    @field_validator("gradients")
+    @classmethod
+    def validate_gradients_format(cls, v):
+        if isinstance(v, list):
+            for i, gradient in enumerate(v):
+                if isinstance(gradient, dict):
+                    if "name" not in gradient or not gradient["name"]:
+                        raise ValueError(
+                            f"gradients[{i}]: List format gradients must have a 'name' field"
+                        )
+        return v
+
     # CROSS-FIELD VALIDATIONS
     # the "after" model validator runs after all individual fields
+    def _get_gradient_names(self):
+        """Helper method to extract gradient names from both dict and list formats"""
+        if not self.gradients:
+            return set()
+
+        if isinstance(self.gradients, dict):
+            return set(self.gradients.keys())
+        elif isinstance(self.gradients, list):
+            gradient_names = set()
+            for gradient in self.gradients:
+                if isinstance(gradient, dict) and "name" in gradient:
+                    gradient_names.add(gradient["name"])
+            return gradient_names
+        else:
+            return set()
+
     @model_validator(mode="after")
     def validate_object_gradients(self):
         """Validate that object gradients reference existing gradients in the recipe"""
         if hasattr(self, "objects") and self.objects:
-            available_gradients = (
-                set(self.gradients.keys()) if self.gradients else set()
-            )
+            available_gradients = self._get_gradient_names()
             for obj_name, obj_data in self.objects.items():
                 if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
                     gradient_value = obj_data.gradient
@@ -366,25 +416,41 @@ class Recipe(BaseModel):
             available_composition = (
                 set(self.composition.keys()) if self.composition else set()
             )
+            gradients_to_check = []
+            if isinstance(self.gradients, dict):
+                gradients_to_check = list(self.gradients.items())
+            elif isinstance(self.gradients, list):
+                gradients_to_check = [
+                    (g.get("name", f"gradient_{i}"), g)
+                    for i, g in enumerate(self.gradients)
+                ]
 
-            for gradient_name, gradient_data in self.gradients.items():
-                if hasattr(gradient_data, "mode") and gradient_data.mode == "surface":
-                    if (
-                        hasattr(gradient_data, "mode_settings")
-                        and gradient_data.mode_settings
-                    ):
-                        if (
-                            hasattr(gradient_data.mode_settings, "object")
-                            and gradient_data.mode_settings.object
+            for gradient_name, gradient_data in gradients_to_check:
+                mode = (
+                    gradient_data.get("mode")
+                    if isinstance(gradient_data, dict)
+                    else getattr(gradient_data, "mode", None)
+                )
+
+                if mode == "surface":
+                    mode_settings = (
+                        gradient_data.get("mode_settings")
+                        if isinstance(gradient_data, dict)
+                        else getattr(gradient_data, "mode_settings", None)
+                    )
+                    if mode_settings:
+                        obj_ref = (
+                            mode_settings.get("object")
+                            if isinstance(mode_settings, dict)
+                            else getattr(mode_settings, "object", None)
+                        )
+                        if obj_ref and (
+                            obj_ref not in available_objects
+                            and obj_ref not in available_composition
                         ):
-                            obj_ref = gradient_data.mode_settings.object
-                            if (
-                                obj_ref not in available_objects
-                                and obj_ref not in available_composition
-                            ):
-                                raise ValueError(
-                                    f"gradients.{gradient_name}.mode_settings.object references '{obj_ref}' which does not exist in objects or composition sections"
-                                )
+                            raise ValueError(
+                                f"gradients.{gradient_name}.mode_settings.object references '{obj_ref}' which does not exist in objects or composition sections"
+                            )
         return self
 
     @model_validator(mode="after")
