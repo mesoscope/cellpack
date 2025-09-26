@@ -20,7 +20,7 @@ requires-python = "~=3.11.0"
 dependencies = [
     "aicsimageio",
     "boto3",
-    "deepdiff",
+    "deepdiff>=8.6.1",
     "fire",
     "firebase-admin",
     "grpcio",
