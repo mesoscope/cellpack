@@ -194,7 +194,20 @@ class RecipeObject(BaseModel):
     radius: Optional[float] = Field(None, gt=0)
     available_regions: Optional[Dict[str, Any]] = None
     partners: Optional[Union[List[Partner], Dict[str, Any]]] = None
-    gradient: Optional[Union[str, List[str]]] = None
+    # Gradient field supports multiple formats:
+    # - str: Simple reference to gradient name (standard format)
+    # - List[str]: List of gradient names (for multiple gradients)
+    # - RecipeGradient: Full gradient definition (for unnested Firebase recipes)
+    # - List[RecipeGradient]: List of full gradient definitions (for unnested Firebase recipes)
+    #
+    # Examples:
+    # Standard format: "gradient_name"
+    # Multiple gradients: ["gradient1", "gradient2"]
+    # Unnested Firebase: {"name": "gradient_name", "mode": "surface", ...}
+    # Converted Firebase list: [{"name": "grad1", "mode": "x"}, {"name": "grad2", "mode": "y"}]
+    gradient: Optional[
+        Union[str, List[str], "RecipeGradient", List["RecipeGradient"]]
+    ] = None
     weight: Optional[float] = Field(None, ge=0)
     is_attractor: Optional[bool] = None
     priority: Optional[int] = None
@@ -394,13 +407,32 @@ class Recipe(BaseModel):
             for obj_name, obj_data in self.objects.items():
                 if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
                     gradient_value = obj_data.gradient
-                    # Handle both string and list gradient references
                     gradient_refs = []
                     if isinstance(gradient_value, str):
+                        # standard format: gradient name string
                         gradient_refs = [gradient_value]
+                    elif isinstance(gradient_value, RecipeGradient):
+                        # unnested Firebase format: full gradient object
+                        # skip validation for embedded gradients - they are self-contained
+                        continue
                     elif isinstance(gradient_value, list):
-                        gradient_refs = gradient_value
-                    # Check that all referenced gradients exist
+                        # handle list of gradients (either strings or RecipeGradient objects)
+                        for item in gradient_value:
+                            if isinstance(item, str):
+                                gradient_refs.append(item)
+                            elif isinstance(item, RecipeGradient):
+                                # skip validation for embedded gradients
+                                pass
+                            else:
+                                raise ValueError(
+                                    f"objects.{obj_name}.gradient contains invalid item type: {type(item)}"
+                                )
+                    else:
+                        raise ValueError(
+                            f"objects.{obj_name}.gradient has invalid type: {type(gradient_value)}"
+                        )
+
+                    # check that all referenced gradients exist (only for string references)
                     for gradient_ref in gradient_refs:
                         if gradient_ref not in available_gradients:
                             raise ValueError(
