@@ -152,8 +152,9 @@ class PackingRepresentation(BaseModel):
     path: str
     name: str
     format: str
-    radii: Optional[List[List[float]]] = None
-    positions: Optional[List[List[ThreeFloatArray]]] = None
+    # support both standard format and Firebase dictionary format
+    radii: Optional[Union[List[List[float]], Dict[str, Any]]] = None
+    positions: Optional[Union[List[List[ThreeFloatArray]], Dict[str, Any]]] = None
 
 
 class AtomicRepresentation(BaseModel):
