@@ -35,7 +35,15 @@ class RecipeLoader(object):
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
-        autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
+
+        # set CURRENT_RECIPE_PATH appropriately for remote(firebase) vs local recipes
+        if autopack.is_remote_path(self.file_path):
+            autopack.CURRENT_RECIPE_PATH = os.path.join(
+                os.getcwd(), "examples", "recipes", "v2"
+            )
+        else:
+            autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
+
         self.recipe_data = self._read(use_docker=use_docker)
 
     @staticmethod
