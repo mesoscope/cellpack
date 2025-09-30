@@ -1,6 +1,7 @@
-from aicsimageio.writers.ome_tiff_writer import OmeTiffWriter
 from pathlib import Path
+
 import numpy
+from bioio_ome_tiff.writers import OmeTiffWriter
 from scipy.ndimage import convolve
 
 """
