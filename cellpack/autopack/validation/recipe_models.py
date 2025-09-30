@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field, field_validator, model_validator
-from typing import Optional, List, Dict, Any, Union
 from enum import Enum
+from typing import Any, Dict, List, Optional, Union
+
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 # note: ge(>=), le(<=), gt(>), lt(<)
 
@@ -69,7 +70,7 @@ ThreeFloatArray = List[float]
 
 
 class WeightModeSettings(BaseModel):
-    decay_length: Optional[float] = Field(None, ge=0, le=1)
+    exponent_factor: Optional[float] = Field(None, gt=0)
     power: Optional[float] = Field(None, gt=0)
 
 
