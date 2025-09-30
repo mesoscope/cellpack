@@ -70,7 +70,7 @@ ThreeFloatArray = List[float]
 
 
 class WeightModeSettings(BaseModel):
-    exponent_factor: Optional[float] = Field(None, gt=0)
+    decay_length: Optional[float] = Field(None, gt=0)
     power: Optional[float] = Field(None, gt=0)
 
 
