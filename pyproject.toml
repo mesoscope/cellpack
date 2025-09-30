@@ -124,15 +124,6 @@ source-exclude = [
     "out",
 ]
 
-[tool.uv.sources]
-aicsimageio = {index = "aics"}
-
-
-[[tool.uv.index]]
-name = "aics"
-url = "https://artifactory.corp.alleninstitute.org/artifactory/api/pypi/pypi-virtual/simple"
-explicit = true
-
 [tool.black]
 line-length = 88
 
