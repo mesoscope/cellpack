@@ -16,6 +16,8 @@ from cellpack.autopack.interface_objects.partners import Partners
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert as convert_v1_to_v2
 from cellpack.autopack.loaders.migrate_v2_to_v2_1 import convert as convert_v2_to_v2_1
 from cellpack.autopack.utils import deep_merge, expand_object_using_key
+from cellpack.autopack.validation.recipe_validator import RecipeValidator
+from pydantic import ValidationError
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 CURRENT_VERSION = "2.1"
@@ -33,7 +35,15 @@ class RecipeLoader(object):
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
-        autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
+
+        # set CURRENT_RECIPE_PATH appropriately for remote(firebase) vs local recipes
+        if autopack.is_remote_path(self.file_path):
+            autopack.CURRENT_RECIPE_PATH = os.path.join(
+                os.getcwd(), "examples", "recipes", "v2"
+            )
+        else:
+            autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
+
         self.recipe_data = self._read(use_docker=use_docker)
 
     @staticmethod
@@ -172,6 +182,16 @@ class RecipeLoader(object):
             new_values = DBRecipeLoader.compile_db_recipe_data(
                 new_values, objects, gradients, composition
             )
+
+            # validate the converted firebase recipe
+            try:
+                RecipeValidator.validate_recipe(new_values)
+            except ValidationError as e:
+                formatted_error = RecipeValidator.format_validation_error(e)
+                raise ValueError(
+                    f"Firebase recipe validation failed:\n{formatted_error}"
+                )
+
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(

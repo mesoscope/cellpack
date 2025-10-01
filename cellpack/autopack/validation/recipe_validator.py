@@ -6,13 +6,17 @@ class RecipeValidator:
     def format_validation_error(validation_error):
         """
         Format a Pydantic ValidationError into a user-friendly message
-        Removes technical details like URLs and provides clear error messages
+        Shows field location and basic error info for quick debugging
         """
-        error_lines = []
-        for error in validation_error.errors():
-            error_lines.append(error["msg"])
+        error_lines = ["Validation errors found:"]
 
-        return "Validation errors found:\n" + "\n".join(error_lines)
+        for error in validation_error.errors():
+            field_path = " -> ".join(str(loc) for loc in error["loc"])
+            error_msg = error["msg"]
+            error_lines.append(f"  Field: {field_path}")
+            error_lines.append(f"  Error: {error_msg}")
+
+        return "\n".join(error_lines)
 
     @staticmethod
     def validate_recipe(recipe_data):
@@ -28,12 +32,24 @@ class RecipeValidator:
                 validated_objects[obj_name] = validated_obj.model_dump()
             validated_data["objects"] = validated_objects
 
-        # individual gradients
+        # individual gradients - handle both dict and list formats
         if "gradients" in recipe_data and recipe_data["gradients"]:
-            validated_gradients = {}
-            for gradient_name, gradient_data in recipe_data["gradients"].items():
-                validated_gradient = RecipeGradient(**gradient_data)
-                validated_gradients[gradient_name] = validated_gradient.model_dump()
-            validated_data["gradients"] = validated_gradients
+            if isinstance(recipe_data["gradients"], dict):
+                # dict format: {"gradient_name": {...}, ...}
+                validated_gradients = {}
+                for gradient_name, gradient_data in recipe_data["gradients"].items():
+                    validated_gradient = RecipeGradient(**gradient_data)
+                    validated_gradients[gradient_name] = validated_gradient.model_dump()
+                validated_data["gradients"] = validated_gradients
+            elif isinstance(recipe_data["gradients"], list):
+                # list format: [{"name": "gradient_name", ...}, ...]
+                validated_gradients = []
+                for gradient_data in recipe_data["gradients"]:
+                    if isinstance(gradient_data, dict):
+                        validated_gradient = RecipeGradient(**gradient_data)
+                        validated_gradients.append(validated_gradient.model_dump())
+                    else:
+                        validated_gradients.append(gradient_data)
+                validated_data["gradients"] = validated_gradients
 
         return validated_data
