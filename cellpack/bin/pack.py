@@ -1,3 +1,4 @@
+import json
 import logging
 import logging.config
 import os
@@ -5,21 +6,19 @@ import time
 from pathlib import Path
 
 import fire
+from pydantic import ValidationError
 
 from cellpack import autopack
 from cellpack.autopack import upy
 from cellpack.autopack.Analysis import Analysis
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.Environment import Environment
-from cellpack.autopack.IOutils import format_time
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.IOutils import format_time
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.validation.recipe_validator import RecipeValidator
-
-from pydantic import ValidationError
-import json
 
 ###############################################################################
 log_file_path = Path(__file__).parent.parent / "logging.conf"
