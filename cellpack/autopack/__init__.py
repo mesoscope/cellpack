@@ -147,30 +147,59 @@ def checkPath():
 
 # get user / default value
 if not os.path.isfile(autopack_path_pref_file):
-    log.error(str(autopack_path_pref_file) + "file is not found")
+    log.error(
+        "Autopack path preference file not found at %s, creating default.",
+        autopack_path_pref_file,
+    )
     checkPath()
 
-doit = False
-if os.path.isfile(autopack_user_path_pref_file):
-    f = open(autopack_user_path_pref_file, "r")
-    doit = True
-elif os.path.isfile(autopack_path_pref_file):
-    f = open(autopack_path_pref_file, "r")
-    doit = True
-if doit:
-    log.info(f"autopack_path_pref_file {autopack_path_pref_file}")
-    pref_path = json.load(f)
-    f.close()
-    if "autoPACKserver" not in pref_path:
-        log.warning(f"problem with autopack_path_pref_file {autopack_path_pref_file}")
-    else:
-        autoPACKserver = pref_path["autoPACKserver"]
-        if "filespath" in pref_path:
-            if pref_path["filespath"] != "default":
-                filespath = pref_path["filespath"]
-        if "autopackdir" in pref_path:
-            if pref_path["autopackdir"] != "default":
-                autopackdir = pref_path["autopackdir"]
+
+def load_path_preferences():
+    """Load path preferences from user or default preference files."""
+    global autoPACKserver, filespath, autopackdir
+
+    # Determine which preference file to use
+    pref_file = None
+    if os.path.isfile(autopack_user_path_pref_file):
+        pref_file = autopack_user_path_pref_file
+    elif os.path.isfile(autopack_path_pref_file):
+        pref_file = autopack_path_pref_file
+
+    if pref_file is None:
+        log.warning("No preference files found")
+        return
+
+    try:
+        with open(pref_file, "r") as f:
+            content = f.read().strip()
+            if not content:
+                log.warning(f"Preference file {pref_file} is empty")
+                return
+
+            pref_path = json.loads(content)
+
+        if not isinstance(pref_path, dict):
+            log.warning(f"Invalid preference file format in {pref_file}")
+            return
+
+        if "autoPACKserver" not in pref_path:
+            log.warning(f"Missing 'autoPACKserver' key in {pref_file}")
+        else:
+            autoPACKserver = pref_path["autoPACKserver"]
+
+        if "filespath" in pref_path and pref_path["filespath"] != "default":
+            filespath = pref_path["filespath"]
+
+        if "autopackdir" in pref_path and pref_path["autopackdir"] != "default":
+            autopackdir = pref_path["autopackdir"]
+
+    except json.JSONDecodeError as e:
+        log.error(f"Failed to parse JSON in {pref_file}: {e}")
+    except Exception as e:
+        log.error(f"Error loading preferences from {pref_file}: {e}")
+
+
+load_path_preferences()
 
 
 REPLACE_PATH = {
