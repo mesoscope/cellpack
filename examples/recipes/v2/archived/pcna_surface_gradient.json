@@ -1,0 +1,82 @@
+{
+    "version": "surface_gradient",
+    "format_version": "2.1",
+    "name": "pcna",
+    "bounding_box": [
+        [
+            -80,
+            -40,
+            -55
+        ],
+        [
+            80,
+            40,
+            55
+        ]
+    ],
+    "gradients": {
+        "surface_gradient": {
+            "description": "gradient based on distance from the surface of a mesh",
+            "weight_mode": "exponential",
+            "pick_mode": "rnd",
+            "mode": "surface",
+            "mode_settings": {
+                "object": "nucleus",
+                "scale_to_next_surface": false
+            },
+            "weight_mode_settings": {
+                "decay_length": 0.05
+            }
+        }
+    },
+    "objects": {
+        "mean_nucleus": {
+            "type": "mesh",
+            "color": [
+                0,
+                1,
+                1
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "https://www.dl.dropboxusercontent.com/s/3194r3t40ewypxh/",
+                    "name": "mean-nuc.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "pcna": {
+            "jitter_attempts": 300,
+            "type": "single_sphere",
+            "color": [
+                0.20,
+                0.70,
+                0.10
+            ],
+            "radius": 1,
+            "gradient": "surface_gradient",
+            "packing_mode": "gradient"
+        }
+    },
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "nucleus"
+                ]
+            }
+        },
+        "nucleus": {
+            "object": "mean_nucleus",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    {
+                        "object": "pcna",
+                        "count": 2048
+                    }
+                ]
+            }
+        }
+    }
+}
