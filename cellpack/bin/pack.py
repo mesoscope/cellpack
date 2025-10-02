@@ -1,4 +1,3 @@
-import json
 import logging
 import logging.config
 import os
@@ -6,7 +5,6 @@ import time
 from pathlib import Path
 
 import fire
-from pydantic import ValidationError
 
 from cellpack import autopack
 from cellpack.autopack import upy
@@ -18,7 +16,6 @@ from cellpack.autopack.IOutils import format_time
 from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
-from cellpack.autopack.validation.recipe_validator import RecipeValidator
 
 ###############################################################################
 log_file_path = Path(__file__).parent.parent / "logging.conf"
@@ -41,19 +38,6 @@ def pack(
     :return: void
     """
     packing_config_data = ConfigLoader(config_path, docker).config
-
-    # validate local recipes before packing
-    # firebase recipes are validated automatically in RecipeLoader._read()
-    if validate and not recipe.startswith("firebase:"):
-        try:
-            with open(recipe, "r") as f:
-                raw_recipe_data = json.load(f)
-            RecipeValidator.validate_recipe(raw_recipe_data)
-            log.info("Local recipe validation passed!")
-        except ValidationError as e:
-            formatted_error = RecipeValidator.format_validation_error(e)
-            log.error(formatted_error)
-            return
 
     recipe_data = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"], docker
