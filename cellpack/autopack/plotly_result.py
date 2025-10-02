@@ -130,7 +130,7 @@ class PlotlyAnalysis:
         self.plot.show()
 
     def show(self):
-        self.plot.show()
+        self.plot.show(renderer="browser")
 
     def transformPoints2D(self, trans, rot, points):
         output = []
