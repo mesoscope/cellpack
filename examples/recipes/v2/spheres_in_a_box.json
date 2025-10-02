@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "2.0",
-    "name": "analysis_b",
+    "name": "spheres_in_a_box",
     "bounding_box": [
         [
             0,
