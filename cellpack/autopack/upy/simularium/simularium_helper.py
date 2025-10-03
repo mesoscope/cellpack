@@ -4,28 +4,27 @@ import os
 import webbrowser
 from pathlib import Path
 
+import collada
 import matplotlib
 import numpy as np
 import trimesh
-
 from simulariumio import (
-    TrajectoryConverter,
-    TrajectoryData,
     AgentData,
-    UnitData,
-    MetaData,
-    ModelMetaData,
     CameraData,
     DisplayData,
+    MetaData,
+    ModelMetaData,
+    TrajectoryConverter,
+    TrajectoryData,
+    UnitData,
 )
-from simulariumio.cellpack import CellpackConverter, HAND_TYPE
+from simulariumio.cellpack import HAND_TYPE, CellpackConverter
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
+from cellpack.autopack.DBRecipeHandler import DBMaintenance, DBUploader
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.upy import hostHelper
 from cellpack.autopack.upy.simularium.plots import PlotData
-from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
-from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
-import collada
 
 
 class Instance:
@@ -165,21 +164,6 @@ class simulariumHelper(hostHelper.Helper):
 
     def getCurrentScene(self):
         return self.scene
-
-    def progressBar(self, progress=None, label=None):
-        """update the progress bar status by progress value and label string
-        @type  progress: Int/Float
-        @param progress: the new progress
-        @type  label: string
-        @param label: the new message to put in the progress status
-        """
-        # resetProgressBar
-        print("Progress ", str(progress), label)
-        return
-
-    def resetProgressBar(self):
-        """reset the Progress Bar, using value"""
-        return
 
     def update(self):
         self.increment_time()
