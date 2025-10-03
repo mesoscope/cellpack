@@ -49,7 +49,7 @@ def pack(
             with open(recipe, "r") as f:
                 raw_recipe_data = json.load(f)
             RecipeValidator.validate_recipe(raw_recipe_data)
-            log.info("Local recipe validation passed!")
+            log.debug("Local recipe validation passed!")
         except ValidationError as e:
             formatted_error = RecipeValidator.format_validation_error(e)
             log.error(formatted_error)
