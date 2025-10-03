@@ -25,6 +25,7 @@ dependencies = [
     "firebase-admin",
     "grpcio",
     "matplotlib",
+    "mdutils>=1.8.0",
     "numpy",
     "pandas",
     "plotly",
@@ -75,7 +76,6 @@ lint = [
     "docutils",
 ]
 docs = [
-    "mdutils",
     "linkify-it-py",
     "myst-parser",
 ]
