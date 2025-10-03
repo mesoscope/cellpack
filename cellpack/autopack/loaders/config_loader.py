@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
-
 import json
+import os
 from json import encoder
 
 import cellpack.autopack as autopack
@@ -28,7 +27,7 @@ class ConfigLoader(object):
     default_values = {
         "clean_grid_cache": False,
         "format": "simularium",
-        "load_from_grid_file": False,
+        "load_from_grid_file": True,
         "inner_grid_method": "trimesh",
         "live_packing": False,
         "number_of_packings": 1,
@@ -46,7 +45,7 @@ class ConfigLoader(object):
         "save_plot_figures": True,
         "show_grid_plot": False,
         "show_sphere_trees": False,
-        "show_progress_bar": False,
+        "show_progress_bar": True,
         "spacing": None,
         "upload_results": True,
         "use_periodicity": False,
