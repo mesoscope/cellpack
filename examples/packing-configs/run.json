@@ -13,5 +13,6 @@
     "use_periodicity": false,
     "show_sphere_trees": false,
     "load_from_grid_file": false,
-    "save_converted_recipe": true
+    "save_converted_recipe": true,
+    "upload_results": false
 }
