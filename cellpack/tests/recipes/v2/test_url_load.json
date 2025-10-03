@@ -1,19 +1,19 @@
 {
-    "version": "1.0.0",
+    "version": "gradient_packing",
     "format_version": "2.1",
-    "name": "test_url_loading",
+    "name": "peroxisome",
     "bounding_box": [
         [
-            -5,
-            -5,
-            -5
+            35.325,
+            35.325,
+            7.125
         ],
         [
-            5,
-            5,
-            5
+            210.675,
+            210.675,
+            106.875
         ]
-    ],   
+    ],
     "objects": {
         "membrane_mesh": {
             "type": "mesh",
@@ -24,8 +24,8 @@
             ],
             "representations": {
                 "mesh": {
-                    "path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/meshes",
-                    "name": "sphere_4.obj",
+                    "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
+                    "name": "mem_mesh_743916.obj",
                     "format": "obj"
                 }
             }
@@ -39,21 +39,23 @@
             ],
             "representations": {
                 "mesh": {
-                    "path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/meshes",
-                    "name": "sphere_2.obj",
+                    "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
+                    "name": "nuc_mesh_743916.obj",
                     "format": "obj"
                 }
             }
         },
-        "primitive_sphere": {
+        "peroxisome": {
+            "jitter_attempts": 300,
             "type": "single_sphere",
             "color": [
                 0.2,
                 0.7,
                 0.1
             ],
-            "radius": 0.5,
-            "packing_mode": "random"
+            "radius": 2.4792095238948373,
+            "packing_mode": "gradient",
+            "gradient": "nucleus_gradient"
         }
     },
     "composition": {
@@ -71,8 +73,8 @@
                 "interior": [
                     "nucleus",
                     {
-                        "object": "primitive_sphere",
-                        "count": 100
+                        "object": "peroxisome",
+                        "count": 59
                     }
                 ]
             }
@@ -85,5 +87,63 @@
             }
         }
     },
-    "grid_file_path": "https://cellpack-results.s3.us-west-2.amazonaws.com/data/grids/nested_mesh_grid.dat"
+    "grid_file_path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/grids/743916_grid.dat",
+    "gradients": {
+        "nucleus_gradient": {
+            "name": "nucleus_gradient",
+            "description": "gradient based on distance from the surface of the nucleus mesh",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "surface",
+            "mode_settings": {
+                "object": "nucleus",
+                "scale_to_next_surface": false
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.1
+            }
+        },
+        "membrane_gradient": {
+            "name": "membrane_gradient",
+            "description": "gradient based on distance from the surface of the membrane mesh",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "surface",
+            "mode_settings": {
+                "object": "membrane",
+                "scale_to_next_surface": false
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.01
+            }
+        },
+        "apical_gradient": {
+            "name": "apical_gradient",
+            "description": "gradient based on distance from a plane",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "vector",
+            "mode_settings": {
+                "direction": [
+                    0,
+                    0,
+                    1
+                ],
+                "center": [
+                    0,
+                    0,
+                    106.875
+                ]
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.1
+            }
+        }
+    }
 }

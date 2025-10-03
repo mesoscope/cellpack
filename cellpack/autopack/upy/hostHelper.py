@@ -16,15 +16,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 """
-import sys
-import os
 import math
-from math import cos, sin, sqrt
+import os
 import random
+import sys
+from math import cos, sin, sqrt
+
 import numpy
 import PIL as Image
-from pymunk.util import is_clockwise, calc_area
-
+from pymunk.util import calc_area, is_clockwise
 
 from cellpack.autopack.upy import colors
 
@@ -2415,32 +2415,74 @@ class Helper:
         return [(p1[0] + p2[0]) / 2.0, (p1[1] + p2[1]) / 2.0, (p1[2] + p2[2]) / 2.0]
 
     def reporthook(self, count, blockSize, totalSize):
-        percent = float(count * blockSize / totalSize)
-        self.progressBar(percent, "Downloading...")
+        """
+        Progress callback for download operations
+        """
+        if totalSize <= 0:
+            return
+
+        percent = min(float(count * blockSize) / totalSize, 1.0)
+        downloaded = min(count * blockSize, totalSize)
+
+        # Format sizes in human readable format
+        def format_bytes(bytes_val):
+            for unit in ["B", "KB", "MB", "GB"]:
+                if bytes_val < 1024.0:
+                    return f"{bytes_val:.1f} {unit}"
+                bytes_val /= 1024.0
+            return f"{bytes_val:.1f} TB"
+
+        downloaded_str = format_bytes(downloaded)
+        total_str = format_bytes(totalSize)
+
+        label = f"Downloading... {downloaded_str}/{total_str}"
+        self.progressBar(percent, label)
+
         if percent >= 1.0:
             self.resetProgressBar()
 
-    def progressBar(self, progress, label):
+    def progressBar(self, progress: float, label: str = "Progress") -> None:
         """
         Update the progress bar status by progress value and label string
 
-        * overwrited by children class for each host
+        * overwritten by children class for each host
 
-        @type  progress: Int/Float
-        @param progress: the new progress
-        @type  label: string
-        @param label: the new message to put in the progress status
+        Parameters
+        ----------
+        progress
+            The new progress (0.0 to 1.0)
+        label
+            The new message to put in the progress status. Default is "Progress".
         """
-        pass
+        progress = max(0.0, min(1.0, float(progress)))
 
-    def resetProgressBar(self, value=None):
+        bar_length = 50
+        filled_length = int(bar_length * progress)
+        bar = "█" * filled_length + "░" * (bar_length - filled_length)
+        percent = progress * 100
+
+        print(f"\r{label}: |{bar}| {percent:.1f}%" + " " * 10, end="", flush=True)
+
+        if progress >= 1.0:
+            print("\r" + " " * 80 + "\r", end="", flush=True)
+            print(f"{label}: |{bar}| {percent:.1f}%")
+
+    def resetProgressBar(self, value: float | None = None):
         """
-        Reset the Progress Bar, using value
+        Reset progress bar to value
 
-        * overwrited by children class for each host
+        * overwritten by children class for each host
 
+        Parameters
+        ----------
+        value
+            The new progress (0.0 to 1.0)
         """
-        pass
+        if value is not None:
+            self.progressBar(float(value), "Progress")
+        else:
+            # Clear the current progress line
+            print("\r" + " " * 80 + "\r", end="", flush=True)
 
     # ===============================================================================
     #     Texture Mapping / UV
@@ -4738,12 +4780,9 @@ class Helper:
         self, parent_object, collada_xml=None, instance_node=True, **kw
     ):
         try:
+            from collada import Collada, geometry, material, scene, source
+
             from cellpack.autopack.transformation import decompose_matrix
-            from collada import Collada
-            from collada import material
-            from collada import source
-            from collada import geometry
-            from collada import scene
         except Exception:
             return
         inst_parent = parent_object  # self.getCurrentSelection()[0]
