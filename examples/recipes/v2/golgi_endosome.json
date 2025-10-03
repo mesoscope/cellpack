@@ -3,13 +3,25 @@
     "format_version": "2.1",
     "name": "golgi_endosome",
     "bounding_box": [
-        [34.5, 34.64999999999999, 7.449999999999996],
-        [244.5, 238.35000000000002, 93.55000000000001]
+        [
+            34.5,
+            34.64999999999999,
+            7.449999999999996
+        ],
+        [
+            244.5,
+            238.35000000000002,
+            93.55000000000001
+        ]
     ],
     "objects": {
         "membrane_mesh": {
             "type": "mesh",
-            "color": [0.75, 0.75, 0.75],
+            "color": [
+                0.75,
+                0.75,
+                0.75
+            ],
             "representations": {
                 "mesh": {
                     "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
@@ -20,7 +32,11 @@
         },
         "struct_mesh": {
             "type": "mesh",
-            "color": [0.5, 0.5, 0.5],
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
             "representations": {
                 "mesh": {
                     "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
@@ -31,7 +47,11 @@
         },
         "nucleus_mesh": {
             "type": "mesh",
-            "color": [0.25, 0.25, 0.25],
+            "color": [
+                0.25,
+                0.25,
+                0.25
+            ],
             "representations": {
                 "mesh": {
                     "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
@@ -43,7 +63,11 @@
         "endosome": {
             "jitter_attempts": 300,
             "type": "single_sphere",
-            "color": [1, 0.8, 0],
+            "color": [
+                1,
+                0.8,
+                0
+            ],
             "radius": 2.6,
             "packing_mode": "gradient",
             "gradient": "apical_gradient"
@@ -52,7 +76,9 @@
     "composition": {
         "bounding_area": {
             "regions": {
-                "interior": ["membrane"]
+                "interior": [
+                    "membrane"
+                ]
             }
         },
         "membrane": {
@@ -126,8 +152,16 @@
             "invert": null,
             "mode": "vector",
             "mode_settings": {
-                "direction": [0, 0, 1],
-                "center": [0, 0, 93.55000000000001]
+                "direction": [
+                    0,
+                    0,
+                    1
+                ],
+                "center": [
+                    0,
+                    0,
+                    93.55000000000001
+                ]
             },
             "weight_mode": "exponential",
             "weight_mode_settings": {

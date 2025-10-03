@@ -3,13 +3,25 @@
     "format_version": "2.1",
     "name": "peroxisome",
     "bounding_box": [
-        [35.325, 35.325, 7.125],
-        [210.675, 210.675, 106.875]
+        [
+            35.325,
+            35.325,
+            7.125
+        ],
+        [
+            210.675,
+            210.675,
+            106.875
+        ]
     ],
     "objects": {
         "membrane_mesh": {
             "type": "mesh",
-            "color": [1, 0, 1],
+            "color": [
+                1,
+                0,
+                1
+            ],
             "representations": {
                 "mesh": {
                     "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
@@ -20,7 +32,11 @@
         },
         "nucleus_mesh": {
             "type": "mesh",
-            "color": [0, 1, 1],
+            "color": [
+                0,
+                1,
+                1
+            ],
             "representations": {
                 "mesh": {
                     "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
@@ -32,16 +48,22 @@
         "peroxisome": {
             "jitter_attempts": 300,
             "type": "single_sphere",
-            "color": [0.2, 0.7, 0.1],
+            "color": [
+                0.2,
+                0.7,
+                0.1
+            ],
             "radius": 2.4792095238948373,
             "packing_mode": "gradient",
-            "gradient": ["nucleus_gradient"]
+            "gradient": "nucleus_gradient"
         }
     },
     "composition": {
         "bounding_area": {
             "regions": {
-                "interior": ["membrane"]
+                "interior": [
+                    "membrane"
+                ]
             }
         },
         "membrane": {
@@ -107,8 +129,16 @@
             "invert": null,
             "mode": "vector",
             "mode_settings": {
-                "direction": [0, 0, 1],
-                "center": [0, 0, 106.875]
+                "direction": [
+                    0,
+                    0,
+                    1
+                ],
+                "center": [
+                    0,
+                    0,
+                    106.875
+                ]
             },
             "weight_mode": "exponential",
             "weight_mode_settings": {
