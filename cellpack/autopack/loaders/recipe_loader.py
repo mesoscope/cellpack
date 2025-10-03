@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import copy
 import json
+import logging
 import os
 from json import encoder
 
 import cellpack.autopack as autopack
+
+log = logging.getLogger(__name__)
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects import (
     GradientData,
@@ -183,15 +186,6 @@ class RecipeLoader(object):
                 new_values, objects, gradients, composition
             )
 
-            # validate the converted firebase recipe
-            try:
-                RecipeValidator.validate_recipe(new_values)
-            except ValidationError as e:
-                formatted_error = RecipeValidator.format_validation_error(e)
-                raise ValueError(
-                    f"Firebase recipe validation failed:\n{formatted_error}"
-                )
-
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
@@ -206,6 +200,15 @@ class RecipeLoader(object):
                 recipe_data["objects"] = RecipeLoader.resolve_inheritance(
                     recipe_data["objects"]
                 )
+        # validate recipe after migration to v2.1 format but before transforming to class instances
+        try:
+            RecipeValidator.validate_recipe(recipe_data)
+            log.info("Recipe validation passed")
+        except ValidationError as e:
+            formatted_error = RecipeValidator.format_validation_error(e)
+            raise ValueError(f"Recipe validation failed:\n{formatted_error}")
+
+        if "objects" in recipe_data:
             for _, obj in recipe_data["objects"].items():
                 reps = obj["representations"] if "representations" in obj else {}
                 obj["representations"] = Representations(

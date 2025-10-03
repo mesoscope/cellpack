@@ -1,11 +1,8 @@
 import logging
 import logging.config
 import fire
-import json
 from pathlib import Path
-from pydantic import ValidationError
 
-from cellpack.autopack.validation.recipe_validator import RecipeValidator
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
@@ -17,21 +14,11 @@ log = logging.getLogger()
 
 def validate(recipe_path):
     try:
-        if recipe_path.startswith("firebase:"):
-            loader = RecipeLoader(recipe_path, use_docker=True)
-            recipe_data = loader.recipe_data
-            log.info(f"Firebase recipe {recipe_data['name']} is valid!")
-        else:
-            with open(recipe_path, "r") as f:
-                raw_recipe_data = json.load(f)
+        use_docker = recipe_path.startswith("firebase:")
+        loader = RecipeLoader(recipe_path, use_docker=use_docker)
+        recipe_data = loader.recipe_data
+        log.info(f"Recipe {recipe_data['name']} is valid!")
 
-            RecipeValidator.validate_recipe(raw_recipe_data)
-            log.info(f"Local recipe {raw_recipe_data['name']} is valid!")
-
-    except ValidationError as e:
-        formatted_error = RecipeValidator.format_validation_error(e)
-        log.error(formatted_error)
-        return
     except ValueError as e:
         log.error(str(e))
         return
