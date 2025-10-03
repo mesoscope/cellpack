@@ -42,13 +42,14 @@ def pack(
     """
     packing_config_data = ConfigLoader(config_path, docker).config
 
-    # validate recipe before packing
-    if validate:
+    # validate local recipes before packing
+    # firebase recipes are validated automatically in RecipeLoader._read()
+    if validate and not recipe.startswith("firebase:"):
         try:
             with open(recipe, "r") as f:
                 raw_recipe_data = json.load(f)
             RecipeValidator.validate_recipe(raw_recipe_data)
-            log.debug("Recipe validation passed!")
+            log.info("Local recipe validation passed!")
         except ValidationError as e:
             formatted_error = RecipeValidator.format_validation_error(e)
             log.error(formatted_error)
