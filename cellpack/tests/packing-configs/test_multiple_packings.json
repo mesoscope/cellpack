@@ -1,8 +1,9 @@
 {
-    "name": "show_grid_plot",
+    "name": "test_multiple_packings",
     "out": "cellpack/tests/outputs/",
     "overwrite_place_method": true,
+    "number_of_packings": 10,
     "place_method": "spheresSST",
     "save_analyze_result": true,
-    "show_grid_plot": true
+    "show_sphere_trees": true
 }

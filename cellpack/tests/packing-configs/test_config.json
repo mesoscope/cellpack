@@ -1,16 +1,8 @@
 {
     "name": "test_config",
-    "format": "simularium",
-    "inner_grid_method": "trimesh",
-    "live_packing": false,
-    "ordered_packing": false,
     "out": "cellpack/tests/outputs/",
     "overwrite_place_method": true,
     "place_method": "spheresSST",
     "save_analyze_result": true,
-    "show_grid_plot": false,
-    "spacing": null,
-    "parallel": false,
-    "use_periodicity": false,
     "show_sphere_trees": true
 }
