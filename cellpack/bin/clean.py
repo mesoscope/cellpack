@@ -1,16 +1,29 @@
 # cleans the local cache directory
-import fire
+import logging
 import os
 import shutil
+
+import fire
+
 from cellpack.autopack import CACHE_DIR
 
+logger = logging.getLogger(__name__)
 
-def clean(cache_dir=CACHE_DIR):
+
+def clean(cache_type="all"):
     """
     Cleans the local cache directory
     :param cache_dir: dict, the cache directory
     :return: void
     """
+    if cache_type == "all":
+        cache_dir = CACHE_DIR
+    elif cache_type in CACHE_DIR:
+        cache_dir = {cache_type: CACHE_DIR[cache_type]}
+    else:
+        logger.error(f"Unknown cache type: {cache_type}")
+        return
+
     for _, folder in cache_dir.items():
         for filename in os.listdir(folder):
             file_path = os.path.join(folder, filename)
@@ -20,8 +33,8 @@ def clean(cache_dir=CACHE_DIR):
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)
             except Exception as e:
-                print(f"Failed to delete {file_path}. Exception: {e}")
-    print("Cache cleaned")
+                logger.error(f"Failed to delete {file_path}. Exception: {e}")
+    logger.info("Cache cleaned for type: %s", cache_type)
 
 
 def main():
