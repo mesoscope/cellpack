@@ -4,6 +4,7 @@ import fire
 from pathlib import Path
 
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 ###############################################################################
 log_file_path = Path(__file__).parent.parent / "logging.conf"
@@ -14,8 +15,10 @@ log = logging.getLogger()
 
 def validate(recipe_path):
     try:
-        use_docker = recipe_path.startswith("firebase:")
-        loader = RecipeLoader(recipe_path, use_docker=use_docker)
+        use_remote_db = any(
+            recipe_path.startswith(db) for db in DATABASE_IDS.with_colon()
+        )
+        loader = RecipeLoader(recipe_path, use_docker=use_remote_db)
         recipe_data = loader.recipe_data
         log.debug(f"Recipe {recipe_data['name']} is valid!")
 
@@ -23,9 +26,13 @@ def validate(recipe_path):
         log.error(str(e))
         return
     except Exception as e:
-        if "firebase" in str(e).lower() and "not initialized" in str(e).lower():
+        error_msg = str(e).lower()
+        if (
+            any(db.lower() in error_msg for db in DATABASE_IDS.values())
+            and "not initialized" in error_msg
+        ):
             log.error(
-                "Firebase database not initialized. Please set up firebase credentials."
+                "Remote database not initialized. Please set up credentials for the database."
             )
             log.error(
                 "See: https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
