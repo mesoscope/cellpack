@@ -63,6 +63,8 @@ def get_representations(old_ingredient):
 
 
 def constrain_angle(angle):
+    if -pi <= angle <= pi:
+        return angle
     return (angle + pi) % (2 * pi) - pi
 
 
