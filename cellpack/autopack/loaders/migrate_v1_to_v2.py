@@ -69,7 +69,7 @@ def constrain_angle(angle):
 
 
 def convert_rotation_range(old_ingredient):
-    range_min = (
+    range_min = old_ingredient.get("orientBiasRotRangeMin", -pi)
         old_ingredient["orientBiasRotRangeMin"]
         if "orientBiasRotRangeMin" in old_ingredient
         else -pi
