@@ -26,7 +26,7 @@ The config file controls the packing behavior. It specifies parameters such as p
 | `show_progress_bar`                    | boolean           | Show progress bar in terminal            | False         |                                                     |
 | `show_sphere_trees`                    | boolean           | Visualize sphere trees                   | False         |                                                     |
 | `spacing`                              | number            | Override object spacing                  | None          |                                                     |
-| `upload_results`                       | boolean           | Upload results to S3                     | True          |                                                     |
+| `upload_results`                       | boolean           | Upload results to S3                     | False          |                                                     |
 | `use_periodicity`                      | boolean           | Enable periodic boundary conditions      | False         |                                                     |
 | `version`                              | number            | Config version number                    | 1.0           | For internal tracking                               |
 | `image_export_options.hollow`          | boolean           | Export hollow images                     | False         |                                                     |
