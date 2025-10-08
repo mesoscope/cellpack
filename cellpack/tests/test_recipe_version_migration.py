@@ -265,7 +265,7 @@ def test_get_v1_ingredient():
                     "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     "radius": 10,
                     "representations": RecipeLoader.default_values["representations"],
-                    "orient_bias_range": [-pi, -pi],
+                    "orient_bias_range": [-pi, pi],
                 },
                 "B": {
                     "type": INGREDIENT_TYPE.SINGLE_SPHERE,
