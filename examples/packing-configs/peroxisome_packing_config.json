@@ -5,6 +5,5 @@
     "save_analyze_result": true,
     "save_plot_figures": true,
     "spacing": 2.5,
-    "load_from_grid_file": false,
-    "upload_results": false
+    "load_from_grid_file": false
 }

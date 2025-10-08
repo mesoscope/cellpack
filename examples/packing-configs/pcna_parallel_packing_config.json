@@ -16,6 +16,5 @@
     "show_progress_bar": true,
     "spacing": 2.5,
     "use_periodicity": false,
-    "show_sphere_trees": false,
-    "upload_results": false
+    "show_sphere_trees": false
 }
