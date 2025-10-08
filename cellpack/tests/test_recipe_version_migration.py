@@ -243,7 +243,7 @@ def test_get_v1_ingredient():
         "radius": 10,
         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
         "representations": RecipeLoader.default_values["representations"],
-        "orient_bias_range": [-pi, -pi],
+        "orient_bias_range": [-pi, pi],
     }
     expected_composition_data = {
         "object": ingredient_key,
