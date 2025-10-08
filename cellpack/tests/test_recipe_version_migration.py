@@ -148,7 +148,7 @@ def test_create_packing_atomic_representation(
             },
             {
                 "count": 15,
-                "orient_bias_range": [-pi, -pi],
+                "orient_bias_range": [-pi, pi],
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.MULTI_SPHERE,
             },
