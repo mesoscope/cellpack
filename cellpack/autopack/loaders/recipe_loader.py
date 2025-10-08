@@ -7,7 +7,6 @@ from json import encoder
 
 import cellpack.autopack as autopack
 
-log = logging.getLogger(__name__)
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects import (
     GradientData,
@@ -24,6 +23,8 @@ from pydantic import ValidationError
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 CURRENT_VERSION = "2.1"
+
+log = logging.getLogger(__name__)
 
 
 class RecipeLoader(object):
