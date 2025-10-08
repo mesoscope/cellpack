@@ -1,16 +1,17 @@
 from math import pi
-from cellpack.autopack import load_file
 
+from cellpack.autopack import load_file
+from cellpack.autopack.interface_objects.default_values import default_recipe_values
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.utils import create_file_info_object_from_full_path
-from cellpack.autopack.interface_objects.default_values import default_recipe_values
+
 from .v1_v2_attribute_changes import (
-    convert_to_partners_map,
-    required_attributes,
-    v1_to_v2_name_map,
     attributes_move_to_composition,
+    convert_to_partners_map,
     ingredient_types_map,
+    required_attributes,
     unused_attributes_list,
+    v1_to_v2_name_map,
 )
 
 """
@@ -70,15 +71,7 @@ def constrain_angle(angle):
 
 def convert_rotation_range(old_ingredient):
     range_min = old_ingredient.get("orientBiasRotRangeMin", -pi)
-        old_ingredient["orientBiasRotRangeMin"]
-        if "orientBiasRotRangeMin" in old_ingredient
-        else -pi
-    )
-    range_max = (
-        old_ingredient["orientBiasRotRangeMax"]
-        if "orientBiasRotRangeMax" in old_ingredient
-        else pi
-    )
+    range_max = old_ingredient.get("orientBiasRotRangeMax", pi)
 
     range_min = constrain_angle(range_min)
     range_max = constrain_angle(range_max)
