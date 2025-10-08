@@ -333,7 +333,7 @@ def test_convert_v1_to_v2(
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     },
                     "B": {
-                        "orient_bias_range": [-pi, 6 - 2 * pi],
+                        "orient_bias_range": [6 - 2 * pi, pi],
                         "packing_mode": "random",
                         "radius": 40,
                         "representations": Representations(
