@@ -272,7 +272,7 @@ def test_get_v1_ingredient():
                     "radius": 10,
                     "packing_mode": "random",
                     "representations": RecipeLoader.default_values["representations"],
-                    "orient_bias_range": [-pi, -pi],
+                    "orient_bias_range": [-pi, pi],
                 },
                 "C": {
                     "orient_bias_range": [-pi, -pi],
