@@ -344,7 +344,7 @@ def test_convert_v1_to_v2(
                     "C": {
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "radius": 200,
-                        "orient_bias_range": [-pi, 12 - 2 * pi],
+                        "orient_bias_range": [-pi, 12 - 4 * pi],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
