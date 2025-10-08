@@ -275,7 +275,7 @@ def test_get_v1_ingredient():
                     "orient_bias_range": [-pi, pi],
                 },
                 "C": {
-                    "orient_bias_range": [-pi, -pi],
+                    "orient_bias_range": [-pi, pi],
                     "radius": 10,
                     "representations": {
                         "packing": {
