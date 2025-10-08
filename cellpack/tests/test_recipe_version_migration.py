@@ -325,7 +325,7 @@ def test_convert_v1_to_v2(
                 "bounding_box": [[0, 0, 0], [500, 500, 500]],
                 "objects": {
                     "A": {
-                        "orient_bias_range": [12 - 2 * pi, 6 - 2 * pi],
+                        "orient_bias_range": [6 - 2 * pi, 12 - 4 * pi],
                         "radius": 20,
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
