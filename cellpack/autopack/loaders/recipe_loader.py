@@ -204,7 +204,7 @@ class RecipeLoader(object):
         # validate recipe after migration to v2.1 format but before transforming to class instances
         try:
             RecipeValidator.validate_recipe(recipe_data)
-            log.info("Recipe validation passed")
+            log.debug("Recipe validation passed")
         except ValidationError as e:
             formatted_error = RecipeValidator.format_validation_error(e)
             raise ValueError(f"Recipe validation failed:\n{formatted_error}")

@@ -17,7 +17,7 @@ def validate(recipe_path):
         use_docker = recipe_path.startswith("firebase:")
         loader = RecipeLoader(recipe_path, use_docker=use_docker)
         recipe_data = loader.recipe_data
-        log.info(f"Recipe {recipe_data['name']} is valid!")
+        log.debug(f"Recipe {recipe_data['name']} is valid!")
 
     except ValueError as e:
         log.error(str(e))
