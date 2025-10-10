@@ -146,7 +146,7 @@ class AWSHandler(object):
                     if self.is_url_valid(base_url):
                         return file_name, base_url
         except NoCredentialsError as e:
-            logging.debug(f"AWS credentials are not configured: {e}")
+            logging.warning(f"AWS credentials are not configured: {e}")
             return None, None
         return None, None
 

@@ -1380,7 +1380,7 @@ class simulariumHelper(hostHelper.Helper):
     def raycast_test(self, obj, start, end, length, **kw):
         return
 
-    def post_and_open_file(self, file_name, open_results_in_browser=True):
+    def post_and_open_file(self, file_name, open_results_in_browser):
         simularium_file = Path(f"{file_name}.simularium")
         url = None
         job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
@@ -1415,7 +1415,9 @@ class simulariumHelper(hostHelper.Helper):
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
             if not file_name or not url:
                 db_maintainer = DBMaintenance(initialized_handler)
-                logging.debug(f"Skipping browser opening, upload credentials not configured. For setup instructions see: {db_maintainer.readme_url()}")
+                logging.warning(
+                    f"Skipping browser opening, upload credentials not configured. For setup instructions see: {db_maintainer.readme_url()}"
+                )
         return file_name, url
 
     @staticmethod
@@ -1430,7 +1432,7 @@ class simulariumHelper(hostHelper.Helper):
                 db_uploader.upload_result_metadata(file_name, url, job_id)
             else:
                 db_maintainer = DBMaintenance(initialized_db)
-                logging.debug(
+                logging.warning(
                     f"Firebase credentials not found. For setup instructions see: {db_maintainer.readme_url()}"
                 )
         return
