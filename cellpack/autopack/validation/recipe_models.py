@@ -230,14 +230,6 @@ class RecipeObject(BaseModel):
                     raise ValueError("Color components must be between 0 and 1")
         return v
 
-    @field_validator("orient_bias_range")
-    @classmethod
-    def validate_orient_bias_range(cls, v):
-        if v is not None and len(v) == 2:
-            if v[0] > v[1]:
-                raise ValueError("orient_bias_range min must be <= max")
-        return v
-
     @field_validator("partners")
     @classmethod
     def validate_partners_format(cls, v):

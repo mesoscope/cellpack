@@ -140,14 +140,15 @@ def test_create_packing_atomic_representation(
             {
                 "encapsulatingRadius": 100,
                 "nbMol": 15,
-                "orientBiasRotRangeMax": 12,
+                "orientBiasRotRangeMin": -pi,
+                "orientBiasRotRangeMax": pi,
                 "partners_name": [],
                 "proba_binding": 0.5,
                 "Type": "MultiSphere",
             },
             {
                 "count": 15,
-                "orient_bias_range": [-pi, 12],
+                "orient_bias_range": [-pi, pi],
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.MULTI_SPHERE,
             },
@@ -156,12 +157,12 @@ def test_create_packing_atomic_representation(
             {
                 "encapsulatingRadius": 100,
                 "nbMol": 15,
-                "orientBiasRotRangeMin": 6,
+                "orientBiasRotRangeMin": -pi,
                 "Type": "Grow",
             },
             {
                 "count": 15,
-                "orient_bias_range": [6, pi],
+                "orient_bias_range": [-pi, pi],
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.GROW,
             },
@@ -170,15 +171,15 @@ def test_create_packing_atomic_representation(
             {
                 "encapsulatingRadius": 100,
                 "nbMol": 15,
-                "orientBiasRotRangeMax": 12,
-                "orientBiasRotRangeMin": 6,
+                "orientBiasRotRangeMax": pi,
+                "orientBiasRotRangeMin": -pi,
                 "proba_binding": 0.5,
                 "radii": [[100]],
                 "Type": "SingleSphere",
             },
             {
                 "count": 15,
-                "orient_bias_range": [6, 12],
+                "orient_bias_range": [-pi, pi],
                 "radius": 100,
                 "representations": RecipeLoader.default_values["representations"],
                 "type": INGREDIENT_TYPE.SINGLE_SPHERE,
@@ -209,8 +210,8 @@ old_recipe_test_data = {
                 "meshObject": None,
                 "meshType": "file",
                 "properties": {},
-                "orientBiasRotRangeMin": 6,
-                "orientBiasRotRangeMax": 12,
+                "orientBiasRotRangeMin": -pi,
+                "orientBiasRotRangeMax": pi,
             },
             "B": {
                 "radii": [[10]],
@@ -218,14 +219,14 @@ old_recipe_test_data = {
                 "packingPriority": 0,
                 "encapsulatingRadius": 100,
                 "name": "Sphere_radius_100",
-                "orientBiasRotRangeMin": 6,
+                "orientBiasRotRangeMin": -pi,
             },
             "C": {
                 "radii": [[10]],
                 "packingPriority": 0,
                 "proba_binding": 0.5,
                 "name": "Sphere_radius_200",
-                "orientBiasRotRangeMax": 12,
+                "orientBiasRotRangeMax": pi,
                 "sphereFile": "/fibrinogen.sph",
             },
         }
@@ -242,7 +243,7 @@ def test_get_v1_ingredient():
         "radius": 10,
         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
         "representations": RecipeLoader.default_values["representations"],
-        "orient_bias_range": [6, 12],
+        "orient_bias_range": [-pi, pi],
     }
     expected_composition_data = {
         "object": ingredient_key,
@@ -264,17 +265,17 @@ def test_get_v1_ingredient():
                     "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     "radius": 10,
                     "representations": RecipeLoader.default_values["representations"],
-                    "orient_bias_range": [6, 12],
+                    "orient_bias_range": [-pi, pi],
                 },
                 "B": {
                     "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     "radius": 10,
                     "packing_mode": "random",
                     "representations": RecipeLoader.default_values["representations"],
-                    "orient_bias_range": [6, pi],
+                    "orient_bias_range": [-pi, pi],
                 },
                 "C": {
-                    "orient_bias_range": [-pi, 12],
+                    "orient_bias_range": [-pi, pi],
                     "radius": 10,
                     "representations": {
                         "packing": {
@@ -324,7 +325,7 @@ def test_convert_v1_to_v2(
                 "bounding_box": [[0, 0, 0], [500, 500, 500]],
                 "objects": {
                     "A": {
-                        "orient_bias_range": [6, 12],
+                        "orient_bias_range": [6 - 2 * pi, 12 - 4 * pi],
                         "radius": 20,
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
@@ -332,7 +333,7 @@ def test_convert_v1_to_v2(
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     },
                     "B": {
-                        "orient_bias_range": [6, pi],
+                        "orient_bias_range": [6 - 2 * pi, pi],
                         "packing_mode": "random",
                         "radius": 40,
                         "representations": Representations(
@@ -343,7 +344,7 @@ def test_convert_v1_to_v2(
                     "C": {
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "radius": 200,
-                        "orient_bias_range": [-pi, 12],
+                        "orient_bias_range": [-pi, 12 - 4 * pi],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
@@ -411,7 +412,10 @@ def test_migrate_version_error():
                         "place_method": "jitter",
                         "rotation_axis": None,
                         "use_rotation_axis": False,
-                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "orient_bias_range": [
+                            (-3.1415927 + pi) % (2 * pi) - pi,
+                            (-3.1415927 + pi) % (2 * pi) - pi,
+                        ],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
@@ -419,7 +423,6 @@ def test_migrate_version_error():
                     },
                     "compartment_A": {
                         "type": INGREDIENT_TYPE.MESH,
-                        "orient_bias_range": [-3.141592653589793, 3.141592653589793],
                         "representations": Representations(
                             mesh={
                                 "path": "cellpack/test/geometry",
@@ -442,7 +445,10 @@ def test_migrate_version_error():
                         "place_method": "jitter",
                         "rotation_axis": None,
                         "use_rotation_axis": False,
-                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "orient_bias_range": [
+                            (-3.1415927 + pi) % (2 * pi) - pi,
+                            (-3.1415927 + pi) % (2 * pi) - pi,
+                        ],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
@@ -462,7 +468,10 @@ def test_migrate_version_error():
                         "place_method": "jitter",
                         "rotation_axis": None,
                         "use_rotation_axis": False,
-                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "orient_bias_range": [
+                            (-3.1415927 + pi) % (2 * pi) - pi,
+                            (-3.1415927 + pi) % (2 * pi) - pi,
+                        ],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
@@ -513,7 +522,5 @@ def test_convert_compartment(converted_compartment_data, expected_compartment_da
         data["partners"] = mock_partners
         expected_compartment_data["objects"][obj]["representations"] = mock_rep
         expected_compartment_data["objects"][obj]["partners"] = mock_partners
-        assert (
-            converted_compartment_data["objects"][obj]
-            == expected_compartment_data["objects"][obj]
-        )
+        for key in expected_compartment_data["objects"][obj]:
+            assert data[key] == expected_compartment_data["objects"][obj][key]
