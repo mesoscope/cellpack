@@ -36,7 +36,7 @@ class ConfigLoader(object):
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
-        "open_results_in_browser": True,
+        "open_results_in_browser": False,
         "parallel": False,
         "place_method": "spheresSST",
         "randomness_seed": None,
