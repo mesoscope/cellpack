@@ -76,9 +76,6 @@ def convert_rotation_range(old_ingredient):
     range_min = constrain_angle(range_min)
     range_max = constrain_angle(range_max)
 
-    if range_min > range_max:
-        range_min, range_max = range_max, range_min
-
     return [range_min, range_max]
 
 
