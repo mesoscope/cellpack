@@ -1,7 +1,11 @@
-from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
-import plotly.graph_objects as go
-import plotly.colors as pcolors
 import numpy
+import plotly.colors as pcolors
+import plotly.graph_objects as go
+import plotly.io as pio
+
+from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
+
+pio.renderers.default = "browser"
 
 
 class PlotlyAnalysis:

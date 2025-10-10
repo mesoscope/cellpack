@@ -30,9 +30,9 @@ pip install -e .
 ```
 
 ## Pack example recipes
-1. v1: `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json -c examples/packing-configs/run.json`
-2. v2:  `pack -r examples/recipes/v2/one_sphere.json -c examples/packing-configs/run.json`
-3. Pack from remote server: `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c examples/packing-configs/run.json`
+1. v1: `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json`
+2. v2:  `pack -r examples/recipes/v2/spheres_in_a_box.json`
+3. Pack from remote server: `pack -r  github:recipes/NM_Analysis_FigureB1.0.json `
 
 **Stable Release:** `pip install cellpack`<br>
 **Development Head:** `pip install git+https://github.com/mesoscope/cellpack.git`

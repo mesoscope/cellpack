@@ -1,18 +1,10 @@
 {
     "name": "test_image_config_convolved",
-    "format": "simularium",
-    "inner_grid_method": "trimesh",
-    "live_packing": false,
-    "ordered_packing": false,
     "out": "out/images/",
     "overwrite_place_method": true,
     "place_method": "spheresSST",
     "save_analyze_result": true,
-    "show_grid_plot": false,
-    "number_of_packings": 1,
     "spacing": 2.5,
-    "use_periodicity": false,
-    "show_sphere_trees": false,
     "load_from_grid_file": true,
     "save_converted_recipe": true,
     "image_export_options": {

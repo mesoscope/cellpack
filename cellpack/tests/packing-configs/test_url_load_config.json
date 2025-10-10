@@ -1,7 +1,0 @@
-{
-    "name": "test_url_load_config",
-    "clean_grid_cache": false,
-    "load_from_grid_file": true,
-    "out": "cellpack/tests/outputs",
-    "save_analyze_result": true
-}
