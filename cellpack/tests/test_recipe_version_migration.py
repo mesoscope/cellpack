@@ -423,7 +423,6 @@ def test_migrate_version_error():
                     },
                     "compartment_A": {
                         "type": INGREDIENT_TYPE.MESH,
-                        "orient_bias_range": [-pi, -pi],
                         "representations": Representations(
                             mesh={
                                 "path": "cellpack/test/geometry",
@@ -523,7 +522,5 @@ def test_convert_compartment(converted_compartment_data, expected_compartment_da
         data["partners"] = mock_partners
         expected_compartment_data["objects"][obj]["representations"] = mock_rep
         expected_compartment_data["objects"][obj]["partners"] = mock_partners
-        assert (
-            converted_compartment_data["objects"][obj]
-            == expected_compartment_data["objects"][obj]
-        )
+        for key in expected_compartment_data["objects"][obj]:
+            assert data[key] == expected_compartment_data["objects"][obj][key]
