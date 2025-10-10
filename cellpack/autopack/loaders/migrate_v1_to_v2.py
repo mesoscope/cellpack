@@ -1,16 +1,17 @@
 from math import pi
-from cellpack.autopack import load_file
 
+from cellpack.autopack import load_file
+from cellpack.autopack.interface_objects.default_values import default_recipe_values
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.utils import create_file_info_object_from_full_path
-from cellpack.autopack.interface_objects.default_values import default_recipe_values
+
 from .v1_v2_attribute_changes import (
-    convert_to_partners_map,
-    required_attributes,
-    v1_to_v2_name_map,
     attributes_move_to_composition,
+    convert_to_partners_map,
     ingredient_types_map,
+    required_attributes,
     unused_attributes_list,
+    v1_to_v2_name_map,
 )
 
 """
@@ -62,34 +63,18 @@ def get_representations(old_ingredient):
     return representations
 
 
-def convert_rotation_range(old_ingredient):
-    has_min = "orientBiasRotRangeMin" in old_ingredient
-    has_max = "orientBiasRotRangeMax" in old_ingredient
+def constrain_angle(angle):
+    if -pi <= angle <= pi:
+        return angle
+    return (angle + pi) % (2 * pi) - pi
 
-    if has_min and has_max:
-        range_min = old_ingredient["orientBiasRotRangeMin"]
-        range_max = old_ingredient["orientBiasRotRangeMax"]
-        if range_min > range_max:
-            range_min, range_max = range_max, range_min
-    elif has_min and not has_max:
-        provided_min = old_ingredient["orientBiasRotRangeMin"]
-        if provided_min > pi:
-            range_min = -pi
-            range_max = provided_min
-        else:
-            range_min = provided_min
-            range_max = pi
-    elif has_max and not has_min:
-        provided_max = old_ingredient["orientBiasRotRangeMax"]
-        if provided_max < -pi:
-            range_min = provided_max
-            range_max = pi
-        else:
-            range_min = -pi
-            range_max = provided_max
-    else:
-        range_min = -pi
-        range_max = pi
+
+def convert_rotation_range(old_ingredient):
+    range_min = old_ingredient.get("orientBiasRotRangeMin", -pi)
+    range_max = old_ingredient.get("orientBiasRotRangeMax", pi)
+
+    range_min = constrain_angle(range_min)
+    range_max = constrain_angle(range_max)
 
     return [range_min, range_max]
 
