@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # standardmodule
+import logging
 import os
 import webbrowser
 from pathlib import Path
@@ -1414,9 +1415,7 @@ class simulariumHelper(hostHelper.Helper):
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
             if not file_name or not url:
                 db_maintainer = DBMaintenance(initialized_handler)
-                print(
-                    f"If AWS access needed, please refer to the instructions at {db_maintainer.readme_url()}. \nSkipping the opening of new browser tabs  -------------"
-                )
+                logging.debug(f"Skipping browser opening, upload credentials not configured. For setup instructions see: {db_maintainer.readme_url()}")
         return file_name, url
 
     @staticmethod
@@ -1431,8 +1430,8 @@ class simulariumHelper(hostHelper.Helper):
                 db_uploader.upload_result_metadata(file_name, url, job_id)
             else:
                 db_maintainer = DBMaintenance(initialized_db)
-                print(
-                    f"Firebase credentials are not found. If needed, please refer to the instructions at {db_maintainer.readme_url()}. \nSkipping firebase staging database -------------"
+                logging.debug(
+                    f"Firebase credentials not found. For setup instructions see: {db_maintainer.readme_url()}"
                 )
         return
 
