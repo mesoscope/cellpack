@@ -11,7 +11,7 @@ The config file controls the packing behavior. It specifies parameters such as p
 | `load_from_grid_file`                  | boolean           | Load objects from a grid file            | False         |                                                     |
 | `name`                                 | string            | Name of the config                       | default       | Used to identify this config run                    |
 | `number_of_packings`                   | number (>=1)      | Number of independent packing replicates | 1             |                                                     |
-| `open_results_in_browser`              | boolean           | Open results in browser after run        | True          |                                                     |
+| `open_results_in_browser`              | boolean           | Open results in browser after run        | False          |  Prerequisite: AWS s3 credentials                    |
 | `ordered_packing`                      | boolean           | Use deterministic packing order          | False         |                                                     |
 | `out`                                  | string            | Output directory path                    | `"out/"`      |                                                     |
 | `overwrite_place_method`               | boolean           | Override object-specific place methods   | False         |                                                     |
@@ -26,7 +26,7 @@ The config file controls the packing behavior. It specifies parameters such as p
 | `show_progress_bar`                    | boolean           | Show progress bar in terminal            | False         |                                                     |
 | `show_sphere_trees`                    | boolean           | Visualize sphere trees                   | False         |                                                     |
 | `spacing`                              | number            | Override object spacing                  | None          |                                                     |
-| `upload_results`                       | boolean           | Upload results to S3                     | False          |                                                     |
+| `upload_results`                       | boolean           | Upload results to S3                     | False          |  Requires AWS S3 credentials to upload the result file to S3 |                                             |
 | `use_periodicity`                      | boolean           | Enable periodic boundary conditions      | False         |                                                     |
 | `version`                              | number            | Config version number                    | 1.0           | For internal tracking                               |
 | `image_export_options.hollow`          | boolean           | Export hollow images                     | False         |                                                     |
