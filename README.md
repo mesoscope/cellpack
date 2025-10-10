@@ -30,9 +30,12 @@ pip install -e .
 ```
 
 ## Pack example recipes
-1. v1: `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json -c examples/packing-configs/run.json`
-2. v2:  `pack -r examples/recipes/v2/one_sphere.json -c examples/packing-configs/run.json`
-3. Pack from remote server: `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c examples/packing-configs/run.json`
+1. v1: `pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json`
+2. v2:  `pack -r examples/recipes/v2/one_sphere.json`
+3. Pack from remote server: `pack -r  github:recipes/NM_Analysis_FigureB1.0.json`
+
+### Config Files
+Config files control the packing behavior and simulation parameters such as place methods, output formats, grid settings, and debugging options. If you need different config settings than the default, you can use the provided example config files in `examples/packing-configs/` or customize your own config options. Use `-c` flag to specify a config file: `pack -r recipe.json -c config.json`
 
 **Stable Release:** `pip install cellpack`<br>
 **Development Head:** `pip install git+https://github.com/mesoscope/cellpack.git`
