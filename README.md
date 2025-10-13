@@ -9,7 +9,7 @@ An algorithm to pack molecular recipes
 ## Installation
 
 > [!NOTE]
-> These are the basic installation steps. However, our recommendation for developers is to install using `uv`. See advanced installation instructions [here](./docs/INSTALL.md).
+> These are the basic installation steps. However, our recommendation for developers is to install using `uv`. See advanced installation instructions [here](./docs/INSTALLATION.md).
 
 1. Install Python 3.11 and `git`.  Update pip at least to `24.0.0`.
 2. Clone this git repository.
