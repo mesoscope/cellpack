@@ -401,7 +401,7 @@ def load_file(
         if not initialize_db._initialized:
             readme_url = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
             sys.exit(
-                f"The selected database: {database_name} is not initialized. Please set up credentials to pack remote recipes. Refer to the instructions at {readme_url}"
+                f"The selected database: {database_name} is not initialized. Please set up credentials to pack remote recipes. Refer to the instructions at {readme_url}, or try cellPACK web interface: https://cellpack.allencell.org (no setup required)"
             )
         db_handler = DBRecipeLoader(initialize_db)
         db_handler.validate_input_recipe_path(filename)

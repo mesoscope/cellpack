@@ -6,6 +6,8 @@
 
 An algorithm to pack molecular recipes
 
+**Try cellPACK online:** [cellpack.allencell.org](https://cellpack.allencell.org)
+
 ## Installation
 
 > [!NOTE]

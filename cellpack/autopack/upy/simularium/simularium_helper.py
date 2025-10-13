@@ -1433,7 +1433,7 @@ class simulariumHelper(hostHelper.Helper):
             else:
                 db_maintainer = DBMaintenance(initialized_db)
                 logging.warning(
-                    f"Firebase credentials not found. For setup instructions see: {db_maintainer.readme_url()}"
+                    f"Firebase credentials not found. For setup instructions see: {db_maintainer.readme_url()}. Or try cellPACK web interface: https://cellpack.allencell.org (no setup required)"
                 )
         return
 
