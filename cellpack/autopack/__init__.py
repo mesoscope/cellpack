@@ -179,6 +179,7 @@ REPLACE_PATH = {
     "autopackdata": appdata,
     f"{DATABASE_IDS.GITHUB.value}:": autoPACKserver,
     f"{DATABASE_IDS.FIREBASE.value}:": None,
+    f"{DATABASE_IDS.AWS.value}:": None,
 }
 
 
