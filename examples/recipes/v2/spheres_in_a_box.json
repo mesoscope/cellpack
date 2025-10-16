@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "2.0",
-    "name": "analysis_b",
+    "name": "spheres_in_a_box",
     "bounding_box": [
         [
             0,
@@ -17,7 +17,6 @@
     "objects": {
         "base": {
             "type": "single_sphere"
-
         },
         "sphere_100": {
             "type": "single_sphere",
@@ -64,25 +63,28 @@
         "space": {
             "regions": {
                 "interior": [
-                    "A", "B", "C", "D"
+                    "A",
+                    "B",
+                    "C",
+                    "D"
                 ]
             }
         },
         "A": {
             "object": "sphere_100",
-            "count": 6
+            "count": 60
         },
         "B": {
             "object": "sphere_200",
-            "count": 2
+            "count": 20
         },
         "C": {
             "object": "sphere_50",
-            "count": 15
+            "count": 150
         },
         "D": {
             "object": "sphere_25",
-            "count": 40
+            "count": 400
         }
     }
 }
