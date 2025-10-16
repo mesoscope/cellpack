@@ -480,20 +480,6 @@ class Recipe(BaseModel):
         return self
 
     @model_validator(mode="after")
-    def validate_gradient_combinations(self):
-        """Validate gradient combinations in object gradient lists"""
-        if hasattr(self, "objects") and self.objects:
-            for obj_name, obj_data in self.objects.items():
-                if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
-                    if isinstance(obj_data.gradient, list):
-                        # multiple gradients - validate combination
-                        if len(obj_data.gradient) < 2:
-                            raise ValueError(
-                                f"objects.{obj_name}.gradient: gradient lists must contain at least 2 gradients"
-                            )
-        return self
-
-    @model_validator(mode="after")
     def validate_object_inheritance(self):
         """Validate that object inherit references point to existing objects in the objects section"""
         if hasattr(self, "objects") and self.objects:
