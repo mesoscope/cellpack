@@ -1179,7 +1179,7 @@ class Analysis:
             across seeds
         """
         number_of_packings = packing_config_data["number_of_packings"]
-        plot_figures = packing_config_data.get("save_plot_figures", True)
+        plot_figures = packing_config_data["save_plot_figures"]
         show_grid = packing_config_data["show_grid_plot"]
         image_export_options = packing_config_data.get("image_export_options")
 

@@ -3,7 +3,6 @@
     "save_analyze_result": true,
     "show_grid_plot": true,
     "spacing": 0.25,
-    "show_sphere_trees": false,
     "load_from_grid_file": true,
     "save_gradient_data_as_image": true,
     "image_export_options": {

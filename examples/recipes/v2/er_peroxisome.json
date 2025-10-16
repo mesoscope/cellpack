@@ -1,0 +1,188 @@
+{
+    "version": "gradient_packing",
+    "format_version": "2.1",
+    "name": "ER_peroxisome",
+    "bounding_box": [
+        [
+            33.77499999999999,
+            35.375,
+            7.125
+        ],
+        [
+            274.225,
+            208.625,
+            106.875
+        ]
+    ],
+    "objects": {
+        "membrane_mesh": {
+            "type": "mesh",
+            "color": [
+                0.75,
+                0.75,
+                0.75
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
+                    "name": "mem_mesh_370574.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "struct_mesh": {
+            "type": "mesh",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
+                    "name": "struct_mesh_370574.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "nucleus_mesh": {
+            "type": "mesh",
+            "color": [
+                0.25,
+                0.25,
+                0.25
+            ],
+            "representations": {
+                "mesh": {
+                    "path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/meshes",
+                    "name": "nuc_mesh_370574.obj",
+                    "format": "obj"
+                }
+            }
+        },
+        "peroxisome": {
+            "jitter_attempts": 300,
+            "type": "single_sphere",
+            "color": [
+                0,
+                1,
+                0
+            ],
+            "radius": 2.37,
+            "packing_mode": "gradient",
+            "gradient": "struct_gradient"
+        }
+    },
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "membrane"
+                ]
+            }
+        },
+        "membrane": {
+            "object": "membrane_mesh",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    "nucleus",
+                    "struct",
+                    {
+                        "object": "peroxisome",
+                        "count": 121
+                    }
+                ]
+            }
+        },
+        "nucleus": {
+            "object": "nucleus_mesh",
+            "count": 1,
+            "regions": {
+                "interior": []
+            }
+        },
+        "struct": {
+            "object": "struct_mesh",
+            "count": 1,
+            "regions": {
+                "interior": []
+            }
+        }
+    },
+    "grid_file_path": "https://cellpack-analysis-data.s3.us-west-2.amazonaws.com/cellpack_web_client/grids/370574_grid.dat",
+    "gradients": {
+        "nucleus_gradient": {
+            "name": "nucleus_gradient",
+            "description": "gradient based on distance from the surface of the nucleus mesh",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "surface",
+            "mode_settings": {
+                "object": "nucleus",
+                "scale_to_next_surface": false
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.1
+            }
+        },
+        "membrane_gradient": {
+            "name": "membrane_gradient",
+            "description": "gradient based on distance from the surface of the membrane mesh",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "surface",
+            "mode_settings": {
+                "object": "membrane",
+                "scale_to_next_surface": false
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.01
+            }
+        },
+        "apical_gradient": {
+            "name": "apical_gradient",
+            "description": "gradient based on distance from a plane",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "vector",
+            "mode_settings": {
+                "direction": [
+                    0,
+                    0,
+                    1
+                ],
+                "center": [
+                    0,
+                    0,
+                    106.875
+                ]
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.1
+            }
+        },
+        "struct_gradient": {
+            "name": "struct_gradient",
+            "description": "gradient based on distance from the surface of the struct mesh",
+            "pick_mode": "linear",
+            "reversed": false,
+            "invert": null,
+            "mode": "surface",
+            "mode_settings": {
+                "object": "struct",
+                "scale_to_next_surface": false
+            },
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.01
+            }
+        }
+    }
+}
