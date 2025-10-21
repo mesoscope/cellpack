@@ -2,7 +2,7 @@ import copy
 
 from cellpack.autopack.utils import deep_merge
 
-from ..default_values import DEFAULT_GRADIENT_MODE_SETTINGS
+from ...validation.recipe_models import DEFAULT_GRADIENT_MODE_SETTINGS
 from ..meta_enum import MetaEnum
 
 """
