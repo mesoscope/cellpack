@@ -52,9 +52,9 @@ class PickMode(str, Enum):
 
 
 class GradientMode(str, Enum):
-    X = "x"
-    Y = "y"
-    Z = "z"
+    X = "X"
+    Y = "Y"
+    Z = "Z"
     VECTOR = "vector"
     RADIAL = "radial"
     SURFACE = "surface"
