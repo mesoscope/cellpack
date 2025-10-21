@@ -6,7 +6,7 @@ default_recipe_values = {
 DEFAULT_GRADIENT_MODE_SETTINGS = {
     "mode": "X",
     "weight_mode": "linear",
-    "pick_mode": "linear",
+    "pick_mode": "rnd",
     "description": "Linear gradient in the X direction",
     "reversed": False,  # is the direction of the vector reversed?
     "invert": None,  # options: "weight", "distance"

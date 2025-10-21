@@ -262,6 +262,8 @@ class Gradient:
             self.build_radial_weight_map(bb, master_grid_positions)
         elif self.mode == "surface":
             self.build_surface_distance_weight_map()
+        elif self.mode == "uniform":
+            self.build_uniform_weight_map(master_grid_positions)
 
     def get_gauss_weights(self, number_of_points, degree=5):
         """
@@ -326,6 +328,13 @@ class Gradient:
         self.distances = numpy.abs((master_grid_positions[:, ind] - mini))
         self.set_weights_by_mode()
 
+    def build_uniform_weight_map(self, master_grid_positions):
+        """
+        Build a uniform weight map
+        """
+        self.distances = numpy.zeros(len(master_grid_positions), dtype=numpy.uint8)
+        self.weight = numpy.ones(len(master_grid_positions))
+
     def set_weights_by_mode(self):
 
         self.scaled_distances = Gradient.scale_between_0_and_1(self.distances)
@@ -354,6 +363,9 @@ class Gradient:
             self.weight = numpy.exp(
                 -self.scaled_distances / self.weight_mode_settings["decay_length"]
             )
+        else:
+            raise ValueError(f"Unknown weight mode: {self.weight_mode}")
+
         # normalize the weight
         self.weight = Gradient.scale_between_0_and_1(self.weight)
 

@@ -21,6 +21,7 @@ class GradientModes(MetaEnum):
     VECTOR = "vector"
     RADIAL = "radial"
     SURFACE = "surface"
+    UNIFORM = "uniform"
 
 
 class WeightModes(MetaEnum):

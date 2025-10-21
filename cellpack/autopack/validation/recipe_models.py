@@ -58,6 +58,7 @@ class GradientMode(str, Enum):
     VECTOR = "vector"
     RADIAL = "radial"
     SURFACE = "surface"
+    UNIFORM = "uniform"
 
 
 class CoordinateSystem(str, Enum):
