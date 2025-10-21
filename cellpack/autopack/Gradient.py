@@ -112,6 +112,8 @@ class Gradient:
         """
         max_value = numpy.nanmax(values)
         min_value = numpy.nanmin(values)
+        if max_value == min_value:
+            return values
         return (values - min_value) / (max_value - min_value)
 
     @staticmethod
