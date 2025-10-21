@@ -1,18 +1,9 @@
 {
     "name": "debug",
-    "format": "simularium",
-    "inner_grid_method": "trimesh",
-    "live_packing": false,
-    "ordered_packing": false,
-    "out": "out/",
     "overwrite_place_method": true,
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": true,
-    "number_of_packings": 1,
-    "spacing": null,
-    "use_periodicity": false,
     "show_sphere_trees": true,
-    "load_from_grid_file": false,
     "save_converted_recipe": true
 }
