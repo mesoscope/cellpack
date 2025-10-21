@@ -120,6 +120,19 @@ REQUIRED_WEIGHT_MODE_OPTIONS = {
 }
 
 
+# default gradient settings for v2.0 to v2.1 migration
+DEFAULT_GRADIENT_MODE_SETTINGS = {
+    "mode": "X",
+    "weight_mode": "linear",
+    "pick_mode": "linear",
+    "description": "Linear gradient in the X direction",
+    "reversed": False,
+    "invert": None,
+    "mode_settings": {},
+    "weight_mode_settings": {},
+}
+
+
 class WeightModeSettings(BaseModel):
     decay_length: Optional[float] = Field(None, gt=0)
     power: Optional[float] = Field(None, gt=0)
