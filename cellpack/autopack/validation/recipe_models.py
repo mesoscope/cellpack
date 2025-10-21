@@ -52,9 +52,9 @@ class PickMode(str, Enum):
 
 
 class GradientMode(str, Enum):
-    X = "x"
-    Y = "y"
-    Z = "z"
+    X = "X"
+    Y = "Y"
+    Z = "Z"
     VECTOR = "vector"
     RADIAL = "radial"
     SURFACE = "surface"
@@ -206,7 +206,7 @@ class RecipeObject(BaseModel):
     # Standard format: "gradient_name"
     # Multiple gradients: ["gradient1", "gradient2"]
     # Unnested Firebase: {"name": "gradient_name", "mode": "surface", ...}
-    # Converted Firebase list: [{"name": "grad1", "mode": "x"}, {"name": "grad2", "mode": "y"}]
+    # Converted Firebase list: [{"name": "grad1", "mode": "X"}, {"name": "grad2", "mode": "Y"}]
     gradient: Optional[
         Union[str, List[str], "RecipeGradient", List["RecipeGradient"]]
     ] = None
