@@ -46,9 +46,11 @@
 # TODO: fix the save/restore grid
 """
 
-import numpy
-from random import random
 import bisect
+from random import random
+
+import numpy
+
 from cellpack.autopack.utils import get_distances_from_point
 
 
@@ -132,6 +134,13 @@ class Gradient:
         weight_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
         for i in range(len(gradient_list)):
             weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
+
+        if isinstance(gradient_weights, dict):
+            total = sum(gradient_weights.values())
+            gradient_weights = [
+                gradient_weights.get(gradient.name, 0) / total
+                for gradient in gradient_list
+            ]
 
         combined_weight = numpy.average(weight_list, axis=0, weights=gradient_weights)
         combined_weight = Gradient.scale_between_0_and_1(combined_weight)
