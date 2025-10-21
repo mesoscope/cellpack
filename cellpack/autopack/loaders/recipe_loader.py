@@ -9,7 +9,6 @@ import cellpack.autopack as autopack
 
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects import (
-    GradientData,
     Representations,
     default_recipe_values,
 )
@@ -238,7 +237,9 @@ class RecipeLoader(object):
         ):
             gradients = []
             for gradient_name, gradient_dict in recipe_data["gradients"].items():
-                gradients.append(GradientData(gradient_dict, gradient_name).data)
+                gradient_data = gradient_dict.copy()
+                gradient_data["name"] = gradient_name
+                gradients.append(gradient_data)
             recipe_data["gradients"] = gradients
         return recipe_data
 
