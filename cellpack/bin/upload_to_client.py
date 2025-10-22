@@ -51,7 +51,9 @@ def upload_to_client(
             "config": config_id,
             "editable_fields": editable_fields_ids,
         }
-        db_handler.upload_data("client_recipes", recipe_metadata)
+
+        # Upload the combined recipe metadata to example_packings collection for client
+        db_handler.upload_data("example_packings", recipe_metadata)
 
 def main():
     fire.Fire(upload_to_client)
