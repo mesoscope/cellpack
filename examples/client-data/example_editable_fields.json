@@ -1,0 +1,69 @@
+{
+  "editable_fields": [
+    {
+        "name": "Display Name",
+        "description": "Description text",
+        "path": "path.to.field.in.recipe.json",
+        "data_type": "integer/float/string",
+        "input_type": "slider/dropdown/gradient"
+    },
+    {
+        "name": "Endosome Count",
+        "description": "Number of spheres to be packed",
+        "path": "composition.membrane.regions.interior.1.count",
+        "data_type": "integer",
+        "input_type": "slider",
+        "min": 0,
+        "max": 300
+    },
+    {
+        "name": "Endosome Radius",
+        "description": "Radius of spheres. 1 voxel = 0.108µm",
+        "path": "objects.endosome.radius",
+        "data_type": "float",
+        "input_type": "slider",
+        "min": 0,
+        "max": 10,
+        "unit": "µm",
+        "conversion_factor": 0.108
+    },
+    {
+        "name": "Gradient Type",
+        "description": "Choose from one of the listed gradient types",
+        "path": "objects.endosome.gradient",
+        "data_type": "gradient",
+        "input_type": "gradient",
+        "gradient_options": [
+            {
+                "display_name": "Nucleus Gradient",
+                "value": "nucleus_gradient",
+                "path": "objects.endosome.gradient",
+                "packing_mode": "gradient",
+                "packing_mode_path": "objects.endosome.packing_mode",
+                "strength_path": "gradients.nucleus_gradient.weight_mode_settings.decay_length",
+                "strength_display_name": "Nucleus gradient strength",
+                "strength_description": "1 / Decay length of the gradient",
+                "strength_min": 0,
+                "strength_max": 100
+            },
+            {
+                "display_name": "Membrane Gradient",
+                "value": "membrane_gradient",
+                "path": "objects.endosome.gradient",
+                "packing_mode": "gradient",
+                "packing_mode_path": "objects.endosome.packing_mode",
+                "strength_path": "gradients.membrane_gradient.weight_mode_settings.decay_length",
+                "strength_display_name": "Membrane gradient strength",
+                "strength_description": "Description of gradient strength",
+                "strength_min": 0,
+                "strength_max": 100
+            },
+            {
+                "display_name": "No Gradient",
+                "value": "random",
+                "path": "objects.peroxisome.packing_mode"
+            }
+        ]
+    }
+  ]
+}
