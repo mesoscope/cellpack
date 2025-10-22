@@ -23,6 +23,8 @@ def get_recipe_metadata(loader):
         }
         if "grid_file_path" in loader.recipe_data:
             recipe_meta_data["grid_file_path"] = loader.recipe_data["grid_file_path"]
+        if "randomness_seed" in loader.recipe_data:
+            recipe_meta_data["randomness_seed"] = loader.recipe_data["randomness_seed"]
         return recipe_meta_data
     except KeyError as e:
         sys.exit(f"Recipe metadata is missing. {e}")
