@@ -347,8 +347,11 @@ class simulariumHelper(hostHelper.Helper):
 
         positions, values = self.sort_values(positions, values)
 
-        normalized_values = (values - np.min(values)) / (
-            np.max(values) - np.min(values)
+        max_value = np.nanmax(values)
+        min_value = np.nanmin(values)
+        value_range = max_value - min_value
+        normalized_values = (
+            (values - min_value) / value_range if value_range != 0 else values
         )
         colormap = matplotlib.cm.Reds(normalized_values)
 
