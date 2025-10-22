@@ -7,6 +7,7 @@ from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.bin.upload import get_recipe_metadata
 
+
 def upload_to_client(
     recipe: str,
     config: str,
@@ -55,8 +56,10 @@ def upload_to_client(
         # Upload the combined recipe metadata to example_packings collection for client
         db_handler.upload_data("example_packings", recipe_metadata)
 
+
 def main():
     fire.Fire(upload_to_client)
+
 
 if __name__ == "__main__":
     main()
