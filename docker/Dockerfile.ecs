@@ -4,8 +4,7 @@ WORKDIR /cellpack
 COPY . /cellpack
 
 RUN python -m pip install --upgrade pip --root-user-action=ignore
-RUN python -m pip install .
-RUN python -m pip install aiohttp mdutils
+RUN python -m pip install . --root-user-action=ignore
 
 EXPOSE 80
 
