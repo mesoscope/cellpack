@@ -111,10 +111,7 @@ class Gradient:
         Scale values between 0 and 1
         """
         max_value = numpy.nanmax(values)
-        min_value = numpy.nanmin(values)
-        if max_value == min_value:
-            return values
-        return (values - min_value) / (max_value - min_value)
+        return (values / max_value) if max_value != 0 else values
 
     @staticmethod
     def get_combined_gradient_weight(gradient_list, gradient_weights=None):
