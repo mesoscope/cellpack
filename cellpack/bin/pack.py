@@ -25,7 +25,7 @@ log = logging.getLogger()
 
 
 def pack(
-    recipe, config_path=None, analysis_config_path=None, docker=False, validate=True
+    recipe, config_path=None, analysis_config_path=None, docker=False, validate=True, recipe_str=None
 ):
     """
     Initializes an autopack packing from the command line
@@ -40,7 +40,7 @@ def pack(
     packing_config_data = ConfigLoader(config_path, docker).config
 
     recipe_loader = RecipeLoader(
-        recipe, packing_config_data["save_converted_recipe"], docker
+        recipe, packing_config_data["save_converted_recipe"], docker, recipe_str
     )
     recipe_data = recipe_loader.recipe_data
     analysis_config_data = {}
