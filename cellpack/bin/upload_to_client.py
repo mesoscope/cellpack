@@ -16,6 +16,15 @@ def upload_to_client(
     """
     Uploads recipe, config, and editable fields, read from specified
     JSON files, to the database for client access
+
+    :param recipe: string argument
+    path to local recipe file to upload to firebase
+    :param config: string argument
+    path to local config file to upload to firebase
+    :param fields: string argument
+    path to local editable fields file to upload to firebase
+    :param name: string argument
+    display name for recipe in client selection menu
     """
     db_handler = FirebaseHandler()
     recipe_id = ""
