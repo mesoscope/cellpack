@@ -8,12 +8,7 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.bin.upload import get_recipe_metadata
 
 
-def upload_to_client(
-    recipe: str,
-    config: str,
-    fields: str,
-    name: str
-):
+def upload_to_client(recipe: str, config: str, fields: str, name: str):
     """
     Uploads recipe, config, and editable fields, read from specified
     JSON files, to the database for client access
