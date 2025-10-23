@@ -30,7 +30,7 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path, save_converted_recipe=False, use_docker=False, recipe_obj=None):
+    def __init__(self, input_file_path, save_converted_recipe=False, use_docker=False, json_recipe=None):
         _, file_extension = os.path.splitext(input_file_path)
         self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
@@ -38,7 +38,7 @@ class RecipeLoader(object):
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
-        self.recipe_obj = recipe_obj
+        self.json_recipe = json_recipe
 
         # set CURRENT_RECIPE_PATH appropriately for remote(firebase) vs local recipes
         if autopack.is_remote_path(self.file_path):
@@ -170,7 +170,7 @@ class RecipeLoader(object):
 
     def _read(self, resolve_inheritance=True, use_docker=False):
         new_values, database_name, is_unnested_firebase = autopack.load_file(
-            self.file_path, cache="recipes", use_docker=use_docker, recipe_obj=self.recipe_obj
+            self.file_path, cache="recipes", use_docker=use_docker, json_recipe=self.json_recipe
         )
         if database_name == "firebase":
             if is_unnested_firebase:
