@@ -1,6 +1,6 @@
 import copy
 
-from ..interface_objects.gradient_data import GradientData, ModeOptions
+from ..validation.recipe_models import DEFAULT_GRADIENT_MODE_SETTINGS, ModeOptions
 
 
 def convert_partners(object_data):
@@ -33,11 +33,13 @@ def convert_partners(object_data):
 
 def convert_gradients(old_gradients_dict):
     new_gradients_dict = {}
+    mode_setting_keys = [option.value for option in ModeOptions]
+
     for gradient_name, gradient_dict in old_gradients_dict.items():
-        gradient_data = copy.deepcopy(GradientData.default_values)
+        gradient_data = copy.deepcopy(DEFAULT_GRADIENT_MODE_SETTINGS)
 
         for key, value in gradient_dict.items():
-            if ModeOptions.is_member(key):
+            if key in mode_setting_keys:
                 gradient_data["mode_settings"][key] = value
             else:
                 gradient_data[key] = value
