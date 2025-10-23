@@ -16,7 +16,7 @@ class CellpackServer:
         os.environ["AWS_BATCH_JOB_ID"] = job_id
         self.update_job_status(job_id, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True, recipe_str=body)
+            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body)
         except Exception as e:
             self.update_job_status(job_id, "FAILED", error_message=str(e))
 
