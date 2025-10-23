@@ -61,7 +61,7 @@
             {
                 "display_name": "No Gradient",
                 "value": "random",
-                "path": "objects.peroxisome.packing_mode"
+                "path": "objects.endosome.packing_mode"
             }
         ]
     }

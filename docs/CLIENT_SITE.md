@@ -6,7 +6,7 @@ The cellPACK client site allows users to edit example recipes, run packings, and
 * GitHub repository: https://github.com/AllenCell/cellpack-client
 
 ### Publishing Recipes to Client Site
-To add new example recipes to the client site, the recipe and it's associated metadata must be uploaded to Firebase. 
+To add new example recipes to the client site, the recipe and its associated metadata must be uploaded to Firebase.
 
 1. Set up access to the staging Firebase account, following [these instructions](https://github.com/mesoscope/cellpack/blob/main/docs/REMOTE_DATABASES.md#firebase-firestore)
 2. Determine which recipe fields should be editable in the client, and create a JSON file specifying these editable fields following the schema outlined in [this example](https://github.com/mesoscope/cellpack/blob/0f140859824086d73edab008ff381b5e5717db8b/examples/client-data/example_editable_fields.json)
