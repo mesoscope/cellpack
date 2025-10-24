@@ -57,6 +57,8 @@ jobs:
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
             - uses: iterative/setup-cml@v2
+              with:
+                vega: false # we only use CML to post markdown reports, so disable vega to skip extra npm installs
             - name: Update comment for dependabot
               if: ${{ github.actor == 'dependabot[bot]' }}
               env:
