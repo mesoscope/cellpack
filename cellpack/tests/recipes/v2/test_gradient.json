@@ -1,0 +1,102 @@
+{
+    "version": "default",
+    "format_version": "2.0",
+    "name": "test_gradient",
+    "bounding_box": [
+        [
+            -100,
+            -100,
+            0
+        ],
+        [
+            100,
+            100,
+            1
+        ]
+    ],
+    "gradients": {
+        "radial_gradient": {
+            "mode": "radial",
+            "description": "Radial gradient from the center",
+            "weight_mode": "cube",
+            "pick_mode": "rnd",
+            "mode_settings": {
+                "direction": [
+                    0,
+                    0,
+                    0
+                ],
+                "radius": 150,
+                "center": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        "vector_gradient": {
+            "mode": "vector",
+            "description": "Gradient away from the plane formed by center and vector",
+            "weight_mode": "cube",
+            "pick_mode": "rnd",
+            "mode_settings": {
+                "direction": [
+                    1,
+                    1,
+                    0
+                ]
+            }
+        },
+        "uniform_gradient": {
+            "mode": "uniform",
+            "description": "Uniform gradient"
+        }
+    },
+    "objects": {
+        "base": {
+            "packing_mode": "gradient",
+            "principal_vector": [
+                0,
+                0,
+                1
+            ],
+            "place_method": "jitter",
+            "jitter_attempts": 100,
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "sphere": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "gradient": "radial_gradient",
+            "radius": 5,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere",
+            "count": 100
+        }
+    }
+}
