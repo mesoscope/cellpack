@@ -106,9 +106,9 @@ class Gradient:
         return ingr
 
     @staticmethod
-    def scale_between_0_and_1(values):
+    def normalize_by_max_value(values):
         """
-        Scale values between 0 and 1
+        Normalize values by their maximum value
         """
         max_value = numpy.nanmax(values)
         return (values / max_value) if max_value != 0 else values
@@ -132,7 +132,7 @@ class Gradient:
 
         weight_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
         for i in range(len(gradient_list)):
-            weight_list[i] = Gradient.scale_between_0_and_1(gradient_list[i].weight)
+            weight_list[i] = Gradient.normalize_by_max_value(gradient_list[i].weight)
 
         if isinstance(gradient_weights, dict):
             total = sum(gradient_weights.values())
@@ -142,7 +142,7 @@ class Gradient:
             ]
 
         combined_weight = numpy.average(weight_list, axis=0, weights=gradient_weights)
-        combined_weight = Gradient.scale_between_0_and_1(combined_weight)
+        combined_weight = Gradient.normalize_by_max_value(combined_weight)
 
         return combined_weight
 
@@ -166,7 +166,7 @@ class Gradient:
         """
         weights_to_use = numpy.take(weight, points)
         weights_to_use[numpy.isnan(weights_to_use)] = 0
-        weights_to_use = Gradient.scale_between_0_and_1(weights_to_use)
+        weights_to_use = Gradient.normalize_by_max_value(weights_to_use)
 
         point_probabilities = weights_to_use / numpy.sum(weights_to_use)
 
@@ -336,7 +336,7 @@ class Gradient:
 
     def set_weights_by_mode(self):
 
-        self.scaled_distances = Gradient.scale_between_0_and_1(self.distances)
+        self.scaled_distances = Gradient.normalize_by_max_value(self.distances)
 
         if (numpy.nanmax(self.scaled_distances) > 1.0) or (
             numpy.nanmin(self.scaled_distances) < 0.0
@@ -366,7 +366,7 @@ class Gradient:
             raise ValueError(f"Unknown weight mode: {self.weight_mode}")
 
         # normalize the weight
-        self.weight = Gradient.scale_between_0_and_1(self.weight)
+        self.weight = Gradient.normalize_by_max_value(self.weight)
 
         if (numpy.nanmax(self.weight) > 1.0) or (numpy.nanmin(self.weight) < 0.0):
             raise ValueError(
@@ -511,7 +511,7 @@ class Gradient:
             )
             if channel_values is None:
                 continue
-            normalized_values = Gradient.scale_between_0_and_1(channel_values)
+            normalized_values = Gradient.normalize_by_max_value(channel_values)
             reshaped_values = numpy.reshape(
                 normalized_values, image_writer.image_size, order="F"
             )
