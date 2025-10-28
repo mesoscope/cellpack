@@ -72,7 +72,7 @@ pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json
 pack -r examples/recipes/v2/spheres_in_a_box.json
 ```
 
-![Multi-Sphere Result](docs/images/sphere_in_a_box_res.png)
+![Multi-Sphere Result](docs/images/spheres_in_a_box_res.png)
 
 ### Remote Recipe Loading
 You can also load recipes directly from remote servers:
