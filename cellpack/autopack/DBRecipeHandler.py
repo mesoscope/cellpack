@@ -853,6 +853,8 @@ class DBRecipeLoader(object):
         }
         if db_recipe_data.get("grid_file_path"):
             recipe_data["grid_file_path"] = db_recipe_data.get("grid_file_path")
+        if db_recipe_data.get("randomness_seed"):
+            recipe_data["randomness_seed"] = db_recipe_data.get("randomness_seed")
         if grad_dict:
             recipe_data["gradients"] = [
                 {**v} for v in DBRecipeLoader.remove_dedup_hash(grad_dict).values()
