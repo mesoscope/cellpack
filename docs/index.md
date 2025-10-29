@@ -23,7 +23,8 @@ CONTRIBUTING
 ```
 
 ```{include} ../README.md
-:relative-docs: ./docs/
+:relative-docs: docs/
+:relative-images:
 ```
 
 - {ref}`genindex`

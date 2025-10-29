@@ -52,6 +52,8 @@ cellPACK supports two recipe formats: **v1** (legacy) from the original publicat
 pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json
 ```
 
+![Blood Plasma Model Result](docs/images/nm_analysis_figure_b1_res.png)
+
 #### v2 Recipes (Modern Format)
 **v2 recipes** use a modernized schema with improved structure and features:
 - Cleaner organization with `objects` and `composition` sections
@@ -69,6 +71,8 @@ pack -r examples/recipes/v1/NM_Analysis_FigureB1.0.json
 ```bash
 pack -r examples/recipes/v2/spheres_in_a_box.json
 ```
+
+![Multi-Sphere Result](docs/images/spheres_in_a_box_res.png)
 
 ### Remote Recipe Loading
 You can also load recipes directly from remote servers:

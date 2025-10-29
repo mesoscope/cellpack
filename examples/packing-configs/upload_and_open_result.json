@@ -1,5 +1,6 @@
 {
     "name": "upload_results_and_open_in_browser",
     "upload_results": true,
-    "open_results_in_browser": true
+    "open_results_in_browser": true,
+    "save_analyze_result": true
 }
