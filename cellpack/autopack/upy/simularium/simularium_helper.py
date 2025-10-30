@@ -1328,12 +1328,12 @@ class simulariumHelper(hostHelper.Helper):
                     n_subpoints[t][n] = 0
                 n += 1
 
-        camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
+        camera_z_position = box_size[2] * 1.5
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array(box_size),
                 camera_defaults=CameraData(
-                    position=np.array([10.0, 0.0, camera_z_position]),
+                    position=np.array([0.0, box_size[1] * 1.1, camera_z_position]),
                     look_at_position=np.array([0.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),
