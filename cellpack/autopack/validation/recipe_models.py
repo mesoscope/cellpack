@@ -33,6 +33,25 @@ class PlaceMethod(str, Enum):
     SPHERES_SST = "spheresSST"
 
 
+class CoordinateSystem(str, Enum):
+    LEFT = "left"
+    RIGHT = "right"
+
+
+# 3-element float array - used for 3D vectors, colors, etc.
+ThreeFloatArray = List[float]
+
+
+# GRADIENT CLASSES
+class GradientMode(str, Enum):
+    X = "X"
+    Y = "Y"
+    Z = "Z"
+    VECTOR = "vector"
+    RADIAL = "radial"
+    SURFACE = "surface"
+
+
 class WeightMode(str, Enum):
     LINEAR = "linear"
     SQUARE = "square"
@@ -51,22 +70,67 @@ class PickMode(str, Enum):
     REG = "reg"
 
 
-class GradientMode(str, Enum):
-    X = "x"
-    Y = "y"
-    Z = "z"
-    VECTOR = "vector"
-    RADIAL = "radial"
-    SURFACE = "surface"
+class ModeOptions(str, Enum):
+    """
+    All available options for individual modes
+    """
+
+    direction = "direction"
+    center = "center"
+    radius = "radius"
+    gblob = "gblob"
+    object = "object"
+    scale_distance_between = "scale_distance_between"
 
 
-class CoordinateSystem(str, Enum):
-    LEFT = "left"
-    RIGHT = "right"
+class InvertOptions(str, Enum):
+    """
+    All available options for individual invert modes
+    """
+
+    weight = "weight"
+    distance = "distance"
 
 
-# 3-element float array - used for 3D vectors, colors, etc.
-ThreeFloatArray = List[float]
+class WeightModeOptions(str, Enum):
+    """
+    All available options for individual weight modes
+    """
+
+    power = "power"
+    decay_length = "decay_length"
+
+
+REQUIRED_MODE_OPTIONS = {
+    GradientMode.VECTOR: [ModeOptions.direction],
+    GradientMode.SURFACE: [ModeOptions.object],
+}
+
+
+DIRECTION_MAP = {
+    GradientMode.X: [1, 0, 0],
+    GradientMode.Y: [0, 1, 0],
+    GradientMode.Z: [0, 0, 1],
+}
+
+
+REQUIRED_WEIGHT_MODE_OPTIONS = {
+    WeightMode.POWER: [WeightModeOptions.power],
+    WeightMode.EXPONENTIAL: [WeightModeOptions.decay_length],
+}
+
+
+# default gradient settings for v2.0 to v2.1 migration
+DEFAULT_GRADIENT_MODE_SETTINGS = {
+    "mode": "X",
+    "weight_mode": "linear",
+    "pick_mode": "linear",
+    "description": "Linear gradient in the X direction",
+    "reversed": False,
+    "invert": None,
+    "mode_settings": {},
+    "weight_mode_settings": {},
+}
 
 
 class WeightModeSettings(BaseModel):
@@ -89,45 +153,67 @@ class RecipeGradient(BaseModel):
     pick_mode: PickMode = Field(PickMode.LINEAR)
     weight_mode: Optional[WeightMode] = None
     reversed: Optional[bool] = None
-    invert: Optional[bool] = None
+    invert: Optional[InvertOptions] = None
     weight_mode_settings: Optional[WeightModeSettings] = None
     mode_settings: Optional[GradientModeSettings] = None
 
     @model_validator(mode="after")
     def validate_mode_requirements(self):
         """Validate that required `mode_settings` exist for modes that need them"""
-        # surface mode requires mode_settings with object
-        if self.mode == GradientMode.SURFACE:
+        required_options = REQUIRED_MODE_OPTIONS.get(self.mode)
+
+        if required_options:
             if not self.mode_settings:
-                raise ValueError("Surface gradient mode requires 'mode_settings' field")
-            if (
-                not hasattr(self.mode_settings, "object")
-                or not self.mode_settings.object
-            ):
                 raise ValueError(
-                    "Surface gradient mode requires 'object' in mode_settings"
+                    f"{self.mode.value} gradient mode requires 'mode_settings' field"
                 )
 
-        # vector mode requires mode_settings with direction
-        elif self.mode == GradientMode.VECTOR:
-            if not self.mode_settings:
-                raise ValueError("Vector gradient mode requires 'mode_settings' field")
-            if (
-                not hasattr(self.mode_settings, "direction")
-                or not self.mode_settings.direction
-            ):
+            for option in required_options:
+                option_name = option.value if hasattr(option, "value") else option
+                if (
+                    not hasattr(self.mode_settings, option_name)
+                    or getattr(self.mode_settings, option_name) is None
+                ):
+                    raise ValueError(
+                        f"{self.mode.value} gradient mode requires '{option_name}' in mode_settings"
+                    )
+
+        # vector mode direction must be non-zero
+        if self.mode == GradientMode.VECTOR and self.mode_settings:
+            if self.mode_settings.direction:
+                import math
+
+                magnitude = math.sqrt(sum(x**2 for x in self.mode_settings.direction))
+                if magnitude == 0:
+                    raise ValueError(
+                        "Vector gradient mode requires a non-zero direction vector"
+                    )
+
+        return self
+
+    @model_validator(mode="after")
+    def validate_weight_mode_requirements(self):
+        """Validate that required `weight_mode_settings` exist for weight modes that need them"""
+        if self.weight_mode is None:
+            return self
+
+        required_options = REQUIRED_WEIGHT_MODE_OPTIONS.get(self.weight_mode)
+
+        if required_options:
+            if not self.weight_mode_settings:
                 raise ValueError(
-                    "Vector gradient mode requires 'direction' in mode_settings"
+                    f"{self.weight_mode.value} weight mode requires 'weight_mode_settings' field"
                 )
 
-            # validate that direction vector is not zero (only for vector mode)
-            import math
-
-            magnitude = math.sqrt(sum(x**2 for x in self.mode_settings.direction))
-            if magnitude == 0:
-                raise ValueError(
-                    "Vector gradient mode requires a non-zero direction vector"
-                )
+            for option in required_options:
+                option_name = option.value if hasattr(option, "value") else option
+                if (
+                    not hasattr(self.weight_mode_settings, option_name)
+                    or getattr(self.weight_mode_settings, option_name) is None
+                ):
+                    raise ValueError(
+                        f"{self.weight_mode.value} weight mode requires '{option_name}' in weight_mode_settings"
+                    )
 
         return self
 
@@ -206,7 +292,7 @@ class RecipeObject(BaseModel):
     # Standard format: "gradient_name"
     # Multiple gradients: ["gradient1", "gradient2"]
     # Unnested Firebase: {"name": "gradient_name", "mode": "surface", ...}
-    # Converted Firebase list: [{"name": "grad1", "mode": "x"}, {"name": "grad2", "mode": "y"}]
+    # Converted Firebase list: [{"name": "grad1", "mode": "X"}, {"name": "grad2", "mode": "Y"}]
     gradient: Optional[
         Union[str, List[str], "RecipeGradient", List["RecipeGradient"]]
     ] = None
