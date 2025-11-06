@@ -134,7 +134,7 @@ DEFAULT_GRADIENT_MODE_SETTINGS = {
 
 
 class WeightModeSettings(BaseModel):
-    decay_length: Optional[float] = Field(None, gt=0)
+    decay_length: Optional[float] = Field(None, ge=0)
     power: Optional[float] = Field(None, gt=0)
 
 
