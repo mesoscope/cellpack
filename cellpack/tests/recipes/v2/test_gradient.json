@@ -34,6 +34,28 @@
                 ]
             }
         },
+        "zero_decay": {
+            "mode": "radial",
+            "description": "Radial gradient with zero decay",
+            "weight_mode": "exponential",
+            "pick_mode": "rnd",
+            "weight_mode_settings": {
+                "decay_length": 0.0
+            },
+            "mode_settings": {
+                "direction": [
+                    0,
+                    0,
+                    0
+                ],
+                "radius": 150,
+                "center": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
         "vector_gradient": {
             "mode": "vector",
             "description": "Gradient away from the plane formed by center and vector",
