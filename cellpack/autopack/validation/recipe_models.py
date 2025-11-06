@@ -50,6 +50,7 @@ class GradientMode(str, Enum):
     VECTOR = "vector"
     RADIAL = "radial"
     SURFACE = "surface"
+    UNIFORM = "uniform"
 
 
 class WeightMode(str, Enum):
@@ -284,7 +285,7 @@ class RecipeObject(BaseModel):
     partners: Optional[Union[List[Partner], Dict[str, Any]]] = None
     # Gradient field supports multiple formats:
     # - str: Simple reference to gradient name (standard format)
-    # - List[str]: List of gradient names (for multiple gradients)
+    # - List[str] OR dict[str, dict[str, Any]]: List of gradient names (for multiple gradients)
     # - RecipeGradient: Full gradient definition (for unnested Firebase recipes)
     # - List[RecipeGradient]: List of full gradient definitions (for unnested Firebase recipes)
     #
@@ -294,7 +295,13 @@ class RecipeObject(BaseModel):
     # Unnested Firebase: {"name": "gradient_name", "mode": "surface", ...}
     # Converted Firebase list: [{"name": "grad1", "mode": "X"}, {"name": "grad2", "mode": "Y"}]
     gradient: Optional[
-        Union[str, List[str], "RecipeGradient", List["RecipeGradient"]]
+        Union[
+            str,
+            list[str],
+            dict[str, dict[str, Any]],
+            "RecipeGradient",
+            list["RecipeGradient"],
+        ]
     ] = None
     weight: Optional[float] = Field(None, ge=0)
     is_attractor: Optional[bool] = None
