@@ -1,11 +1,11 @@
-import json
 import logging
 import logging.config
-import fire
 from pathlib import Path
 
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+import fire
+
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 log_file_path = Path(__file__).parent.parent / "logging.conf"
@@ -36,7 +36,8 @@ def validate(recipe_path):
                 "Remote database not initialized. Please set up credentials for the database."
             )
             log.error(
-                "See: https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
+                "See: https://github.com/mesoscope/cellpack?tab=readme-ov-file"
+                "#introduction-to-remote-databases"
             )
         else:
             log.error(f"Error loading recipe: {e}")

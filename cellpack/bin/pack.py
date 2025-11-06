@@ -1,4 +1,3 @@
-import json
 import logging
 import logging.config
 import os
@@ -6,7 +5,6 @@ import time
 from pathlib import Path
 
 import fire
-from pydantic import ValidationError
 
 from cellpack import autopack
 from cellpack.autopack import upy
