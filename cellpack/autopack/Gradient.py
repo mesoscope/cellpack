@@ -359,9 +359,12 @@ class Gradient:
                 "power"
             ]
         elif self.weight_mode == "exponential":
-            self.weight = numpy.exp(
-                -self.scaled_distances / self.weight_mode_settings["decay_length"]
-            )
+            if self.weight_mode_settings["decay_length"] == 0:
+                self.weight = numpy.ones(len(self.scaled_distances))
+            else:
+                self.weight = numpy.exp(
+                    -self.scaled_distances / self.weight_mode_settings["decay_length"]
+                )
         else:
             raise ValueError(f"Unknown weight mode: {self.weight_mode}")
 
