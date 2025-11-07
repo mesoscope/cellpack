@@ -2,8 +2,8 @@ import copy
 
 from cellpack.autopack.utils import deep_merge
 
-from ...validation.recipe_models import DEFAULT_GRADIENT_MODE_SETTINGS
-from ..meta_enum import MetaEnum
+from .default_values import DEFAULT_GRADIENT_MODE_SETTINGS
+from .meta_enum import MetaEnum
 
 """
 GradientData provides a class to pass sanitized arguments to create gradients

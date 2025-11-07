@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-ARCHIVED: This test file was for the old GradientData class which has been replaced
-with pydantic validation models (RecipeGradient in recipe_models.py).
-
 Docs: https://docs.pytest.org/en/latest/example/simple.html
     https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 import pytest
-from cellpack.autopack.interface_objects.archive.gradient_data import GradientData
+from cellpack.autopack.interface_objects import GradientData
 
 
 @pytest.mark.parametrize(
