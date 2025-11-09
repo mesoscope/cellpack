@@ -71,20 +71,6 @@ class PickMode(str, Enum):
     REG = "reg"
 
 
-class GradientMode(str, Enum):
-    X = "x"
-    Y = "y"
-    Z = "z"
-    VECTOR = "vector"
-    RADIAL = "radial"
-    SURFACE = "surface"
-
-
-class CoordinateSystem(str, Enum):
-    LEFT = "left"
-    RIGHT = "right"
-
-
 # 3-element float array - used for 3D vectors, colors, etc.
 ThreeFloatArray = List[float]
 
