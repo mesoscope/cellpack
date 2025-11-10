@@ -12,8 +12,8 @@ cd /path/to/directory/
 **2. Clone the repo from GitHub**
 
 ```bash
-git clone git@github.com:mesoscope/cellpack-analysis.git
-cd cellpack-analysis
+git clone git@github.com:mesoscope/cellpack.git
+cd cellpack
 ```
 
 **3. Install the dependencies using uv**

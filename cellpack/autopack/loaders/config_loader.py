@@ -35,7 +35,7 @@ class ConfigLoader(object):
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
-        "open_results_in_browser": True,
+        "open_results_in_browser": False,
         "parallel": False,
         "place_method": "spheresSST",
         "randomness_seed": None,
@@ -47,7 +47,7 @@ class ConfigLoader(object):
         "show_sphere_trees": False,
         "show_progress_bar": True,
         "spacing": None,
-        "upload_results": True,
+        "upload_results": False,
         "use_periodicity": False,
         "version": 1.0,
     }

@@ -45,6 +45,10 @@ class FirebaseHandler(object):
         if default_db in options.values():
             log.debug(f"Using {default_db} database -------------")
             return default_db
+        # detect if running in a non-interactive environment(CI, Docker, etc), default to staging db
+        if not os.isatty(0):
+            log.debug("Non-interactive environment detected, using staging database")
+            return "staging"
         choice = input(
             f"Enter number for database ({', '.join([f'{k}: {v}' for k, v in options.items()])}): "
         ).strip()
