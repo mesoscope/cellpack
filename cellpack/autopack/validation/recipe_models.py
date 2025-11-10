@@ -417,10 +417,12 @@ class CompositionEntry(BaseModel):
 # RECIPE-METADATA-LEVEL
 class Recipe(BaseModel):
     name: str
+    description: Optional[str] = None
     version: str = Field("1.0.0")
     format_version: str = Field("2.0")
     bounding_box: List[List[float]] = Field([[0, 0, 0], [100, 100, 100]])
     grid_file_path: Optional[str] = None
+    randomness_seed: Optional[int] = None
     objects: Dict[str, RecipeObject] = Field(default_factory=dict)
     gradients: Union[Dict[str, RecipeGradient], List[Dict[str, Any]]] = Field(
         default_factory=dict
