@@ -21,6 +21,8 @@ def get_recipe_metadata(loader):
             "bounding_box": loader.recipe_data["bounding_box"],
             "composition": {},
         }
+        if "description" in loader.recipe_data:
+            recipe_meta_data["description"] = loader.recipe_data["description"]
         if "grid_file_path" in loader.recipe_data:
             recipe_meta_data["grid_file_path"] = loader.recipe_data["grid_file_path"]
         if "randomness_seed" in loader.recipe_data:
