@@ -2,6 +2,7 @@
     "version": "gradient_packing",
     "format_version": "2.1",
     "name": "golgi_endosome",
+    "description": "Endosome puncta (represented as spheres) packed in and around mesh containers representing the cell membrane, the nucleus, and the Golgi, derived from a segmented hiPS cell.",
     "bounding_box": [
         [
             34.5,
