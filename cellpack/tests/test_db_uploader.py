@@ -27,6 +27,7 @@ def test_upload_data_with_recipe_and_id():
     collection = "recipe"
     data = {
         "name": "test",
+        "description": "test_description",
         "bounding_box": [[0, 0, 0], [1000, 1000, 1]],
         "version": "1.0.0",
         "composition": {"test": {"inherit": "firebase:test_collection/test_id"}},
@@ -147,11 +148,13 @@ def test_upload_collections():
 def test_upload_recipe():
     recipe_meta_data = {
         "name": "one_sphere",
+        "description": "test_description",
         "version": "1.0.0",
         "composition": {},
     }
     recipe_data = {
         "name": "one_sphere",
+        "description": "test_description",
         "version": "1.0.0",
         "objects": {
             "sphere_25": {
