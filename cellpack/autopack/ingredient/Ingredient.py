@@ -425,7 +425,7 @@ class Ingredient(Agent):
             if isinstance(ingredient_info["gradient"], list):
                 if "gradient_weights" in ingredient_info:
                     # check if gradient_weights are missing
-                    if not isinstance(ingredient_info["gradient_weights"], list):
+                    if not isinstance(ingredient_info["gradient_weights"], list | dict):
                         raise Exception(
                             f"Invalid gradient weights for ingredient {ingredient_info['name']}"
                         )
