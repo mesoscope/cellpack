@@ -1328,7 +1328,9 @@ class simulariumHelper(hostHelper.Helper):
                     n_subpoints[t][n] = 0
                 n += 1
 
-        camera_z_position = box_size[2] * 1.5
+        # use max dimension to make sure camera captures entire scene
+        max_box_dimension = max(box_size)
+        camera_z_position = max_box_dimension * 2.5
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array(box_size),
