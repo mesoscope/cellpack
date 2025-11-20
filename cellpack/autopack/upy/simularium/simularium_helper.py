@@ -1394,7 +1394,9 @@ class simulariumHelper(hostHelper.Helper):
                 simulariumHelper.open_in_simularium(url)
 
     @staticmethod
-    def store_result_file(file_path, storage=None, batch_job_id=None, sub_folder="simularium"):
+    def store_result_file(
+        file_path, storage=None, batch_job_id=None, sub_folder="simularium"
+    ):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
             # if batch_job_id is not None, then we are in a batch job and should use the temp bucket
