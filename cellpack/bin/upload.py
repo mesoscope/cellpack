@@ -4,7 +4,7 @@ import json
 
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
-
+from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
@@ -36,6 +36,7 @@ def upload(
     studio: bool = False,
     fields: str = None,
     name: str = None,
+    output_file: str = None,
 ):
     """
     Uploads a recipe to the database
@@ -52,11 +53,19 @@ def upload(
     path to local editable fields file to upload to firebase
     :param name: string argument
     display name for recipe in studio selection menu
+    :param output_file: string argument
+    path to local simularium output file to upload
 
     :return: void
     """
+    if studio and (not name or not recipe_path or not config_path or not fields):
+        sys.exit(
+            "To upload a recipe for cellPACK studio, please provide --name, --recipe_path, --config_path, and --fields arguments."
+        )
+
     recipe_id = ""
     config_id = ""
+    result_url = ""
     editable_fields_ids = []
     if db_id == DATABASE_IDS.FIREBASE:
         # fetch the service key json file
@@ -76,12 +85,17 @@ def upload(
                 for field in editable_fields_data.get("editable_fields", []):
                     id, _ = db_handler.upload_data("editable_fields", field)
                     editable_fields_ids.append(id)
+            if output_file:
+                _, result_url = simulariumHelper.store_result_file(
+                    output_file, storage="aws", sub_folder="client"
+                )
             if studio:
                 recipe_metadata = {
                     "name": name,
                     "recipe": recipe_id,
                     "config": config_id,
                     "editable_fields": editable_fields_ids,
+                    "result_path": result_url,
                 }
                 # Upload the combined recipe metadata to example_packings collection for studio
                 db_handler.upload_data("example_packings", recipe_metadata)
