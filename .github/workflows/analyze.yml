@@ -57,7 +57,7 @@ jobs:
             - name: Copy files to results bucket
               run: aws s3 cp ./results s3://cellpack-results/${{  github.ref_name  }}/ --recursive --acl public-read
             - name: Update comment for dependabot
-              if: ${{ github.actor == 'dependabot[bot]' }}
+              if: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
               env:
                   GH_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
               run: |
@@ -70,7 +70,7 @@ jobs:
                   echo -e "$COMMENT_BODY" | gh pr comment ${{ github.event.pull_request.number }} --body-file -
                   cat ./results/analysis_report.md
             - name: Update comment for PR
-              if: ${{ github.actor != 'dependabot[bot]' }}
+              if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
