@@ -390,7 +390,7 @@ def main():
         converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
-        camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
+        camera_z_position = box_size[2] * 1.5
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array(box_size),
