@@ -6,6 +6,7 @@ on:
             - main
             - test/workflow
     pull_request:
+    workflow_dispatch:
 
 jobs:
     Analyze:
