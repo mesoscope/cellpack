@@ -565,6 +565,18 @@ class DBUploader(object):
                 },
             )
 
+    def save_recipe_and_config_to_output(self, output_folder, recipe_path, config_data):
+
+        output_path = Path(output_folder)
+        recipe_output_path = output_path / "recipe.json"
+        shutil.copy(recipe_path, recipe_output_path)
+        logging.debug(f"Saved recipe to {recipe_output_path}")
+
+        config_path = output_path / "config.json"
+        with open(config_path, "w") as f:
+            json.dump(config_data, f, indent=2)
+        logging.debug(f"Saved config to {config_path}")
+
     def upload_packing_results_workflow(self, source_folder, recipe_name, job_id):
         """
         Complete packing results upload workflow including folder preparation and s3 upload

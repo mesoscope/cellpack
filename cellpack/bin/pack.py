@@ -88,6 +88,12 @@ def pack(
                 region_name="us-west-2",
             )
             uploader = DBUploader(db_handler=initialized_handler)
+            uploader.save_recipe_and_config_to_output(
+                output_folder=env.out_folder,
+                recipe_path=recipe,
+                config_data=packing_config_data,
+            )
+
             uploader.upload_packing_results_workflow(
                 source_folder=env.out_folder,
                 recipe_name=recipe_data["name"],
