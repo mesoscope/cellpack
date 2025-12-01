@@ -516,6 +516,7 @@ class DBUploader(object):
         recipe_to_save = self.upload_collections(recipe_meta_data, recipe_data)
         recipe_to_save["recipe_path"] = self.db.create_path("recipes", recipe_id)
         self.upload_data("recipes", recipe_to_save, recipe_id)
+        return recipe_id
 
     def upload_config(self, config_data, source_path):
         """
@@ -527,7 +528,7 @@ class DBUploader(object):
         # update the config data with the firebase doc path
         config_data["config_path"] = doc_path
         self.db.update_doc("configs", id, config_data)
-        return
+        return id
 
     def upload_result_metadata(self, file_name, url, job_id=None):
         """
