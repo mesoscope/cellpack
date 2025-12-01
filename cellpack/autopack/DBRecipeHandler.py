@@ -570,7 +570,9 @@ class DBUploader(object):
     def save_recipe_and_config_to_output(self, output_folder, recipe_path, config_data):
 
         # Define the explicit directory under which all recipes must reside.
-        RECIPES_BASE_DIR = Path(os.environ.get("CELLPACK_RECIPES_BASE_DIR", str(Path.cwd()))).resolve()
+        RECIPES_BASE_DIR = Path(
+            os.environ.get("CELLPACK_RECIPES_BASE_DIR", str(Path.cwd()))
+        ).resolve()
 
         output_path = Path(output_folder)
 
