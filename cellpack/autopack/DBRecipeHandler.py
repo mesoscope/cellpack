@@ -568,8 +568,16 @@ class DBUploader(object):
     def save_recipe_and_config_to_output(self, output_folder, recipe_path, config_data):
 
         output_path = Path(output_folder)
+
+        recipe_file_path = Path(recipe_path).resolve()
+        cwd = Path.cwd().resolve()
+
+        # check if recipe path is within current working directory
+        if not recipe_file_path.is_relative_to(cwd):
+            raise ValueError(f"Recipe path outside working directory: {recipe_path}")
+
         recipe_output_path = output_path / "recipe.json"
-        shutil.copy(recipe_path, recipe_output_path)
+        shutil.copy(recipe_file_path, recipe_output_path)
         logging.debug(f"Saved recipe to {recipe_output_path}")
 
         config_path = output_path / "config.json"
