@@ -58,9 +58,9 @@ def upload(
 
     :return: void
     """
-    if studio and (not name or not recipe_path or not config_path or not fields):
+    if studio and (not name or not recipe_path or not fields):
         sys.exit(
-            "To upload a recipe for cellPACK studio, please provide --name, --recipe_path, --config_path, and --fields arguments."
+            "To upload a recipe for cellPACK studio, please provide --name, --recipe_path, and --fields arguments."
         )
 
     recipe_id = ""
