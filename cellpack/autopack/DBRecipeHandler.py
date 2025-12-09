@@ -13,6 +13,7 @@ import hashlib
 import json
 import requests
 
+import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
 
 
@@ -567,26 +568,34 @@ class DBUploader(object):
                 },
             )
 
-    def save_recipe_and_config_to_output(self, output_folder, recipe_path, config_data):
-
-        # Define the explicit directory under which all recipes must reside.
-        RECIPES_BASE_DIR = Path(
-            os.environ.get("CELLPACK_RECIPES_BASE_DIR", str(Path.cwd()))
-        ).resolve()
-
+    def save_recipe_and_config_to_output(
+        self, output_folder, recipe_path, config_data, recipe_data=None
+    ):
         output_path = Path(output_folder)
-
-        # Normalize the recipe path relative to the recipes base dir
-        recipe_candidate_path = (RECIPES_BASE_DIR / recipe_path).resolve()
-        # check if recipe path is within the recipes base directory
-        try:
-            recipe_candidate_path.relative_to(RECIPES_BASE_DIR)
-        except ValueError:
-            raise ValueError(f"Recipe path outside allowed directory: {recipe_path}")
-
         recipe_output_path = output_path / "recipe.json"
-        shutil.copy(recipe_candidate_path, recipe_output_path)
-        logging.debug(f"Saved recipe to {recipe_output_path}")
+
+        if recipe_path and autopack.is_remote_path(recipe_path):
+            # for firebase, write the loaded recipe data as json
+            if recipe_data:
+                with open(recipe_output_path, "w") as f:
+                    json.dump(recipe_data, f, indent=2)
+                logging.debug(f"Saved recipe to {recipe_output_path}")
+        elif recipe_path:
+            # for local paths, copy the file
+            RECIPES_BASE_DIR = Path(
+                os.environ.get("CELLPACK_RECIPES_BASE_DIR", str(Path.cwd()))
+            ).resolve()
+
+            recipe_candidate_path = (RECIPES_BASE_DIR / recipe_path).resolve()
+            try:
+                recipe_candidate_path.relative_to(RECIPES_BASE_DIR)
+            except ValueError:
+                raise ValueError(
+                    f"Recipe path outside allowed directory: {recipe_path}"
+                )
+
+            shutil.copy(recipe_candidate_path, recipe_output_path)
+            logging.debug(f"Saved recipe to {recipe_output_path}")
 
         config_path = output_path / "config.json"
         with open(config_path, "w") as f:
@@ -594,7 +603,13 @@ class DBUploader(object):
         logging.debug(f"Saved config to {config_path}")
 
     def upload_packing_results_workflow(
-        self, source_folder, recipe_name, job_id, recipe_path, config_data
+        self,
+        source_folder,
+        recipe_name,
+        job_id,
+        recipe_path,
+        config_data,
+        recipe_data=None,
     ):
         """
         Complete packing results upload workflow including folder preparation and s3 upload
@@ -623,6 +638,7 @@ class DBUploader(object):
                         output_folder=s3_upload_folder,
                         recipe_path=recipe_path,
                         config_data=config_data,
+                        recipe_data=recipe_data,
                     )
                 upload_result = self.upload_outputs_to_s3(
                     output_folder=s3_upload_folder,
