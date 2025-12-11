@@ -568,34 +568,13 @@ class DBUploader(object):
                 },
             )
 
-    def save_recipe_and_config_to_output(
-        self, output_folder, recipe_path, config_data, recipe_data=None
-    ):
+    def save_recipe_and_config_to_output(self, output_folder, config_data, recipe_data):
         output_path = Path(output_folder)
+
         recipe_output_path = output_path / "recipe.json"
-
-        if recipe_path and autopack.is_remote_path(recipe_path):
-            # for firebase, write the loaded recipe data as json
-            if recipe_data:
-                with open(recipe_output_path, "w") as f:
-                    json.dump(recipe_data, f, indent=2)
-                logging.debug(f"Saved recipe to {recipe_output_path}")
-        elif recipe_path:
-            # for local paths, copy the file
-            RECIPES_BASE_DIR = Path(
-                os.environ.get("CELLPACK_RECIPES_BASE_DIR", str(Path.cwd()))
-            ).resolve()
-
-            recipe_candidate_path = (RECIPES_BASE_DIR / recipe_path).resolve()
-            try:
-                recipe_candidate_path.relative_to(RECIPES_BASE_DIR)
-            except ValueError:
-                raise ValueError(
-                    f"Recipe path outside allowed directory: {recipe_path}"
-                )
-
-            shutil.copy(recipe_candidate_path, recipe_output_path)
-            logging.debug(f"Saved recipe to {recipe_output_path}")
+        with open(recipe_output_path, "w") as f:
+            json.dump(recipe_data, f, indent=2)
+        logging.debug(f"Saved recipe to {recipe_output_path}")
 
         config_path = output_path / "config.json"
         with open(config_path, "w") as f:
@@ -607,9 +586,8 @@ class DBUploader(object):
         source_folder,
         recipe_name,
         job_id,
-        recipe_path,
         config_data,
-        recipe_data=None,
+        recipe_data,
     ):
         """
         Complete packing results upload workflow including folder preparation and s3 upload
@@ -633,10 +611,9 @@ class DBUploader(object):
                 s3_upload_folder.mkdir(parents=True, exist_ok=True)
                 shutil.copytree(source_folder, s3_upload_folder, dirs_exist_ok=True)
 
-                if recipe_path and config_data:
+                if recipe_data and config_data:
                     self.save_recipe_and_config_to_output(
                         output_folder=s3_upload_folder,
-                        recipe_path=recipe_path,
                         config_data=config_data,
                         recipe_data=recipe_data,
                     )

@@ -93,7 +93,6 @@ def pack(
                 source_folder=env.out_folder,
                 recipe_name=recipe_data["name"],
                 job_id=job_id,
-                recipe_path=recipe,
                 config_data=packing_config_data,
                 recipe_data=recipe_loader.serializable_recipe_data,
             )
