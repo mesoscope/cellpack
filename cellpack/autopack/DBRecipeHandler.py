@@ -12,7 +12,6 @@ import hashlib
 import json
 import requests
 
-import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
 
 
