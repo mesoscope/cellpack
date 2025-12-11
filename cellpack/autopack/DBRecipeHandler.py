@@ -4,7 +4,6 @@ import shutil
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-import os
 
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
