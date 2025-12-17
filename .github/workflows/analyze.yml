@@ -63,11 +63,14 @@ jobs:
               run: |
                   MARKER="<!-- Analyze workflow report -->"
                   COMMENT_BODY="${MARKER}\n$(cat ./results/analysis_report.md)"
-                  EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --json comments --jq ".comments[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
-                  if [ ! -z "$EXISTING_COMMENT_ID" ]; then
-                    gh api -X DELETE /repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID
-                  fi
-                  echo -e "$COMMENT_BODY" | gh pr comment ${{ github.event.pull_request.number }} --body-file -
+                  EXISTING_COMMENT_ID=$(gh api "/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
+                    if [ -n "$EXISTING_COMMENT_ID" ]; then
+                      echo "Updating existing comment with ID: $EXISTING_COMMENT_ID"
+                      echo "$COMMENT_BODY" | gh api -X PATCH "/repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID" -F body=@-
+                    else
+                      echo "Creating new comment"
+                      echo "$COMMENT_BODY" | gh pr comment ${{ github.event.pull_request.number }} --body-file -
+                    fi
                   cat ./results/analysis_report.md
             - name: Update comment for PR
               if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
@@ -75,10 +78,14 @@ jobs:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   MARKER="<!-- Analyze workflow report -->"
-                  COMMENT_BODY="${MARKER}\n$(cat ./results/analysis_report.md)"
-                  EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --json comments --jq ".comments[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
-                  if [ ! -z "$EXISTING_COMMENT_ID" ]; then
-                    gh api -X DELETE /repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID
+                  COMMENT_BODY="${MARKER}
+                  $(cat ./results/analysis_report.md)"
+                  EXISTING_COMMENT_ID=$(gh api "/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
+                  if [ -n "$EXISTING_COMMENT_ID" ]; then
+                    echo "Updating existing comment with ID: $EXISTING_COMMENT_ID"
+                    echo "$COMMENT_BODY" | gh api -X PATCH "/repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT_ID" -F body=@-
+                  else
+                    echo "Creating new comment"
+                    echo "$COMMENT_BODY" | gh pr comment ${{ github.event.pull_request.number }} --body-file -
                   fi
-                  echo -e "$COMMENT_BODY" | gh pr comment ${{ github.event.pull_request.number }} --body-file -
                   cat ./results/analysis_report.md
