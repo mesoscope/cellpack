@@ -208,6 +208,10 @@ class RecipeLoader(object):
             formatted_error = RecipeValidator.format_validation_error(e)
             raise ValueError(f"Recipe validation failed:\n{formatted_error}")
 
+        # keep a serializable copy before converting to class instances
+        # this ensures the original data (human-readable) is available for download in the UI
+        self.serializable_recipe_data = copy.deepcopy(recipe_data)
+
         if "objects" in recipe_data:
             for _, obj in recipe_data["objects"].items():
                 reps = obj["representations"] if "representations" in obj else {}

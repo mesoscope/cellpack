@@ -566,7 +566,27 @@ class DBUploader(object):
                 },
             )
 
-    def upload_packing_results_workflow(self, source_folder, recipe_name, job_id):
+    def save_recipe_and_config_to_output(self, output_folder, config_data, recipe_data):
+        output_path = Path(output_folder)
+
+        recipe_output_path = output_path / "recipe.json"
+        with open(recipe_output_path, "w") as f:
+            json.dump(recipe_data, f, indent=2)
+        logging.debug(f"Saved recipe to {recipe_output_path}")
+
+        config_path = output_path / "config.json"
+        with open(config_path, "w") as f:
+            json.dump(config_data, f, indent=2)
+        logging.debug(f"Saved config to {config_path}")
+
+    def upload_packing_results_workflow(
+        self,
+        source_folder,
+        recipe_name,
+        job_id,
+        config_data,
+        recipe_data,
+    ):
         """
         Complete packing results upload workflow including folder preparation and s3 upload
         """
@@ -586,10 +606,15 @@ class DBUploader(object):
 
                 logging.debug(f"outputs will be copied to: {s3_upload_folder}")
 
-                # copy outputs to unique upload folder
                 s3_upload_folder.mkdir(parents=True, exist_ok=True)
                 shutil.copytree(source_folder, s3_upload_folder, dirs_exist_ok=True)
 
+                if recipe_data and config_data:
+                    self.save_recipe_and_config_to_output(
+                        output_folder=s3_upload_folder,
+                        config_data=config_data,
+                        recipe_data=recipe_data,
+                    )
                 upload_result = self.upload_outputs_to_s3(
                     output_folder=s3_upload_folder,
                     recipe_name=recipe_name,

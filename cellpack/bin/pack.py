@@ -39,9 +39,10 @@ def pack(
     """
     packing_config_data = ConfigLoader(config_path, docker).config
 
-    recipe_data = RecipeLoader(
+    recipe_loader = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"], docker
-    ).recipe_data
+    )
+    recipe_data = recipe_loader.recipe_data
     analysis_config_data = {}
     if analysis_config_path is not None:
         analysis_config_data = AnalysisConfigLoader(analysis_config_path).config
@@ -92,6 +93,8 @@ def pack(
                 source_folder=env.out_folder,
                 recipe_name=recipe_data["name"],
                 job_id=job_id,
+                config_data=packing_config_data,
+                recipe_data=recipe_loader.serializable_recipe_data,
             )
 
 
