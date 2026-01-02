@@ -1,8 +1,11 @@
+import logging
 from pathlib import Path
 
 import numpy
 from bioio_ome_tiff.writers import OmeTiffWriter
 from scipy.ndimage import convolve
+
+log = logging.getLogger(__name__)
 
 """
 ImageWriter provides a class to export cellpack packings as tiff images
@@ -209,7 +212,7 @@ class ImageWriter:
         """
         Saves the results as a tiff file
         """
-        print(f"Exporting image to {self.output_path}")
+        log.debug(f"Exporting image to {self.output_path}")
         (
             concatenated_image,
             channel_names,

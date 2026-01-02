@@ -5,12 +5,13 @@
 
 import json
 import os
-import numpy
 from collections import OrderedDict
 
+import numpy
+
+import cellpack.autopack.transformation as tr
 from cellpack import autopack
 from cellpack.autopack.ingredient.grow import ActinIngredient, GrowIngredient
-import cellpack.autopack.transformation as tr
 
 
 def updatePositionsRadii(ingr):
