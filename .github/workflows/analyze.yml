@@ -27,7 +27,7 @@ jobs:
             - name: Run analysis code
               run: uv run analyze -r cellpack/tests/recipes/v2/test_spheres.json -a cellpack/tests/analysis-configs/PR_analysis_config.json -p cellpack/tests/outputs/test_spheres/spheresSST
             - name: Upload results
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               with:
                   name: results
                   path: cellpack/tests/outputs/test_spheres/
