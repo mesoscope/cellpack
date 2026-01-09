@@ -25,7 +25,12 @@ log = logging.getLogger()
 
 
 def pack(
-    recipe, config_path=None, analysis_config_path=None, docker=False, validate=True, json_recipe=None
+    recipe,
+    config_path=None,
+    analysis_config_path=None,
+    docker=False,
+    validate=True,
+    json_recipe=None,
 ):
     """
     Initializes an autopack packing from the command line
