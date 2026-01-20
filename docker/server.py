@@ -2,6 +2,7 @@ import asyncio
 from aiohttp import web
 from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.bin.pack import pack
 
 SERVER_PORT = 80
