@@ -549,7 +549,9 @@ class DBUploader(object):
         if dedup_hash:
             self.upload_job_status(dedup_hash, "DONE", result_path=url)
 
-    def upload_job_status(self, dedup_hash, status, result_path=None, error_message=None):
+    def upload_job_status(
+        self, dedup_hash, status, result_path=None, error_message=None
+    ):
         """
         Update status for a given dedup_hash
         """
@@ -630,7 +632,8 @@ class DBUploader(object):
 
                 # update outputs directory in firebase
                 self.update_outputs_directory(
-                    dedup_hash, upload_result.get("outputs_directory")
+                    dedup_hash,
+                    upload_result.get("outputs_directory"),
                 )
 
                 return upload_result
@@ -697,11 +700,12 @@ class DBUploader(object):
                 dedup_hash,
                 {
                     "timestamp": timestamp,
+                    "status": "DONE",
                     "outputs_directory": outputs_directory,
                 },
             )
             logging.debug(
-                f"Updated outputs s3 location {outputs_directory} for dedup_hash: {dedup_hash}"
+                f"Updated status to DONE, outputs_directory={outputs_directory} for dedup_hash: {dedup_hash}"
             )
 
 
