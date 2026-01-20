@@ -529,7 +529,7 @@ class DBUploader(object):
         self.db.update_doc("configs", id, config_data)
         return id
 
-    def upload_result_metadata(self, file_name, url, job_id=None):
+    def upload_result_metadata(self, file_name, url, dedup_hash=None):
         """
         Upload the metadata of the result file to the database.
         """
@@ -543,21 +543,21 @@ class DBUploader(object):
                     "user": username,
                     "timestamp": timestamp,
                     "url": url,
-                    "batch_job_id": job_id,
+                    "dedup_hash": dedup_hash,
                 },
             )
-        if job_id:
-            self.upload_job_status(job_id, "DONE", result_path=url)
+        if dedup_hash:
+            self.upload_job_status(dedup_hash, "DONE", result_path=url)
 
-    def upload_job_status(self, job_id, status, result_path=None, error_message=None):
+    def upload_job_status(self, dedup_hash, status, result_path=None, error_message=None):
         """
-        Update status for a given job ID
+        Update status for a given dedup_hash
         """
         if self.db:
             timestamp = self.db.create_timestamp()
             self.db.update_or_create(
                 "job_status",
-                job_id,
+                dedup_hash,
                 {
                     "timestamp": timestamp,
                     "status": str(status),
@@ -583,7 +583,7 @@ class DBUploader(object):
         self,
         source_folder,
         recipe_name,
-        job_id,
+        dedup_hash,
         config_data,
         recipe_data,
     ):
@@ -591,7 +591,7 @@ class DBUploader(object):
         Complete packing results upload workflow including folder preparation and s3 upload
         """
         try:
-            if job_id:
+            if dedup_hash:
 
                 source_path = Path(source_folder)
                 if not source_path.exists():
@@ -601,7 +601,7 @@ class DBUploader(object):
 
                 # prepare unique S3 upload folder
                 parent_folder = source_path.parent
-                unique_folder_name = f"{source_path.name}_run_{job_id}"
+                unique_folder_name = f"{source_path.name}_run_{dedup_hash}"
                 s3_upload_folder = parent_folder / unique_folder_name
 
                 logging.debug(f"outputs will be copied to: {s3_upload_folder}")
@@ -618,7 +618,7 @@ class DBUploader(object):
                 upload_result = self.upload_outputs_to_s3(
                     output_folder=s3_upload_folder,
                     recipe_name=recipe_name,
-                    job_id=job_id,
+                    dedup_hash=dedup_hash,
                 )
 
                 # clean up temporary folder after upload
@@ -630,7 +630,7 @@ class DBUploader(object):
 
                 # update outputs directory in firebase
                 self.update_outputs_directory(
-                    job_id, upload_result.get("outputs_directory")
+                    dedup_hash, upload_result.get("outputs_directory")
                 )
 
                 return upload_result
@@ -639,7 +639,7 @@ class DBUploader(object):
             logging.error(e)
             return {"success": False, "error": e}
 
-    def upload_outputs_to_s3(self, output_folder, recipe_name, job_id):
+    def upload_outputs_to_s3(self, output_folder, recipe_name, dedup_hash):
         """
         Upload packing outputs to S3 bucket
         """
@@ -647,7 +647,7 @@ class DBUploader(object):
         bucket_name = self.db.bucket_name
         region_name = self.db.region_name
         sub_folder_name = self.db.sub_folder_name
-        s3_prefix = f"{sub_folder_name}/{recipe_name}/{job_id}"
+        s3_prefix = f"{sub_folder_name}/{recipe_name}/{dedup_hash}"
 
         try:
             upload_result = self.db.upload_directory(
@@ -671,7 +671,7 @@ class DBUploader(object):
 
                 return {
                     "success": True,
-                    "run_id": job_id,
+                    "dedup_hash": dedup_hash,
                     "s3_bucket": bucket_name,
                     "s3_prefix": s3_prefix,
                     "public_url_base": f"{base_url}/{s3_prefix}/",
@@ -685,23 +685,23 @@ class DBUploader(object):
             logging.error(e)
             return {"success": False, "error": e}
 
-    def update_outputs_directory(self, job_id, outputs_directory):
+    def update_outputs_directory(self, dedup_hash, outputs_directory):
         if not self.db or self.db.s3_client:
             # switch to firebase handler to update job status
             handler = DATABASE_IDS.handlers().get("firebase")
             initialized_db = handler(default_db="staging")
-        if job_id:
+        if dedup_hash:
             timestamp = initialized_db.create_timestamp()
             initialized_db.update_or_create(
                 "job_status",
-                job_id,
+                dedup_hash,
                 {
                     "timestamp": timestamp,
                     "outputs_directory": outputs_directory,
                 },
             )
             logging.debug(
-                f"Updated outputs s3 location {outputs_directory} for job ID: {job_id}"
+                f"Updated outputs s3 location {outputs_directory} for dedup_hash: {dedup_hash}"
             )
 
 

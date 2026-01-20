@@ -18,33 +18,33 @@ class CellpackServer:
             return initialized_db
         return None
 
-    def get_cached_result(self, job_id):
+    def get_cached_result(self, dedup_hash):
         """
-        Check if a completed result already exists for this job_id (dedup_hash).
+        Check if a completed result already exists for this dedup_hash.
         Returns the cached result data if found with status DONE, otherwise None.
         """
         db = self._get_firebase_handler()
         if not db:
             return None
 
-        job_status, _ = db.get_doc_by_id("job_status", job_id)
+        job_status, _ = db.get_doc_by_id("job_status", dedup_hash)
         if job_status and job_status.get("status") == "DONE":
         # TODO: if the same recipe is submitted again quickly, the status may not be updated in time ("RUNNING"), discuss if we need to handle this case
             return job_status
         return None
 
-    async def run_packing(self, recipe, config, job_id, body=None):
-        self.update_job_status(job_id, "RUNNING")
+    async def run_packing(self, recipe, config, dedup_hash, body=None):
+        self.update_job_status(dedup_hash, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body, job_id=job_id)
+            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body, dedup_hash=dedup_hash)
         except Exception as e:
-            self.update_job_status(job_id, "FAILED", error_message=str(e))
+            self.update_job_status(dedup_hash, "FAILED", error_message=str(e))
 
-    def update_job_status(self, job_id, status, result_path=None, error_message=None):
+    def update_job_status(self, dedup_hash, status, result_path=None, error_message=None):
         db = self._get_firebase_handler()
         if db:
             db_uploader = DBUploader(db)
-            db_uploader.upload_job_status(job_id, status, result_path, error_message)
+            db_uploader.upload_job_status(dedup_hash, status, result_path, error_message)
 
     async def hello_world(self, request: web.Request) -> web.Response:
         return web.Response(text="Hello from the cellPACK server")
@@ -67,12 +67,12 @@ class CellpackServer:
 
         # calculate dedup_hash from normalized recipe content
         # TODO: discuss when to hash firebase recipes(has references) vs raw json, this currently loads and processes the recipe twice (one here and once in pack())
-        job_id = RecipeLoader.get_dedup_hash(recipe, json_recipe=body, use_docker=True)
+        dedup_hash = RecipeLoader.get_dedup_hash(recipe, json_recipe=body, use_docker=True)
 
-        cached_result = self.get_cached_result(job_id)
+        cached_result = self.get_cached_result(dedup_hash)
         if cached_result:
             return web.json_response({
-                "jobId": job_id,
+                "jobId": dedup_hash,  # keep "jobId" for backwards compatibility
                 "status": "DONE",
                 "cached": True,
                 "outputs_directory": cached_result.get("outputs_directory"),
@@ -80,16 +80,15 @@ class CellpackServer:
             })
 
         # Initiate packing task to run in background
-        packing_task = asyncio.create_task(self.run_packing(recipe, config, job_id, body))
+        packing_task = asyncio.create_task(self.run_packing(recipe, config, dedup_hash, body))
 
         # Keep track of task references to prevent them from being garbage
         # collected, then discard after task completion
         self.packing_tasks.add(packing_task)
         packing_task.add_done_callback(self.packing_tasks.discard)
 
-        # return job id immediately, rather than wait for task to complete,
-        # to avoid timeout issues with API gateway
-        return web.json_response({"jobId": job_id})
+        # return dedup_hash as "jobId" for backwards compatibility
+        return web.json_response({"jobId": dedup_hash})
 
 
 async def init_app() -> web.Application:

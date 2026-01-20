@@ -30,7 +30,7 @@ def pack(
     docker=False,
     validate=True,
     json_recipe=None,
-    job_id=None,
+    dedup_hash=None,
 ):
     """
     Initializes an autopack packing from the command line
@@ -39,6 +39,8 @@ def pack(
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
     :param validate: boolean argument, validate recipe before packing
+    :param json_recipe: dict argument, recipe data passed directly
+    :param dedup_hash: string argument, hash identifier for tracking/caching results
 
     :return: void
     """
@@ -83,7 +85,7 @@ def pack(
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
-    if docker and job_id:
+    if docker and dedup_hash:
         handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
         # temporarily using demo bucket before permissions are granted
         initialized_handler = handler(
@@ -95,7 +97,7 @@ def pack(
         uploader.upload_packing_results_workflow(
             source_folder=env.out_folder,
             recipe_name=recipe_data["name"],
-            job_id=job_id,
+            dedup_hash=dedup_hash,
             config_data=packing_config_data,
             recipe_data=recipe_loader.serializable_recipe_data,
         )
