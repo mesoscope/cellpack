@@ -7,7 +7,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 
-from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
+from cellpack.autopack.DBRecipeHandler import DataDoc, DBRecipeLoader
 from cellpack.autopack.interface_objects import (
     Representations,
     default_recipe_values,
@@ -55,6 +55,23 @@ class RecipeLoader(object):
             autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
 
         self.recipe_data = self._read(use_docker=use_docker)
+        # calculate dedup_hash from the normalized recipe data
+        self.dedup_hash = DataDoc.generate_hash(self.serializable_recipe_data)
+
+    @staticmethod
+    def get_dedup_hash(recipe_path, json_recipe=None, use_docker=False):
+        """
+        Load recipe and return its dedup_hash.
+        This method loads and normalizes the recipe to ensure consistent hashing
+        regardless of source (local file, firebase, or JSON body).
+        """
+        loader = RecipeLoader(
+            recipe_path,
+            save_converted_recipe=False,
+            use_docker=use_docker,
+            json_recipe=json_recipe,
+        )
+        return loader.dedup_hash
 
     @staticmethod
     def _resolve_object(key, objects):
