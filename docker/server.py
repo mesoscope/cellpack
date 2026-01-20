@@ -1,6 +1,5 @@
 import asyncio
 from aiohttp import web
-import os
 import uuid
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
@@ -13,10 +12,9 @@ class CellpackServer:
         self.packing_tasks = set()
 
     async def run_packing(self, recipe, config, job_id, body=None):
-        os.environ["AWS_BATCH_JOB_ID"] = job_id
         self.update_job_status(job_id, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body)
+            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body, job_id=job_id)
         except Exception as e:
             self.update_job_status(job_id, "FAILED", error_message=str(e))
 

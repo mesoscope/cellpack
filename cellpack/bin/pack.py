@@ -1,6 +1,5 @@
 import logging
 import logging.config
-import os
 import time
 from pathlib import Path
 
@@ -31,6 +30,7 @@ def pack(
     docker=False,
     validate=True,
     json_recipe=None,
+    job_id=None,
 ):
     """
     Initializes an autopack packing from the command line
@@ -83,24 +83,22 @@ def pack(
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
-    if docker:
-        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
-        if job_id:
-            handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
-            # temporarily using demo bucket before permissions are granted
-            initialized_handler = handler(
-                bucket_name="cellpack-demo",
-                sub_folder_name="runs",
-                region_name="us-west-2",
-            )
-            uploader = DBUploader(db_handler=initialized_handler)
-            uploader.upload_packing_results_workflow(
-                source_folder=env.out_folder,
-                recipe_name=recipe_data["name"],
-                job_id=job_id,
-                config_data=packing_config_data,
-                recipe_data=recipe_loader.serializable_recipe_data,
-            )
+    if docker and job_id:
+        handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+        # temporarily using demo bucket before permissions are granted
+        initialized_handler = handler(
+            bucket_name="cellpack-demo",
+            sub_folder_name="runs",
+            region_name="us-west-2",
+        )
+        uploader = DBUploader(db_handler=initialized_handler)
+        uploader.upload_packing_results_workflow(
+            source_folder=env.out_folder,
+            recipe_name=recipe_data["name"],
+            job_id=job_id,
+            config_data=packing_config_data,
+            recipe_data=recipe_loader.serializable_recipe_data,
+        )
 
 
 def main():
