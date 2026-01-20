@@ -1,7 +1,7 @@
 import asyncio
 from aiohttp import web
 import uuid
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.bin.pack import pack
 
@@ -45,7 +45,12 @@ class CellpackServer:
                 "Pack requests must include recipe as a query param"
             )
         config = request.rel_url.query.get("config")
-        job_id = str(uuid.uuid4())
+
+        if body:
+            job_id = DataDoc.generate_hash(body)
+        # TODO: keep uuid at all?
+        else:
+            job_id = str(uuid.uuid4())
 
         # Initiate packing task to run in background
         packing_task = asyncio.create_task(self.run_packing(recipe, config, job_id, body))
