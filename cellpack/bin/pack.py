@@ -30,7 +30,6 @@ def pack(
     analysis_config_path=None,
     docker=False,
     validate=True,
-    json_recipe=None,
 ):
     """
     Initializes an autopack packing from the command line
@@ -42,12 +41,52 @@ def pack(
 
     :return: void
     """
-    packing_config_data = ConfigLoader(config_path, docker).config
+    config_loader = ConfigLoader(config_path, docker)
 
     recipe_loader = RecipeLoader(
-        recipe, packing_config_data["save_converted_recipe"], docker, json_recipe
+        recipe, config_loader.config["save_converted_recipe"], docker
     )
+    return run_packing(
+        recipe_loader,
+        config_loader,
+        analysis_config_path,
+        docker,
+        validate
+    )
+
+def pack_from_json(
+    json_recipe,
+    config_path=None,
+    analysis_config_path=None,
+    docker=False,
+    validate=True,
+):
+    """
+    Initializes an autopack packing from the command line
+    :param json: JSON object representing the recipe
+    :param config_path: string argument, path to packing config file
+    :param analysis_config_path: string argument, path to analysis config file
+    :param docker: boolean argument, are we using docker
+    :param validate: boolean argument, validate recipe before packing
+
+    :return: void
+    """
+    config_loader = ConfigLoader(config_path, docker)
+
+    recipe_loader = RecipeLoader(
+        "", config_loader.config["save_converted_recipe"], docker, json_recipe
+    )
+    return run_packing(
+        recipe_loader,
+        config_loader,
+        analysis_config_path,
+        docker,
+        validate
+    )
+
+def run_packing(recipe_loader, config_loader, analysis_config_path, docker, validate):
     recipe_data = recipe_loader.recipe_data
+    packing_config_data = config_loader.config
     analysis_config_data = {}
     if analysis_config_path is not None:
         analysis_config_data = AnalysisConfigLoader(analysis_config_path).config
