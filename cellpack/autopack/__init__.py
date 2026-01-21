@@ -409,6 +409,10 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
     f.close()
     return sphere_data
 
+def load_json_recipe(json_recipe):
+    composition = DBRecipeLoader.remove_empty(json_recipe.get("composition", {}))
+    json_recipe["composition"] = composition
+    return json_recipe
 
 def load_file(
     filename,
@@ -416,12 +420,7 @@ def load_file(
     cache="geometries",
     force=None,
     use_docker=False,
-    json_recipe=None,
 ):
-    if json_recipe is not None:
-        composition = DBRecipeLoader.remove_empty(json_recipe.get("composition", {}))
-        json_recipe["composition"] = composition
-        return json_recipe, None, False
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
         if database_name == DATABASE_IDS.GITHUB:

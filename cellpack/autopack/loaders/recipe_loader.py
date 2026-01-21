@@ -175,12 +175,17 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name, is_unnested_firebase = autopack.load_file(
-            self.file_path,
-            cache="recipes",
-            use_docker=use_docker,
-            json_recipe=self.json_recipe,
-        )
+        database_name = None
+        is_unnested_firebase = False
+        if self.json_recipe is not None:
+            new_values = autopack.load_json_recipe(self.json_recipe)
+        else:
+            new_values, database_name, is_unnested_firebase = autopack.load_file(
+                self.file_path,
+                cache="recipes",
+                use_docker=use_docker,
+            )
+
         if database_name == "firebase":
             if is_unnested_firebase:
                 objects = new_values.get("objects", {})

@@ -4,7 +4,7 @@ import os
 import uuid
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
-from cellpack.bin.pack import pack
+from cellpack.bin.pack import pack, pack_from_json
 
 SERVER_PORT = 80
 
@@ -16,7 +16,10 @@ class CellpackServer:
         os.environ["AWS_BATCH_JOB_ID"] = job_id
         self.update_job_status(job_id, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body)
+            if body is None:
+                pack(recipe=recipe, config_path=config, docker=True)
+            else:
+                pack_from_json(json_recipe=body, config_path=config, docker=True)
         except Exception as e:
             self.update_job_status(job_id, "FAILED", error_message=str(e))
 
