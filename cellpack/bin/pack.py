@@ -47,11 +47,7 @@ def pack(
         recipe, config_loader.config["save_converted_recipe"], docker
     )
     return run_packing(
-        recipe_loader,
-        config_loader,
-        analysis_config_path,
-        docker,
-        validate
+        recipe_loader, config_loader, analysis_config_path, docker, validate
     )
 
 
@@ -78,11 +74,7 @@ def pack_from_json(
         "", config_loader.config["save_converted_recipe"], docker, json_recipe
     )
     return run_packing(
-        recipe_loader,
-        config_loader,
-        analysis_config_path,
-        docker,
-        validate
+        recipe_loader, config_loader, analysis_config_path, docker, validate
     )
 
 
