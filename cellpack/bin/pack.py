@@ -54,6 +54,7 @@ def pack(
         validate
     )
 
+
 def pack_from_json(
     json_recipe,
     config_path=None,
@@ -83,6 +84,7 @@ def pack_from_json(
         docker,
         validate
     )
+
 
 def run_packing(recipe_loader, config_loader, analysis_config_path, docker, validate):
     recipe_data = recipe_loader.recipe_data
