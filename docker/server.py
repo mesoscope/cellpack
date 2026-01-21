@@ -36,7 +36,7 @@ class CellpackServer:
     async def run_packing(self, recipe, config, dedup_hash, body=None):
         self.update_job_status(dedup_hash, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body, dedup_hash=dedup_hash)
+            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body, hash=dedup_hash)
         except Exception as e:
             self.update_job_status(dedup_hash, "FAILED", error_message=str(e))
 
@@ -72,9 +72,8 @@ class CellpackServer:
         cached_result = self.get_cached_result(dedup_hash)
         if cached_result:
             return web.json_response({
-                "jobId": dedup_hash,  # keep "jobId" for backwards compatibility
+                "jobId": dedup_hash,
                 "status": "DONE",
-                "cached": True,
                 "outputs_directory": cached_result.get("outputs_directory"),
                 "result_path": cached_result.get("result_path"),
             })
@@ -87,7 +86,6 @@ class CellpackServer:
         self.packing_tasks.add(packing_task)
         packing_task.add_done_callback(self.packing_tasks.discard)
 
-        # return dedup_hash as "jobId" for backwards compatibility
         return web.json_response({"jobId": dedup_hash})
 
 
