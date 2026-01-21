@@ -56,6 +56,15 @@ class RecipeLoader(object):
 
         self.recipe_data = self._read(use_docker=use_docker)
 
+    @classmethod
+    def from_json(cls, json_recipe, save_converted_recipe=False, use_docker=False):
+        return cls(
+            input_file_path="",
+            save_converted_recipe=save_converted_recipe,
+            use_docker=use_docker,
+            json_recipe=json_recipe,
+        )
+
     @staticmethod
     def _resolve_object(key, objects):
         current_object = objects[key]
@@ -177,9 +186,9 @@ class RecipeLoader(object):
     def _read(self, resolve_inheritance=True, use_docker=False):
         database_name = None
         is_unnested_firebase = False
-        if self.json_recipe is not None:
-            new_values = autopack.load_json_recipe(self.json_recipe)
-        else:
+        new_values = self.json_recipe
+        if new_values is None:
+            # Read recipe from filepath
             new_values, database_name, is_unnested_firebase = autopack.load_file(
                 self.file_path,
                 cache="recipes",
