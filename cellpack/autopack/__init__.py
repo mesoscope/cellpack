@@ -416,7 +416,9 @@ def load_json_recipe(json_recipe):
     return json_recipe
 
 
-def load_file(filename, destination="", cache="geometries", force=None, use_docker=False):
+def load_file(
+    filename, destination="", cache="geometries", force=None, use_docker=False
+):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
         if database_name == DATABASE_IDS.GITHUB:
