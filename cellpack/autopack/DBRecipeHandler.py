@@ -675,8 +675,11 @@ class DBUploader(object):
                     f"{base_url}/{file_info['s3_key']}"
                     for file_info in upload_result["uploaded_files"]
                 ]
+                simularium_url = None
+                for url in public_urls:
+                    if url.endswith(".simularium"):
+                        simularium_url = url
                 outputs_directory = f"https://us-west-2.console.aws.amazon.com/s3/buckets/{bucket_name}/{s3_prefix}/"
-
                 logging.info(
                     f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
                 )
@@ -694,6 +697,7 @@ class DBUploader(object):
                     "total_size": upload_result["total_size"],
                     "urls": public_urls,
                     "outputs_directory": outputs_directory,
+                    "simularium_url": simularium_url,
                 }
         except Exception as e:
             logging.error(e)

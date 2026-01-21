@@ -1399,24 +1399,15 @@ class simulariumHelper(hostHelper.Helper):
 
     @staticmethod
     def store_result_file(
-        file_path, storage=None, batch_job_id=None, sub_folder="simularium"
+        file_path, storage=None, sub_folder="simularium"
     ):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
-            # if batch_job_id is not None, then we are in a batch job and should use the temp bucket
-            # TODO: use cellpack-results bucket for batch jobs once we have the correct permissions
-            if batch_job_id:
-                initialized_handler = handler(
-                    bucket_name="cellpack-demo",
-                    sub_folder_name=sub_folder,
-                    region_name="us-west-2",
-                )
-            else:
-                initialized_handler = handler(
-                    bucket_name="cellpack-results",
-                    sub_folder_name=sub_folder,
-                    region_name="us-west-2",
-                )
+            initialized_handler = handler(
+                bucket_name="cellpack-results",
+                sub_folder_name=sub_folder,
+                region_name="us-west-2",
+            )
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
             if not file_name or not url:
                 db_maintainer = DBMaintenance(initialized_handler)
