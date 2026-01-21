@@ -33,7 +33,7 @@ def pack(
 ):
     """
     Initializes an autopack packing from the command line
-    :param recipe: string argument, path to recipe
+    :param recipe: string argument, path to recipe file, or a dictionary representing a recipe
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
@@ -41,45 +41,14 @@ def pack(
 
     :return: void
     """
-    config_loader = ConfigLoader(config_path, docker)
-
-    recipe_loader = RecipeLoader(
-        recipe, config_loader.config["save_converted_recipe"], docker
-    )
-    return run_packing(
-        recipe_loader, config_loader, analysis_config_path, docker, validate
-    )
-
-
-def pack_from_json(
-    json_recipe,
-    config_path=None,
-    analysis_config_path=None,
-    docker=False,
-    validate=True,
-):
-    """
-    Initializes an autopack packing from the command line
-    :param json: JSON object representing the recipe
-    :param config_path: string argument, path to packing config file
-    :param analysis_config_path: string argument, path to analysis config file
-    :param docker: boolean argument, are we using docker
-    :param validate: boolean argument, validate recipe before packing
-
-    :return: void
-    """
-    config_loader = ConfigLoader(config_path, docker)
-
-    recipe_loader = RecipeLoader(
-        "", config_loader.config["save_converted_recipe"], docker, json_recipe
-    )
-    return run_packing(
-        recipe_loader, config_loader, analysis_config_path, docker, validate
-    )
-
-
-def run_packing(recipe_loader, config_loader, analysis_config_path, docker, validate):
+    if isinstance(recipe, dict):
+        # Load recipe from JSON dictionary
+        recipe_loader = RecipeLoader.from_json(recipe, use_docker=docker)
+    else:
+        # Load recipe from file path
+        recipe_loader = RecipeLoader(recipe, use_docker=docker)
     recipe_data = recipe_loader.recipe_data
+    config_loader = ConfigLoader(config_path, docker)
     packing_config_data = config_loader.config
     analysis_config_data = {}
     if analysis_config_path is not None:

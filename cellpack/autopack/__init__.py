@@ -410,12 +410,6 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
     return sphere_data
 
 
-def load_json_recipe(json_recipe):
-    composition = DBRecipeLoader.remove_empty(json_recipe.get("composition", {}))
-    json_recipe["composition"] = composition
-    return json_recipe
-
-
 def load_file(
     filename, destination="", cache="geometries", force=None, use_docker=False
 ):
