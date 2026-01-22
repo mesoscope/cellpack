@@ -12,7 +12,7 @@ class CellpackServer:
     def __init__(self):
         self.packing_tasks = set()
 
-    async def run_packing(self, recipe, config, job_id, body=None):
+    async def run_packing(self, job_id, recipe=None, config=None, body=None):
         os.environ["AWS_BATCH_JOB_ID"] = job_id
         self.update_job_status(job_id, "RUNNING")
         try:
@@ -51,7 +51,7 @@ class CellpackServer:
         job_id = str(uuid.uuid4())
 
         # Initiate packing task to run in background
-        packing_task = asyncio.create_task(self.run_packing(recipe, config, job_id, body))
+        packing_task = asyncio.create_task(self.run_packing(job_id, recipe, config, body))
 
         # Keep track of task references to prevent them from being garbage
         # collected, then discard after task completion

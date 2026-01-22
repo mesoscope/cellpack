@@ -25,11 +25,7 @@ log = logging.getLogger()
 
 
 def pack(
-    recipe,
-    config_path=None,
-    analysis_config_path=None,
-    docker=False,
-    validate=True,
+    recipe, config_path=None, analysis_config_path=None, docker=False, validate=True
 ):
     """
     Initializes an autopack packing from the command line
@@ -41,6 +37,8 @@ def pack(
 
     :return: void
     """
+    packing_config_data = ConfigLoader(config_path, docker).config
+
     if isinstance(recipe, dict):
         # Load recipe from JSON dictionary
         recipe_loader = RecipeLoader.from_json(recipe, use_docker=docker)
@@ -48,8 +46,6 @@ def pack(
         # Load recipe from file path
         recipe_loader = RecipeLoader(recipe, use_docker=docker)
     recipe_data = recipe_loader.recipe_data
-    config_loader = ConfigLoader(config_path, docker)
-    packing_config_data = config_loader.config
     analysis_config_data = {}
     if analysis_config_path is not None:
         analysis_config_data = AnalysisConfigLoader(analysis_config_path).config
