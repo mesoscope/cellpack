@@ -44,7 +44,9 @@ def pack(
         recipe_loader = RecipeLoader.from_json(recipe, use_docker=docker)
     else:
         # Load recipe from file path
-        recipe_loader = RecipeLoader(recipe, use_docker=docker)
+        recipe_loader = RecipeLoader(
+            recipe, packing_config_data["save_converted_recipe"], docker
+        )
     recipe_data = recipe_loader.recipe_data
     analysis_config_data = {}
     if analysis_config_path is not None:
