@@ -190,7 +190,7 @@ class RecipeLoader(object):
         if new_values is None:
             # Read recipe from filepath
             new_values, database_name, is_unnested_firebase = autopack.load_file(
-                self.file_path, cache="recipes", use_docker=use_docker,
+                self.file_path, cache="recipes", use_docker=use_docker
             )
 
         if database_name == "firebase":
