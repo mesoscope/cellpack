@@ -29,7 +29,7 @@ def pack(
 ):
     """
     Initializes an autopack packing from the command line
-    :param recipe: string argument, path to recipe
+    :param recipe: string argument, path to recipe file, or a dictionary representing a recipe
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
@@ -39,9 +39,14 @@ def pack(
     """
     packing_config_data = ConfigLoader(config_path, docker).config
 
-    recipe_loader = RecipeLoader(
-        recipe, packing_config_data["save_converted_recipe"], docker
-    )
+    if isinstance(recipe, dict):
+        # Load recipe from JSON dictionary
+        recipe_loader = RecipeLoader.from_json(recipe, use_docker=docker)
+    else:
+        # Load recipe from file path
+        recipe_loader = RecipeLoader(
+            recipe, packing_config_data["save_converted_recipe"], docker
+        )
     recipe_data = recipe_loader.recipe_data
     analysis_config_data = {}
     if analysis_config_path is not None:

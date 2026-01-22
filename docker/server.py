@@ -12,11 +12,12 @@ class CellpackServer:
     def __init__(self):
         self.packing_tasks = set()
 
-    async def run_packing(self, recipe, config, job_id):
+    async def run_packing(self, job_id, recipe=None, config=None, body=None):
         os.environ["AWS_BATCH_JOB_ID"] = job_id
         self.update_job_status(job_id, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True)
+            # Pack JSON recipe in body if provided, otherwise use recipe path
+            pack(recipe=(body if body else recipe), config_path=config, docker=True)
         except Exception as e:
             self.update_job_status(job_id, "FAILED", error_message=str(e))
 
@@ -37,8 +38,12 @@ class CellpackServer:
         return web.Response()
 
     async def pack_handler(self, request: web.Request) -> web.Response:
-        recipe = request.rel_url.query.get("recipe")
-        if recipe is None:
+        recipe = request.rel_url.query.get("recipe") or ""
+        if request.can_read_body:
+            body = await request.json()
+        else:
+            body = None
+        if not recipe and not body:
             raise web.HTTPBadRequest(
                 "Pack requests must include recipe as a query param"
             )
@@ -46,7 +51,7 @@ class CellpackServer:
         job_id = str(uuid.uuid4())
 
         # Initiate packing task to run in background
-        packing_task = asyncio.create_task(self.run_packing(recipe, config, job_id))
+        packing_task = asyncio.create_task(self.run_packing(job_id, recipe, config, body))
 
         # Keep track of task references to prevent them from being garbage
         # collected, then discard after task completion
