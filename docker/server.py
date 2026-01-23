@@ -1,8 +1,7 @@
 import asyncio
 from aiohttp import web
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.bin.pack import pack
 
 SERVER_PORT = 80
@@ -18,22 +17,19 @@ class CellpackServer:
             return initialized_db
         return None
 
-    def get_cached_result(self, dedup_hash):
+    def job_exists(self, dedup_hash):
         """
-        Check if a completed result already exists for this dedup_hash.
-        Returns the cached result data if found with status DONE, otherwise None.
+        Check if a job already exists for this dedup_hash.
+        Returns True if a document exists, False otherwise.
         """
         db = self._get_firebase_handler()
         if not db:
-            return None
+            return False
 
         job_status, _ = db.get_doc_by_id("job_status", dedup_hash)
-        if job_status and job_status.get("status") == "DONE":
-        # TODO: if the same recipe is submitted again quickly, the status may not be updated in time ("RUNNING"), discuss if we need to handle this case
-            return job_status
-        return None
+        return job_status is not None
 
-    async def run_packing(self, recipe=None, config=None, dedup_hash, body=None):
+    async def run_packing(self, dedup_hash, recipe=None, config=None, body=None):
         self.update_job_status(dedup_hash, "RUNNING")
         try:
             # Pack JSON recipe in body if provided, otherwise use recipe path
@@ -66,21 +62,13 @@ class CellpackServer:
             )
         config = request.rel_url.query.get("config")
 
-        # calculate dedup_hash from normalized recipe content
-        # TODO: discuss when to hash firebase recipes(has references) vs raw json, this currently loads and processes the recipe twice (one here and once in pack())
-        dedup_hash = RecipeLoader.get_dedup_hash(recipe, json_recipe=body, use_docker=True)
+        dedup_hash = DataDoc.generate_hash(body)
 
-        cached_result = self.get_cached_result(dedup_hash)
-        if cached_result:
-            return web.json_response({
-                "jobId": dedup_hash,
-                "status": "DONE",
-                "outputs_directory": cached_result.get("outputs_directory"),
-                "result_path": cached_result.get("result_path"),
-            })
+        if self.job_exists(dedup_hash):
+            return web.json_response({"jobId": dedup_hash})
 
         # Initiate packing task to run in background
-        packing_task = asyncio.create_task(self.run_packing(recipe, config, dedup_hash, body))
+        packing_task = asyncio.create_task(self.run_packing(dedup_hash, recipe, config, body))
 
         # Keep track of task references to prevent them from being garbage
         # collected, then discard after task completion
