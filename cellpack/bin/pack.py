@@ -28,7 +28,6 @@ def pack(
     config_path=None,
     analysis_config_path=None,
     docker=False,
-    validate=True,
     hash=None,
 ):
     """
@@ -37,8 +36,6 @@ def pack(
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
-    :param validate: boolean argument, validate recipe before packing
-    :param json_recipe: dict argument, recipe data passed directly
     :param hash: string argument, dedup hash identifier for tracking/caching results
 
     :return: void
