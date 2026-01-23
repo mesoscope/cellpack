@@ -550,23 +550,27 @@ class DBUploader(object):
             self.upload_job_status(dedup_hash, "DONE", result_path=url)
 
     def upload_job_status(
-        self, dedup_hash, status, result_path=None, error_message=None
+        self,
+        dedup_hash,
+        status,
+        result_path=None,
+        error_message=None,
+        outputs_directory=None,
     ):
         """
         Update status for a given dedup_hash
         """
         if self.db:
             timestamp = self.db.create_timestamp()
-            self.db.update_or_create(
-                "job_status",
-                dedup_hash,
-                {
-                    "timestamp": timestamp,
-                    "status": str(status),
-                    "result_path": result_path,
-                    "error_message": error_message,
-                },
-            )
+            data = {
+                "timestamp": timestamp,
+                "status": str(status),
+                "result_path": result_path,
+                "error_message": error_message,
+            }
+            if outputs_directory:
+                data["outputs_directory"] = outputs_directory
+            self.db.update_or_create("job_status", dedup_hash, data)
 
     def save_recipe_and_config_to_output(self, output_folder, config_data, recipe_data):
         output_path = Path(output_folder)
@@ -630,10 +634,11 @@ class DBUploader(object):
                         f"Cleaned up temporary upload folder: {s3_upload_folder}"
                     )
 
-                # update outputs directory in firebase
-                self.update_outputs_directory(
+                # update outputs directory in job status
+                self.upload_job_status(
                     dedup_hash,
-                    upload_result.get("outputs_directory"),
+                    "DONE",
+                    outputs_directory=upload_result.get("outputs_directory"),
                 )
 
                 return upload_result
@@ -687,26 +692,6 @@ class DBUploader(object):
         except Exception as e:
             logging.error(e)
             return {"success": False, "error": e}
-
-    def update_outputs_directory(self, dedup_hash, outputs_directory):
-        if not self.db or self.db.s3_client:
-            # switch to firebase handler to update job status
-            handler = DATABASE_IDS.handlers().get("firebase")
-            initialized_db = handler(default_db="staging")
-        if dedup_hash:
-            timestamp = initialized_db.create_timestamp()
-            initialized_db.update_or_create(
-                "job_status",
-                dedup_hash,
-                {
-                    "timestamp": timestamp,
-                    "status": "DONE",
-                    "outputs_directory": outputs_directory,
-                },
-            )
-            logging.debug(
-                f"Updated status to DONE, outputs_directory={outputs_directory} for dedup_hash: {dedup_hash}"
-            )
 
 
 class DBRecipeLoader(object):
