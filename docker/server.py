@@ -18,10 +18,6 @@ class CellpackServer:
         return None
 
     def job_exists(self, dedup_hash):
-        """
-        Check if a job already exists for this dedup_hash.
-        Returns True if a document exists, False otherwise.
-        """
         db = self._get_firebase_handler()
         if not db:
             return False
@@ -47,7 +43,7 @@ class CellpackServer:
         return web.Response(text="Hello from the cellPACK server")
 
     async def health_check(self, request: web.Request) -> web.Response:
-        # healthcheck endpoint needed for AWS load balancer
+        # health check endpoint needed for AWS load balancer
         return web.Response()
 
     async def pack_handler(self, request: web.Request) -> web.Response:
@@ -75,6 +71,8 @@ class CellpackServer:
         self.packing_tasks.add(packing_task)
         packing_task.add_done_callback(self.packing_tasks.discard)
 
+        # return job id immediately, rather than wait for task to complete,
+        # to avoid timeout issues with API gateway
         return web.json_response({"jobId": dedup_hash})
 
 
