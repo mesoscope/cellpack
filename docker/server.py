@@ -33,10 +33,11 @@ class CellpackServer:
             return job_status
         return None
 
-    async def run_packing(self, recipe, config, dedup_hash, body=None):
+    async def run_packing(self, recipe=None, config=None, dedup_hash, body=None):
         self.update_job_status(dedup_hash, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True, json_recipe=body, hash=dedup_hash)
+            # Pack JSON recipe in body if provided, otherwise use recipe path
+            pack(recipe=(body if body else recipe), config_path=config, docker=True, hash=dedup_hash)
         except Exception as e:
             self.update_job_status(dedup_hash, "FAILED", error_message=str(e))
 

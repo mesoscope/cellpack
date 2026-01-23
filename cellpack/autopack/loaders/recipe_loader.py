@@ -73,6 +73,15 @@ class RecipeLoader(object):
         )
         return loader.dedup_hash
 
+    @classmethod
+    def from_json(cls, json_recipe, save_converted_recipe=False, use_docker=False):
+        return cls(
+            input_file_path="",
+            save_converted_recipe=save_converted_recipe,
+            use_docker=use_docker,
+            json_recipe=json_recipe,
+        )
+
     @staticmethod
     def _resolve_object(key, objects):
         current_object = objects[key]
@@ -192,12 +201,15 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name, is_unnested_firebase = autopack.load_file(
-            self.file_path,
-            cache="recipes",
-            use_docker=use_docker,
-            json_recipe=self.json_recipe,
-        )
+        database_name = None
+        is_unnested_firebase = False
+        new_values = self.json_recipe
+        if new_values is None:
+            # Read recipe from filepath
+            new_values, database_name, is_unnested_firebase = autopack.load_file(
+                self.file_path, cache="recipes", use_docker=use_docker
+            )
+
         if database_name == "firebase":
             if is_unnested_firebase:
                 objects = new_values.get("objects", {})
