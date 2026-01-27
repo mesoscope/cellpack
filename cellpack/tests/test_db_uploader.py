@@ -175,3 +175,54 @@ def test_upload_recipe():
         "A": "firebase:composition/test_id",
     }
     assert recipe_doc.objects_to_path_map == {"sphere_25": "firebase:objects/test_id"}
+
+
+def test_upload_job_status_with_firebase_handler():
+    mock_firebase_db = MagicMock()
+    mock_firebase_db.create_timestamp.return_value = "test_timestamp"
+    # firebaseHandler does not have s3_client attribute
+    del mock_firebase_db.s3_client
+
+    uploader = DBUploader(mock_firebase_db)
+    uploader.upload_job_status("test_hash", "RUNNING")
+
+    mock_firebase_db.create_timestamp.assert_called_once()
+    mock_firebase_db.update_or_create.assert_called_once_with(
+        "job_status",
+        "test_hash",
+        {
+            "timestamp": "test_timestamp",
+            "status": "RUNNING",
+            "error_message": None,
+        },
+    )
+
+
+def test_upload_job_status_with_aws_handler():
+    mock_aws_db = MagicMock()
+    mock_aws_db.s3_client = MagicMock()  # AWSHandler has s3_client
+
+    mock_firebase_handler = MagicMock()
+    mock_firebase_handler.create_timestamp.return_value = "firebase_timestamp"
+
+    with patch(
+        "cellpack.autopack.DBRecipeHandler.DATABASE_IDS.handlers"
+    ) as mock_handlers:
+        mock_handlers.return_value.get.return_value = lambda default_db: mock_firebase_handler
+
+        uploader = DBUploader(mock_aws_db)
+        uploader.upload_job_status("test_hash", "DONE", result_path="test_path")
+
+        mock_firebase_handler.create_timestamp.assert_called_once()
+        mock_firebase_handler.update_or_create.assert_called_once_with(
+            "job_status",
+            "test_hash",
+            {
+                "timestamp": "firebase_timestamp",
+                "status": "DONE",
+                "error_message": None,
+                "result_path": "test_path",
+            },
+        )
+        # AWS handler should not be called for timestamp
+        mock_aws_db.create_timestamp.assert_not_called()
