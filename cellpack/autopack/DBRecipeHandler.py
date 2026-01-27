@@ -561,16 +561,22 @@ class DBUploader(object):
         Update status for a given dedup_hash
         """
         if self.db:
-            timestamp = self.db.create_timestamp()
+            db_handler = self.db
+            # If db is AWSHandler, switch to firebase handler for job status updates
+            if hasattr(self.db, "s3_client"):
+                handler = DATABASE_IDS.handlers().get(DATABASE_IDS.FIREBASE)
+                db_handler = handler(default_db="staging")
+            timestamp = db_handler.create_timestamp()
             data = {
                 "timestamp": timestamp,
                 "status": str(status),
-                "result_path": result_path,
                 "error_message": error_message,
             }
+            if result_path:
+                data["result_path"] = result_path
             if outputs_directory:
                 data["outputs_directory"] = outputs_directory
-            self.db.update_or_create("job_status", dedup_hash, data)
+            db_handler.update_or_create("job_status", dedup_hash, data)
 
     def save_recipe_and_config_to_output(self, output_folder, config_data, recipe_data):
         output_path = Path(output_folder)
