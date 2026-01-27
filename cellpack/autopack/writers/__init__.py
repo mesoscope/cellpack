@@ -197,8 +197,9 @@ class Writer(object):
         number_of_packings = env.config_data.get("number_of_packings", 1)
         open_results_in_browser = env.config_data.get("open_results_in_browser", False)
         upload_results = env.config_data.get("upload_results", False)
+        dedup_hash = getattr(env, "dedup_hash", None)
         if (number_of_packings == 1 or is_aggregate) and upload_results:
-            autopack.helper.post_and_open_file(file_name, open_results_in_browser)
+            autopack.helper.post_and_open_file(file_name, open_results_in_browser, dedup_hash)
 
     def save_Mixed_asJson(
         self,

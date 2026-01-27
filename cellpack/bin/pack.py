@@ -60,6 +60,7 @@ def pack(
     autopack.helper = helper
     env = Environment(config=packing_config_data, recipe=recipe_data)
     env.helper = helper
+    env.dedup_hash = hash
 
     log.info("Packing recipe: %s", recipe_data["name"])
     log.info("Outputs will be saved to %s", env.out_folder)

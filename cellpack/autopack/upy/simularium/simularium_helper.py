@@ -1385,11 +1385,8 @@ class simulariumHelper(hostHelper.Helper):
     def raycast_test(self, obj, start, end, length, **kw):
         return
 
-    def post_and_open_file(self, file_name, open_results_in_browser):
+    def post_and_open_file(self, file_name, open_results_in_browser, dedup_hash=None):
         simularium_file = Path(f"{file_name}.simularium")
-        url = None
-        # TODO: refactor to receive dedup_hash as parameter instead of reading from environment, and address the todo in L1410
-        dedup_hash = os.environ.get("AWS_BATCH_JOB_ID", None)
         file_name, url = simulariumHelper.store_result_file(
             simularium_file, storage="aws", batch_job_id=dedup_hash
         )
