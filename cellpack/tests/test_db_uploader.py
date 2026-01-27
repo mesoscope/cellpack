@@ -208,7 +208,9 @@ def test_upload_job_status_with_aws_handler():
     with patch(
         "cellpack.autopack.DBRecipeHandler.DATABASE_IDS.handlers"
     ) as mock_handlers:
-        mock_handlers.return_value.get.return_value = lambda default_db: mock_firebase_handler
+        mock_handlers.return_value.get.return_value = (
+            lambda default_db: mock_firebase_handler
+        )
 
         uploader = DBUploader(mock_aws_db)
         uploader.upload_job_status("test_hash", "DONE", result_path="test_path")
