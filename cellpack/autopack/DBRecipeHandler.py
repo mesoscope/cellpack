@@ -529,7 +529,7 @@ class DBUploader(object):
         self.db.update_doc("configs", id, config_data)
         return id
 
-    def upload_result_metadata(self, file_name, url, dedup_hash=None):
+    def upload_result_metadata(self, file_name, url):
         """
         Upload the metadata of the result file to the database.
         """
@@ -543,11 +543,8 @@ class DBUploader(object):
                     "user": username,
                     "timestamp": timestamp,
                     "url": url,
-                    "dedup_hash": dedup_hash,
                 },
             )
-        if dedup_hash:
-            self.upload_job_status(dedup_hash, "DONE", result_path=url)
 
     def upload_job_status(
         self,
@@ -644,6 +641,7 @@ class DBUploader(object):
                 self.upload_job_status(
                     dedup_hash,
                     "DONE",
+                    result_path=upload_result.get("simularium_url"),
                     outputs_directory=upload_result.get("outputs_directory"),
                 )
 
