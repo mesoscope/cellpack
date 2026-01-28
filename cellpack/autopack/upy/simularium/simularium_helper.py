@@ -1387,17 +1387,16 @@ class simulariumHelper(hostHelper.Helper):
 
     def post_and_open_file(self, file_name, open_results_in_browser, dedup_hash=None):
         simularium_file = Path(f"{file_name}.simularium")
-        file_name, url = None, None
         if dedup_hash is None:
             file_name, url = simulariumHelper.store_result_file(
                 simularium_file, storage="aws"
             )
-        if file_name and url:
-            simulariumHelper.store_metadata(
-                file_name, url, db="firebase"
-            )
-            if open_results_in_browser:
-                simulariumHelper.open_in_simularium(url)
+            if file_name and url:
+                simulariumHelper.store_metadata(
+                    file_name, url, db="firebase"
+                )
+                if open_results_in_browser:
+                    simulariumHelper.open_in_simularium(url)
 
     @staticmethod
     def store_result_file(
