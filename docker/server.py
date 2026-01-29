@@ -1,8 +1,6 @@
 import asyncio
 from aiohttp import web
-import os
-import uuid
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.bin.pack import pack
 
@@ -12,29 +10,40 @@ class CellpackServer:
     def __init__(self):
         self.packing_tasks = set()
 
-    async def run_packing(self, job_id, recipe=None, config=None, body=None):
-        os.environ["AWS_BATCH_JOB_ID"] = job_id
-        self.update_job_status(job_id, "RUNNING")
+    def _get_firebase_handler(self, database_name="firebase"):
+        handler = DATABASE_IDS.handlers().get(database_name)
+        initialized_db = handler(default_db="staging")
+        if initialized_db._initialized:
+            return initialized_db
+        return None
+
+    def job_exists(self, dedup_hash):
+        db = self._get_firebase_handler()
+        if not db:
+            return False
+
+        job_status, _ = db.get_doc_by_id("job_status", dedup_hash)
+        return job_status is not None
+
+    async def run_packing(self, dedup_hash, recipe=None, config=None, body=None):
+        self.update_job_status(dedup_hash, "RUNNING")
         try:
             # Pack JSON recipe in body if provided, otherwise use recipe path
-            pack(recipe=(body if body else recipe), config_path=config, docker=True)
+            pack(recipe=(body if body else recipe), config_path=config, docker=True, hash=dedup_hash)
         except Exception as e:
-            self.update_job_status(job_id, "FAILED", error_message=str(e))
+            self.update_job_status(dedup_hash, "FAILED", error_message=str(e))
 
-    def update_job_status(self, job_id, status, result_path=None, error_message=None):
-        handler = DATABASE_IDS.handlers().get("firebase")
-        initialized_db = handler(
-            default_db="staging"
-        )
-        if initialized_db._initialized:
-            db_uploader = DBUploader(initialized_db)
-            db_uploader.upload_job_status(job_id, status, result_path, error_message)
+    def update_job_status(self, dedup_hash, status, result_path=None, error_message=None):
+        db = self._get_firebase_handler()
+        if db:
+            db_uploader = DBUploader(db)
+            db_uploader.upload_job_status(dedup_hash, status, result_path, error_message)
 
     async def hello_world(self, request: web.Request) -> web.Response:
         return web.Response(text="Hello from the cellPACK server")
 
     async def health_check(self, request: web.Request) -> web.Response:
-        # healthcheck endpoint needed for AWS load balancer
+        # health check endpoint needed for AWS load balancer
         return web.Response()
 
     async def pack_handler(self, request: web.Request) -> web.Response:
@@ -48,10 +57,14 @@ class CellpackServer:
                 "Pack requests must include recipe as a query param"
             )
         config = request.rel_url.query.get("config")
-        job_id = str(uuid.uuid4())
+
+        dedup_hash = DataDoc.generate_hash(body)
+
+        if self.job_exists(dedup_hash):
+            return web.json_response({"jobId": dedup_hash})
 
         # Initiate packing task to run in background
-        packing_task = asyncio.create_task(self.run_packing(job_id, recipe, config, body))
+        packing_task = asyncio.create_task(self.run_packing(dedup_hash, recipe, config, body))
 
         # Keep track of task references to prevent them from being garbage
         # collected, then discard after task completion
@@ -60,7 +73,7 @@ class CellpackServer:
 
         # return job id immediately, rather than wait for task to complete,
         # to avoid timeout issues with API gateway
-        return web.json_response({"jobId": job_id})
+        return web.json_response({"jobId": dedup_hash})
 
 
 async def init_app() -> web.Application:
