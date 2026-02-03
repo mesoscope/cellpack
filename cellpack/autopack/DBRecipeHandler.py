@@ -1,7 +1,6 @@
 import copy
 import logging
 import shutil
-from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 
@@ -10,7 +9,6 @@ from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 
 import hashlib
 import json
-import requests
 
 from cellpack.autopack.utils import deep_merge
 
@@ -319,36 +317,6 @@ class GradientDoc(DataDoc):
     def __init__(self, settings):
         super().__init__()
         self.settings = settings
-
-
-class ResultDoc:
-    def __init__(self, db):
-        self.db = db
-
-    def handle_expired_results(self):
-        """
-        Check if the results in the database are expired and delete them if the linked object expired.
-        """
-        current_utc = datetime.now(timezone.utc)
-        results = self.db.get_all_docs("results")
-        if results:
-            for result in results:
-                result_data = self.db.doc_to_dict(result)
-                result_age = current_utc - result_data["timestamp"]
-                if result_age.days > 180 and not self.validate_existence(
-                    result_data["url"]
-                ):
-                    self.db.delete_doc("results", self.db.doc_id(result))
-            logging.info("Results cleanup complete.")
-        else:
-            logging.info("No results found in the database.")
-
-    def validate_existence(self, url):
-        """
-        Validate the existence of an S3 object by checking if the URL is accessible.
-        Returns True if the URL is accessible.
-        """
-        return requests.head(url).status_code == requests.codes.ok
 
 
 class DBUploader(object):
@@ -867,18 +835,11 @@ class DBRecipeLoader(object):
 
 class DBMaintenance(object):
     """
-    Handles the maintenance of the database.
+    Provides utility methods for database operations.
     """
 
     def __init__(self, db_handler):
         self.db = db_handler
-        self.result_doc = ResultDoc(self.db)
-
-    def cleanup_results(self):
-        """
-        Check if the results in the database are expired and delete them if the linked object expired.
-        """
-        self.result_doc.handle_expired_results()
 
     def readme_url(self):
         """
