@@ -22,7 +22,7 @@ from simulariumio import (
 from simulariumio.cellpack import HAND_TYPE, CellpackConverter
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
-from cellpack.autopack.DBRecipeHandler import DBMaintenance, DBUploader
+from cellpack.autopack.DBRecipeHandler import DBMaintenance
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.upy import hostHelper
 from cellpack.autopack.upy.simularium.plots import PlotData
@@ -1387,25 +1387,22 @@ class simulariumHelper(hostHelper.Helper):
 
     def post_and_open_file(self, file_name, open_results_in_browser, dedup_hash=None):
         simularium_file = Path(f"{file_name}.simularium")
-        file_name, url = simulariumHelper.store_result_file(
-            simularium_file, storage="aws", batch_job_id=dedup_hash
+        _, url = simulariumHelper.store_result_file(
+            simularium_file, storage="aws", dedup_hash=dedup_hash
         )
-        if file_name and url:
-            simulariumHelper.store_metadata(
-                file_name, url, db="firebase", dedup_hash=dedup_hash
-            )
+        if url:
+            logging.info(f"Result uploaded to: {url}")
             if open_results_in_browser:
                 simulariumHelper.open_in_simularium(url)
 
     @staticmethod
     def store_result_file(
-        file_path, storage=None, batch_job_id=None, sub_folder="simularium"
+        file_path, storage=None, dedup_hash=None, sub_folder="simularium"
     ):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
-            # if batch_job_id is not None, then we are in a batch job and should use the temp bucket
             # TODO: use cellpack-results bucket for batch jobs once we have the correct permissions
-            if batch_job_id:
+            if dedup_hash:
                 initialized_handler = handler(
                     bucket_name="cellpack-demo",
                     sub_folder_name=sub_folder,
@@ -1424,23 +1421,6 @@ class simulariumHelper(hostHelper.Helper):
                     f"Skipping browser opening, upload credentials not configured. For setup instructions see: {db_maintainer.readme_url()}"
                 )
         return file_name, url
-
-    @staticmethod
-    def store_metadata(file_name, url, db=None, dedup_hash=None):
-        if db == "firebase":
-            handler = DATABASE_IDS.handlers().get(db)
-            initialized_db = handler(
-                default_db="staging"
-            )  # default to staging for metadata uploads
-            if initialized_db._initialized:
-                db_uploader = DBUploader(initialized_db)
-                db_uploader.upload_result_metadata(file_name, url, dedup_hash)
-            else:
-                db_maintainer = DBMaintenance(initialized_db)
-                logging.warning(
-                    f"Firebase credentials not found. For setup instructions see: {db_maintainer.readme_url()}. Or try cellPACK web interface: https://cellpack.allencell.org (no setup required)"
-                )
-        return
 
     @staticmethod
     def open_in_simularium(aws_url):
