@@ -529,7 +529,7 @@ class DBUploader(object):
         self.db.update_doc("configs", id, config_data)
         return id
 
-    def upload_result_metadata(self, file_name, url, dedup_hash=None):
+    def upload_result_metadata(self, file_name, url):
         """
         Upload the metadata of the result file to the database.
         """
@@ -543,11 +543,8 @@ class DBUploader(object):
                     "user": username,
                     "timestamp": timestamp,
                     "url": url,
-                    "dedup_hash": dedup_hash,
                 },
             )
-        if dedup_hash:
-            self.upload_job_status(dedup_hash, "DONE", result_path=url)
 
     def upload_job_status(
         self,
@@ -644,6 +641,7 @@ class DBUploader(object):
                 self.upload_job_status(
                     dedup_hash,
                     "DONE",
+                    result_path=upload_result.get("simularium_url"),
                     outputs_directory=upload_result.get("outputs_directory"),
                 )
 
@@ -675,8 +673,11 @@ class DBUploader(object):
                     f"{base_url}/{file_info['s3_key']}"
                     for file_info in upload_result["uploaded_files"]
                 ]
+                simularium_url = None
+                for url in public_urls:
+                    if url.endswith(".simularium"):
+                        simularium_url = url
                 outputs_directory = f"https://us-west-2.console.aws.amazon.com/s3/buckets/{bucket_name}/{s3_prefix}/"
-
                 logging.info(
                     f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
                 )
@@ -694,6 +695,7 @@ class DBUploader(object):
                     "total_size": upload_result["total_size"],
                     "urls": public_urls,
                     "outputs_directory": outputs_directory,
+                    "simularium_url": simularium_url,
                 }
         except Exception as e:
             logging.error(e)
