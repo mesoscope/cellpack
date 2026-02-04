@@ -1387,33 +1387,24 @@ class simulariumHelper(hostHelper.Helper):
 
     def post_and_open_file(self, file_name, open_results_in_browser, dedup_hash=None):
         simularium_file = Path(f"{file_name}.simularium")
-        _, url = simulariumHelper.store_result_file(
-            simularium_file, storage="aws", dedup_hash=dedup_hash
-        )
-        if url:
-            logging.info(f"Result uploaded to: {url}")
-            if open_results_in_browser:
-                simulariumHelper.open_in_simularium(url)
+        if dedup_hash is None:
+            file_name, url = simulariumHelper.store_result_file(
+                simularium_file, storage="aws"
+            )
+            if url and open_results_in_browser:
+                    simulariumHelper.open_in_simularium(url)
 
     @staticmethod
     def store_result_file(
-        file_path, storage=None, dedup_hash=None, sub_folder="simularium"
+        file_path, storage=None, sub_folder="simularium"
     ):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
-            # TODO: use cellpack-results bucket for batch jobs once we have the correct permissions
-            if dedup_hash:
-                initialized_handler = handler(
-                    bucket_name="cellpack-demo",
-                    sub_folder_name=sub_folder,
-                    region_name="us-west-2",
-                )
-            else:
-                initialized_handler = handler(
-                    bucket_name="cellpack-results",
-                    sub_folder_name=sub_folder,
-                    region_name="us-west-2",
-                )
+            initialized_handler = handler(
+                bucket_name="cellpack-results",
+                sub_folder_name=sub_folder,
+                region_name="us-west-2",
+            )
             file_name, url = initialized_handler.save_file_and_get_url(file_path)
             if not file_name or not url:
                 db_maintainer = DBMaintenance(initialized_handler)
