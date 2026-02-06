@@ -838,16 +838,4 @@ class DBRecipeLoader(object):
         return recipe_data
 
 
-class DBMaintenance(object):
-    """
-    Provides utility methods for database operations.
-    """
-
-    def __init__(self, db_handler):
-        self.db = db_handler
-
-    def readme_url(self):
-        """
-        Return the URL to the README file for the database setup section.
-        """
-        return "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
+DB_SETUP_README_URL = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
