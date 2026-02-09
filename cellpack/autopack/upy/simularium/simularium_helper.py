@@ -22,7 +22,7 @@ from simulariumio import (
 from simulariumio.cellpack import HAND_TYPE, CellpackConverter
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
-from cellpack.autopack.DBRecipeHandler import DBMaintenance, DBUploader
+from cellpack.autopack.DBRecipeHandler import DB_SETUP_README_URL
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.upy import hostHelper
 from cellpack.autopack.upy.simularium.plots import PlotData
@@ -1388,20 +1388,12 @@ class simulariumHelper(hostHelper.Helper):
     def post_and_open_file(self, file_name, open_results_in_browser, dedup_hash=None):
         simularium_file = Path(f"{file_name}.simularium")
         if dedup_hash is None:
-            file_name, url = simulariumHelper.store_result_file(
-                simularium_file, storage="aws"
-            )
-            if file_name and url:
-                simulariumHelper.store_metadata(
-                    file_name, url, db="firebase"
-                )
-                if open_results_in_browser:
-                    simulariumHelper.open_in_simularium(url)
+            url = simulariumHelper.store_result_file(simularium_file, storage="aws")
+            if url and open_results_in_browser:
+                simulariumHelper.open_in_simularium(url)
 
     @staticmethod
-    def store_result_file(
-        file_path, storage=None, sub_folder="simularium"
-    ):
+    def store_result_file(file_path, storage=None, sub_folder="simularium"):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
             initialized_handler = handler(
@@ -1409,30 +1401,13 @@ class simulariumHelper(hostHelper.Helper):
                 sub_folder_name=sub_folder,
                 region_name="us-west-2",
             )
-            file_name, url = initialized_handler.save_file_and_get_url(file_path)
-            if not file_name or not url:
-                db_maintainer = DBMaintenance(initialized_handler)
+            _, url = initialized_handler.save_file_and_get_url(file_path)
+            if not url:
                 logging.warning(
-                    f"Skipping browser opening, upload credentials not configured. For setup instructions see: {db_maintainer.readme_url()}"
+                    f"Skipping browser opening, upload credentials not configured. For setup instructions see: {DB_SETUP_README_URL}"
                 )
-        return file_name, url
-
-    @staticmethod
-    def store_metadata(file_name, url, db=None):
-        if db == "firebase":
-            handler = DATABASE_IDS.handlers().get(db)
-            initialized_db = handler(
-                default_db="staging"
-            )  # default to staging for metadata uploads
-            if initialized_db._initialized:
-                db_uploader = DBUploader(initialized_db)
-                db_uploader.upload_result_metadata(file_name, url)
-            else:
-                db_maintainer = DBMaintenance(initialized_db)
-                logging.warning(
-                    f"Firebase credentials not found. For setup instructions see: {db_maintainer.readme_url()}. Or try cellPACK web interface: https://cellpack.allencell.org (no setup required)"
-                )
-        return
+            return url
+        return None
 
     @staticmethod
     def open_in_simularium(aws_url):
