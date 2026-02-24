@@ -36,7 +36,7 @@ class ConfigLoader(object):
         "out": "out/",
         "overwrite_place_method": False,
         "open_results_in_browser": True,
-        "parallel": False,
+        "number_of_processes": 1,
         "place_method": "spheresSST",
         "randomness_seed": None,
         "save_analyze_result": False,
@@ -92,6 +92,10 @@ class ConfigLoader(object):
                         f"{should_be_bool} should be a boolean, not {config[should_be_bool]}"
                     )
                 )
+        if not isinstance(config["number_of_processes"], int) or config["number_of_processes"] < 1:
+            raise TypeError(
+                f"number_of_processes must be an integer >= 1, not {config['number_of_processes']}"
+            )
 
     @staticmethod
     def _migrate_version(config):

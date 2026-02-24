@@ -15,7 +15,7 @@ The config file controls the packing behavior. It specifies parameters such as p
 | `ordered_packing`                      | boolean           | Use deterministic packing order          | False         |                                                     |
 | `out`                                  | string            | Output directory path                    | `"out/"`      |                                                     |
 | `overwrite_place_method`               | boolean           | Override object-specific place methods   | False         |                                                     |
-| `parallel`                             | boolean           | Enable parallel packing                  | False         |                                                     |
+| `number_of_processes`                  | integer (>=1)     | Number of parallel processes to use      | 1             | Values > 1 enable parallel packing                  |
 | `place_method`                         | string            | Default packing method                   | spheresSST    | e.g., `jitter`, `spheresSST`                        |
 | `randomness_seed`                      | number            | Random seed value                        | None          | Helps reproduce packing runs                        |
 | `save_analyze_result`                  | boolean           | Save packing analysis result             | False         | Saves additional data and figures from packing.     |

@@ -7,7 +7,6 @@ Created on Mon May  6 22:58:44 2013
 import concurrent.futures
 import json
 import logging
-import multiprocessing
 from pathlib import Path
 from time import time
 
@@ -1188,7 +1187,7 @@ class Analysis:
             if "ImageWriter" not in globals():
                 from cellpack.autopack.writers.ImageWriter import ImageWriter
 
-        parallel = packing_config_data.get("parallel", False)
+        number_of_processes = packing_config_data.get("number_of_processes", 1)
         save_gradient_data_as_image = packing_config_data.get(
             "save_gradient_data_as_image", False
         )
@@ -1228,13 +1227,8 @@ class Analysis:
         ingredient_occurence_dict = {}
         ingredient_key_dict = {}
 
-        if parallel:
-            num_processes = numpy.min(
-                [
-                    int(numpy.floor(0.8 * multiprocessing.cpu_count())),
-                    number_of_packings,
-                ]
-            )
+        if number_of_processes > 1:
+            num_processes = min(number_of_processes, number_of_packings)
             with concurrent.futures.ProcessPoolExecutor(
                 max_workers=num_processes
             ) as executor:

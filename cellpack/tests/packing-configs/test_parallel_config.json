@@ -5,7 +5,7 @@
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": true,
-    "parallel": true,
+    "number_of_processes": 4,
     "load_from_grid_file": false,
     "number_of_packings": 5,
     "show_sphere_trees": true,
