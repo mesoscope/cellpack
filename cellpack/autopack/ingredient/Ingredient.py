@@ -1505,6 +1505,7 @@ class Ingredient(Agent):
                 if radius is not None:
                     self.radius = radius
                     self.encapsulating_radius = radius
+                    self.min_radius = radius
 
     def attempt_to_pack_at_grid_location(
         self,

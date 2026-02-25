@@ -181,8 +181,10 @@ def get_min_value_from_distribution(distribution_options, return_int=False):
         value = distribution_options.get("min", 1)
 
     if distribution_options.get("distribution") == "normal":
-        value = distribution_options.get("mean", 0) - 2 * distribution_options.get(
-            "std", 1
+        value = distribution_options.get(
+            "min",
+            distribution_options.get("mean", 0)
+            - 2 * distribution_options.get("std", 1),
         )
 
     if distribution_options.get("distribution") == "list":
@@ -203,8 +205,10 @@ def get_max_value_from_distribution(distribution_options, return_int=False):
         value = distribution_options.get("max", 1)
 
     if distribution_options.get("distribution") == "normal":
-        value = distribution_options.get("mean", 0) + 2 * distribution_options.get(
-            "std", 1
+        value = distribution_options.get(
+            "max",
+            distribution_options.get("mean", 0)
+            + 2 * distribution_options.get("std", 1),
         )
 
     if distribution_options.get("distribution") == "list":
@@ -234,8 +238,15 @@ def get_value_from_distribution(distribution_options, return_int=False):
                 distribution_options.get("max", 1),
             )
     if distribution_options.get("distribution") == "normal":
-        value = numpy.random.normal(
-            distribution_options.get("mean", 0), distribution_options.get("std", 1)
+        clip_min = get_min_value_from_distribution(distribution_options)
+        if clip_min is not None:
+            clip_min = max(0, clip_min)
+        value = numpy.clip(
+            numpy.random.normal(
+                distribution_options.get("mean", 0), distribution_options.get("std", 1)
+            ),
+            clip_min,
+            get_max_value_from_distribution(distribution_options),
         )
     elif distribution_options.get("distribution") == "list":
         value = numpy.random.choice(distribution_options.get("list_values", None))
