@@ -109,7 +109,9 @@ class ConfigLoader(object):
                 db = DATABASE_IDS.handlers().get(database_name)
                 initialize_db = db(default_db="staging") if use_docker else db()
                 db_handler = DBRecipeLoader(initialize_db)
-                config = db_handler.read_config(self.file_path)
+                remote_values = db_handler.read_config(self.file_path)
+                config = ConfigLoader.default_values.copy()
+                config.update(remote_values)
             else:
                 new_values = json.load(open(self.file_path, "r"))
                 config = ConfigLoader.default_values.copy()
