@@ -185,19 +185,26 @@ class Writer(object):
                     env.grid.gridSpacing / 4,
                 )
         # write to simularium format
-        result_file_name = env.result_file
+        result_folder, result_file_name = os.path.split(env.result_file)
         is_aggregate = len(seed_to_results_map) > 1
-        if is_aggregate:
-            result_file_name = f"{env.result_file.split('_seed')[0]}_all"
-        else:
-            result_file_name = f"{env.result_file.split('_seed')[0]}_seed_{list(seed_to_results_map.keys())[0]}"
+        base_name = result_file_name.split("_seed")[0]
+        result_file_name = (
+            f"{base_name}_all"
+            if is_aggregate
+            else f"{base_name}_seed_{list(seed_to_results_map.keys())[0]}"
+        )
         file_name = env.helper.writeToFile(
-            result_file_name, env.boundingBox, env.name, env.version
+            f"{result_folder}/{result_file_name}",
+            env.boundingBox,
+            env.name,
+            env.version,
         )
         number_of_packings = env.config_data.get("number_of_packings", 1)
-        open_results_in_browser = env.config_data.get("open_results_in_browser", True)
         upload_results = env.config_data.get("upload_results", True)
-        if (number_of_packings == 1 or is_aggregate) and upload_results:
+        if upload_results and (number_of_packings == 1 or is_aggregate):
+            open_results_in_browser = env.config_data.get(
+                "open_results_in_browser", True
+            )
             autopack.helper.post_and_open_file(file_name, open_results_in_browser)
 
     def save_Mixed_asJson(
