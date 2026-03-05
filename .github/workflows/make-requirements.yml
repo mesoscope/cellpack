@@ -101,6 +101,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.WORKFLOW_PAT }}@github.com/${{ github.repository }}
           BRANCH="admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}"
           git checkout -b "$BRANCH"
+          echo "# test change" >> requirements/linux/requirements.txt
           git add requirements/
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "Updating requirements.txt after change to \`uv.lock\` was pushed to \`main\`"
