@@ -1,0 +1,84 @@
+{
+  "editable_fields": [
+    {
+      "name": "Sphere 100 Count",
+      "description": "Number of 100nm radius spheres to pack",
+      "default": 60,
+      "path": "composition.A.count",
+      "data_type": "integer",
+      "input_type": "slider",
+      "min": 1,
+      "max": 200
+    },
+    {
+      "name": "Sphere 100 Radius",
+      "description": "Radius of sphere type A",
+      "default": 100,
+      "path": "objects.sphere_100.radius",
+      "data_type": "float",
+      "input_type": "slider",
+      "min": 1,
+      "max": 500
+    },
+    {
+      "name": "Sphere 200 Count",
+      "description": "Number of 200nm radius spheres to pack",
+      "default": 20,
+      "path": "composition.B.count",
+      "data_type": "integer",
+      "input_type": "slider",
+      "min": 1,
+      "max": 100
+    },
+    {
+      "name": "Sphere 200 Radius",
+      "description": "Radius of sphere type B",
+      "default": 200,
+      "path": "objects.sphere_200.radius",
+      "data_type": "float",
+      "input_type": "slider",
+      "min": 1,
+      "max": 500
+    },
+    {
+      "name": "Sphere 50 Count",
+      "description": "Number of 50nm radius spheres to pack",
+      "default": 150,
+      "path": "composition.C.count",
+      "data_type": "integer",
+      "input_type": "slider",
+      "min": 1,
+      "max": 300
+    },
+    {
+      "name": "Sphere 50 Radius",
+      "description": "Radius of sphere type C",
+      "default": 50,
+      "path": "objects.sphere_50.radius",
+      "data_type": "float",
+      "input_type": "slider",
+      "min": 1,
+      "max": 500
+    },
+    {
+      "name": "Sphere 25 Count",
+      "description": "Number of 25nm radius spheres to pack",
+      "default": 400,
+      "path": "composition.D.count",
+      "data_type": "integer",
+      "input_type": "slider",
+      "min": 1,
+      "max": 800
+    },
+    {
+      "name": "Sphere 25 Radius",
+      "description": "Radius of sphere type D",
+      "default": 25,
+      "path": "objects.sphere_25.radius",
+      "data_type": "float",
+      "input_type": "slider",
+      "min": 1,
+      "max": 500
+    }
+  ]
+}
