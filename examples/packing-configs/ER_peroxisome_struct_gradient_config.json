@@ -1,0 +1,11 @@
+{
+  "name": "rules_shape",
+  "save_analyze_result": true,
+  "save_plot_figures": false,
+  "spacing": 2,
+  "image_export_options": {
+    "hollow": false,
+    "voxel_size": [1, 1, 1],
+    "projection_axis": "z"
+  }
+}
