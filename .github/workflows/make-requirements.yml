@@ -64,6 +64,9 @@ jobs:
   open-PR:
     needs: [make-requirements]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - name: Download linux requirements files
@@ -93,14 +96,20 @@ jobs:
         run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M')" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
-        with:
-          base: main
-          title: admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}
-          body: Updating requirements.txt.
-
-            Due to some [challenges](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs),
-            with getting this PR to trigger the tests, please manually close and re-open this PR.
-          branch: admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}
-          commit-message: Updating requirements.txt after change to `uv.lock` was pushed to `main`
-          delete-branch: true
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_PAT }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.WORKFLOW_PAT }}@github.com/${{ github.repository }}
+          BRANCH="admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}"
+          git checkout -b "$BRANCH"
+          git add requirements/
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Updating requirements.txt after change to \`uv.lock\` was pushed to \`main\`"
+          git push origin "$BRANCH"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "admin/requirements-update_${{ steps.timestamp.outputs.timestamp }}" \
+            --body "Updating requirements.txt."
