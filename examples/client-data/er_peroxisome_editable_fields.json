@@ -1,0 +1,94 @@
+{
+  "editable_fields": [
+    {
+      "name": "Peroxisome Count",
+      "description": "Number of spheres to be packed",
+      "default": 121,
+      "path": "composition.membrane.regions.interior.2.count",
+      "data_type": "integer",
+      "input_type": "slider",
+      "min": 1,
+      "max": 300
+    },
+    {
+      "name": "Peroxisome Radius",
+      "description": "Radius of spheres",
+      "default": 2.37,
+      "path": "objects.peroxisome.radius",
+      "data_type": "float",
+      "input_type": "slider",
+      "min": 0.01,
+      "max": 9.259,
+      "unit": "µm",
+      "conversion_factor": 0.108
+    },
+    {
+      "name": "Spatial Distribution Rule",
+      "description": "Choose one of the available options listed in the \"gradients\" dictionary. Select \"No Gradient\" to pack without gradient.",
+      "path": "objects.peroxisome.gradient",
+      "data_type": "gradient",
+      "input_type": "gradient",
+      "gradient_options": [
+        {
+          "display_name": "Nuclear Bias",
+          "value": "nucleus_gradient",
+          "path": "objects.peroxisome.gradient",
+          "packing_mode": "gradient",
+          "packing_mode_path": "objects.peroxisome.packing_mode",
+          "strength_path": "gradients.nucleus_gradient.weight_mode_settings.decay_length",
+          "strength_default": 0.1,
+          "strength_display_name": "Nucleus Decay Length",
+          "strength_description": "Smaller decay length indicates stronger bias",
+          "strength_min": 0.01,
+          "strength_max": 1
+        },
+        {
+          "display_name": "Membrane Bias",
+          "value": "membrane_gradient",
+          "path": "objects.peroxisome.gradient",
+          "packing_mode": "gradient",
+          "packing_mode_path": "objects.peroxisome.packing_mode",
+          "strength_path": "gradients.membrane_gradient.weight_mode_settings.decay_length",
+          "strength_default": 0.1,
+          "strength_display_name": "Membrane Decay Length",
+          "strength_description": "Smaller decay length indicates stronger bias",
+          "strength_min": 0.01,
+          "strength_max": 1
+        },
+        {
+          "display_name": "Apical Bias",
+          "value": "apical_gradient",
+          "path": "objects.peroxisome.gradient",
+          "packing_mode": "gradient",
+          "packing_mode_path": "objects.peroxisome.packing_mode",
+          "strength_path": "gradients.apical_gradient.weight_mode_settings.decay_length",
+          "strength_default": 0.1,
+          "strength_display_name": "Apical Decay Length",
+          "strength_description": "Smaller decay length indicates stronger bias",
+          "strength_min": 0.01,
+          "strength_max": 1
+        },
+        {
+          "display_name": "ER Gradient",
+          "value": "struct_gradient",
+          "path": "objects.peroxisome.gradient",
+          "packing_mode": "gradient",
+          "packing_mode_path": "objects.peroxisome.packing_mode",
+          "strength_path": "gradients.struct_gradient.weight_mode_settings.decay_length",
+          "strength_default": 0.1,
+          "strength_display_name": "ER Decay Length",
+          "strength_description": "Smaller decay length indicates stronger bias",
+          "strength_min": 0.01,
+          "strength_max": 1
+        },
+        {
+          "display_name": "Unbiased",
+          "value": "random",
+          "path": "objects.peroxisome.packing_mode",
+          "packing_mode": "random",
+          "packing_mode_path": "objects.peroxisome.packing_mode"
+        }
+      ]
+    }
+  ]
+}
