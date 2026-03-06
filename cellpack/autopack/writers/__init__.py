@@ -187,11 +187,12 @@ class Writer(object):
         # write to simularium format
         result_folder, result_file_name = os.path.split(env.result_file)
         is_aggregate = len(seed_to_results_map) > 1
-        base_name = result_file_name.split("_seed")[0]
+        stem, ext = os.path.splitext(result_file_name)
+        base_name = stem.rsplit("_seed", 1)[0]
         result_file_name = (
-            f"{base_name}_all"
+            f"{base_name}_all{ext}"
             if is_aggregate
-            else f"{base_name}_seed_{list(seed_to_results_map.keys())[0]}"
+            else f"{base_name}_seed_{list(seed_to_results_map.keys())[0]}{ext}"
         )
         file_name = env.helper.writeToFile(
             f"{result_folder}/{result_file_name}",
