@@ -14,10 +14,10 @@ graph TD
     E --> F[Create Background Task]
     F --> G[Return job_id immediately]
     F --> I[Initiate packing]
-    I --> J[Load recipe from firebase, using file path from URL param]
+    I --> J[Load recipe from firebase<br>using file path from URL param]
     J --> K[Execute packing]
     K --> L{Packing succeeds?}
-    L -->|Success| M[S3: Upload outputs to S3, Firebase: Update job status to SUCCEEDED]
+    L -->|Success| M[S3: Upload outputs to S3<br>Firebase: Update job status to SUCCEEDED]
     L -->|Failure| N[Firebase: Update job status to FAILED]
     
     style A fill:#e1f5fe
@@ -35,19 +35,19 @@ graph TD
     C -->|Has recipe path URL param| E[Generate UUID for job_id]
     C -->|Has recipe JSON in request body| F[Generate hash from JSON]
     F --> G{Packing result exists in firebase for this hash?}
-    G -->|Yes| H[Return existing hash as job_id]
+    G -->|Yes| H[Return existing hash<br>as job_id]
     G -->|No| I[Use hash as job_id]
     E --> J[Create Background Task]
     I --> J
     J --> K[Return job_id immediately]
     J --> L[Initiate packing]
     L --> M{Input type?}
-    M -->|Recipe path| N[Load recipe from firebase, using file path from URL param]
-    M -->|JSON body| O[Load recipe from JSON dict, from request body]
+    M -->|Recipe path| N[Load recipe from firebase<br>using file path from URL param]
+    M -->|JSON body| O[Load recipe from JSON dict<br>from request body]
     N --> P[Execute packing]
     O --> P
     P --> Q{Packing succeeds?}
-    Q -->|Success| R[S3: Upload outputs to S3, Firebase: Update job status to SUCCEEDED]
+    Q -->|Success| R[S3: Upload outputs to S3<br>Firebase: Update job status to SUCCEEDED]
     Q -->|Failure| S[Firebase: Update job status to FAILED]
     
     style A fill:#e1f5fe
