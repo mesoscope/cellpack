@@ -8,17 +8,16 @@ The main changes in this PR allow the server to accept recipe JSON directly in t
 ```mermaid
 graph TD
     A[Client Request] --> B[POST /start-packing]
-    B --> C{Check recipe param}
+    B --> C{Check for recipe URL param}
     C -->|Missing| D[Return 400 Error]
     C -->|Present| E[Generate UUID for job_id]
     E --> F[Create Background Task]
     F --> G[Return job_id immediately]
-    F --> H[run_packing with recipe path]
-    H --> I[pack with docker enabled]
-    I --> J[Load recipe from file path]
+    F --> I[Initiate packing]
+    I --> J[Load recipe from firebase, using file path from URL param]
     J --> K[Execute packing]
     K --> L{Packing succeeds?}
-    L -->|Success| M[S3: Upload outputs to S3]
+    L -->|Success| M[S3: Upload outputs to S3, Firebase: Update job status to SUCCEEDED]
     L -->|Failure| N[Firebase: Update job status to FAILED]
     
     style A fill:#e1f5fe
@@ -32,23 +31,23 @@ graph TD
 graph TD
     A[Client Request] --> B[POST /start-packing]
     B --> C{Check inputs}
-    C -->|No recipe param + No body| D[Return 400 Error]
-    C -->|Has recipe param + config| E[Generate UUID for job_id]
-    C -->|Has JSON body + config| F[Generate hash from JSON]
-    F --> G{Job exists?}
-    G -->|Yes| H[Return existing job_id]
+    C -->|No recipe - no URL param and no request body| D[Return 400 Error]
+    C -->|Has recipe path URL param| E[Generate UUID for job_id]
+    C -->|Has recipe JSON in request body| F[Generate hash from JSON]
+    F --> G{Packing result exists in firebase for this hash?}
+    G -->|Yes| H[Return existing hash as job_id]
     G -->|No| I[Use hash as job_id]
     E --> J[Create Background Task]
     I --> J
     J --> K[Return job_id immediately]
-    J --> L[pack with docker enabled and hash]
+    J --> L[Initiate packing]
     L --> M{Input type?}
-    M -->|Recipe path| N[Load recipe from file path]
-    M -->|JSON body| O[Load recipe from JSON dict]
-    N --> P[Execute packing in pack function]
+    M -->|Recipe path| N[Load recipe from firebase, using file path from URL param]
+    M -->|JSON body| O[Load recipe from JSON dict, from request body]
+    N --> P[Execute packing]
     O --> P
     P --> Q{Packing succeeds?}
-    Q -->|Success| R[S3: Upload outputs to S3]
+    Q -->|Success| R[S3: Upload outputs to S3, Firebase: Update job status to SUCCEEDED]
     Q -->|Failure| S[Firebase: Update job status to FAILED]
     
     style A fill:#e1f5fe
@@ -56,7 +55,7 @@ graph TD
     style R fill:#fff3e0
     style S fill:#ffcdd2
     style G fill:#ffeb3b
-    style H fill:#4caf50
+    style H fill:#c8e6c9
 ```
 
 ## Key Server Improvements
