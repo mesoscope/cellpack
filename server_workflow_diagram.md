@@ -64,17 +64,21 @@ graph TD
 - **BEFORE**: Each request generated a unique UUID, no deduplication possible
 - **AFTER**: JSON recipes generate deterministic hash, enabling job deduplication
 
-### 2. **Input Flexibility**
+### 2. **Input Flexibility & Backwards Compatibility**
 - **BEFORE**: Only recipe file paths supported via query parameter
 - **AFTER**: Supports both recipe file paths AND direct JSON recipe objects in request body, plus optional config parameter
 
-### 3. **Job Tracking**
-- **BEFORE**: Generated UUID for each job without deduplication
-- **AFTER**: Uses deterministic hash for JSON recipes, enabling job reuse
+### 3. **Smart Job Management**
+- **BEFORE**: Generated UUID for each job without deduplication, every request creates new job regardless of content
+- **AFTER**: Uses deterministic hash for JSON recipes, enabling job reuse for identical recipes
 
-### 4. **Smart Job Management**
-- **BEFORE**: Every request creates new job regardless of content
-- **AFTER**: Identical recipe JSON returns existing job ID if already processed
+### 4. **Firebase Request Reduction**
+- **BEFORE**: Every edited recipe was uploaded to firebase by the client and downloaded from firebase by the server
+- **AFTER**: Edited recipes are passed in the body of the packing request, so no firebase uploads or downloads occur
+
+### 5: **Unified Results Upload**
+- **BEFORE**: Simularium result file was uploaded to S3 twice per job, once on its own and once as part of the full output files upload
+- **AFTER**: Only upload Simularium result file once by keeping track of its path when we upload all output files
 
 ## Technical Implementation
 
@@ -83,9 +87,6 @@ graph TD
 2. **`job_exists()`** - Checks if job already completed in Firebase
 3. **Enhanced request handling** - Reads JSON from request body
 4. **Smart job ID generation** - Uses hash for JSON recipes, UUID for file paths
-
-### Note: Known Issues
-- Error message still says "recipe as a query param" but should mention body JSON is also accepted
 
 ### Request Flow Changes:
 1. **Input validation** now checks both query params and request body
@@ -99,3 +100,4 @@ graph TD
 2. **Faster Client Response**: Instant return for duplicate JSON requests  
 3. **Better Resource Utilization**: No redundant compute for same recipes
 4. **Improved API Design**: JSON recipes easier for programmatic access
+5. **Reduced Firebase Usage**: Passing recipe directly instead of uploading to firebase
