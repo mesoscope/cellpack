@@ -49,10 +49,17 @@ class CellpackServer:
 
     async def pack_handler(self, request: web.Request) -> web.Response:
         recipe = request.rel_url.query.get("recipe") or ""
-        if request.can_read_body:
-            body = await request.json()
-        else:
-            body = None
+        body = None
+
+        # If request has a body, attempt to parse it as JSON and use as recipe
+        # otherwise rely on recipe query param
+        if (request.can_read_body and request.content_length
+                and request.content_length > 0):
+            try:
+                body = await request.json()
+            except Exception:
+                body = None
+
         if not recipe and not body:
             raise web.HTTPBadRequest(
                 "Pack requests must include a recipe, either as a query param or in the request body"
