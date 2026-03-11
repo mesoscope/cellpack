@@ -1392,16 +1392,12 @@ class simulariumHelper(hostHelper.Helper):
                 simularium_file, storage="aws"
             )
             if file_name and url:
-                simulariumHelper.store_metadata(
-                    file_name, url, db="firebase"
-                )
+                simulariumHelper.store_metadata(file_name, url, db="firebase")
                 if open_results_in_browser:
                     simulariumHelper.open_in_simularium(url)
 
     @staticmethod
-    def store_result_file(
-        file_path, storage=None, sub_folder="simularium"
-    ):
+    def store_result_file(file_path, storage=None, sub_folder="simularium"):
         if storage == "aws":
             handler = DATABASE_IDS.handlers().get(storage)
             initialized_handler = handler(
