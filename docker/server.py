@@ -54,7 +54,7 @@ class CellpackServer:
             body = None
         if not recipe and not body:
             raise web.HTTPBadRequest(
-                "Pack requests must include recipe as a query param"
+                "Pack requests must include a recipe, either as a query param or in the request body"
             )
         config = request.rel_url.query.get("config")
 
