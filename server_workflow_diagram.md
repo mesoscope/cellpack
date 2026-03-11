@@ -14,7 +14,7 @@ graph TD
     E --> F[Create Background Task]
     F --> G[Return job_id immediately]
     F --> I[Initiate packing]
-    I --> J[Load recipe from firebase<br>using file path from URL param]
+    I --> J[Load recipe from firebase<br>using file path from<br>URL param]
     J --> K[Execute packing]
     K --> L{Packing succeeds?}
     L -->|Success| M[S3: Upload outputs to S3<br>Firebase: Update job status to SUCCEEDED]
@@ -31,10 +31,10 @@ graph TD
 graph TD
     A[Client Request] --> B[POST /start-packing]
     B --> C{Check inputs}
-    C -->|No recipe - no URL param and no request body| D[Return 400 Error]
+    C -->|No recipe - no URL param<br>and no request body| D[Return 400 Error]
     C -->|Has recipe path URL param| E[Generate UUID for job_id]
     C -->|Has recipe JSON in request body| F[Generate hash from JSON]
-    F --> G{Packing result exists in firebase for this hash?}
+    F --> G{Packing result exists<br>in firebase for this hash?}
     G -->|Yes| H[Return existing hash<br>as job_id]
     G -->|No| I[Use hash as job_id]
     E --> J[Create Background Task]
@@ -42,7 +42,7 @@ graph TD
     J --> K[Return job_id immediately]
     J --> L[Initiate packing]
     L --> M{Input type?}
-    M -->|Recipe path| N[Load recipe from firebase<br>using file path from URL param]
+    M -->|Recipe path| N[Load recipe from firebase<br>using file path from<br>URL param]
     M -->|JSON body| O[Load recipe from JSON dict<br>from request body]
     N --> P[Execute packing]
     O --> P
