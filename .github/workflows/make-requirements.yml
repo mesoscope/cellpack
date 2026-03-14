@@ -90,7 +90,7 @@ jobs:
 
       - name: Get timestamp
         id: timestamp
-        run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M')" >> $GITHUB_OUTPUT
+        run: echo "timestamp=$(date +'%Y-%m-%d_%H-%M')_${{ github.run_id }}" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         env:
