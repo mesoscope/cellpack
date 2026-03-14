@@ -3,7 +3,7 @@ description: Install UV
 runs:
   using: composite
   steps:
-    - name: Set up UV
-      uses: astral-sh/setup-uv@v3
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v7
       with:
         enable-cache: true
