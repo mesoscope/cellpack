@@ -34,6 +34,7 @@ Define here some usefull variable and setup filename path that facilitate
 AF
 @author: Ludovic Autin with editing by Graham Johnson
 """
+
 import getpass
 import json
 import logging
