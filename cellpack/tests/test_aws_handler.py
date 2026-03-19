@@ -1,7 +1,28 @@
+import builtins
+from unittest.mock import mock_open, patch
+
 import boto3
-from unittest.mock import patch
 from moto import mock_aws
+
 from cellpack.autopack.AWSHandler import AWSHandler
+
+_real_open = builtins.open
+
+
+def _open_passthrough(read_data="test file"):
+    """Return an open() side_effect that mocks test-file opens but passes real opens through.
+
+    This prevents botocore's configparser from receiving mock data when it reads
+    ~/.aws/config, which would cause a ConfigParseError.
+    """
+    m = mock_open(read_data=read_data)
+
+    def _open(file, *args, **kwargs):
+        if "test_file" in str(file):
+            return m(file, *args, **kwargs)
+        return _real_open(file, *args, **kwargs)
+
+    return _open
 
 
 @patch("cellpack.autopack.AWSHandler.boto3.client")
@@ -31,7 +52,8 @@ def test_get_aws_object_key():
         assert object_key == "test_folder/test_file"
 
 
-def test_upload_file():
+@patch("builtins.open", side_effect=_open_passthrough())
+def test_upload_file(mock_file):
     with mock_aws():
         aws_handler = AWSHandler(
             bucket_name="test_bucket",
@@ -43,15 +65,17 @@ def test_upload_file():
             Bucket="test_bucket",
             CreateBucketConfiguration={"LocationConstraint": "us-west-2"},
         )
-        with open("test_file.txt", "w") as file:
-            file.write("test file")
         file_name = aws_handler.upload_file("test_file.txt")
         assert file_name == "test_folder/test_file.txt"
 
 
-def test_create_presigned_url():
+@patch("builtins.open", side_effect=_open_passthrough())
+def test_create_presigned_url(mock_file):
     with mock_aws(), patch.object(AWSHandler, "_s3_client") as mock_client:
-        presigned_url = "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/test_file.txt?query=string"
+        presigned_url = (
+            "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/"
+            "test_file.txt?query=string"
+        )
         mock_client.generate_presigned_url.return_value = presigned_url
         aws_handler = AWSHandler(
             bucket_name="test_bucket",
@@ -63,19 +87,22 @@ def test_create_presigned_url():
             Bucket="test_bucket",
             CreateBucketConfiguration={"LocationConstraint": "us-west-2"},
         )
-        with open("test_file.txt", "w") as file:
-            file.write("test file")
         aws_handler.upload_file("test_file.txt")
         url = aws_handler.create_presigned_url("test_file.txt")
         assert url is not None
         assert url.startswith(
-            "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/test_file.txt"
+            "https://s3.us-west-2.amazonaws.com/test_bucket/"
+            "test_folder/test_file.txt"
         )
 
 
-def test_is_url_valid():
+@patch("builtins.open", side_effect=_open_passthrough())
+def test_is_url_valid(mock_file):
     with mock_aws(), patch.object(AWSHandler, "_s3_client") as mock_client:
-        presigned_url = "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/test_file.txt?query=string"
+        presigned_url = (
+            "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/"
+            "test_file.txt?query=string"
+        )
         mock_client.generate_presigned_url.return_value = presigned_url
         aws_handler = AWSHandler(
             bucket_name="test_bucket",
@@ -87,8 +114,6 @@ def test_is_url_valid():
             Bucket="test_bucket",
             CreateBucketConfiguration={"LocationConstraint": "us-west-2"},
         )
-        with open("test_file.txt", "w") as file:
-            file.write("test file")
         aws_handler.upload_file("test_file.txt")
         url = aws_handler.create_presigned_url("test_file.txt")
         assert aws_handler.is_url_valid(url) is True
@@ -101,7 +126,8 @@ def test_is_url_valid():
         )
         assert (
             aws_handler.is_url_valid(
-                "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/test_file.txt?AWSAccessKeyId=1234"
+                "https://s3.us-west-2.amazonaws.com/test_bucket/test_folder/"
+                "test_file.txt?AWSAccessKeyId=1234"
             )
             is False
         )
