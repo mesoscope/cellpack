@@ -1,6 +1,5 @@
 import logging
 import logging.config
-import os
 import time
 from pathlib import Path
 
@@ -25,23 +24,32 @@ log = logging.getLogger()
 
 
 def pack(
-    recipe, config_path=None, analysis_config_path=None, docker=False, validate=True
+    recipe,
+    config_path=None,
+    analysis_config_path=None,
+    docker=False,
+    hash=None,
 ):
     """
     Initializes an autopack packing from the command line
-    :param recipe: string argument, path to recipe
+    :param recipe: string argument, path to recipe file, or a dictionary representing a recipe
     :param config_path: string argument, path to packing config file
     :param analysis_config_path: string argument, path to analysis config file
     :param docker: boolean argument, are we using docker
-    :param validate: boolean argument, validate recipe before packing
+    :param hash: string argument, dedup hash identifier for tracking/caching results
 
     :return: void
     """
     packing_config_data = ConfigLoader(config_path, docker).config
 
-    recipe_loader = RecipeLoader(
-        recipe, packing_config_data["save_converted_recipe"], docker
-    )
+    if isinstance(recipe, dict):
+        # Load recipe from JSON dictionary
+        recipe_loader = RecipeLoader.from_json(recipe, use_docker=docker)
+    else:
+        # Load recipe from file path
+        recipe_loader = RecipeLoader(
+            recipe, packing_config_data["save_converted_recipe"], docker
+        )
     recipe_data = recipe_loader.recipe_data
     analysis_config_data = {}
     if analysis_config_path is not None:
@@ -52,6 +60,7 @@ def pack(
     autopack.helper = helper
     env = Environment(config=packing_config_data, recipe=recipe_data)
     env.helper = helper
+    env.dedup_hash = hash
 
     log.info("Packing recipe: %s", recipe_data["name"])
     log.info("Outputs will be saved to %s", env.out_folder)
@@ -78,24 +87,22 @@ def pack(
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
-    if docker:
-        job_id = os.environ.get("AWS_BATCH_JOB_ID", None)
-        if job_id:
-            handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
-            # temporarily using demo bucket before permissions are granted
-            initialized_handler = handler(
-                bucket_name="cellpack-demo",
-                sub_folder_name="runs",
-                region_name="us-west-2",
-            )
-            uploader = DBUploader(db_handler=initialized_handler)
-            uploader.upload_packing_results_workflow(
-                source_folder=env.out_folder,
-                recipe_name=recipe_data["name"],
-                job_id=job_id,
-                config_data=packing_config_data,
-                recipe_data=recipe_loader.serializable_recipe_data,
-            )
+    if docker and hash:
+        handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
+        # temporarily using demo bucket before permissions are granted
+        initialized_handler = handler(
+            bucket_name="cellpack-demo",
+            sub_folder_name="runs",
+            region_name="us-west-2",
+        )
+        uploader = DBUploader(db_handler=initialized_handler)
+        uploader.upload_packing_results_workflow(
+            source_folder=env.out_folder,
+            recipe_name=recipe_data["name"],
+            dedup_hash=hash,
+            config_data=packing_config_data,
+            recipe_data=recipe_loader.serializable_recipe_data,
+        )
 
 
 def main():
