@@ -2,7 +2,6 @@
 
 """Write out data for cellpack."""
 
-
 import json
 import os
 from collections import OrderedDict

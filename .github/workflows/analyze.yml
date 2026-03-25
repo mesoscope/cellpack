@@ -15,7 +15,7 @@ jobs:
                 python-version: [3.11]
                 os: [ubuntu-latest]
         steps:
-            - uses: actions/checkout@v4.2.2
+            - uses: actions/checkout@v6
             - uses: ./.github/actions/dependencies
             - name: Pack test recipe
               run: |
@@ -27,7 +27,7 @@ jobs:
             - name: Run analysis code
               run: uv run analyze -r cellpack/tests/recipes/v2/test_spheres.json -a cellpack/tests/analysis-configs/PR_analysis_config.json -p cellpack/tests/outputs/test_spheres/spheresSST
             - name: Upload results
-              uses: actions/upload-artifact@v6
+              uses: actions/upload-artifact@v7
               with:
                   name: results
                   path: cellpack/tests/outputs/test_spheres/
@@ -35,22 +35,22 @@ jobs:
         runs-on: ubuntu-latest
         needs: [Analyze]
         steps:
-            - uses: actions/checkout@v4.2.2
+            - uses: actions/checkout@v6
             - name: Configure AWS credentials for dependabot
               if: ${{ github.actor == 'dependabot[bot]' }}
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ secrets.DEPENDABOT_AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.DEPENDABOT_AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-west-2
             - name: Configure AWS credentials
               if: ${{ github.actor != 'dependabot[bot]' }}
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@v6
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-west-2
-            - uses: actions/download-artifact@v6
+            - uses: actions/download-artifact@v8
               with:
                   name: results
                   path: ./results
@@ -62,7 +62,8 @@ jobs:
                   GH_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
               run: |
                   MARKER="<!-- Analyze workflow report -->"
-                  COMMENT_BODY="${MARKER}\n$(cat ./results/analysis_report.md)"
+                  COMMENT_BODY="${MARKER}
+                  $(cat ./results/analysis_report.md)"
                   EXISTING_COMMENT_ID=$(gh api "/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
                     if [ -n "$EXISTING_COMMENT_ID" ]; then
                       echo "Updating existing comment with ID: $EXISTING_COMMENT_ID"
