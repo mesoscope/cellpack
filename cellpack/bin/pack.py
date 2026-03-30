@@ -82,6 +82,7 @@ def pack(
         env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
+    # Upload results to S3 for server-initiated packings (docker and hash are both provided)
     if docker and hash:
         handler = DATABASE_IDS.handlers().get(DATABASE_IDS.AWS)
         # temporarily using demo bucket before permissions are granted
