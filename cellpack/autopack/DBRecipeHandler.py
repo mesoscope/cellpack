@@ -5,12 +5,15 @@ from enum import Enum
 from pathlib import Path
 
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.AWSHandler import AWSHandler
 
 
 import hashlib
 import json
 
 from cellpack.autopack.utils import deep_merge
+
+DB_SETUP_README_URL = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
 
 
 class DataDoc(object):
@@ -511,7 +514,7 @@ class DBUploader(object):
         if self.db:
             db_handler = self.db
             # If db is AWSHandler, switch to firebase handler for job status updates
-            if hasattr(self.db, "s3_client"):
+            if isinstance(self.db, AWSHandler):
                 handler = DATABASE_IDS.handlers().get(DATABASE_IDS.FIREBASE)
                 db_handler = handler(default_db="staging")
             timestamp = db_handler.create_timestamp()
@@ -836,6 +839,3 @@ class DBRecipeLoader(object):
                 {**v} for v in DBRecipeLoader.remove_dedup_hash(grad_dict).values()
             ]
         return recipe_data
-
-
-DB_SETUP_README_URL = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
