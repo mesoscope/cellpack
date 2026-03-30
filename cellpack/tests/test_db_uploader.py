@@ -1,3 +1,4 @@
+from cellpack.autopack.AWSHandler import AWSHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.tests.mocks.mock_db import MockDB
 from unittest.mock import MagicMock, patch
@@ -180,8 +181,6 @@ def test_upload_recipe():
 def test_upload_job_status_with_firebase_handler():
     mock_firebase_db = MagicMock()
     mock_firebase_db.create_timestamp.return_value = "test_timestamp"
-    # firebaseHandler does not have s3_client attribute
-    del mock_firebase_db.s3_client
 
     uploader = DBUploader(mock_firebase_db)
     uploader.upload_job_status("test_hash", "RUNNING")
@@ -199,8 +198,9 @@ def test_upload_job_status_with_firebase_handler():
 
 
 def test_upload_job_status_with_aws_handler():
-    mock_aws_db = MagicMock()
-    mock_aws_db.s3_client = MagicMock()  # AWSHandler has s3_client
+    mock_aws_db = MagicMock(spec=AWSHandler, wraps=None)
+    # Allow create_timestamp to be checked even though it's not on AWSHandler
+    mock_aws_db.create_timestamp = MagicMock()
 
     mock_firebase_handler = MagicMock()
     mock_firebase_handler.create_timestamp.return_value = "firebase_timestamp"
