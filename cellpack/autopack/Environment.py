@@ -439,6 +439,9 @@ class Environment(CompartmentList):
         ingredient_rotation = self.packed_objects.get_rotations_for_ingredient(
             ingredient_name=ingredient_name,
         )
+        if len(ingredient_positions) == 0 or len(ingredient_rotation) == 0:
+            return numpy.array([])
+
         ingredient_position_vector = numpy.array(ingredient_positions) - numpy.array(
             center
         )
@@ -1825,7 +1828,6 @@ class Environment(CompartmentList):
         """
         for ingr in allIngredients:
             if hasattr(ingr, "count_options") and ingr.count_options is not None:
-
                 count = get_value_from_distribution(
                     distribution_options=ingr.count_options,
                     return_int=True,
@@ -2454,7 +2456,9 @@ class Environment(CompartmentList):
                     )
                     ingr.results = []
                     for r in iresults:
-                        rot = numpy.array(r[1]).reshape(
+                        rot = numpy.array(
+                            r[1]
+                        ).reshape(
                             4, 4
                         )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
                         ingr.results.append([numpy.array(r[0]), rot])
@@ -2500,7 +2504,9 @@ class Environment(CompartmentList):
                         )
                         ingr.results = []
                         for r in iresults:
-                            rot = numpy.array(r[1]).reshape(
+                            rot = numpy.array(
+                                r[1]
+                            ).reshape(
                                 4, 4
                             )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
                             ingr.results.append([numpy.array(r[0]), rot])
@@ -2542,7 +2548,9 @@ class Environment(CompartmentList):
                         )
                         ingr.results = []
                         for r in iresults:
-                            rot = numpy.array(r[1]).reshape(
+                            rot = numpy.array(
+                                r[1]
+                            ).reshape(
                                 4, 4
                             )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
                             ingr.results.append([numpy.array(r[0]), rot])
