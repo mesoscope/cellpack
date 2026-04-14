@@ -21,7 +21,6 @@ from pathlib import Path
 
 from cellpack.bin.pack import pack
 
-
 recipe_data = {
     "version": "1.0.0",
     "format_version": "2.0",
