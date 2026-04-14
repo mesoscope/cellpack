@@ -18,10 +18,12 @@ which case `ConfigLoader` falls back to its built-in default values.
 
 import json
 from pathlib import Path
+import copy
+import pytest
 
 from cellpack.bin.pack import pack
 
-recipe_data = {
+_RECIPE = {
     "version": "1.0.0",
     "format_version": "2.0",
     "name": "test_pack_cli",
@@ -41,6 +43,12 @@ recipe_data = {
 }
 
 
+@pytest.fixture
+def recipe_data():
+    # RecipeLoader mutates the dict it receives, so each test gets a fresh copy to stay independent of run order.
+    return copy.deepcopy(_RECIPE)
+
+
 def _write_config(tmp_path: Path) -> Path:
     config = {
         "name": "test_pack_cli",
@@ -58,14 +66,14 @@ def _write_config(tmp_path: Path) -> Path:
     return config_path
 
 
-def test_pack_with_recipe_path(tmp_path):
+def test_pack_with_recipe_path(tmp_path, recipe_data):
     recipe_path = tmp_path / "recipe.json"
     recipe_path.write_text(json.dumps(recipe_data))
     config_path = _write_config(tmp_path)
     pack(recipe=str(recipe_path), config_path=str(config_path))
 
 
-def test_pack_with_recipe_dict(tmp_path):
+def test_pack_with_recipe_dict(tmp_path, recipe_data):
     """
     `pack()` also accepts a recipe dict directly, so
     the docker server can forward a parsed JSON body without writing it to
@@ -75,7 +83,7 @@ def test_pack_with_recipe_dict(tmp_path):
     pack(recipe=recipe_data, config_path=str(config_path))
 
 
-def test_pack_with_default_config(tmp_path, monkeypatch):
+def test_pack_with_default_config(tmp_path, monkeypatch, recipe_data):
     """Omitting `config_path` falls back to `ConfigLoader.default_values`."""
     # default `out: "out/"` is relative, monkeypatch.chdir keeps outputs inside tmp_path.
     monkeypatch.chdir(tmp_path)
