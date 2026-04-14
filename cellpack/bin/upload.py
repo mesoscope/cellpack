@@ -3,7 +3,7 @@ import fire
 import json
 
 from cellpack.autopack.FirebaseHandler import FirebaseHandler
-from cellpack.autopack.DBRecipeHandler import DBUploader, DBMaintenance
+from cellpack.autopack.DBRecipeHandler import DBUploader, DB_SETUP_README_URL
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.autopack.loaders.config_loader import ConfigLoader
@@ -90,7 +90,7 @@ def upload(
                     id, _ = db_handler.upload_data("editable_fields", field)
                     editable_fields_ids.append(id)
             if output_file:
-                _, result_url = simulariumHelper.store_result_file(
+                result_url = simulariumHelper.store_result_file(
                     output_file, storage="aws", sub_folder="client"
                 )
             if studio:
@@ -105,9 +105,8 @@ def upload(
                 db_handler.upload_data("example_packings", recipe_metadata)
 
         else:
-            db_maintainer = DBMaintenance(db_handler)
             sys.exit(
-                f"The selected database is not initialized. Please set up Firebase credentials to upload recipes. Refer to the instructions at {db_maintainer.readme_url()} "
+                f"The selected database is not initialized. Please set up Firebase credentials to upload recipes. Refer to the instructions at {DB_SETUP_README_URL} "
             )
 
 

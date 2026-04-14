@@ -9,7 +9,6 @@ default_firebase_collection_names = [
     "objects",
     "gradients",
     "recipes",
-    "results",
     "configs",
     "recipes_edited",
 ]

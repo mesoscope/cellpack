@@ -1,18 +1,19 @@
 import copy
 import logging
 import shutil
-from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.AWSHandler import AWSHandler
 
 
 import hashlib
 import json
-import requests
 
 from cellpack.autopack.utils import deep_merge
+
+DB_SETUP_README_URL = "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
 
 
 class DataDoc(object):
@@ -321,36 +322,6 @@ class GradientDoc(DataDoc):
         self.settings = settings
 
 
-class ResultDoc:
-    def __init__(self, db):
-        self.db = db
-
-    def handle_expired_results(self):
-        """
-        Check if the results in the database are expired and delete them if the linked object expired.
-        """
-        current_utc = datetime.now(timezone.utc)
-        results = self.db.get_all_docs("results")
-        if results:
-            for result in results:
-                result_data = self.db.doc_to_dict(result)
-                result_age = current_utc - result_data["timestamp"]
-                if result_age.days > 180 and not self.validate_existence(
-                    result_data["url"]
-                ):
-                    self.db.delete_doc("results", self.db.doc_id(result))
-            logging.info("Results cleanup complete.")
-        else:
-            logging.info("No results found in the database.")
-
-    def validate_existence(self, url):
-        """
-        Validate the existence of an S3 object by checking if the URL is accessible.
-        Returns True if the URL is accessible.
-        """
-        return requests.head(url).status_code == requests.codes.ok
-
-
 class DBUploader(object):
     """
     Handles the uploading of data to the database.
@@ -529,42 +500,34 @@ class DBUploader(object):
         self.db.update_doc("configs", id, config_data)
         return id
 
-    def upload_result_metadata(self, file_name, url, job_id=None):
+    def upload_job_status(
+        self,
+        dedup_hash,
+        status,
+        result_path=None,
+        error_message=None,
+        outputs_directory=None,
+    ):
         """
-        Upload the metadata of the result file to the database.
-        """
-        if self.db:
-            username = self.db.get_username()
-            timestamp = self.db.create_timestamp()
-            self.db.update_or_create(
-                "results",
-                file_name,
-                {
-                    "user": username,
-                    "timestamp": timestamp,
-                    "url": url,
-                    "batch_job_id": job_id,
-                },
-            )
-        if job_id:
-            self.upload_job_status(job_id, "DONE", result_path=url)
-
-    def upload_job_status(self, job_id, status, result_path=None, error_message=None):
-        """
-        Update status for a given job ID
+        Update status for a given dedup_hash
         """
         if self.db:
-            timestamp = self.db.create_timestamp()
-            self.db.update_or_create(
-                "job_status",
-                job_id,
-                {
-                    "timestamp": timestamp,
-                    "status": str(status),
-                    "result_path": result_path,
-                    "error_message": error_message,
-                },
-            )
+            db_handler = self.db
+            # If db is AWSHandler, switch to firebase handler for job status updates
+            if isinstance(self.db, AWSHandler):
+                handler = DATABASE_IDS.handlers().get(DATABASE_IDS.FIREBASE)
+                db_handler = handler(default_db="staging")
+            timestamp = db_handler.create_timestamp()
+            data = {
+                "timestamp": timestamp,
+                "status": str(status),
+                "error_message": error_message,
+            }
+            if result_path:
+                data["result_path"] = result_path
+            if outputs_directory:
+                data["outputs_directory"] = outputs_directory
+            db_handler.update_or_create("job_status", dedup_hash, data)
 
     def save_recipe_and_config_to_output(self, output_folder, config_data, recipe_data):
         output_path = Path(output_folder)
@@ -583,7 +546,7 @@ class DBUploader(object):
         self,
         source_folder,
         recipe_name,
-        job_id,
+        dedup_hash,
         config_data,
         recipe_data,
     ):
@@ -591,7 +554,7 @@ class DBUploader(object):
         Complete packing results upload workflow including folder preparation and s3 upload
         """
         try:
-            if job_id:
+            if dedup_hash:
 
                 source_path = Path(source_folder)
                 if not source_path.exists():
@@ -601,7 +564,7 @@ class DBUploader(object):
 
                 # prepare unique S3 upload folder
                 parent_folder = source_path.parent
-                unique_folder_name = f"{source_path.name}_run_{job_id}"
+                unique_folder_name = f"{source_path.name}_run_{dedup_hash}"
                 s3_upload_folder = parent_folder / unique_folder_name
 
                 logging.debug(f"outputs will be copied to: {s3_upload_folder}")
@@ -618,7 +581,7 @@ class DBUploader(object):
                 upload_result = self.upload_outputs_to_s3(
                     output_folder=s3_upload_folder,
                     recipe_name=recipe_name,
-                    job_id=job_id,
+                    dedup_hash=dedup_hash,
                 )
 
                 # clean up temporary folder after upload
@@ -628,9 +591,12 @@ class DBUploader(object):
                         f"Cleaned up temporary upload folder: {s3_upload_folder}"
                     )
 
-                # update outputs directory in firebase
-                self.update_outputs_directory(
-                    job_id, upload_result.get("outputs_directory")
+                # update outputs directory in job status
+                self.upload_job_status(
+                    dedup_hash,
+                    "DONE",
+                    result_path=upload_result.get("simularium_url"),
+                    outputs_directory=upload_result.get("outputs_directory"),
                 )
 
                 return upload_result
@@ -639,7 +605,7 @@ class DBUploader(object):
             logging.error(e)
             return {"success": False, "error": e}
 
-    def upload_outputs_to_s3(self, output_folder, recipe_name, job_id):
+    def upload_outputs_to_s3(self, output_folder, recipe_name, dedup_hash):
         """
         Upload packing outputs to S3 bucket
         """
@@ -647,7 +613,7 @@ class DBUploader(object):
         bucket_name = self.db.bucket_name
         region_name = self.db.region_name
         sub_folder_name = self.db.sub_folder_name
-        s3_prefix = f"{sub_folder_name}/{recipe_name}/{job_id}"
+        s3_prefix = f"{sub_folder_name}/{recipe_name}/{dedup_hash}"
 
         try:
             upload_result = self.db.upload_directory(
@@ -661,8 +627,11 @@ class DBUploader(object):
                     f"{base_url}/{file_info['s3_key']}"
                     for file_info in upload_result["uploaded_files"]
                 ]
+                simularium_url = None
+                for url in public_urls:
+                    if url.endswith(".simularium"):
+                        simularium_url = url
                 outputs_directory = f"https://us-west-2.console.aws.amazon.com/s3/buckets/{bucket_name}/{s3_prefix}/"
-
                 logging.info(
                     f"Successfully uploaded {upload_result['total_files']} files to {outputs_directory}"
                 )
@@ -671,7 +640,7 @@ class DBUploader(object):
 
                 return {
                     "success": True,
-                    "run_id": job_id,
+                    "dedup_hash": dedup_hash,
                     "s3_bucket": bucket_name,
                     "s3_prefix": s3_prefix,
                     "public_url_base": f"{base_url}/{s3_prefix}/",
@@ -680,29 +649,11 @@ class DBUploader(object):
                     "total_size": upload_result["total_size"],
                     "urls": public_urls,
                     "outputs_directory": outputs_directory,
+                    "simularium_url": simularium_url,
                 }
         except Exception as e:
             logging.error(e)
             return {"success": False, "error": e}
-
-    def update_outputs_directory(self, job_id, outputs_directory):
-        if not self.db or self.db.s3_client:
-            # switch to firebase handler to update job status
-            handler = DATABASE_IDS.handlers().get("firebase")
-            initialized_db = handler(default_db="staging")
-        if job_id:
-            timestamp = initialized_db.create_timestamp()
-            initialized_db.update_or_create(
-                "job_status",
-                job_id,
-                {
-                    "timestamp": timestamp,
-                    "outputs_directory": outputs_directory,
-                },
-            )
-            logging.debug(
-                f"Updated outputs s3 location {outputs_directory} for job ID: {job_id}"
-            )
 
 
 class DBRecipeLoader(object):
@@ -888,25 +839,3 @@ class DBRecipeLoader(object):
                 {**v} for v in DBRecipeLoader.remove_dedup_hash(grad_dict).values()
             ]
         return recipe_data
-
-
-class DBMaintenance(object):
-    """
-    Handles the maintenance of the database.
-    """
-
-    def __init__(self, db_handler):
-        self.db = db_handler
-        self.result_doc = ResultDoc(self.db)
-
-    def cleanup_results(self):
-        """
-        Check if the results in the database are expired and delete them if the linked object expired.
-        """
-        self.result_doc.handle_expired_results()
-
-    def readme_url(self):
-        """
-        Return the URL to the README file for the database setup section.
-        """
-        return "https://github.com/mesoscope/cellpack?tab=readme-ov-file#introduction-to-remote-databases"
