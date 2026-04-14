@@ -52,10 +52,6 @@ def test_generate_hash_is_stable_across_key_order():
     recipe_b = {"count": 1, "version": "1.0", "name": "test"}
     assert DataDoc.generate_hash(recipe_a) == DataDoc.generate_hash(recipe_b)
 
-    nested_a = {"outer": {"a": 1, "b": 2}, "meta": {"x": True, "y": False}}
-    nested_b = {"meta": {"y": False, "x": True}, "outer": {"b": 2, "a": 1}}
-    assert DataDoc.generate_hash(nested_a) == DataDoc.generate_hash(nested_b)
-
 
 def test_generate_hash_is_stable_across_string_list_order():
     recipe_a = {

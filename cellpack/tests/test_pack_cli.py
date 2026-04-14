@@ -22,7 +22,7 @@ from pathlib import Path
 from cellpack.bin.pack import pack
 
 
-MINIMAL_RECIPE = {
+recipe_data = {
     "version": "1.0.0",
     "format_version": "2.0",
     "name": "test_pack_cli",
@@ -42,7 +42,7 @@ MINIMAL_RECIPE = {
 }
 
 
-def _write_minimal_config(tmp_path: Path) -> Path:
+def _write_config(tmp_path: Path) -> Path:
     config = {
         "name": "test_pack_cli",
         "out": f"{tmp_path}/",
@@ -61,8 +61,8 @@ def _write_minimal_config(tmp_path: Path) -> Path:
 
 def test_pack_with_recipe_path(tmp_path):
     recipe_path = tmp_path / "recipe.json"
-    recipe_path.write_text(json.dumps(MINIMAL_RECIPE))
-    config_path = _write_minimal_config(tmp_path)
+    recipe_path.write_text(json.dumps(recipe_data))
+    config_path = _write_config(tmp_path)
     pack(recipe=str(recipe_path), config_path=str(config_path))
 
 
@@ -72,12 +72,12 @@ def test_pack_with_recipe_dict(tmp_path):
     the docker server can forward a parsed JSON body without writing it to
     db first.
     """
-    config_path = _write_minimal_config(tmp_path)
-    pack(recipe=MINIMAL_RECIPE, config_path=str(config_path))
+    config_path = _write_config(tmp_path)
+    pack(recipe=recipe_data, config_path=str(config_path))
 
 
 def test_pack_with_default_config(tmp_path, monkeypatch):
     """Omitting `config_path` falls back to `ConfigLoader.default_values`."""
     # default `out: "out/"` is relative, monkeypatch.chdir keeps outputs inside tmp_path.
     monkeypatch.chdir(tmp_path)
-    pack(recipe=MINIMAL_RECIPE)
+    pack(recipe=recipe_data)
