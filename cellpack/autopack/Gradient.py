@@ -130,9 +130,9 @@ class Gradient:
         """
         assert len(gradient_list) > 1, "Need at least two gradients to combine"
 
-        weight_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
+        prob_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
         for i in range(len(gradient_list)):
-            weight_list[i] = Gradient.normalize_by_max_value(gradient_list[i].weight)
+            prob_list[i] = gradient_list[i].weight / numpy.sum(gradient_list[i].weight)
 
         if isinstance(gradient_weights, dict):
             total = sum(gradient_weights.values())
@@ -141,8 +141,9 @@ class Gradient:
                 for gradient in gradient_list
             ]
 
-        combined_weight = numpy.average(weight_list, axis=0, weights=gradient_weights)
-        combined_weight = Gradient.normalize_by_max_value(combined_weight)
+        combined_prob = numpy.average(prob_list, axis=0, weights=gradient_weights)
+        combined_prob /= numpy.sum(combined_prob)  # Normalize to sum to 1
+        combined_weight = Gradient.normalize_by_max_value(combined_prob)
 
         return combined_weight
 
