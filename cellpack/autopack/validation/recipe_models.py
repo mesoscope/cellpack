@@ -343,10 +343,12 @@ class CompositionEntry(BaseModel):
 # RECIPE-METADATA-LEVEL
 class Recipe(BaseModel):
     name: str
+    description: Optional[str] = None
     version: str = Field("1.0.0")
     format_version: str = Field("2.0")
     bounding_box: List[List[float]] = Field([[0, 0, 0], [100, 100, 100]])
     grid_file_path: Optional[str] = None
+    randomness_seed: Optional[int] = None
     objects: Dict[str, RecipeObject] = Field(default_factory=dict)
     gradients: Union[Dict[str, RecipeGradient], List[Dict[str, Any]]] = Field(
         default_factory=dict
@@ -488,20 +490,6 @@ class Recipe(BaseModel):
                         ):
                             raise ValueError(
                                 f"gradients.{gradient_name}.mode_settings.object references '{obj_ref}' which does not exist in objects or composition sections"
-                            )
-        return self
-
-    @model_validator(mode="after")
-    def validate_gradient_combinations(self):
-        """Validate gradient combinations in object gradient lists"""
-        if hasattr(self, "objects") and self.objects:
-            for obj_name, obj_data in self.objects.items():
-                if hasattr(obj_data, "gradient") and obj_data.gradient is not None:
-                    if isinstance(obj_data.gradient, list):
-                        # multiple gradients - validate combination
-                        if len(obj_data.gradient) < 2:
-                            raise ValueError(
-                                f"objects.{obj_name}.gradient: gradient lists must contain at least 2 gradients"
                             )
         return self
 

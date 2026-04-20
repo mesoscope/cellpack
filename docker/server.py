@@ -1,8 +1,7 @@
 import asyncio
-from aiohttp import web
-import os
 import uuid
-from cellpack.autopack.DBRecipeHandler import DBUploader
+from aiohttp import web
+from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.bin.pack import pack
 
@@ -12,41 +11,73 @@ class CellpackServer:
     def __init__(self):
         self.packing_tasks = set()
 
-    async def run_packing(self, recipe, config, job_id):
-        os.environ["AWS_BATCH_JOB_ID"] = job_id
+    def _get_firebase_handler(self, database_name="firebase"):
+        handler = DATABASE_IDS.handlers().get(database_name)
+        initialized_db = handler(default_db="staging")
+        if initialized_db._initialized:
+            return initialized_db
+        return None
+
+    def job_exists(self, dedup_hash):
+        db = self._get_firebase_handler()
+        if not db:
+            return False
+
+        job_status, _ = db.get_doc_by_id("job_status", dedup_hash)
+        return job_status is not None
+
+    async def run_packing(self, job_id, recipe=None, config=None, body=None):
         self.update_job_status(job_id, "RUNNING")
         try:
-            pack(recipe=recipe, config_path=config, docker=True)
+            # Pack JSON recipe in body if provided, otherwise use recipe path
+            pack(recipe=(body if body else recipe), config_path=config, docker=True, hash=job_id)
         except Exception as e:
             self.update_job_status(job_id, "FAILED", error_message=str(e))
 
     def update_job_status(self, job_id, status, result_path=None, error_message=None):
-        handler = DATABASE_IDS.handlers().get("firebase")
-        initialized_db = handler(
-            default_db="staging"
-        )
-        if initialized_db._initialized:
-            db_uploader = DBUploader(initialized_db)
+        db = self._get_firebase_handler()
+        if db:
+            db_uploader = DBUploader(db)
             db_uploader.upload_job_status(job_id, status, result_path, error_message)
 
     async def hello_world(self, request: web.Request) -> web.Response:
         return web.Response(text="Hello from the cellPACK server")
 
     async def health_check(self, request: web.Request) -> web.Response:
-        # healthcheck endpoint needed for AWS load balancer
+        # health check endpoint needed for AWS load balancer
         return web.Response()
 
     async def pack_handler(self, request: web.Request) -> web.Response:
-        recipe = request.rel_url.query.get("recipe")
-        if recipe is None:
+        recipe = request.rel_url.query.get("recipe") or ""
+        body = None
+
+        # If request has a body, attempt to parse it as JSON and use as recipe
+        # otherwise rely on recipe query param
+        if (request.can_read_body and request.content_length
+                and request.content_length > 0):
+            try:
+                body = await request.json()
+            except Exception:
+                body = None
+
+        if not recipe and not body:
             raise web.HTTPBadRequest(
-                "Pack requests must include recipe as a query param"
+                "Pack requests must include a recipe, either as a query param or in the request body"
             )
         config = request.rel_url.query.get("config")
-        job_id = str(uuid.uuid4())
+
+        if body:
+            dedup_hash = DataDoc.generate_hash(body)
+            if self.job_exists(dedup_hash):
+                return web.json_response({"jobId": dedup_hash})
+            job_id = dedup_hash
+        else:
+            job_id = str(uuid.uuid4())
 
         # Initiate packing task to run in background
-        packing_task = asyncio.create_task(self.run_packing(recipe, config, job_id))
+        packing_task = asyncio.create_task(
+            self.run_packing(job_id, recipe, config, body)
+        )
 
         # Keep track of task references to prevent them from being garbage
         # collected, then discard after task completion

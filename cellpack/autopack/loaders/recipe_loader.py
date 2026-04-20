@@ -31,22 +31,29 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path, save_converted_recipe=False, use_docker=False):
-        _, file_extension = os.path.splitext(input_file_path)
+    def __init__(
+        self,
+        input_data,
+        save_converted_recipe=False,
+        use_docker=False,
+    ):
         self.current_version = CURRENT_VERSION
-        self.file_path = input_file_path
-        self.file_extension = file_extension
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
 
-        # set CURRENT_RECIPE_PATH appropriately for remote(firebase) vs local recipes
-        if autopack.is_remote_path(self.file_path):
-            autopack.CURRENT_RECIPE_PATH = os.path.join(
-                os.getcwd(), "examples", "recipes", "v2"
-            )
+        if isinstance(input_data, dict):
+            self._json_recipe = input_data
+            self.file_path = None
         else:
-            autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
+            self.file_path = input_data
+            self._json_recipe = None
+            if autopack.is_remote_path(self.file_path):
+                autopack.CURRENT_RECIPE_PATH = os.path.join(
+                    os.getcwd(), "examples", "recipes", "v2"
+                )
+            else:
+                autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
 
         self.recipe_data = self._read(use_docker=use_docker)
 
@@ -169,16 +176,25 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name, is_unnested_firebase = autopack.load_file(
-            self.file_path, cache="recipes", use_docker=use_docker
-        )
+        database_name = None
+        is_unnested_firebase = False
+        new_values = self._json_recipe
+        if new_values is None:
+            # Read recipe from filepath
+            new_values, database_name, is_unnested_firebase = autopack.load_file(
+                self.file_path, cache="recipes", use_docker=use_docker
+            )
+
+        if "composition" in new_values:
+            new_values["composition"] = DBRecipeLoader.remove_empty(
+                new_values["composition"]
+            )
+
         if database_name == "firebase":
             if is_unnested_firebase:
                 objects = new_values.get("objects", {})
                 gradients = new_values.get("gradients", {})
-                composition = DBRecipeLoader.remove_empty(
-                    new_values.get("composition", {})
-                )
+                composition = new_values.get("composition", {})
             else:
                 objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
                     new_values["composition"]
@@ -208,6 +224,10 @@ class RecipeLoader(object):
         except ValidationError as e:
             formatted_error = RecipeValidator.format_validation_error(e)
             raise ValueError(f"Recipe validation failed:\n{formatted_error}")
+
+        # keep a serializable copy before converting to class instances
+        # this ensures the original data (human-readable) is available for download in the UI
+        self.serializable_recipe_data = copy.deepcopy(recipe_data)
 
         if "objects" in recipe_data:
             for _, obj in recipe_data["objects"].items():

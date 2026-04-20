@@ -16,4 +16,18 @@ updates:
     groups:
       actions:
         patterns:
-          - "github-actions"
+          - "*"
+
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "deps(dependabot):"
+    open-pull-requests-limit: 1
+    rebase-strategy: "auto"
+    groups:
+      python-all:
+        patterns:
+          - "*"
+

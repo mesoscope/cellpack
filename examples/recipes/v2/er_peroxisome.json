@@ -2,6 +2,7 @@
     "version": "gradient_packing",
     "format_version": "2.1",
     "name": "ER_peroxisome",
+    "description": "Peroxisome puncta (represented as spheres) packed in and around mesh containers representing the cell membrane, the nucleus, and the endoplasmic reticulum (ER), derived from a segmented hiPS cell.",
     "bounding_box": [
         [
             33.77499999999999,

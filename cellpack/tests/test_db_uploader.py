@@ -1,3 +1,4 @@
+from cellpack.autopack.AWSHandler import AWSHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader
 from cellpack.tests.mocks.mock_db import MockDB
 from unittest.mock import MagicMock, patch
@@ -27,6 +28,7 @@ def test_upload_data_with_recipe_and_id():
     collection = "recipe"
     data = {
         "name": "test",
+        "description": "test_description",
         "bounding_box": [[0, 0, 0], [1000, 1000, 1]],
         "version": "1.0.0",
         "composition": {"test": {"inherit": "firebase:test_collection/test_id"}},
@@ -147,11 +149,13 @@ def test_upload_collections():
 def test_upload_recipe():
     recipe_meta_data = {
         "name": "one_sphere",
+        "description": "test_description",
         "version": "1.0.0",
         "composition": {},
     }
     recipe_data = {
         "name": "one_sphere",
+        "description": "test_description",
         "version": "1.0.0",
         "objects": {
             "sphere_25": {
@@ -172,3 +176,55 @@ def test_upload_recipe():
         "A": "firebase:composition/test_id",
     }
     assert recipe_doc.objects_to_path_map == {"sphere_25": "firebase:objects/test_id"}
+
+
+def test_upload_job_status_with_firebase_handler():
+    mock_firebase_db = MagicMock()
+    mock_firebase_db.create_timestamp.return_value = "test_timestamp"
+
+    uploader = DBUploader(mock_firebase_db)
+    uploader.upload_job_status("test_hash", "RUNNING")
+
+    mock_firebase_db.create_timestamp.assert_called_once()
+    mock_firebase_db.update_or_create.assert_called_once_with(
+        "job_status",
+        "test_hash",
+        {
+            "timestamp": "test_timestamp",
+            "status": "RUNNING",
+            "error_message": None,
+        },
+    )
+
+
+def test_upload_job_status_with_aws_handler():
+    mock_aws_db = MagicMock(spec=AWSHandler, wraps=None)
+    # Allow create_timestamp to be checked even though it's not on AWSHandler
+    mock_aws_db.create_timestamp = MagicMock()
+
+    mock_firebase_handler = MagicMock()
+    mock_firebase_handler.create_timestamp.return_value = "firebase_timestamp"
+
+    with patch(
+        "cellpack.autopack.DBRecipeHandler.DATABASE_IDS.handlers"
+    ) as mock_handlers:
+        mock_handlers.return_value.get.return_value = (
+            lambda default_db: mock_firebase_handler
+        )
+
+        uploader = DBUploader(mock_aws_db)
+        uploader.upload_job_status("test_hash", "DONE", result_path="test_path")
+
+        mock_firebase_handler.create_timestamp.assert_called_once()
+        mock_firebase_handler.update_or_create.assert_called_once_with(
+            "job_status",
+            "test_hash",
+            {
+                "timestamp": "firebase_timestamp",
+                "status": "DONE",
+                "error_message": None,
+                "result_path": "test_path",
+            },
+        )
+        # AWS handler should not be called for timestamp
+        mock_aws_db.create_timestamp.assert_not_called()

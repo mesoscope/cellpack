@@ -124,6 +124,7 @@ class Environment(CompartmentList):
 
         self.config_data = config
         self.recipe_data = recipe
+        self.dedup_hash = None
         name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
