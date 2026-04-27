@@ -19,7 +19,6 @@ Ready to contribute? Here's how to set up `cellpack` for local development.
 
     ```bash
     cd cellpack/
-    pip install -r requirements/linux/requirements.txt
     pip install -e .[dev]
     ```
 
