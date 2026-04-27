@@ -40,6 +40,11 @@ dependencies = [
 ]
 license = {text = "MIT license"}
 
+[project.optional-dependencies]
+server = [
+    "aiohttp",
+]
+
 [project.urls]
 Homepage = "https://github.com/mesoscope/cellpack"
 
@@ -96,7 +101,6 @@ source-include = [
     "docker",
     "docs",
     "examples",
-    "requirements",
     ".dockerignore",
     "tests",
     "__init__.py",
