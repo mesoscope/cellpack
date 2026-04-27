@@ -15,11 +15,11 @@ Ready to contribute? Here's how to set up `cellpack` for local development.
     git clone git@github.com:{your_name_here}/cellpack.git
     ```
 
-3. Install the project in editable mode by following installation instructions [here](./docs/INSTALL.md). (It is also recommended to work in a virtual environment):
+3. Install the project in editable mode by following installation instructions [here](./INSTALLATION.md). (It is also recommended to work in a virtual environment):
 
     ```bash
     cd cellpack/
-    pip install -e .[dev]
+    uv sync
     ```
 
 4. Create a branch for local development:
@@ -50,7 +50,7 @@ Ready to contribute? Here's how to set up `cellpack` for local development.
 
 ### Contributing cheat sheet
 
-1. `pip install -e .[dev]`
+1. `uv sync`
 
     This will install your package in editable mode with all the required development
     dependencies (i.e. `tox`).
