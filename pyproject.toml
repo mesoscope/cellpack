@@ -40,11 +40,6 @@ dependencies = [
 ]
 license = {text = "MIT license"}
 
-[project.optional-dependencies]
-server = [
-    "aiohttp",
-]
-
 [project.urls]
 Homepage = "https://github.com/mesoscope/cellpack"
 
@@ -83,6 +78,9 @@ lint = [
 docs = [
     "linkify-it-py",
     "myst-parser",
+]
+server = [
+    "aiohttp",
 ]
 
 [build-system]

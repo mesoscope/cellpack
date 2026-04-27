@@ -298,11 +298,6 @@ dependencies = [
     { name = "trimesh" },
 ]
 
-[package.optional-dependencies]
-server = [
-    { name = "aiohttp" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "bumpver" },
@@ -325,6 +320,9 @@ lint = [
     { name = "flake8" },
     { name = "flake8-debugger" },
 ]
+server = [
+    { name = "aiohttp" },
+]
 test = [
     { name = "moto" },
     { name = "pytest" },
@@ -334,7 +332,6 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aiohttp", marker = "extra == 'server'" },
     { name = "bioio", specifier = ">=3.0.0" },
     { name = "bioio-ome-tiff", specifier = ">=1.4.0" },
     { name = "boto3" },
@@ -355,7 +352,6 @@ requires-dist = [
     { name = "tqdm" },
     { name = "trimesh" },
 ]
-provides-extras = ["server"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -379,6 +375,7 @@ lint = [
     { name = "flake8" },
     { name = "flake8-debugger" },
 ]
+server = [{ name = "aiohttp" }]
 test = [
     { name = "moto" },
     { name = "pytest" },
