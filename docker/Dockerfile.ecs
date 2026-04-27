@@ -4,7 +4,9 @@ WORKDIR /cellpack
 COPY . /cellpack
 
 RUN python -m pip install --upgrade pip --root-user-action=ignore
-RUN python -m pip install ".[server]" --root-user-action=ignore
+RUN python -m pip install uv --root-user-action=ignore
+RUN uv sync --no-default-groups --extra server --frozen
+ENV PATH="/cellpack/.venv/bin:$PATH"
 
 EXPOSE 80
 
