@@ -41,6 +41,9 @@ def pack(
     :return: void
     """
     packing_config_data = ConfigLoader(config_path, docker).config
+    if docker:
+        # server-initiated runs always upload results to S3
+        packing_config_data["upload_results"] = True
 
     recipe_loader = RecipeLoader(
         recipe, packing_config_data["save_converted_recipe"], docker
