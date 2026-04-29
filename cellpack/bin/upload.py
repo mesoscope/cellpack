@@ -6,6 +6,7 @@ from cellpack.autopack.FirebaseHandler import FirebaseHandler
 from cellpack.autopack.DBRecipeHandler import DBUploader, DB_SETUP_README_URL
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
+from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
@@ -81,7 +82,9 @@ def upload(
                 recipe_meta_data = get_recipe_metadata(recipe_loader)
                 recipe_id = db_handler.upload_recipe(recipe_meta_data, recipe_full_data)
             if config_path:
-                config_data = json.load(open(config_path, "r"))
+                ConfigLoader(config_path)
+                with open(config_path, "r") as f:
+                    config_data = json.load(f)
                 config_id = db_handler.upload_config(config_data, config_path)
             if fields:
                 editable_fields_data = json.load(open(fields, "r"))
