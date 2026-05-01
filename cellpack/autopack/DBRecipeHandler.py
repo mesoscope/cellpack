@@ -49,8 +49,42 @@ class DataDoc(object):
         return not comp_or_obj.get("name") and "object" in comp_or_obj
 
     @staticmethod
+    def _is_positional(item):
+        if isinstance(item, bool):
+            return False
+        if isinstance(item, (int, float)):
+            return True
+        if isinstance(item, list):
+            return all(DataDoc._is_positional(x) for x in item)
+        return False
+
+    @staticmethod
+    def _normalize_for_hashing(data):
+        """
+        Recursively normalize the input json data so that dedup hashes are
+        stable across semantically equivalent inputs.
+
+        Categories (see `cellpack/tests/test_data_doc.py` for worked shapes):
+            - dict key order — sorted by `json.dumps(sort_keys=True)`
+            - string lists (e.g. region composition refs) — sorted
+            - mixed string + inline-dict lists — sorted
+            - pure-dict lists (partners, inline composition entries) — sorted
+            - positional numeric lists (vectors, colors) — leave as is
+            - positional nested-numeric lists (bounding boxes) — leave as is
+        """
+        if isinstance(data, dict):
+            return {k: DataDoc._normalize_for_hashing(v) for k, v in data.items()}
+        if isinstance(data, list):
+            normalized = [DataDoc._normalize_for_hashing(item) for item in data]
+            if all(DataDoc._is_positional(item) for item in normalized):
+                return normalized
+            return sorted(normalized, key=lambda x: json.dumps(x, sort_keys=True))
+        return data
+
+    @staticmethod
     def generate_hash(doc_data):
-        doc_str = json.dumps(doc_data, sort_keys=True)
+        normalized_data = DataDoc._normalize_for_hashing(doc_data)
+        doc_str = json.dumps(normalized_data, sort_keys=True)
         return hashlib.sha256(doc_str.encode()).hexdigest()
 
 

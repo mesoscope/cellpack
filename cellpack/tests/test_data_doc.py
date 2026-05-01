@@ -45,3 +45,69 @@ def test_generate_hash():
         generated_hash = DataDoc.generate_hash(input_data)
         assert isinstance(generated_hash, str)
         assert generated_hash == DataDoc.generate_hash(input_data)
+
+
+def test_generate_hash_is_stable_across_key_order():
+    recipe_a = {"name": "test", "version": "1.0", "count": 1}
+    recipe_b = {"count": 1, "version": "1.0", "name": "test"}
+    assert DataDoc.generate_hash(recipe_a) == DataDoc.generate_hash(recipe_b)
+
+
+def test_generate_hash_is_stable_across_string_list_order():
+    recipe_a = {
+        "composition": {
+            "space": {"regions": {"interior": ["A", "B", "C", "D", "E"]}},
+            "A": {"object": "sphere_100", "count": 6},
+            "B": {"object": "sphere_200", "count": 2},
+            "C": {"object": "sphere_50", "count": 15},
+        }
+    }
+    recipe_b = {
+        "composition": {
+            "A": {"count": 6, "object": "sphere_100"},
+            "C": {"object": "sphere_50", "count": 15},
+            "B": {"object": "sphere_200", "count": 2},
+            "space": {"regions": {"interior": ["E", "C", "A", "D", "B"]}},
+        }
+    }
+    assert DataDoc.generate_hash(recipe_a) == DataDoc.generate_hash(recipe_b)
+
+
+def test_generate_hash_preserves_positional_list_order():
+    # numeric/nested lists encode positional data (bounding boxes, vectors, colors) and must remain order-sensitive.
+    bbox_a = {"bounding_box": [[0, 0, 0], [1000, 1000, 1]]}
+    bbox_b = {"bounding_box": [[1000, 1000, 1], [0, 0, 0]]}
+    assert DataDoc.generate_hash(bbox_a) != DataDoc.generate_hash(bbox_b)
+
+    axis_a = {"rotation_axis": [0, 0, 1]}
+    axis_b = {"rotation_axis": [1, 0, 0]}
+    assert DataDoc.generate_hash(axis_a) != DataDoc.generate_hash(axis_b)
+
+
+def test_generate_hash_is_stable_across_mixed_list_order():
+    # region lists that mix string refs with inline dicts should dedup regardless of element order.
+    recipe_a = {
+        "composition": {
+            "bounding_area": {
+                "regions": {
+                    "interior": [
+                        "outer_sphere",
+                        {"object": "green_sphere", "count": 5},
+                    ]
+                }
+            }
+        }
+    }
+    recipe_b = {
+        "composition": {
+            "bounding_area": {
+                "regions": {
+                    "interior": [
+                        {"object": "green_sphere", "count": 5},
+                        "outer_sphere",
+                    ]
+                }
+            }
+        }
+    }
+    assert DataDoc.generate_hash(recipe_a) == DataDoc.generate_hash(recipe_b)
