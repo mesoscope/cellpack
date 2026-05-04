@@ -1,5 +1,4 @@
 import asyncio
-import uuid
 from aiohttp import web
 from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
