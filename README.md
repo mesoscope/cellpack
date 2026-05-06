@@ -107,6 +107,6 @@ See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for information related to develop
 cellPACK uses AWS and Firebase Firestore as remote databases to store packing results and recipes. Follow [ setup instructions](./docs/REMOTE_DATABASES.md) for access.
 
 ## Docker
-cellPACK can be run in Docker containers for both AWS ECS and AWS Batch. Follow the [instructions](./docs/DOCKER.md) to set up the Docker environment.
+cellPACK can be run in Docker containers for running the server on AWS ECS. Follow the [instructions](./docs/DOCKER.md) to set up the Docker environment.
 
 **MIT license**
