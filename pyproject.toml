@@ -30,6 +30,7 @@ dependencies = [
     "pandas",
     "plotly",
     "pycollada",
+    "pydantic",
     "pymunk",
     "python-dotenv",
     "rtree",
