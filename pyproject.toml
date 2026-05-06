@@ -30,6 +30,7 @@ dependencies = [
     "pandas",
     "plotly",
     "pycollada",
+    "pydantic",
     "pymunk",
     "python-dotenv",
     "rtree",
@@ -79,6 +80,9 @@ docs = [
     "linkify-it-py",
     "myst-parser",
 ]
+server = [
+    "aiohttp",
+]
 
 [build-system]
 requires = ["uv_build>=0.8.14,<0.9.0"]
@@ -96,7 +100,6 @@ source-include = [
     "docker",
     "docs",
     "examples",
-    "requirements",
     ".dockerignore",
     "tests",
     "__init__.py",

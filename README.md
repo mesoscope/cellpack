@@ -19,15 +19,14 @@ An algorithm to pack molecular recipes
 git clone git@github.com:mesoscope/cellpack.git
 cd cellpack
 ```
-1. Create a new virtual environment and activate it.
+3. Create a new virtual environment and activate it.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
-1. Install the required packages for your operating system. Replace `linux` with `macos` or `windows` as appropriate.
+4. Install the package and its dependencies from `pyproject.toml`.
 ```bash
 pip install --upgrade pip
-pip install -r requirements/linux/requirements.txt
 pip install -e .
 ```
 
