@@ -7,5 +7,6 @@
     "hollow": false,
     "voxel_size": [1, 1, 1],
     "projection_axis": "z"
-  }
+  },
+  "upload_results": true
 }
