@@ -305,7 +305,7 @@ class RecipeObject(BaseModel):
     ] = None
     weight: Optional[float] = Field(None, ge=0)
     is_attractor: Optional[bool] = None
-    priority: Optional[int] = None
+    priority: Optional[Union[int, float]] = None
 
     jitterMax: Optional[ThreeFloatArray] = Field(
         None, min_length=3, max_length=3, alias="jitterMax"
@@ -397,7 +397,7 @@ All referenced objects must be defined in the objects section.
 class CompositionItem(BaseModel):
     object: str
     count: int = Field(5, ge=0)
-    priority: Optional[int] = None
+    priority: Optional[Union[int, float]] = None
 
 
 class CompositionRegions(BaseModel):
@@ -410,7 +410,7 @@ class CompositionRegions(BaseModel):
 class CompositionEntry(BaseModel):
     object: Optional[str] = None
     count: Optional[int] = Field(None, ge=0)
-    priority: Optional[int] = None
+    priority: Optional[Union[int, float]] = None
     regions: Optional[CompositionRegions] = None
 
     @model_validator(mode="after")
