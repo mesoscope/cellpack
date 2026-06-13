@@ -63,6 +63,14 @@ def get_representations(old_ingredient):
     return representations
 
 
+def normalize_color(color):
+    if color is None:
+        return color
+    if any(component > 1 for component in color):
+        return [component / 255 for component in color]
+    return color
+
+
 def constrain_angle(angle):
     if -pi <= angle <= pi:
         return angle
@@ -85,6 +93,8 @@ def migrate_ingredient(old_ingredient):
         if attribute in v1_to_v2_name_map:
             if attribute == "Type":
                 value = ingredient_types_map[old_ingredient[attribute]]
+            elif attribute == "color":
+                value = normalize_color(old_ingredient[attribute])
             else:
                 value = old_ingredient[attribute]
             new_ingredient[v1_to_v2_name_map[attribute]] = value

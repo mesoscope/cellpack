@@ -1620,10 +1620,10 @@ class Ingredient(Agent):
             # TODO: make this work for ingredients other than single spheres
 
             success = True
-            (jtrans, rotMatj) = self.get_new_jitter_location_and_rotation(
+            jtrans, rotMatj = self.get_new_jitter_location_and_rotation(
                 env, target_grid_point_position, rotation_matrix
             )
-            (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
+            insidePoints, newDistPoints = self.pack_at_grid_pt_location(
                 env,
                 jtrans,
                 rotMatj,
