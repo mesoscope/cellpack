@@ -57,6 +57,7 @@ def pack(
     env.helper = helper
     env.dedup_hash = hash
 
+    log.debug("Using cellpack package from: %s", str(Path(autopack.__file__).parent.parent))
     log.info("Packing recipe: %s", recipe_data["name"])
     log.info("Outputs will be saved to %s", env.out_folder)
 
