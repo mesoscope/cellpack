@@ -1,0 +1,21 @@
+{
+    "name": "test_gradient_mixing",
+    "out": "out",
+    "save_analyze_result": true,
+    "show_progress_bar": true,
+    "save_plot_figures": false,
+    "load_from_grid_file": true,
+    "spacing": 2,
+    "image_export_options": {
+        "hollow": false,
+        "voxel_size": [
+            1,
+            1,
+            1
+        ],
+        "projection_axis": "z"
+    },
+    "open_results_in_browser": false,
+    "upload_results": false,
+    "number_of_packings": 1
+}
