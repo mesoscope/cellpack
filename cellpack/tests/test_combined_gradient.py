@@ -253,3 +253,77 @@ def test_zero_candidate_mass_raises():
         Gradient.get_combined_gradient_weight(
             [fake_a, fake_b], [50, 50], candidate_points=candidate_points
         )
+
+
+def test_legacy_global_normalization_reproduces_pre_fix_mass_leak():
+    """
+    Executable, permanent companion to
+    test_realized_pick_fractions_match_intended_weights (plan step B3: "add
+    a companion assertion that this test fails on the pre-fix code").
+    Rather than relying only on a one-time stash/run/restore (already done
+    manually -- see the recorded numbers above and the engine report), this
+    reproduces the pre-fix *arithmetic* permanently and automatically: the
+    fix kept get_combined_gradient_weight's default (candidate_points=None)
+    call-compatible with the old, unconditional whole-grid normalization
+    (see test_combined_gradient_weight_without_candidate_points_matches_legacy_behavior
+    for the direct, non-Monte-Carlo proof of that equivalence on toy
+    arrays). Pre-fix, pick_point_for_ingredient's combined branch was
+    exactly:
+        combined_weight = get_combined_gradient_weight(gradient_list, weights)
+        ptInd = pick_point_from_weight(combined_weight, allIngrPts)
+    -- the same two real (not reimplemented) functions called below, just
+    without candidate restriction on the first call, then restricted to
+    the candidate set only at the final pick step exactly as
+    pick_point_for_ingredient does. So this test drives production code
+    through the exact call sequence the pre-fix code used, and will start
+    failing (as a regression alarm) if the "no candidate_points" default
+    is ever changed to something other than legacy whole-grid
+    normalization -- which would silently break the call-compatibility
+    guarantee the fix design requires.
+    """
+    bb, positions = _build_synthetic_grid()
+    near = _load_gradient_from_recipe("asym_sharp_near_origin")
+    far = _load_gradient_from_recipe("asym_sharp_far_end")
+    near.build_weight_map(bb, positions)
+    far.build_weight_map(bb, positions)
+
+    candidate_points = numpy.where(positions[:, 0] >= 500)[0]
+
+    # No candidate_points kwarg -> legacy whole-master-grid normalization:
+    # byte-for-byte what the pre-fix code always did, since no other
+    # normalization mode existed before this fix.
+    legacy_combined_weight = Gradient.get_combined_gradient_weight(
+        [near, far], [30, 70]
+    )
+
+    numpy.random.seed(42)
+    n_picks = 10000
+    picks = numpy.array(
+        [
+            Gradient.pick_point_from_weight(legacy_combined_weight, candidate_points)
+            for _ in range(n_picks)
+        ]
+    )
+    picked_x = positions[picks, 0]
+    realized_near = numpy.mean(picked_x < 750)
+    realized_far = numpy.mean(picked_x >= 750)
+
+    # Same leak-magnitude reasoning as the comment in
+    # test_realized_pick_fractions_match_intended_weights: "near"'s
+    # candidate-restricted mass is ~exp(-100/6) ~= 5.8e-8 of its global
+    # mass, so its realized share collapses toward 0 regardless of its
+    # intended 0.30 weight. Bounds below are deliberately loose (an order
+    # of magnitude from both the 0.30/0.70 intended split and the
+    # ~0.0004/0.9996 observed against the real pre-fix file) so this is a
+    # robust, non-flaky regression guard rather than a repeat of the tight
+    # tolerance check above.
+    assert realized_near < 0.02, (
+        f"expected legacy whole-grid normalization to starve the "
+        f"near-origin component well below its intended 0.30 share; "
+        f"got {realized_near}"
+    )
+    assert realized_far > 0.98, (
+        f"expected legacy whole-grid normalization to inflate the "
+        f"far-end component well above its intended 0.70 share; "
+        f"got {realized_far}"
+    )
