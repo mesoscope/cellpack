@@ -114,7 +114,9 @@ class Gradient:
         return (values / max_value) if max_value != 0 else values
 
     @staticmethod
-    def get_combined_gradient_weight(gradient_list, gradient_weights=None):
+    def get_combined_gradient_weight(
+        gradient_list, gradient_weights=None, candidate_points=None
+    ):
         """
         Combine the gradient weights
 
@@ -123,16 +125,60 @@ class Gradient:
         gradient_list: list
             list of gradient objects
 
+        gradient_weights: dict or list, optional
+            per-gradient mixing coefficients (the recipe's intended
+            fractions)
+
+        candidate_points: numpy.ndarray, optional
+            Indices of the grid points actually reachable by the ingredient
+            (e.g. `allIngrPts`, the candidate set at the ingredient's first
+            pick -- see `pick_point_for_ingredient`). Gradient supports are
+            not co-extensive with the master grid (e.g. nucleus interior,
+            outside the cell), so without this, a component whose mass
+            sits largely outside the packable region is under-weighted
+            relative to its intended `gradient_weights` coefficient. When
+            given, each component is normalized to a probability
+            distribution over just this candidate set before mixing,
+            instead of over the whole master grid. `None` preserves the
+            previous whole-grid normalization, so the signature stays
+            call-compatible.
+
         Returns
         ----------
         numpy.ndarray
-            the combined gradient weight
+            the combined gradient weight, shaped like the master grid (not
+            just `candidate_points`). Callers restrict to candidate points
+            downstream (see `pick_point_from_weight`), and the
+            renormalizations below (`combined_prob /= numpy.sum(...)`,
+            `normalize_by_max_value`) are global monotone rescalings that
+            preserve relative proportions among candidate points, so
+            returning the full-grid shape here is still correct.
         """
         assert len(gradient_list) > 1, "Need at least two gradients to combine"
 
         prob_list = numpy.zeros((len(gradient_list), len(gradient_list[0].weight)))
         for i in range(len(gradient_list)):
-            prob_list[i] = gradient_list[i].weight / numpy.sum(gradient_list[i].weight)
+            # Treat NaNs as 0 for mass purposes, consistent with
+            # pick_point_from_weight's existing NaN handling.
+            weight = numpy.nan_to_num(gradient_list[i].weight, nan=0.0)
+            if candidate_points is not None:
+                normalizer = numpy.nansum(weight[candidate_points])
+            else:
+                normalizer = numpy.nansum(weight)
+            if normalizer == 0:
+                where = (
+                    "the candidate points"
+                    if candidate_points is not None
+                    else "the master grid"
+                )
+                gradient_name = getattr(gradient_list[i], "name", i)
+                raise ValueError(
+                    f"Gradient '{gradient_name}' has zero weight mass over "
+                    f"{where}; cannot use it in a combined gradient mix. "
+                    "Check that this gradient has packable support where "
+                    "this ingredient can be placed."
+                )
+            prob_list[i] = weight / normalizer
 
         if isinstance(gradient_weights, dict):
             total = sum(gradient_weights.values())
@@ -207,8 +253,29 @@ class Gradient:
                             )
                         gradient_list.append(all_gradients[gradient_name])
 
+                    # `combined_weight` is computed once and cached on `ingr`
+                    # (guarded by the `hasattr` check above), using
+                    # `allIngrPts` -- and, as of this fix, the candidate-mass
+                    # normalization derived from it -- as they stand at this,
+                    # the ingredient's *first* pick. Neither is recomputed as
+                    # the candidate set shrinks over the rest of the packing
+                    # run. That is deliberate: it keeps the mixture
+                    # stationary over the run, matching the single blended
+                    # weight map the analysis assumes (one map per
+                    # ingredient, not one per remaining-point-set). It is
+                    # still an approximation -- the candidate-restricted
+                    # normalization is only exact for the t=0 candidate set,
+                    # so a component's realized share can drift from its
+                    # intended `gradient_weights` coefficient over a run as
+                    # differently-shaped components empty out their support
+                    # at different rates. See
+                    # NOTES_combined_gradient_adjacent_defects.md #2 for the
+                    # caching mechanism itself (the cache is never
+                    # invalidated, even across reused ingredient objects).
                     combined_weight = Gradient.get_combined_gradient_weight(
-                        gradient_list, ingr.gradient_weights
+                        gradient_list,
+                        ingr.gradient_weights,
+                        candidate_points=allIngrPts,
                     )
                     ingr.combined_weight = combined_weight
 
