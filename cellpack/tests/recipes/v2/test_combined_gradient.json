@@ -32,6 +32,25 @@
             "weight_mode_settings": {
                 "decay_length": 0.1
             }
+        },
+        "asym_sharp_near_origin": {
+            "description": "Sharp exponential peaked at X=0 -- asymmetric-support gradient A. With a candidate set restricted to X>=500, almost all of this gradient's mass sits outside the candidate region (see test_combined_gradient.py for the mass-fraction arithmetic).",
+            "mode": "X",
+            "pick_mode": "rnd",
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.03
+            }
+        },
+        "asym_sharp_far_end": {
+            "description": "Sharp exponential peaked at X=1000 (via invert:distance, which flips scaled_distance before the exponential is applied -- NOT reversed, which only affects mode:vector direction and has no effect on axis-mode gradients) -- asymmetric-support gradient B. Almost all of its mass sits inside a candidate set restricted to X>=500.",
+            "mode": "X",
+            "invert": "distance",
+            "pick_mode": "rnd",
+            "weight_mode": "exponential",
+            "weight_mode_settings": {
+                "decay_length": 0.03
+            }
         }
     },
     "objects": {
@@ -93,19 +112,48 @@
                 70,
                 30
             ]
+        },
+        "sphere_10_asymmetric": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "radius": 10,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "packing_mode": "gradient",
+            "gradient": [
+                "asym_sharp_near_origin",
+                "asym_sharp_far_end"
+            ],
+            "gradient_weights": [
+                30,
+                70
+            ]
         }
     },
     "composition": {
         "space": {
             "regions": {
                 "interior": [
-                    "A"
+                    "A",
+                    "B"
                 ]
             }
         },
         "A": {
             "object": "sphere_25",
             "count": 500
+        },
+        "B": {
+            "object": "sphere_10_asymmetric",
+            "count": 50
         }
     }
 }
