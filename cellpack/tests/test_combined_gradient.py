@@ -15,6 +15,7 @@ entries are untouched.
 See NOTES_combined_gradient_adjacent_defects.md (repo root) for three
 adjacent issues on this same code path that are filed, not fixed, here.
 """
+
 import itertools
 import json
 from pathlib import Path
