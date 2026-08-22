@@ -12,9 +12,20 @@ All three were checked against `cellpack-analysis/cellpack_analysis/packing/rule
 (the manuscript's canonical `GRADIENTS` dict, read-only) via `grep -n "pick_mode\|invert"`,
 which returned no matches — none of the manuscript's rules (`random`, `nucleus_gradient`,
 `membrane_gradient`, `apical_gradient`, or their `combine_prob` mixes) set a non-default
-`pick_mode` or any `invert` value. All three defects are therefore currently **dormant** for
-published manuscript results. They are live risks for future recipes only, except where noted
-otherwise (defect 2).
+`pick_mode` or any `invert` value. **The grep is accurate; the dormancy inference drawn from it
+for defect #1 is not.** The default `pick_mode` is `"linear"`
+(`interface_objects/default_values.py:9`), applied to every gradient via
+`GradientData.__init__`'s `deep_merge(gradient_data, gradient_options)` (`gradient_data.py:111`)
+regardless of whether the recipe's own JSON sets `pick_mode` at all — so an absent `pick_mode` key
+does not mean there is nothing for defect #1 to override. Generated recipes carry no `pick_mode`
+key, so every manuscript gradient resolves to `pick_mode: "linear"`, and the combined path's
+unconditional `numpy.random.choice` overrides it on **every** combined-gradient mix that has ever
+been run, including the Fig 5b/5c packings. Defect #1 is not dormant — see #1 below for why this
+is nevertheless benign. Defects #2 and #3 are unaffected by this correction: defect #3's dormancy
+follows directly from this same grep (no `invert` value is set anywhere, and that reasoning does
+not depend on a default-value assumption the way defect #1's did), and defect #2's liveness
+depends on packing-invocation configuration (serial vs. parallel `doloop`), not on this grep at
+all.
 
 ---
 
@@ -46,11 +57,19 @@ non-`"rnd"` `pick_mode` is used inside a multi-gradient mix. A recipe author who
 silently overridden — the recipe reads as "always pick the single highest-weight point" but
 actually does weighted-random sampling. This is a silent semantic downgrade, not a crash.
 
-**Who it could affect.** Only recipes that both (a) mix that gradient into a
-`packing_mode: gradient` list of length > 1, and (b) set a non-default `pick_mode` on it.
-Confirmed dormant for all current manuscript rules and `combine_prob` mixes (see grep result
-above). Would affect any future rule-mixing recipe that wants non-random point selection on a
-mixed component.
+**Who it could affect.** Every recipe that mixes a gradient into a `packing_mode: gradient` list
+of length > 1 — not only ones that explicitly set a non-default `pick_mode`. Generated recipes
+carry no `pick_mode` key, so every manuscript gradient resolves to the default
+`pick_mode: "linear"` (`interface_objects/default_values.py:9`, via `GradientData.__init__`'s
+`deep_merge`), and the combined path's unconditional `numpy.random.choice` overrides that default
+on every mix ever run, including the Fig 5b/5c packings — **the override fires universally, not
+only on some hypothetical future non-default recipe.** It is benign only because
+`getLinearWeighted` and `numpy.random.choice(p=w/Σw)` are both weight-proportional samplers, so
+the substituted selection is distributionally equivalent to what `pick_mode: "linear"` would have
+done (verified: total variation 0.0072 at N = 200,000 draws). A future recipe that sets a
+genuinely different `pick_mode` (`"max"`, `"min"`, `"binary"`, `"sub"`, `"reg"` — anything not
+weight-proportional) on a gradient later mixed would still see a real, silent behavior change,
+since the linear/`"rnd"` equivalence does not extend to those modes.
 
 **Suggested fix sketch.** Decide the intended semantics first (this is a design choice, not a
 mechanical patch): e.g. (a) require/validate that all gradients in a mix share one `pick_mode`
