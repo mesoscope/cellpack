@@ -214,7 +214,7 @@ def test_realized_pick_fractions_match_intended_weights_dict_form():
     }
     ingr = SimpleNamespace(
         gradient=["asym_sharp_near_origin", "asym_sharp_far_end"],
-        gradient_weights={"asym_sharp_near_origin": 30, "asym_sharp_far_end": 70},
+        gradient_weights={"asym_sharp_far_end": 70, "asym_sharp_near_origin": 30},
     )
 
     numpy.random.seed(42)  # same seed as the list-form test above
