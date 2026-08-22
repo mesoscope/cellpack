@@ -187,6 +187,57 @@ def test_realized_pick_fractions_match_intended_weights():
     # for the full before/after record).
 
 
+def test_realized_pick_fractions_match_intended_weights_dict_form():
+    """
+    Dict-form companion to test_realized_pick_fractions_match_intended_weights
+    above -- same fixture, same seed, same tolerance, only the
+    `gradient_weights` form changes (name-keyed dict instead of a positional
+    list). This is the form every production mixed recipe actually uses
+    (`combine_prob` recipes key coefficients by gradient name), so it is the
+    only test in this file that exercises the `isinstance(gradient_weights,
+    dict)` branch in Gradient.get_combined_gradient_weight with a realistic,
+    non-degenerate input -- every other test above passes a list. See the
+    test above for the full mass-fraction arithmetic and tolerance
+    derivation; this test only re-checks that the dict and list forms
+    produce the same realized fractions.
+    """
+    bb, positions = _build_synthetic_grid()
+    near = _load_gradient_from_recipe("asym_sharp_near_origin")
+    far = _load_gradient_from_recipe("asym_sharp_far_end")
+    near.build_weight_map(bb, positions)
+    far.build_weight_map(bb, positions)
+
+    candidate_points = numpy.where(positions[:, 0] >= 500)[0]
+    all_gradients = {
+        "asym_sharp_near_origin": near,
+        "asym_sharp_far_end": far,
+    }
+    ingr = SimpleNamespace(
+        gradient=["asym_sharp_near_origin", "asym_sharp_far_end"],
+        gradient_weights={"asym_sharp_near_origin": 30, "asym_sharp_far_end": 70},
+    )
+
+    numpy.random.seed(42)  # same seed as the list-form test above
+    n_picks = 10000
+    picks = numpy.array(
+        [
+            Gradient.pick_point_for_ingredient(ingr, candidate_points, all_gradients)
+            for _ in range(n_picks)
+        ]
+    )
+    assert hasattr(ingr, "combined_weight")
+
+    picked_x = positions[picks, 0]
+    realized_near = numpy.mean(picked_x < 750)
+    realized_far = numpy.mean(picked_x >= 750)
+
+    # Same tolerance derivation as
+    # test_realized_pick_fractions_match_intended_weights above.
+    tolerance = 0.02
+    assert realized_near == pytest.approx(0.30, abs=tolerance)
+    assert realized_far == pytest.approx(0.70, abs=tolerance)
+
+
 def test_combined_gradient_weight_without_candidate_points_matches_legacy_behavior():
     """
     candidate_points=None (the default) must reproduce the pre-fix,
