@@ -212,7 +212,7 @@ Every later draw renormalizes those frozen weights over the *current* candidate 
 realized density departs from the intended blend as candidates deplete.
 
 This section states what is and is not known about that departure. It is written at length because
-earlier drafts of it — in the inline comment, in this file, and in the analysis-side HANDOFF — each
+earlier drafts of it — in the inline comment, in this file, and in downstream analysis notes — each
 stated it more strongly than the code supports.
 
 ### The candidate set is not the free-point set
@@ -277,6 +277,6 @@ internally, and the dict branch pre-divides by their sum before that.
 
 The consequence is that the blend is **exactly scale-invariant in `sum(c)`**: multiplying every
 weight by a constant leaves the blended array unchanged to float precision (checked at factors 1.07,
-1.46 and 17.3 -- maximum absolute change 9e-19). A caller cannot influence the mixture through the
-magnitude of the weights it passes, only through their ratios, so `{..: 30, ..: 70}` -- as this
-repo's own mixer test fixture passes -- yields exactly the blend of `{..: 0.3, ..: 0.7}`.
+1.46 and 17.3 — maximum absolute change 9e-19). A caller cannot influence the mixture through the
+magnitude of the weights it passes, only through their ratios, so `{..: 30, ..: 70}` — as this
+repo's own mixer test fixture passes — yields exactly the blend of `{..: 0.3, ..: 0.7}`.
