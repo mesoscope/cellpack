@@ -255,6 +255,52 @@ def test_zero_candidate_mass_raises():
         )
 
 
+def test_zero_coefficient_vector_raises():
+    """
+    A `gradient_weights` coefficient vector that sums to exactly zero (every
+    component's mixing coefficient is 0) is a distinct degenerate input from
+    test_zero_candidate_mass_raises above: there, one component's own weight
+    map has zero mass over the candidate set; here, both components have
+    perfectly good candidate mass, but the *mixing coefficients themselves*
+    carry no information about how to combine them. numpy.average raises an
+    opaque ZeroDivisionError for this today ("Weights sum to zero, can't be
+    normalized"); the fix must raise the same clear, named ValueError as the
+    other degenerate-input guards instead, so callers can catch one
+    exception type at this boundary rather than a mix of ValueError and
+    numpy/Python internals.
+    """
+    fake_a = SimpleNamespace(name="fake_a", weight=numpy.array([1.0, 1.0, 1.0, 1.0]))
+    fake_b = SimpleNamespace(name="fake_b", weight=numpy.array([1.0, 1.0, 1.0, 1.0]))
+    candidate_points = numpy.arange(4)  # both components have full candidate mass
+
+    with pytest.raises(ValueError, match="zero"):
+        Gradient.get_combined_gradient_weight(
+            [fake_a, fake_b], [0, 0], candidate_points=candidate_points
+        )
+
+
+def test_zero_coefficient_dict_raises():
+    """
+    Dict-form companion to test_zero_coefficient_vector_raises. Every
+    production mixed recipe passes `gradient_weights` as a name-keyed dict
+    (see test_realized_pick_fractions_match_intended_weights_dict_form), and
+    the dict branch resolves coefficients via a `.../total` division before
+    `numpy.average` ever runs -- a zero-sum dict hits a plain Python
+    ZeroDivisionError ("division by zero") one step earlier than the list
+    form does. The fix must catch this case too, with the same ValueError.
+    """
+    fake_a = SimpleNamespace(name="fake_a", weight=numpy.array([1.0, 1.0, 1.0, 1.0]))
+    fake_b = SimpleNamespace(name="fake_b", weight=numpy.array([1.0, 1.0, 1.0, 1.0]))
+    candidate_points = numpy.arange(4)
+
+    with pytest.raises(ValueError, match="zero"):
+        Gradient.get_combined_gradient_weight(
+            [fake_a, fake_b],
+            {"fake_a": 0, "fake_b": 0},
+            candidate_points=candidate_points,
+        )
+
+
 def test_legacy_global_normalization_reproduces_pre_fix_mass_leak():
     """
     Executable, permanent companion to

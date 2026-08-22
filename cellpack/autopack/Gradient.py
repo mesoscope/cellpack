@@ -180,14 +180,37 @@ class Gradient:
                 )
             prob_list[i] = weight / normalizer
 
+        gradient_names = [
+            getattr(gradient, "name", i) for i, gradient in enumerate(gradient_list)
+        ]
+
         if isinstance(gradient_weights, dict):
             total = sum(gradient_weights.values())
+            if total == 0:
+                raise ValueError(
+                    f"Combined gradient weights for {gradient_names} sum to "
+                    "zero; cannot mix gradients with a zero-sum coefficient "
+                    "dict."
+                )
             gradient_weights = [
                 gradient_weights.get(gradient.name, 0) / total
                 for gradient in gradient_list
             ]
 
+        if gradient_weights is not None and numpy.nansum(gradient_weights) == 0:
+            raise ValueError(
+                f"Combined gradient weights for {gradient_names} are all "
+                "zero or NaN; cannot mix gradients with a zero-sum "
+                "coefficient vector."
+            )
+
         combined_prob = numpy.average(prob_list, axis=0, weights=gradient_weights)
+        if numpy.nansum(combined_prob) == 0:
+            raise ValueError(
+                f"Combined gradient mixture for {gradient_names} has zero "
+                "(or all-NaN) combined mass; cannot mix these gradients "
+                "over the given candidate points."
+            )
         combined_prob /= numpy.sum(combined_prob)  # Normalize to sum to 1
         combined_weight = Gradient.normalize_by_max_value(combined_prob)
 
