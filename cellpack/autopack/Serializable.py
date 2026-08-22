@@ -4,9 +4,9 @@ Created on Tue Jan 19 15:55:27 2016
 
 @author: ludo
 """
+
 # serializabl;e class for auopack recipe
 import json
-
 
 # toDO class Assambly for nesting of protein quaternary structure.
 # class sAssambly

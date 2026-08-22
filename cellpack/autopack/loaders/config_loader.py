@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
+import multiprocessing
 import os
 from json import encoder
 
@@ -98,6 +100,32 @@ class ConfigLoader(object):
             )
 
     @staticmethod
+    def _migrate_legacy_keys(config):
+        """
+        Map deprecated config keys onto their current equivalents so that older
+        config files keep working. Currently handles the legacy ``parallel``
+        boolean, which was renamed to ``number_of_processes`` (an integer >= 1).
+        """
+        if "parallel" in config:
+            legacy_parallel = config.pop("parallel")
+            # Only honor the legacy value if number_of_processes wasn't set explicitly.
+            if "number_of_processes" not in config:
+                if legacy_parallel:
+                    config["number_of_processes"] = max(
+                        1, int(0.8 * multiprocessing.cpu_count())
+                    )
+                else:
+                    config["number_of_processes"] = 1
+            logging.warning(
+                "Config key 'parallel' is deprecated; use 'number_of_processes' "
+                "(integer >= 1) instead. Interpreting parallel=%s as "
+                "number_of_processes=%s.",
+                legacy_parallel,
+                config.get("number_of_processes", 1),
+            )
+        return config
+
+    @staticmethod
     def _migrate_version(config):
         return config
 
@@ -114,8 +142,10 @@ class ConfigLoader(object):
                 initialize_db = db(default_db="staging") if use_docker else db()
                 db_handler = DBRecipeLoader(initialize_db)
                 config = db_handler.read_config(self.file_path)
+                config = ConfigLoader._migrate_legacy_keys(config)
             else:
                 new_values = json.load(open(self.file_path, "r"))
+                new_values = ConfigLoader._migrate_legacy_keys(new_values)
                 config = ConfigLoader.default_values.copy()
                 config.update(new_values)
         if config["version"] != self.latest_version:

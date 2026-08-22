@@ -9,15 +9,18 @@ The top-level fields include metadata about the recipe, such as its name, versio
 | Field Path       | Type                                             | Description                        | Default Value                      | Notes                                                                                                                        |
 | ---------------- | ------------------------------------------------ | ---------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `name`           | string                                           | Name of the recipe                 |                                    |                                                                                                                              |
+| `description`    | string                                           | Description of the recipe          |                                    |                                                           |
 | `version`        | string                                           | Recipe version string              | "default"                          | Version of the recipe is appended to the output file name.                                                                   |
 | `format_version` | string                                           | Schema format version              | "1.0"                              | Older recipe formats do not have this field. Recipes are automatically migrated to the latest format version before packing. |
 | `bounding_box`   | array `[[minX, minY, minZ], [maxX, maxY, maxZ]]` | Bounding box of the packing result | `[[ 0, 0, 0 ], [ 100, 100, 100 ]]` |                                                                                                                              |
 | `grid_file_path` | string                                           | File path to read/write grid data  |                                    | If not specified, a grid file is created and stored at the output path.                                                      |
+| `randomness_seed` | integer                                          | Seed for random number generation   |  |   |
 
 **Example:**
 ```JSON
 {
     "name": "one_sphere",
+    "description": "Single sphere packed within a bounding box",
     "version": "1.0.0",
     "format_version": "2.0",
     "bounding_box": [

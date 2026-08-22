@@ -91,11 +91,13 @@ downloaded_data_from_firebase = {
     "version": "linear",
     "bounding_box": [[-110, -45, -62], [110, 45, 62]],
     "name": "test_recipe",
+    "description": "test_description",
 }
 
 
 compiled_firebase_recipe_example = {
     "name": "test_recipe",
+    "description": "test_description",
     "format_version": "2.1",
     "version": "linear",
     "bounding_box": [[-110, -45, -62], [110, 45, 62]],

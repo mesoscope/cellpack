@@ -2,7 +2,6 @@
 
 """Write out data for cellpack."""
 
-
 import json
 import os
 from collections import OrderedDict
@@ -201,12 +200,13 @@ class Writer(object):
             env.version,
         )
         number_of_packings = env.config_data.get("number_of_packings", 1)
+        open_results_in_browser = env.config_data.get("open_results_in_browser", True)
         upload_results = env.config_data.get("upload_results", True)
-        if upload_results and (number_of_packings == 1 or is_aggregate):
-            open_results_in_browser = env.config_data.get(
-                "open_results_in_browser", True
+        dedup_hash = getattr(env, "dedup_hash")
+        if (number_of_packings == 1 or is_aggregate) and upload_results:
+            autopack.helper.post_and_open_file(
+                file_name, open_results_in_browser, dedup_hash
             )
-            autopack.helper.post_and_open_file(file_name, open_results_in_browser)
 
     def save_Mixed_asJson(
         self,

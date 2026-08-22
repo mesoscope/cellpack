@@ -14,7 +14,9 @@ class DATABASE_IDS(MetaEnum):
 
     @classmethod
     def handlers(cls):
-        def create_aws_handler(bucket_name, sub_folder_name, region_name):
+        def create_aws_handler(
+            bucket_name=None, sub_folder_name=None, region_name=None
+        ):
             return AWSHandler(
                 bucket_name=bucket_name,
                 sub_folder_name=sub_folder_name,

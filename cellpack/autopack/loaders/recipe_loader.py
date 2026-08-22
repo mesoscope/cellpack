@@ -9,7 +9,7 @@ import cellpack.autopack as autopack
 
 from cellpack.autopack.DBRecipeHandler import DBRecipeLoader
 from cellpack.autopack.interface_objects import (
-    GradientData,
+    DEFAULT_GRADIENT_MODE_SETTINGS,
     Representations,
     default_recipe_values,
 )
@@ -31,22 +31,29 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path, save_converted_recipe=False, use_docker=False):
-        _, file_extension = os.path.splitext(input_file_path)
+    def __init__(
+        self,
+        input_data,
+        save_converted_recipe=False,
+        use_docker=False,
+    ):
         self.current_version = CURRENT_VERSION
-        self.file_path = input_file_path
-        self.file_extension = file_extension
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
 
-        # set CURRENT_RECIPE_PATH appropriately for remote(firebase) vs local recipes
-        if autopack.is_remote_path(self.file_path):
-            autopack.CURRENT_RECIPE_PATH = os.path.join(
-                os.getcwd(), "examples", "recipes", "v2"
-            )
+        if isinstance(input_data, dict):
+            self._json_recipe = input_data
+            self.file_path = None
         else:
-            autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
+            self.file_path = input_data
+            self._json_recipe = None
+            if autopack.is_remote_path(self.file_path):
+                autopack.CURRENT_RECIPE_PATH = os.path.join(
+                    os.getcwd(), "examples", "recipes", "v2"
+                )
+            else:
+                autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
 
         self.recipe_data = self._read(use_docker=use_docker)
 
@@ -144,6 +151,33 @@ class RecipeLoader(object):
             format_version = recipe_data["format_version"]
         return format_version
 
+    @staticmethod
+    def _normalize_gradients(gradients):
+        """
+        Normalize gradients to the list-of-dicts format and fill in
+        default settings for any missing keys.
+        """
+        if not gradients:
+            return gradients
+
+        # firebase recipes already store gradients as a list of dicts;
+        # file recipes store them as a dict keyed by gradient name
+        if isinstance(gradients, dict):
+            gradient_items = [
+                {**gradient_dict, "name": gradient_name}
+                for gradient_name, gradient_dict in gradients.items()
+            ]
+        else:
+            gradient_items = gradients
+
+        normalized = []
+        for gradient in gradient_items:
+            # fill any missing top-level keys from the defaults without
+            # overwriting values the recipe set
+            filled = {**copy.deepcopy(DEFAULT_GRADIENT_MODE_SETTINGS), **gradient}
+            normalized.append(filled)
+        return normalized
+
     def _migrate_version(self, old_recipe):
         converted = False
         if old_recipe["format_version"] == "1.0":
@@ -169,16 +203,25 @@ class RecipeLoader(object):
             )
 
     def _read(self, resolve_inheritance=True, use_docker=False):
-        new_values, database_name, is_unnested_firebase = autopack.load_file(
-            self.file_path, cache="recipes", use_docker=use_docker
-        )
+        database_name = None
+        is_unnested_firebase = False
+        new_values = self._json_recipe
+        if new_values is None:
+            # Read recipe from filepath
+            new_values, database_name, is_unnested_firebase = autopack.load_file(
+                self.file_path, cache="recipes", use_docker=use_docker
+            )
+
+        if "composition" in new_values:
+            new_values["composition"] = DBRecipeLoader.remove_empty(
+                new_values["composition"]
+            )
+
         if database_name == "firebase":
             if is_unnested_firebase:
                 objects = new_values.get("objects", {})
                 gradients = new_values.get("gradients", {})
-                composition = DBRecipeLoader.remove_empty(
-                    new_values.get("composition", {})
-                )
+                composition = new_values.get("composition", {})
             else:
                 objects, gradients, composition = DBRecipeLoader.collect_and_sort_data(
                     new_values["composition"]
@@ -201,6 +244,11 @@ class RecipeLoader(object):
                 recipe_data["objects"] = RecipeLoader.resolve_inheritance(
                     recipe_data["objects"]
                 )
+        if "gradients" in recipe_data:
+            recipe_data["gradients"] = RecipeLoader._normalize_gradients(
+                recipe_data["gradients"]
+            )
+
         # validate recipe after migration to v2.1 format but before transforming to class instances
         try:
             RecipeValidator.validate_recipe(recipe_data)
@@ -208,6 +256,12 @@ class RecipeLoader(object):
         except ValidationError as e:
             formatted_error = RecipeValidator.format_validation_error(e)
             raise ValueError(f"Recipe validation failed:\n{formatted_error}")
+
+        # keep a serializable copy after all dict-level normalization but before
+        # converting to class instances. this is the human-readable source of
+        # truth used for UI download / DB upload, and now matches both the packed
+        # recipe and the database's list-of-dicts gradient format.
+        self.serializable_recipe_data = copy.deepcopy(recipe_data)
 
         if "objects" in recipe_data:
             for _, obj in recipe_data["objects"].items():
@@ -231,15 +285,6 @@ class RecipeLoader(object):
                 if "type" in obj and not INGREDIENT_TYPE.is_member(obj["type"]):
                     raise TypeError(f"{obj['type']} is not an allowed type")
 
-        # handle gradients
-        # gradients in firebase recipes are already stored as a list of dicts
-        if "gradients" in recipe_data and not isinstance(
-            recipe_data["gradients"], list
-        ):
-            gradients = []
-            for gradient_name, gradient_dict in recipe_data["gradients"].items():
-                gradients.append(GradientData(gradient_dict, gradient_name).data)
-            recipe_data["gradients"] = gradients
         return recipe_data
 
     def _load_json(self):

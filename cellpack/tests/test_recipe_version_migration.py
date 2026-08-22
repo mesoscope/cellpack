@@ -5,6 +5,7 @@
 Docs: https://docs.pytest.org/en/latest/example/simple.html
     https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
+
 from math import pi
 from unittest.mock import MagicMock
 import pytest
@@ -316,7 +317,7 @@ def test_convert_v1_to_v2(
     [
         (
             RecipeLoader(
-                input_file_path="cellpack/tests/recipes/v1/test_single_spheres.json"
+                "cellpack/tests/recipes/v1/test_single_spheres.json"
             ).recipe_data,
             {
                 "version": "1.0",
@@ -385,9 +386,7 @@ def test_migrate_version_error():
     "converted_compartment_data, expected_compartment_data",
     [
         (
-            RecipeLoader(
-                input_file_path="cellpack/tests/recipes/v1/test_compartment.json"
-            ).recipe_data,
+            RecipeLoader("cellpack/tests/recipes/v1/test_compartment.json").recipe_data,
             {
                 "version": "1.0",
                 "format_version": "2.0",

@@ -1,0 +1,954 @@
+{
+    "format_version": "2.1",
+    "version": "1.0",
+    "name": "BloodPlasma-no-HIV",
+    "bounding_box": [
+        [
+            -150,
+            -600,
+            -1100
+        ],
+        [
+            150,
+            600,
+            1100
+        ]
+    ],
+    "objects": {
+        "Heparin": {
+            "jitter_attempts": 5,
+            "color": [
+                0.41568627450980394,
+                0.7568627450980392,
+                0.8980392156862745
+            ],
+            "rotation_range": 6.2831,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "3irl",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "2hhb_hemoglobin.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "Heparin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "IgG_Antibody_1mer": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "path": "default",
+                    "name": "igg.pdb",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "antB.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "iIgG_Antibody_1mer_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "dLDL": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.5607843137254902,
+                0.396078431372549,
+                0.6784313725490196
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "EMD-5239.map",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "EMDB_5239.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "dLDL_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "AntiTrypsin": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.5607843137254902,
+                0.396078431372549,
+                0.6784313725490196
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "1atu",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "1atu.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "AntiTrypsin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "Ceruloplasmin": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.7686274509803922,
+                0.7137254901960784,
+                0.6078431372549019
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "1kcw",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "1kcw_ceruloplasmin.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "Ceruloplasmin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "Hemoglobin": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.7568627450980392,
+                0.1843137254901961,
+                0.1450980392156863
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "2hhb",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "2hhb_hemoglobin.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "Hemoglobin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "i2tsc_63kD": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.5803921568627451,
+                0.596078431372549,
+                0.6039215686274509
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "2tsc",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "2tsc_63kD.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "i2tsc_63kD_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "Fibrinogen": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.8509803921568627,
+                0.615686274509804,
+                0.20392156862745098
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "3ghg",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "3ghg.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "Fibrinogen_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "i1ysx_23kD": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "1ysx",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "1ysx_23kD.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "i1ysx_23kD_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "SerumAlbumin": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "1e7i",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "1e7i.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "SerumAlbumin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "iLDL": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "EMD-5241.map",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "EMDB_5421.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "iLDL_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "iIgA_Antibody_2mer": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "path": "default",
+                    "name": "igg_dim.pdb",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "IgA_Antibody_2mer.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "iIgA_Antibody_2mer_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "Insulin": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.9686274509803922,
+                0.7490196078431373,
+                0.23137254901960785
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "2hui",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "2hui.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "Insulin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "FactorH1": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.6352941176470588,
+                0.596078431372549,
+                0.403921568627451
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "3gau",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "3gau_FactorH3.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "FactorH1_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "i7aat_91kD": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "7aat",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "7aat_91kD.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "i7aat_91kD_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "iIgM_Antibody_5mer": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": null,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "2rcj",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "IgM_Antibody_5mer.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "iIgM_Antibody_5mer_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "Transferrin": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.17254901960784313,
+                0.7568627450980392,
+                0.00784313725490196
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "1lfg",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "1lfg.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "Transferrin_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        },
+        "i1smd_56kD": {
+            "jitter_attempts": 5,
+            "rotation_range": 6.2831,
+            "color": [
+                0.7529411764705882,
+                0.7647058823529411,
+                0.7450980392156863
+            ],
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "is_attractor": false,
+            "packing_mode": "random",
+            "type": "multi_sphere",
+            "rejection_threshold": 30,
+            "place_method": "jitter",
+            "rotation_axis": null,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                3.141592607179586,
+                3.141592607179586
+            ],
+            "representations": {
+                "atomic": {
+                    "id": "1smd",
+                    "format": ".pdb"
+                },
+                "packing": {
+                    "path": "github:collisionTrees",
+                    "name": "1smd_56kD.sph",
+                    "format": ".sph"
+                },
+                "mesh": {
+                    "path": "github:geometries",
+                    "name": "i1smd_56kD_1.dae",
+                    "format": ".dae",
+                    "coordinate_system": "left"
+                }
+            }
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    {
+                        "object": "Heparin",
+                        "count": 2,
+                        "priority": -2
+                    },
+                    {
+                        "object": "IgG_Antibody_1mer",
+                        "count": 109,
+                        "priority": 2
+                    },
+                    {
+                        "object": "dLDL",
+                        "count": 2,
+                        "priority": -3
+                    },
+                    {
+                        "object": "AntiTrypsin",
+                        "count": 70,
+                        "priority": 0.093310084
+                    },
+                    {
+                        "object": "Ceruloplasmin",
+                        "count": 3,
+                        "priority": 0.12052907
+                    },
+                    {
+                        "object": "Hemoglobin",
+                        "count": 1,
+                        "priority": 0.10002977
+                    },
+                    {
+                        "object": "i2tsc_63kD",
+                        "count": 40,
+                        "priority": 0.097860758
+                    },
+                    {
+                        "object": "Fibrinogen",
+                        "count": 15,
+                        "priority": -2
+                    },
+                    {
+                        "object": "i1ysx_23kD",
+                        "count": 10,
+                        "priority": 0.082762727
+                    },
+                    {
+                        "object": "SerumAlbumin",
+                        "count": 805,
+                        "priority": 0.11814741
+                    },
+                    {
+                        "object": "iLDL",
+                        "count": 2,
+                        "priority": -3
+                    },
+                    {
+                        "object": "iIgA_Antibody_2mer",
+                        "count": 10,
+                        "priority": 1
+                    },
+                    {
+                        "object": "Insulin",
+                        "count": 2,
+                        "priority": 0.042997491
+                    },
+                    {
+                        "object": "FactorH1",
+                        "count": 4,
+                        "priority": -2
+                    },
+                    {
+                        "object": "i7aat_91kD",
+                        "count": 40,
+                        "priority": 0.12103942
+                    },
+                    {
+                        "object": "iIgM_Antibody_5mer",
+                        "count": 2,
+                        "priority": -10
+                    },
+                    {
+                        "object": "Transferrin",
+                        "count": 40,
+                        "priority": 0.12593034
+                    },
+                    {
+                        "object": "i1smd_56kD",
+                        "count": 70,
+                        "priority": 0.097392932
+                    }
+                ]
+            }
+        }
+    }
+}

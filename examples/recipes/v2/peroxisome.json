@@ -2,6 +2,7 @@
     "version": "gradient_packing",
     "format_version": "2.1",
     "name": "peroxisome",
+    "description": "Peroxisomes puncta (represented as spheres) packed with various biases in mesh containers representing the cell membrane and nucleus derived from a segmented hiPS cell.",
     "bounding_box": [
         [
             35.325,

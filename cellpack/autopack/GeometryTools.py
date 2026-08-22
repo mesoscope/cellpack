@@ -13,6 +13,7 @@ reative Commons Attribution-ShareAlike
 http://crowsandcats.blogspot.com/2013/04/cube-sphere-intersection-volume.html
 Copyright ©  Andrew White
 """
+
 import math
 import numpy as np
 
