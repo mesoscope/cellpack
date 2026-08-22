@@ -287,14 +287,21 @@ class Gradient:
                     # weight map the analysis assumes (one map per
                     # ingredient, not one per remaining-point-set). It is
                     # still an approximation -- the candidate-restricted
-                    # normalization is only exact for the t=0 candidate set,
-                    # so a component's realized share can drift from its
-                    # intended `gradient_weights` coefficient over a run as
-                    # differently-shaped components empty out their support
-                    # at different rates. See
-                    # NOTES_combined_gradient_adjacent_defects.md #2 for the
-                    # caching mechanism itself (the cache is never
-                    # invalidated, even across reused ingredient objects).
+                    # normalization is exact only for the candidate set as
+                    # it stands at this, the ingredient's first pick. The
+                    # weights are frozen here; every later draw renormalizes
+                    # them over the *current* candidate list (the
+                    # compartment- and cutoff-filtered free points, which
+                    # only shrink), so the realized density departs from the
+                    # intended blend as candidates deplete -- by an amount
+                    # and in a direction that both depend on geometry rather
+                    # than on the coefficients. This code also defines no
+                    # per-component realized share: the blend is a single
+                    # array and a pick carries no component label. See
+                    # NOTES_combined_gradient_adjacent_defects.md -- #4 for
+                    # the drift treatment, #2 for the caching mechanism
+                    # itself (the cache is never invalidated, even across
+                    # reused ingredient objects).
                     combined_weight = Gradient.get_combined_gradient_weight(
                         gradient_list,
                         ingr.gradient_weights,
