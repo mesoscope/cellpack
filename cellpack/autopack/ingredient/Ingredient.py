@@ -2214,6 +2214,9 @@ class Ingredient(Agent):
                 continue
 
             # need to check compartment too
+            if self.collides_with_compartment(env, packing_location, packing_rotation):
+                continue
+
             self.log.info("no collision")
             # if self.compareCompartment:
             #     collision = self.compareCompartmentPrimitive(
