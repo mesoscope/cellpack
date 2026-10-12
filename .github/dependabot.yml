@@ -26,8 +26,15 @@ updates:
       prefix: "deps(dependabot):"
     open-pull-requests-limit: 1
     rebase-strategy: "auto"
+    # build-system dep has no lockfile version; it would drop the whole group
+    ignore:
+      - dependency-name: "uv-build"
     groups:
       python-all:
+        patterns:
+          - "*"
+      python-security-updates:
+        applies-to: security-updates
         patterns:
           - "*"
 
