@@ -51,8 +51,12 @@ class CellpackServer:
 
             grid_file_path = recipe_doc.get("grid_file_path")
             if grid_file_path:
-                # Downloads grid file to the local cache if its not already present
-                get_local_file_location(grid_file_path, cache="grids")
+                try:
+                    # Downloads grid file to the local cache if its not already present
+                    get_local_file_location(grid_file_path, cache="grids")
+                except Exception as e:
+                    # Don't let a failed prefetch prevent the server from starting
+                    print(f"Failed to prefetch grid file '{grid_file_path}': {e}")
 
     async def run_packing(self, dedup_hash, recipe, config=None):
         self.update_job_status(dedup_hash, "RUNNING")
