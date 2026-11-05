@@ -1,5 +1,6 @@
 import asyncio
 from aiohttp import web
+from cellpack.autopack import get_local_file_location
 from cellpack.autopack.DBRecipeHandler import DataDoc, DBUploader
 from cellpack.autopack.interface_objects.database_ids import DATABASE_IDS
 from cellpack.bin.pack import pack
@@ -24,6 +25,38 @@ class CellpackServer:
 
         job_status, _ = db.get_doc_by_id("job_status", dedup_hash)
         return job_status is not None
+
+    def prefetch_example_grid_files(self):
+        """
+        Download grid files for all example cellpack client recipes into the local
+        cache so they are ready before the server starts accepting packing requests
+        """
+        db = self._get_firebase_handler()
+        if not db:
+            return
+
+        recipe_docs = db.get_all_docs("example_packings")
+        if not recipe_docs:
+            return
+
+        for doc in recipe_docs:
+            recipe_data = doc.to_dict()
+            recipe_id = recipe_data.get("recipe")
+            if not recipe_id:
+                continue
+
+            recipe_doc, _ = db.get_doc_by_id("recipes", recipe_id)
+            if not recipe_doc:
+                continue
+
+            grid_file_path = recipe_doc.get("grid_file_path")
+            if grid_file_path:
+                try:
+                    # Downloads grid file to the local cache if its not already present
+                    get_local_file_location(grid_file_path, cache="grids")
+                except Exception as e:
+                    # Don't let a failed prefetch prevent the server from starting
+                    print(f"Failed to prefetch grid file '{grid_file_path}': {e}")
 
     async def run_packing(self, dedup_hash, recipe, config=None):
         self.update_job_status(dedup_hash, "RUNNING")
@@ -84,6 +117,7 @@ class CellpackServer:
 async def init_app() -> web.Application:
     app = web.Application()
     server = CellpackServer()
+    server.prefetch_example_grid_files()
     app.add_routes(
         [
             web.get("/hello", server.hello_world),
